@@ -1,4 +1,4 @@
-package net.wuxianjie.springboot;
+package net.wuxianjie.springbootdemo;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

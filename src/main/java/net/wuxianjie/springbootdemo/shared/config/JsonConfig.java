@@ -1,4 +1,4 @@
-package net.wuxianjie.springboot.shared.config;
+package net.wuxianjie.springbootdemo.shared.config;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
