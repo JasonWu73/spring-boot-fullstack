@@ -1,1 +1,9 @@
-
+spring:
+  datasource:
+    username: root
+    password: qwe@123
+    url: jdbc:mysql://127.0.0.1:3306?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false
+mybatis:
+  mapper-locations: classpath:**/*Mapper.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
