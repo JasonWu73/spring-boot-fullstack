@@ -1,8 +1,10 @@
 FROM openjdk:17-jdk
 
-WORKDIR /app
+ENV TZ=Asia/Shanghai
 
-COPY target/spring-boot-demo-0.0.1-SNAPSHOT.jar /app/spring-boot-demo.jar
+WORKDIR /opt
+
+COPY target/spring-boot-demo-0.0.1-SNAPSHOT.jar /opt/spring-boot-demo.jar
 
 EXPOSE 8080
 
