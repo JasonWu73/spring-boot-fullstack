@@ -11,17 +11,18 @@ services:
       - '3307:3306'
 
   spring-boot-demo:
-    # 确保 `Dockerfile` 位于与 `docker-compose.yml` 文件相同的目录中
-    build:
-      context: .
-    # 先请求拉取远程镜像，失败后再使用 `build` 配置构建本地镜像
-    image: spring-boot-demo:latest
+    image: openjdk:17-jdk
     container_name: spring-boot-demo
     restart: always
+    environment:
+      TZ: Asia/Shanghai
+    working_dir: /opt
     ports:
       - '8081:8080'
     volumes:
-      # 使得配置文件可放在主机中：`/Users/wxj/Downloads/application.yml`
+      # JAR 包所在路径
+      - /Users/wxj/Downloads/spring-boot-demo-0.0.1-SNAPSHOT.jar:/opt/spring-boot-demo.jar
+      # 使得配置文件可放在容器外：`/Users/wxj/Downloads/application.yml`
       - /Users/wxj/Downloads:/opt/config
     depends_on:
       - db

@@ -8,4 +8,4 @@ COPY target/spring-boot-demo-0.0.1-SNAPSHOT.jar /opt/spring-boot-demo.jar
 
 EXPOSE 8080
 
-CMD ["java", "-jar", "/app/spring-boot-demo.jar"]
+CMD ["java", "-jar", "/opt/spring-boot-demo.jar"]
