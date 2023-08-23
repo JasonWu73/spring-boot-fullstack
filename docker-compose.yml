@@ -4,11 +4,17 @@ services:
     image: mysql
     container_name: db
     restart: always
+    # 以 root 用户运行容器，这是 MySQL 官方要求的
+    user: root
     environment:
       TZ: Asia/Shanghai
       MYSQL_ROOT_PASSWORD: qwe@123
     ports:
       - '3307:3306'
+    volumes:
+      # 将数据库数据存放在宿主机中：`/Users/wxj/Downloads/mysql/data`
+      - /Users/wxj/Downloads/mysql/data:/var/lib/mysql
+    command: ['--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
 
   spring-boot-demo:
     image: openjdk:17-jdk
@@ -16,18 +22,22 @@ services:
     restart: always
     environment:
       TZ: Asia/Shanghai
+    # 当容器启动时，所有的命令都将在 `/opt` 目录中执行
+    # 为了使 Spring Boot 项目自动识别 `/opt/config/application.yml`
     working_dir: /opt
     ports:
       - '8081:8080'
     volumes:
-      # JAR 包所在路径
-      - /Users/wxj/Downloads/spring-boot-demo-0.0.1-SNAPSHOT.jar:/opt/spring-boot-demo.jar
-      # 使得配置文件可放在容器外：`/Users/wxj/Downloads/application.yml`
-      - /Users/wxj/Downloads:/opt/config
+      # JAR 包所在路径，注意 `application.yml1 中使用的 MySQL 连接：
+      # `docker compose up -d` 运行时：`jdbc:mysql://db:3306`
+      # `docker run ` 运行时：`jdbc:mysql://host.docker.internal:3307`
+      # 注意：容器内配置文件为 `localhost` 指的是容器自身，而不是宿主机
+      - /Users/wxj/Downloads/spring-boot-demo/spring-boot-demo-0.0.1-SNAPSHOT.jar:/opt/spring-boot-demo.jar
+      # 使得配置文件可放在容器外（即宿主机中）：`/Users/wxj/Downloads/application.yml`
+      - /Users/wxj/Downloads/spring-boot-demo/config:/opt/config
     depends_on:
       - db
-    # 这里的 `command` 仅为演示需要
-    command: ['sh', '-c', 'sleep 10; java -jar /opt/spring-boot-demo.jar']
+    command: ['java', '-jar', '/opt/spring-boot-demo.jar']
 
 
 # 启动命令：docker compose up -d
