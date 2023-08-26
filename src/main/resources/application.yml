@@ -1,13 +1,5 @@
 spring:
-  datasource:
-    username: root
-    password: qwe@123
-    url: jdbc:mysql://db:3306?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false
-
-mybatis:
-  mapper-locations: classpath:**/*Mapper.xml
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-logging:
-  level:
-    com.zaxxer: debug
+  data:
+    redis:
+      host: localhost
+      port: 6379
