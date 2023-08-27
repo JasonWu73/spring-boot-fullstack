@@ -6,6 +6,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -17,12 +19,10 @@ public class RedisController implements CommandLineRunner {
 
   @Override
   public void run(String... args) throws InterruptedException {
-    redisTemplate.opsForValue().set("color", "red", 2, TimeUnit.SECONDS);
-    String color = redisTemplate.opsForValue().get("color");
-    log.info("color: {}", color);
+    Map<String, String> keyMaps = Map.of("color", "red", "car", "toyota");
+    redisTemplate.opsForValue().multiSet(keyMaps);
 
-    TimeUnit.SECONDS.sleep(2);
-    color = redisTemplate.opsForValue().get("color");
-    log.info("color after 2 seconds: {}", color);
+    List<String> values = redisTemplate.opsForValue().multiGet(List.of("color", "car"));
+    log.info("[color={}, car={}]", values.get(0), values.get(1));
   }
 }
