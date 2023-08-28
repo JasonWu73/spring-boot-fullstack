@@ -6,9 +6,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
+import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -18,11 +16,39 @@ public class RedisController implements CommandLineRunner {
   private final RedisTemplate<String, String> redisTemplate;
 
   @Override
-  public void run(String... args) throws InterruptedException {
-    Map<String, String> keyMaps = Map.of("color", "red", "car", "toyota");
-    redisTemplate.opsForValue().multiSet(keyMaps);
+  public void run(String... args) {
+//    updatingInTwoStepsCausesErrors();
 
-    List<String> values = redisTemplate.opsForValue().multiGet(List.of("color", "car"));
-    log.info("[color={}, car={}]", values.get(0), values.get(1));
+    updatingInOneStepSuccess();
+  }
+
+  private void updatingInTwoStepsCausesErrors() {
+    updateUpvote();
+    updateUpvote();
+  }
+
+  private void updatingInOneStepSuccess() {
+    updateUpvoteByIncrement();
+    updateUpvoteByIncrement();
+  }
+
+  private void updateUpvote() {
+    new Thread(() -> {
+      String upvote = Optional.ofNullable(redisTemplate.opsForValue().get("upvote")).orElseThrow();
+
+      String updatedUpvote = String.valueOf(Integer.parseInt(upvote) + 1);
+
+      redisTemplate.opsForValue().set("upvote", updatedUpvote);
+
+      log.info("{} - updating upvote", Thread.currentThread().getName());
+    }).start();
+  }
+
+  private void updateUpvoteByIncrement() {
+    new Thread(() -> {
+      redisTemplate.opsForValue().increment("upvote");
+
+      log.info("{} - updating upvote", Thread.currentThread().getName());
+    }).start();
   }
 }
