@@ -6,6 +6,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
@@ -17,38 +18,22 @@ public class RedisController implements CommandLineRunner {
 
   @Override
   public void run(String... args) {
-//    updatingInTwoStepsCausesErrors();
+    // hset user name 'Jason Wu' age '25'
+    Map<String, String> user = Map.of("name", "Jason Wu", "age", "25");
+    redisTemplate.opsForHash().putAll("user", user);
 
-    updatingInOneStepSuccess();
-  }
+    // hget user name
+    String name = (String) redisTemplate.opsForHash().get("user", "name");
+    log.info("hget user name --> {}", name);
 
-  private void updatingInTwoStepsCausesErrors() {
-    updateUpvote();
-    updateUpvote();
-  }
+    // hget user age
+    Integer age = Optional.ofNullable(redisTemplate.opsForHash().get("user", "age"))
+      .map(o -> Integer.parseInt((String) o))
+      .orElse(null);
+    log.info("hget user age --> {}", age);
 
-  private void updatingInOneStepSuccess() {
-    updateUpvoteByIncrement();
-    updateUpvoteByIncrement();
-  }
-
-  private void updateUpvote() {
-    new Thread(() -> {
-      String upvote = Optional.ofNullable(redisTemplate.opsForValue().get("upvote")).orElseThrow();
-
-      String updatedUpvote = String.valueOf(Integer.parseInt(upvote) + 1);
-
-      redisTemplate.opsForValue().set("upvote", updatedUpvote);
-
-      log.info("{} - updating upvote", Thread.currentThread().getName());
-    }).start();
-  }
-
-  private void updateUpvoteByIncrement() {
-    new Thread(() -> {
-      redisTemplate.opsForValue().increment("upvote");
-
-      log.info("{} - updating upvote", Thread.currentThread().getName());
-    }).start();
+    // hgetall user
+    Map<Object, Object> userInRedis = redisTemplate.opsForHash().entries("user");
+    log.info("hgetall user --> {}", userInRedis);
   }
 }
