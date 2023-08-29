@@ -35,5 +35,21 @@ public class RedisController implements CommandLineRunner {
     // hgetall user
     Map<Object, Object> userInRedis = redisTemplate.opsForHash().entries("user");
     log.info("hgetall user --> {}", userInRedis);
+
+    // hexists user age
+    Boolean isAgeExists = redisTemplate.opsForHash().hasKey("user", "age");
+    log.info("hexists user age --> {}", isAgeExists);
+
+    // hexists user fake
+    Boolean isFakeExists = redisTemplate.opsForHash().hasKey("user", "fake");
+    log.info("hexists user fake --> {}", isFakeExists);
+
+    // hdel user age
+    Long deletedFields = redisTemplate.opsForHash().delete("user", "age", "name");
+    log.info("hdel user age --> {}", deletedFields);
+
+    // hgetall user
+    Map<Object, Object> afterUpdatedUserInRedis = redisTemplate.opsForHash().entries("user");
+    log.info("hgetall user --> {}", afterUpdatedUserInRedis);
   }
 }
