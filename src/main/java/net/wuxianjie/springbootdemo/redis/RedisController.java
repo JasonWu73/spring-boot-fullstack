@@ -6,8 +6,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.Set;
 
 @Slf4j
 @RestController
@@ -19,37 +20,35 @@ public class RedisController implements CommandLineRunner {
   @Override
   public void run(String... args) {
     // hset user name 'Jason Wu' age '25'
-    Map<String, String> user = Map.of("name", "Jason Wu", "age", "25");
+    Map<String, String> user = Map.of("name", "Jason Wu", "age", "25", "amount", "0");
     redisTemplate.opsForHash().putAll("user", user);
 
-    // hget user name
-    String name = (String) redisTemplate.opsForHash().get("user", "name");
-    log.info("hget user name --> {}", name);
+    // hincrby user amount 100
+    Long amount = redisTemplate.opsForHash().increment("user", "amount", 100);
+    log.info("hincrby user amount 100 -> {}", amount);
 
-    // hget user age
-    Integer age = Optional.ofNullable(redisTemplate.opsForHash().get("user", "age"))
-      .map(o -> Integer.parseInt((String) o))
-      .orElse(null);
-    log.info("hget user age --> {}", age);
+    // hincrbyfloat user amount 0.1
+    double amountFloat = redisTemplate.opsForHash().increment("user", "amount", 0.1);
+    log.info("hincrbyfloat user amount 0.1 -> {}", amountFloat);
+
+    // hstrlen user age
+    Long ageLen = redisTemplate.opsForHash().lengthOfValue("user", "age");
+    log.info("hstrlen user age --> {}", ageLen);
+
+    // hstrlen user fake
+    Long fakeLen = redisTemplate.opsForHash().lengthOfValue("user", "fake");
+    log.info("hstrlen user fake --> {}", fakeLen);
+
+    // hkeys user
+    Set<Object> keys = redisTemplate.opsForHash().keys("user");
+    log.info("hkeys user --> {}", keys);
+
+    // hvals user
+    List<Object> values = redisTemplate.opsForHash().values("user");
+    log.info("hvals user --> {}", values);
 
     // hgetall user
     Map<Object, Object> userInRedis = redisTemplate.opsForHash().entries("user");
     log.info("hgetall user --> {}", userInRedis);
-
-    // hexists user age
-    Boolean isAgeExists = redisTemplate.opsForHash().hasKey("user", "age");
-    log.info("hexists user age --> {}", isAgeExists);
-
-    // hexists user fake
-    Boolean isFakeExists = redisTemplate.opsForHash().hasKey("user", "fake");
-    log.info("hexists user fake --> {}", isFakeExists);
-
-    // hdel user age
-    Long deletedFields = redisTemplate.opsForHash().delete("user", "age", "name");
-    log.info("hdel user age --> {}", deletedFields);
-
-    // hgetall user
-    Map<Object, Object> afterUpdatedUserInRedis = redisTemplate.opsForHash().entries("user");
-    log.info("hgetall user --> {}", afterUpdatedUserInRedis);
   }
 }
