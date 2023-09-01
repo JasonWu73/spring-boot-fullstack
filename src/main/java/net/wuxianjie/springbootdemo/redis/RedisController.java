@@ -29,5 +29,9 @@ public class RedisController implements CommandLineRunner {
     // hgetall car
     Map<Object, Object> car = redisTemplate.opsForHash().entries("car");
     log.info("hgetall car --> {}", car);
+
+    // hgetall notfound
+    Map<Object, Object> notfound = redisTemplate.opsForHash().entries("notfound");
+    log.info("hgetall notfound --> {} --> isEmpty={}", notfound, notfound.isEmpty());
   }
 }
