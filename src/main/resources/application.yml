@@ -3,3 +3,5 @@ spring:
     redis:
       host: localhost
       port: 6379
+  main:
+    web-application-type: none
