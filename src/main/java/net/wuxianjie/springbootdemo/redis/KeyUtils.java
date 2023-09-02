@@ -12,4 +12,8 @@ public class KeyUtils {
   public static String getUsers(String userId) {
     return StrUtil.format("users:{}", userId);
   }
+
+  public static String getSessions(String sessionId) {
+    return StrUtil.format("sessions:{}", sessionId);
+  }
 }
