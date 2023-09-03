@@ -1,5 +1,6 @@
 package net.wuxianjie.springbootdemo.redis;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import net.wuxianjie.springbootdemo.shared.exception.ApiException;
@@ -30,6 +31,17 @@ public class SessionController {
     }
 
     return ResponseEntity.ok(sessionOpt.get());
+  }
+
+  public String saveSession(CachedSession session) {
+    String sessionId = KeyUtils.getUuid();
+
+    String key = KeyUtils.getSessions(sessionId);
+
+    Map<String, String> val = objectMapper.convertValue(session, new TypeReference<>() {});
+    redisTemplate.opsForHash().putAll(key, val);
+
+    return sessionId;
   }
 
   private Optional<Session> getSessionFromRedis(String sessionId) {

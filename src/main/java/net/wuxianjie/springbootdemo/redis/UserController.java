@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -24,6 +25,7 @@ public class UserController {
 
   private final StringRedisTemplate redisTemplate;
   private final ObjectMapper objectMapper;
+  private final SessionController sessionController;
 
   @GetMapping("/users/{userId}")
   public ResponseEntity<User> getUser(@PathVariable String userId) {
@@ -36,7 +38,7 @@ public class UserController {
   }
 
   @PostMapping("/users")
-  public ResponseEntity<Void> createUser(@Valid @RequestBody NewUser user) {
+  public ResponseEntity<LinkedHashMap<String, String>> createUser(@Valid @RequestBody NewUser user) {
     String userId = KeyUtils.getUuid();
     String key = KeyUtils.getUsers(userId);
 
@@ -48,7 +50,12 @@ public class UserController {
 
     printSavedUser(key);
 
-    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    String sessionId = sessionController.saveSession(new CachedSession(userId, user.username()));
+
+    LinkedHashMap<String, String> data = new LinkedHashMap<>();
+    data.put("sessionId", sessionId);
+
+    return ResponseEntity.ok(data);
   }
 
   private void checkForUserNotExists(String key) {
@@ -60,7 +67,7 @@ public class UserController {
   }
 
   private void saveUser(String key, CachedUser user) {
-    Map<String, Object> val = objectMapper.convertValue(user, new TypeReference<>() {});
+    Map<String, String> val = objectMapper.convertValue(user, new TypeReference<>() {});
     redisTemplate.opsForHash().putAll(key, val);
   }
 
