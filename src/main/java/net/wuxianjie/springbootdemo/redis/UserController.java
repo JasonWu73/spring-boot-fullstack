@@ -12,7 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -68,6 +70,7 @@ public class UserController {
 
   private void saveUser(String key, CachedUser user) {
     Map<String, String> val = objectMapper.convertValue(user, new TypeReference<>() {});
+    val.put("createdAt", String.valueOf(user.createdAt().toInstant(ZoneOffset.ofHours(8)).toEpochMilli()));
     redisTemplate.opsForHash().putAll(key, val);
   }
 
@@ -76,8 +79,10 @@ public class UserController {
   }
 
   private void printSavedUser(String key) {
-    Map<Object, Object> entries = redisTemplate.opsForHash().entries(key);
-    CachedUser cachedUser = objectMapper.convertValue(entries, CachedUser.class);
+    Map<Object, Object> val = redisTemplate.opsForHash().entries(key);
+
+    CachedUser cachedUser = toCachedUser(val);
+
     log.info("Data in redis: {}", cachedUser);
   }
 
@@ -88,9 +93,17 @@ public class UserController {
       return Optional.empty();
     }
 
-    CachedUser cachedUser = objectMapper.convertValue(val, CachedUser.class);
+    CachedUser cachedUser = toCachedUser(val);
 
-    return Optional.of(new User(userId, cachedUser.username(), cachedUser.password(), cachedUser.createAt()));
+    return Optional.of(new User(userId, cachedUser.username(), cachedUser.password(), cachedUser.createdAt()));
+  }
+
+  private static CachedUser toCachedUser(Map<Object, Object> val) {
+    return new CachedUser(
+      (String) val.get("username"),
+      (String) val.get("password"),
+      Instant.ofEpochMilli(Long.parseLong((String) val.get("createdAt"))).atOffset(ZoneOffset.ofHours(8)).toLocalDateTime()
+    );
   }
 }
 
@@ -101,6 +114,10 @@ record NewUser (
   String password
 ) {}
 
-record CachedUser (String username, String password, LocalDateTime createAt) {}
+record CachedUser (
+  String username,
+  String password,
+  LocalDateTime createdAt
+) {}
 
 record User (String id, String username, String password, LocalDateTime createdAt) {}
