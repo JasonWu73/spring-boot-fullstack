@@ -3,11 +3,13 @@ package net.wuxianjie.springbootdemo.redis;
 import cn.hutool.core.lang.Console;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.data.redis.core.Cursor;
+import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
@@ -29,24 +31,25 @@ public class SandBox implements CommandLineRunner {
     addedNum = redisTemplate.opsForSet().add("colors:3", "red", "orange", "blue");
     Console.log("sadd colors:3 red orange blue --> {}", addedNum);
 
-    // smembers colors:1
-    Set<String> colors1 = redisTemplate.opsForSet().members("colors:1");
-    Console.log("smembers colors:1 --> {}", colors1);
+    // sscan colors:1 0 count 2
+    try (
+      Cursor<String> cursor = redisTemplate.opsForSet().scan("colors:1", ScanOptions.scanOptions().count(2).build())
+    ) {
+      List<String> results = new ArrayList<>();
+      int count = 0;
+      while (cursor.hasNext() && count < 2) {
+        results.add(cursor.next());
+        count++;
+      }
+      Console.log("sscan colors:1 {} count 2 --> {}", cursor.getCursorId(), results);
+    }
 
-    // sunion colors:1 colors:2 colors:3
-    Set<String> union = redisTemplate.opsForSet().union(List.of("colors:1", "colors:2", "colors:3"));
-    Console.log("sunion colors:1 colors:2 colors:3 --> {}", union);
+    // srem colors:1 blue
+    Long removedNum = redisTemplate.opsForSet().remove("colors:1", "blue");
+    Console.log("srem colors:1 blue --> {}", removedNum);
 
-    // sinter colors:1 colors:2 colors:3
-    Set<String> intersect = redisTemplate.opsForSet().intersect(List.of("colors:1", "colors:2", "colors:3"));
-    Console.log("intersect colors:1 colors:2 colors:3 --> {}", intersect);
-
-    // sdiff colors:1 colors:2 colors:3
-    Set<String> difference = redisTemplate.opsForSet().difference(List.of("colors:2", "colors:1", "colors:3"));
-    Console.log("sdiff colors:2 colors:1 colors:3 --> {}", difference);
-
-    // sinterstore colors:inter colors:1 colors:2 colors:3
-    addedNum = redisTemplate.opsForSet().intersectAndStore(List.of("colors:1", "colors:2", "colors:3"), "colors:inter");
-    Console.log("sinterstore colors:inter colors:1 colors:2 colors:3 --> {}", addedNum);
+    // scard colors:1
+    Long size = redisTemplate.opsForSet().size("colors:1");
+    Console.log("scard colors:1 --> {}", size);
   }
 }
