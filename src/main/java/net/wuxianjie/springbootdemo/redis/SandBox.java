@@ -1,52 +1,52 @@
 package net.wuxianjie.springbootdemo.redis;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import cn.hutool.core.lang.Console;
 import lombok.RequiredArgsConstructor;
-import net.wuxianjie.springbootdemo.redis.dto.User;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.data.redis.connection.StringRedisConnection;
-import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
 public class SandBox implements CommandLineRunner {
 
   private final StringRedisTemplate redisTemplate;
-  private final ObjectMapper objectMapper;
 
   @Override
   public void run(String... args) {
-    insertData();
+    // sadd colors:1 red blue orange
+    Long addedNum = redisTemplate.opsForSet().add("colors:1", "red", "blue", "orange");
+    Console.log("sadd colors:1 red blue orange --> {}", addedNum);
 
-    List<Object> vals = redisTemplate.executePipelined((RedisCallback<?>) connection -> {
-      StringRedisConnection conn = (StringRedisConnection) connection;
-      conn.hGetAll("user1");
-      conn.hGetAll("user2");
-      conn.hGetAll("user3");
-      return null;
-    });
+    // sadd colors:2 red green purple
+    addedNum = redisTemplate.opsForSet().add("colors:2", "red", "green", "purple");
+    Console.log("sadd colors:2 red green purple --> {}", addedNum);
 
-    vals.forEach(System.out::println);
-  }
+    // sadd colors:3 red orange blue
+    addedNum = redisTemplate.opsForSet().add("colors:3", "red", "orange", "blue");
+    Console.log("sadd colors:3 red orange blue --> {}", addedNum);
 
-  private void insertData() {
-    User user = new User("001", "张三", "pw111", LocalDateTime.now());
-    Map<String, Object> data = objectMapper.convertValue(user, new TypeReference<>() {});
-    redisTemplate.opsForHash().putAll("user1", data);
+    // smembers colors:1
+    Set<String> colors1 = redisTemplate.opsForSet().members("colors:1");
+    Console.log("smembers colors:1 --> {}", colors1);
 
-    User user1 = new User("002", "李四", "pw111", LocalDateTime.now());
-    Map<String, Object> data1 = objectMapper.convertValue(user1, new TypeReference<>() {});
-    redisTemplate.opsForHash().putAll("user2", data1);
+    // sunion colors:1 colors:2 colors:3
+    Set<String> union = redisTemplate.opsForSet().union(List.of("colors:1", "colors:2", "colors:3"));
+    Console.log("sunion colors:1 colors:2 colors:3 --> {}", union);
 
-    User user2 = new User("003", "王五", "pw111", LocalDateTime.now());
-    Map<String, Object> data2 = objectMapper.convertValue(user2, new TypeReference<>() {});
-    redisTemplate.opsForHash().putAll("user3", data2);
+    // sinter colors:1 colors:2 colors:3
+    Set<String> intersect = redisTemplate.opsForSet().intersect(List.of("colors:1", "colors:2", "colors:3"));
+    Console.log("intersect colors:1 colors:2 colors:3 --> {}", intersect);
+
+    // sdiff colors:1 colors:2 colors:3
+    Set<String> difference = redisTemplate.opsForSet().difference(List.of("colors:2", "colors:1", "colors:3"));
+    Console.log("sdiff colors:2 colors:1 colors:3 --> {}", difference);
+
+    // sinterstore colors:inter colors:1 colors:2 colors:3
+    addedNum = redisTemplate.opsForSet().intersectAndStore(List.of("colors:1", "colors:2", "colors:3"), "colors:inter");
+    Console.log("sinterstore colors:inter colors:1 colors:2 colors:3 --> {}", addedNum);
   }
 }
