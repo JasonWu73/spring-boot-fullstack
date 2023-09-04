@@ -3,6 +3,8 @@ package net.wuxianjie.springbootdemo.redis;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import net.wuxianjie.springbootdemo.redis.dto.CachedSession;
+import net.wuxianjie.springbootdemo.redis.dto.Session;
 import net.wuxianjie.springbootdemo.shared.exception.ApiException;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
@@ -55,7 +57,3 @@ public class SessionController {
     return Optional.of(new Session(sessionId, cachedSession.userId(), cachedSession.username()));
   }
 }
-
-record CachedSession (String userId, String username) {}
-
-record Session (String id, String userId, String username) {}

@@ -3,9 +3,12 @@ package net.wuxianjie.springbootdemo.redis;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.wuxianjie.springbootdemo.redis.dto.CachedSession;
+import net.wuxianjie.springbootdemo.redis.dto.CachedUser;
+import net.wuxianjie.springbootdemo.redis.dto.NewUser;
+import net.wuxianjie.springbootdemo.redis.dto.User;
 import net.wuxianjie.springbootdemo.shared.exception.ApiException;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
@@ -106,18 +109,3 @@ public class UserController {
     );
   }
 }
-
-record NewUser (
-  @NotBlank(message = "用户名不能为空")
-  String username,
-  @NotBlank(message = "密码不能为空")
-  String password
-) {}
-
-record CachedUser (
-  String username,
-  String password,
-  LocalDateTime createdAt
-) {}
-
-record User (String id, String username, String password, LocalDateTime createdAt) {}
