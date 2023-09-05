@@ -5,7 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Component;
+
+import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
@@ -28,15 +31,26 @@ public class SandBox implements CommandLineRunner {
     add = redisTemplate.opsForZSet().add("pencilbox", "eraser", 0.5);
     Console.log("zadd pencilbox 0.5 eraser --> {}", add);
 
-    // zcard pencilbox
-    Long num = redisTemplate.opsForZSet().zCard("pencilbox");
-    Console.log("zcard pencilbox --> {}", num);
+    // zpopmin pencilbox 2
+    Set<ZSetOperations.TypedTuple<String>> min2 = redisTemplate.opsForZSet().popMin("pencilbox", 4);
+    if (min2 == null) {
+      Console.log("zpopmin pencilbox 2 --> null");
+    } else {
+      min2.forEach(stringTypedTuple -> {
+        String value = stringTypedTuple.getValue();
+        Double score = stringTypedTuple.getScore();
+        Console.log("zpopmin pencilbox 2 --> {}: {}", value, score);
+      });
+    }
 
-    // zcount pencilbox 0.5 1.5
-    Long num1 = redisTemplate.opsForZSet().count("pencilbox", 0.5, 1.5);
-    Console.log("zcount pencilbox 0.5 1.5 --> {}", num1);
-
-    // zcount pencilbox (0.5 1.5
-    // zcount pencilbox -inf +inf
+    // zpopmax pencilbox
+    ZSetOperations.TypedTuple<String> max = redisTemplate.opsForZSet().popMax("pencilbox");
+    if (max == null) {
+      Console.log("zpopmax pencilbox --> null");
+    } else {
+      String value = max.getValue();
+      Double score = max.getScore();
+      Console.log("zpopmax pencilbox --> {}: {}", value, score);
+    }
   }
 }
