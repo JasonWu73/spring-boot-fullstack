@@ -1,55 +1,63 @@
 package net.wuxianjie.springbootdemo.redis;
 
 import cn.hutool.core.lang.Console;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.data.redis.core.Cursor;
-import org.springframework.data.redis.core.ScanOptions;
+import org.springframework.data.redis.connection.StringRedisConnection;
+import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
 public class SandBox implements CommandLineRunner {
 
   private final StringRedisTemplate redisTemplate;
+  private final ObjectMapper objectMapper;
 
   @Override
   public void run(String... args) {
-    // sadd colors:1 red blue orange
-    Long addedNum = redisTemplate.opsForSet().add("colors:1", "red", "blue", "orange");
-    Console.log("sadd colors:1 red blue orange --> {}", addedNum);
+    // 用户 id 为 1 所有喜欢商品的商品 id
+    List<String> productIds = getLikedProductsId();
 
-    // sadd colors:2 red green purple
-    addedNum = redisTemplate.opsForSet().add("colors:2", "red", "green", "purple");
-    Console.log("sadd colors:2 red green purple --> {}", addedNum);
+    // 获取所有商品列表
+    List<Product> products = getLikedProducts(productIds);
+    Console.log("喜欢的商品：{}", products);
+  }
 
-    // sadd colors:3 red orange blue
-    addedNum = redisTemplate.opsForSet().add("colors:3", "red", "orange", "blue");
-    Console.log("sadd colors:3 red orange blue --> {}", addedNum);
+  private List<Product> getLikedProducts(List<String> productIds) {
+    List<Object> products = redisTemplate.executePipelined((RedisCallback<?>) connection -> {
+      StringRedisConnection conn = (StringRedisConnection) connection;
+      productIds.forEach(s -> conn.hGetAll("products:" + s));
+      return null;
+    });
 
-    // sscan colors:1 0 count 2
-    try (
-      Cursor<String> cursor = redisTemplate.opsForSet().scan("colors:1", ScanOptions.scanOptions().count(2).build())
-    ) {
-      List<String> results = new ArrayList<>();
-      int count = 0;
-      while (cursor.hasNext() && count < 2) {
-        results.add(cursor.next());
-        count++;
+    List<Product> productList = new ArrayList<>();
+    for (int i = 0; i < products.size(); i++) {
+      String id = productIds.get(i);
+      Object item = products.get(i);
+
+      if (item == null) {
+        productList.add(new Product(id, null, 0));
+        continue;
       }
-      Console.log("sscan colors:1 {} count 2 --> {}", cursor.getCursorId(), results);
+
+      Product product = objectMapper.convertValue(item, Product.class);
+
+      productList.add(new Product(id, product.name(), product.likes()));
     }
 
-    // srem colors:1 blue
-    Long removedNum = redisTemplate.opsForSet().remove("colors:1", "blue");
-    Console.log("srem colors:1 blue --> {}", removedNum);
+    return productList;
+  }
 
-    // scard colors:1
-    Long size = redisTemplate.opsForSet().size("colors:1");
-    Console.log("scard colors:1 --> {}", size);
+  private List<String> getLikedProductsId() {
+    return Objects.requireNonNull(redisTemplate.opsForSet().members("users:2")).stream().toList();
   }
 }
+
+record Product(String id, String name, int likes) {}
