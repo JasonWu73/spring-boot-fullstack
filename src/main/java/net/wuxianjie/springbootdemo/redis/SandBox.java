@@ -16,28 +16,27 @@ public class SandBox implements CommandLineRunner {
 
   @Override
   public void run(String... args) {
-    // zadd pencilbox 1 pen
-    Boolean add = redisTemplate.opsForZSet().add("pencilbox", "pen", 1);
-    Console.log("zadd pencilbox 1 pen --> {}", add);
+    // zadd pencilbox 5 pen
+    Boolean add = redisTemplate.opsForZSet().add("pencilbox", "pen", 5);
+    Console.log("zadd pencilbox 5 pen --> {}", add);
 
-    // zadd pencilbox 0 box
-    add = redisTemplate.opsForZSet().add("pencilbox", "box", 0);
-    Console.log("zadd pencilbox 0 box --> {}", add);
+    // zadd pencilbox 1.5 pencil
+    add = redisTemplate.opsForZSet().add("pencilbox", "pencil", 1.5);
+    Console.log("zadd pencilbox 1.5 pencil --> {}", add);
 
     // zadd pencilbox 0.5 eraser
     add = redisTemplate.opsForZSet().add("pencilbox", "eraser", 0.5);
     Console.log("zadd pencilbox 0.5 eraser --> {}", add);
 
-    // zscore pencilbox pen
-    Double score = redisTemplate.opsForZSet().score("pencilbox", "pen");
-    Console.log("zscore pencilbox pen --> {}", score);
+    // zcard pencilbox
+    Long num = redisTemplate.opsForZSet().zCard("pencilbox");
+    Console.log("zcard pencilbox --> {}", num);
 
-    // zrem pencilbox pen
-    Long remove = redisTemplate.opsForZSet().remove("pencilbox", "pen");
-    Console.log("zrem pencilbox pen --> {}", remove);
+    // zcount pencilbox 0.5 1.5
+    Long num1 = redisTemplate.opsForZSet().count("pencilbox", 0.5, 1.5);
+    Console.log("zcount pencilbox 0.5 1.5 --> {}", num1);
 
-    // zscore pencilbox pen
-    score = redisTemplate.opsForZSet().score("pencilbox", "pen");
-    Console.log("zscore pencilbox pen --> {}", score);
+    // zcount pencilbox (0.5 1.5
+    // zcount pencilbox -inf +inf
   }
 }
