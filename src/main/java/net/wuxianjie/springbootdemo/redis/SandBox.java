@@ -4,14 +4,8 @@ import cn.hutool.core.lang.Console;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.data.redis.connection.StringRedisConnection;
-import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
@@ -22,42 +16,28 @@ public class SandBox implements CommandLineRunner {
 
   @Override
   public void run(String... args) {
-    // 用户 id 为 1 所有喜欢商品的商品 id
-    List<String> productIds = getLikedProductsId();
+    // zadd pencilbox 1 pen
+    Boolean add = redisTemplate.opsForZSet().add("pencilbox", "pen", 1);
+    Console.log("zadd pencilbox 1 pen --> {}", add);
 
-    // 获取所有商品列表
-    List<Product> products = getLikedProducts(productIds);
-    Console.log("喜欢的商品：{}", products);
-  }
+    // zadd pencilbox 0 box
+    add = redisTemplate.opsForZSet().add("pencilbox", "box", 0);
+    Console.log("zadd pencilbox 0 box --> {}", add);
 
-  private List<Product> getLikedProducts(List<String> productIds) {
-    List<Object> products = redisTemplate.executePipelined((RedisCallback<?>) connection -> {
-      StringRedisConnection conn = (StringRedisConnection) connection;
-      productIds.forEach(s -> conn.hGetAll("products:" + s));
-      return null;
-    });
+    // zadd pencilbox 0.5 eraser
+    add = redisTemplate.opsForZSet().add("pencilbox", "eraser", 0.5);
+    Console.log("zadd pencilbox 0.5 eraser --> {}", add);
 
-    List<Product> productList = new ArrayList<>();
-    for (int i = 0; i < products.size(); i++) {
-      String id = productIds.get(i);
-      Object item = products.get(i);
+    // zscore pencilbox pen
+    Double score = redisTemplate.opsForZSet().score("pencilbox", "pen");
+    Console.log("zscore pencilbox pen --> {}", score);
 
-      if (item == null) {
-        productList.add(new Product(id, null, 0));
-        continue;
-      }
+    // zrem pencilbox pen
+    Long remove = redisTemplate.opsForZSet().remove("pencilbox", "pen");
+    Console.log("zrem pencilbox pen --> {}", remove);
 
-      Product product = objectMapper.convertValue(item, Product.class);
-
-      productList.add(new Product(id, product.name(), product.likes()));
-    }
-
-    return productList;
-  }
-
-  private List<String> getLikedProductsId() {
-    return Objects.requireNonNull(redisTemplate.opsForSet().members("users:2")).stream().toList();
+    // zscore pencilbox pen
+    score = redisTemplate.opsForZSet().score("pencilbox", "pen");
+    Console.log("zscore pencilbox pen --> {}", score);
   }
 }
-
-record Product(String id, String name, int likes) {}
