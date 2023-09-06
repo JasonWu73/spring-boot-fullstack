@@ -1,18 +1,17 @@
 package net.wuxianjie.springbootdemo.redis;
 
 import cn.hutool.core.lang.Console;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.data.redis.connection.StringRedisConnection;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
@@ -23,42 +22,68 @@ public class SandBox implements CommandLineRunner {
 
   @Override
   public void run(String... args) {
-    // 数据
-    List<Product> products = List.of(
-      new Product("MacBooPro", 60),
-      new Product("iPhone", 40),
-      new Product("iPod", 20)
-    );
+    // 创建假用户数据
+    generateFakeUserData();
 
-    // 填充
-    addToRedis(products);
+    // 创建用户名与 id 对应的有序集合
+    generateUsernameToUserIdSortedSet();
 
-    // zrange products 1 2 rev withscores
-    zRangeProducts1_2RevWithScores();
+    // 模拟登录：通过用户名获取用户 id
+    String username = "吴仙杰";
+    long userId = getUserIdFromCache(username);
 
-    // zrange products 0 100 byscore limit 1 2 withscores
+    // 获取用户数据
+    getUserData(userId);
   }
 
-  private void zRangeProducts1_2RevWithScores() {
-    Set<ZSetOperations.TypedTuple<String>> set = redisTemplate.opsForZSet().reverseRangeWithScores("products", 1, 2);
-    if (set == null) {
-      Console.log("zrange products 1 2 rev withscores ---> null");
-      return;
+  private void getUserData(long userId) {
+    Map<Object, Object> userMap = redisTemplate.opsForHash().entries(getUserKey(userId));
+
+    User user = objectMapper.convertValue(userMap, User.class);
+
+    Console.log("登录用户: ", user);
+  }
+
+  private long getUserIdFromCache(String username) {
+    Double userId = redisTemplate.opsForZSet().score("usernames", username);
+    if (userId == null) {
+      throw new IllegalArgumentException("用户未登录");
     }
 
-    List<Product> list = set.stream()
-      .map(stringTypedTuple -> new Product(stringTypedTuple.getValue(), Objects.requireNonNull(stringTypedTuple.getScore())))
-      .toList();
-    Console.log("zrange products 1 2 rev withscores ---> {}", list);
+    return userId.longValue();
   }
 
-  private void addToRedis(List<Product> products) {
-    redisTemplate.executePipelined((RedisCallback<?>) c -> {
-      StringRedisConnection conn = (StringRedisConnection) c;
-      products.forEach(p -> conn.zAdd("products", p.score(), p.name()));
+  private void generateUsernameToUserIdSortedSet() {
+    redisTemplate.opsForZSet().add("usernames", "吴仙杰", 1);
+  }
+
+  private void generateFakeUserData() {
+    addUserData(List.of(
+      new User(1L, "吴仙杰", 25),
+      new User(2L, "Bruce", 18),
+      new User(3L, "Jason", 30)
+    ));
+  }
+
+  private void addUserData(List<User> users) {
+    redisTemplate.executePipelined((RedisCallback<?>) connection -> {
+      StringRedisConnection conn = (StringRedisConnection) connection;
+
+      users.forEach(user -> {
+        String key = getUserKey(user.id());
+        Map<String, String> data = objectMapper.convertValue(user, new TypeReference<>() {});
+
+        conn.hMSet(key, data);
+      });
+
       return null;
     });
   }
+
+  private String getUserKey(Long id) {
+    return "users:" + id;
+  }
+
 }
 
-record Product(String name, double score) {}
+record User(Long id, String username, int age) {}
