@@ -8,10 +8,13 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.data.redis.connection.StringRedisConnection;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
@@ -22,68 +25,65 @@ public class SandBox implements CommandLineRunner {
 
   @Override
   public void run(String... args) {
-    // 创建假用户数据
-    generateFakeUserData();
+    // 模拟查找最贵的商品
+    // 构造假商品数据
+    List<Product> products = List.of(
+      new Product(1L, "iPhone", 50),
+      new Product(2L, "iPods", 20),
+      new Product(3L, "MacBook", 80)
+    );
 
-    // 创建用户名与 id 对应的有序集合
-    generateUsernameToUserIdSortedSet();
+    // 存入商品数据
+    saveProducts(products);
 
-    // 模拟登录：通过用户名获取用户 id
-    String username = "吴仙杰";
-    long userId = getUserIdFromCache(username);
+    // 存入价格
+    saveProductPrices(products);
 
-    // 获取用户数据
-    getUserData(userId);
+    // 获取最贵的商品
+    Product highestPriceProduct = getHighestPriceProduct();
+    Console.log("最贵商品: {}", highestPriceProduct);
   }
 
-  private void getUserData(long userId) {
-    Map<Object, Object> userMap = redisTemplate.opsForHash().entries(getUserKey(userId));
-
-    User user = objectMapper.convertValue(userMap, User.class);
-
-    Console.log("登录用户: ", user);
-  }
-
-  private long getUserIdFromCache(String username) {
-    Double userId = redisTemplate.opsForZSet().score("usernames", username);
-    if (userId == null) {
-      throw new IllegalArgumentException("用户未登录");
+  private Product getHighestPriceProduct() {
+    Set<ZSetOperations.TypedTuple<String>> set = redisTemplate.opsForZSet().reverseRangeByScoreWithScores("products:price", 0, Long.MAX_VALUE, 0, 1);
+    if (set == null) {
+      throw new IllegalArgumentException("商品价格缓存不存在");
     }
 
-    return userId.longValue();
+    ZSetOperations.TypedTuple<String> highestPriceProduct = set.stream().findFirst().orElseThrow();
+    long productId = Long.parseLong(Objects.requireNonNull(highestPriceProduct.getValue()));
+
+    return getProductById(productId);
   }
 
-  private void generateUsernameToUserIdSortedSet() {
-    redisTemplate.opsForZSet().add("usernames", "吴仙杰", 1);
+  private Product getProductById(long productId) {
+    Map<Object, Object> entries = redisTemplate.opsForHash().entries("products:" + productId);
+    return objectMapper.convertValue(entries, Product.class);
   }
 
-  private void generateFakeUserData() {
-    addUserData(List.of(
-      new User(1L, "吴仙杰", 25),
-      new User(2L, "Bruce", 18),
-      new User(3L, "Jason", 30)
-    ));
-  }
-
-  private void addUserData(List<User> users) {
+  private void saveProductPrices(List<Product> products) {
     redisTemplate.executePipelined((RedisCallback<?>) connection -> {
       StringRedisConnection conn = (StringRedisConnection) connection;
 
-      users.forEach(user -> {
-        String key = getUserKey(user.id());
-        Map<String, String> data = objectMapper.convertValue(user, new TypeReference<>() {});
-
-        conn.hMSet(key, data);
-      });
+      products.forEach(product -> conn.zAdd("products:price", product.price(), product.id() + ""));
 
       return null;
     });
   }
 
-  private String getUserKey(Long id) {
-    return "users:" + id;
-  }
+  private void saveProducts(List<Product> products) {
+    redisTemplate.executePipelined((RedisCallback<?>) connection -> {
+      StringRedisConnection conn = (StringRedisConnection) connection;
 
+      products.forEach(product -> {
+        Map<String, String> data = objectMapper.convertValue(product, new TypeReference<>() {});
+
+        conn.hMSet("products:" + product.id(), data);
+      });
+
+      return null;
+    });
+  }
 }
 
-record User(Long id, String username, int age) {}
+record Product(Long id, String name, double price) {}
