@@ -1,12 +1,12 @@
 package net.wuxianjie.springbootdemo.redis;
 
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.lang.Console;
+import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.data.redis.connection.DefaultStringTuple;
-import org.springframework.data.redis.connection.SortParameters;
 import org.springframework.data.redis.connection.StringRedisConnection;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -16,8 +16,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -30,80 +28,79 @@ public class SandBox implements CommandLineRunner {
 
   @Override
   public void run(String... args) {
-    // 模拟获取最高查看数的书籍
+    // 模拟查询两个最新评论的书籍
     // 生成测试数据
     List<Book> books = List.of(
-      new Book(1L, "Java", 10),
-      new Book(2L, "JavaScript", 20),
-      new Book(3L, "C++", 2)
+      new Book(1L, "OK Book"),
+      new Book(3L, "Good Book"),
+      new Book(2L, "Bad Book")
     );
+    List<Integer> reviewedBookIds = List.of(1, 1, 3, 3, 2, 3, 2);
 
-    // 存入测试数据
-    saveToRedis(books);
+    // 保存数据至 Redis
+    saveBooks(books);
+    saveReviews(reviewedBookIds);
 
-    // 获取查看数最高的两书籍
-    List<Book> highestBooks = getHighestBooks(2);
-    Console.log("最高查看数的两本书为: {}", highestBooks);
+    // 从 Redis 中获取最新评论的两本书
+    List<Book> newestReviewed = getNewestReviewedBook(2);
+    Console.log("最新评论的两本书: {}", newestReviewed);
   }
 
-  private List<Book> getHighestBooks(int count) {
-    SortQuery<String> sortQuery = SortQueryBuilder
-      .sort(getBooksByViewsKey())
+  private List<Book> getNewestReviewedBook(int count) {
+    Long size = redisTemplate.opsForList().size(getBookReviewsKey());
+    if (size == null) {
+      throw new IllegalStateException(StrUtil.format("缓存 key [] 不存在", getBookReviewsKey()));
+    }
+
+    long offset = size - count;
+    if (offset < 0) {
+      offset = 0;
+    }
+
+    SortQuery<String> sortQuery = SortQueryBuilder.sort(getBookReviewsKey())
       .noSort()
+      .limit(offset, count)
       .get("#")
       .get(BOOKS_KEY + "*->name")
-      .get(BOOKS_KEY + "*->views")
-      .limit(0, count)
-      .order(SortParameters.Order.DESC)
       .build();
 
-    return redisTemplate.sort(sortQuery, tuple -> {
-      String bookId = tuple.get(0);
+    List<Book> books = redisTemplate.sort(sortQuery, tuple -> {
+      Long bookId = Long.valueOf(tuple.get(0));
       String bookName = tuple.get(1);
-      String bookViews = tuple.get(2);
-      return new Book(Long.parseLong(bookId), bookName, Integer.parseInt(bookViews));
+      return new Book(bookId, bookName);
     });
+
+    return ListUtil.reverse(books);
   }
 
-  private void saveToRedis(List<Book> books) {
+  private void saveReviews(List<Integer> reviewedBookIds) {
+    String[] bookIds = reviewedBookIds.stream().map(String::valueOf).toArray(String[]::new);
+
+    redisTemplate.opsForList().rightPushAll(getBookReviewsKey(), bookIds);
+  }
+
+  private void saveBooks(List<Book> books) {
     redisTemplate.executePipelined((RedisCallback<?>) connection -> {
       StringRedisConnection conn = (StringRedisConnection) connection;
 
       books.forEach(book -> {
-        saveBooks(conn, book);
+        Map<String, String> data = objectMapper.convertValue(book, new TypeReference<>() {});
+        data.remove("id");
 
-        saveBookViews(conn, books);
+        conn.hMSet(getBooksKey(book.id()), data);
       });
 
       return null;
     });
   }
 
-  private void saveBookViews(StringRedisConnection conn, List<Book> books) {
-    Set<StringRedisConnection.StringTuple> tuples = convertValue(books);
-
-    conn.zAdd(getBooksByViewsKey(), tuples);
-  }
-
-  private Set<StringRedisConnection.StringTuple> convertValue(List<Book> books) {
-    return books.stream()
-      .map(book -> new DefaultStringTuple(book.id() + "", book.views()))
-      .collect(Collectors.toSet());
-  }
-
-  private void saveBooks(StringRedisConnection conn, Book book) {
-    Map<String, String> data = objectMapper.convertValue(book, new TypeReference<>() {});
-
-    conn.hMSet(getBooksKey(book.id()), data);
-  }
-
   private String getBooksKey(long bookId) {
     return BOOKS_KEY + bookId;
   }
 
-  private String getBooksByViewsKey() {
-    return "books:views";
+  private String getBookReviewsKey() {
+    return "books:reviews";
   }
 }
 
-record Book(Long id, String name, int views) {}
+record Book(Long id, String name) {}
