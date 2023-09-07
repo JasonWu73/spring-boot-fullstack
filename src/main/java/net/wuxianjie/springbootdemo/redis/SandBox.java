@@ -5,118 +5,105 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.data.redis.connection.DefaultStringTuple;
+import org.springframework.data.redis.connection.SortParameters;
 import org.springframework.data.redis.connection.StringRedisConnection;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.query.SortQuery;
+import org.springframework.data.redis.core.query.SortQueryBuilder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
 public class SandBox implements CommandLineRunner {
+
+  public static final String BOOKS_KEY = "books:";
 
   private final StringRedisTemplate redisTemplate;
   private final ObjectMapper objectMapper;
 
   @Override
   public void run(String... args) {
-    // 模拟商品查看数
-    // 商品数据
-    List<Product> products = List.of(
-      new Product(1L, "iPhone", 0),
-      new Product(2L, "iPod", 0),
-      new Product(3L, "MacBook", 0)
+    // 模拟获取最高查看数的书籍
+    // 生成测试数据
+    List<Book> books = List.of(
+      new Book(1L, "Java", 10),
+      new Book(2L, "JavaScript", 20),
+      new Book(3L, "C++", 2)
     );
 
-    // 将商品数据存入 Redis hash
-    saveProducts(products);
+    // 存入测试数据
+    saveToRedis(books);
 
-    // 模拟查看商品存入 Redis zSet
-    viewProduct("wxj");
-
-    // 同一用户多次查看一个商品仅算一次
-    viewProduct("wxj");
-
-    // 其他用户查看再增加一次
-    viewProduct("jason");
-
-    // 查看商品详细
-    showProductDetails();
+    // 获取查看数最高的两书籍
+    List<Book> highestBooks = getHighestBooks(2);
+    Console.log("最高查看数的两本书为: {}", highestBooks);
   }
 
-  private void showProductDetails() {
-    Product product = new Product(1L, "iPhone", 0);
+  private List<Book> getHighestBooks(int count) {
+    SortQuery<String> sortQuery = SortQueryBuilder
+      .sort(getBooksByViewsKey())
+      .noSort()
+      .get("#")
+      .get(BOOKS_KEY + "*->name")
+      .get(BOOKS_KEY + "*->views")
+      .limit(0, count)
+      .order(SortParameters.Order.DESC)
+      .build();
 
-    Map<Object, Object> entries = redisTemplate.opsForHash().entries("products:" + product.id());
-    Console.log("Product Info: {}", entries);
+    return redisTemplate.sort(sortQuery, tuple -> {
+      String bookId = tuple.get(0);
+      String bookName = tuple.get(1);
+      String bookViews = tuple.get(2);
+      return new Book(Long.parseLong(bookId), bookName, Integer.parseInt(bookViews));
+    });
   }
 
-  private void viewProduct(String username) {
-    Product product = new Product(1L, "iPhone", 0);
-
-    String key = "views:" + username;
-
-    Double viewedNums = redisTemplate.opsForZSet().score(key, product.id() + "");
-    if (viewedNums == null) {
-      redisTemplate.opsForZSet().add(key, product.id() + "", 1);
-      incrementViews(product.id());
-      return;
-    }
-
-    if (viewedNums > 0) {
-      return;
-    }
-
-    redisTemplate.opsForZSet().incrementScore(key, product.id() + "", 1);
-  }
-
-  private void incrementViews(long productId) {
-    redisTemplate.opsForHash().increment("products:" + productId, "views", 1);
-  }
-
-  private void saveProducts(List<Product> products) {
-    if (isDataExists(products)) {
-      return;
-    }
-
+  private void saveToRedis(List<Book> books) {
     redisTemplate.executePipelined((RedisCallback<?>) connection -> {
       StringRedisConnection conn = (StringRedisConnection) connection;
 
-      products.forEach(product -> {
-        Map<String, String> map = objectMapper.convertValue(product, new TypeReference<>() {});
+      books.forEach(book -> {
+        saveBooks(conn, book);
 
-        conn.hMSet("products:" + product.id(), map);
+        saveBookViews(conn, books);
       });
 
       return null;
     });
   }
 
-  private boolean isDataExists(List<Product> products) {
-    List<Boolean> booleans = isExistsProducts(products);
+  private void saveBookViews(StringRedisConnection conn, List<Book> books) {
+    Set<StringRedisConnection.StringTuple> tuples = convertValue(books);
 
-    for (Object bool : booleans) {
-      if (Boolean.TRUE == bool) {
-        return true;
-      }
-    }
-
-    return false;
+    conn.zAdd(getBooksByViewsKey(), tuples);
   }
 
-  private List<Boolean> isExistsProducts(List<Product> products) {
-    List<Object> booleans = redisTemplate.executePipelined((RedisCallback<?>) connection -> {
-      StringRedisConnection conn = (StringRedisConnection) connection;
+  private Set<StringRedisConnection.StringTuple> convertValue(List<Book> books) {
+    return books.stream()
+      .map(book -> new DefaultStringTuple(book.id() + "", book.views()))
+      .collect(Collectors.toSet());
+  }
 
-      products.forEach(product -> conn.hExists("products:" + product.id(), "views"));
+  private void saveBooks(StringRedisConnection conn, Book book) {
+    Map<String, String> data = objectMapper.convertValue(book, new TypeReference<>() {});
 
-      return null;
-    });
+    conn.hMSet(getBooksKey(book.id()), data);
+  }
 
-    return booleans.stream().map(o -> (Boolean) o).toList();
+  private String getBooksKey(long bookId) {
+    return BOOKS_KEY + bookId;
+  }
+
+  private String getBooksByViewsKey() {
+    return "books:views";
   }
 }
 
-record Product(Long id, String name, int views) {}
+record Book(Long id, String name, int views) {}
