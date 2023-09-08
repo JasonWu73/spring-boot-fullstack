@@ -1,6 +1,5 @@
 package net.wuxianjie.springbootdemo.redis;
 
-import cn.hutool.core.thread.ThreadUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -15,26 +14,26 @@ public class SandBox implements CommandLineRunner {
   @Override
   public void run(String... args) {
     // 模拟多线程不安全的情况
-    ThreadUtil.execAsync(this::usingTransaction);
-    ThreadUtil.execAsync(this::usingTransaction);
+    new Thread(this::usingTransaction).start();
+    new Thread(this::usingTransaction).start();
   }
 
-private void usingTransaction() {
-  synchronized (this) {
-    redisTemplate.watch("list");
+  private void usingTransaction() {
+    Boolean getLock = redisTemplate.opsForValue().setIfAbsent("locks", "1");
+    if (Boolean.FALSE.equals(getLock)) {
+      System.out.println("进行 [" + Thread.currentThread().getName() + "] 无法获取锁");
+      return;
+    }
 
     boolean isEmpty = isEmpty();
     if (!isEmpty) {
       return;
     }
 
-    redisTemplate.multi();
-
     addItem();
 
-    redisTemplate.exec();
+    redisTemplate.delete("locks");
   }
-}
 
   private void currencyIssue() {
     boolean isEmpty = isEmpty();
