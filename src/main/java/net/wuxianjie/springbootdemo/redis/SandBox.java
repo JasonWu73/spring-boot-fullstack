@@ -1,9 +1,15 @@
 package net.wuxianjie.springbootdemo.redis;
 
+import cn.hutool.core.lang.Console;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.redis.core.RedisOperations;
+import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -19,20 +25,20 @@ public class SandBox implements CommandLineRunner {
   }
 
   private void usingTransaction() {
-    Boolean getLock = redisTemplate.opsForValue().setIfAbsent("locks", "1");
-    if (Boolean.FALSE.equals(getLock)) {
-      System.out.println("进行 [" + Thread.currentThread().getName() + "] 无法获取锁");
-      return;
-    }
+    List<Object> txResults = redisTemplate.execute(new SessionCallback<>() {
+      @Override
+      public List<Object> execute(RedisOperations operations) throws DataAccessException {
+        operations.watch("list");
 
-    boolean isEmpty = isEmpty();
-    if (!isEmpty) {
-      return;
-    }
+        operations.multi();
 
-    addItem();
+        addItem();
 
-    redisTemplate.delete("locks");
+        return operations.exec();
+      }
+    });
+
+    Console.log("txResults: {}", txResults);
   }
 
   private void currencyIssue() {
