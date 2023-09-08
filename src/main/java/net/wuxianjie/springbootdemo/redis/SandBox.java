@@ -1,74 +1,39 @@
 package net.wuxianjie.springbootdemo.redis;
 
-import cn.hutool.core.lang.Console;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import cn.hutool.core.thread.ThreadUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
 public class SandBox implements CommandLineRunner {
 
   private final StringRedisTemplate redisTemplate;
-  private final ObjectMapper objectMapper;
 
   @Override
-  public void run(String... args) throws InterruptedException {
-    // 模拟记录并获取竞拍历史
-
-    // 第一次竞拍
-    createBid(20.5);
-
-    // 等待 5 秒
-    TimeUnit.SECONDS.sleep(5);
-
-    // 第二次竞拍
-    createBid(100.0);
-
-    // 获取竞拍历史
-    List<Bid> bids = getBidHistories(0, 2);
-    Console.log("最近两次的竞拍历史: {}", bids);
-
-    List<Bid> bids2 = getBidHistories(2, 2);
-    Console.log("上两次的竞拍历史: {}", bids2);
+  public void run(String... args) {
+    // 模拟多线程不安全的情况
+    ThreadUtil.execAsync(this::incrementInStockNoConcurrencyIssue);
+    ThreadUtil.execAsync(this::incrementInStockNoConcurrencyIssue);
   }
 
-  private List<Bid> getBidHistories(int offset, int count) {
-    List<String> bids = redisTemplate.opsForList().range("bids", -(offset + count), -(offset + 1));
-    if (bids == null) {
-      throw new IllegalStateException("缓存 key [bids] 不存在");
-    }
-
-    return bids.stream()
-      .map(this::deserialize)
-      .toList();
+  private void incrementInStockNoConcurrencyIssue() {
+    String key = "car:1";
+    redisTemplate.opsForHash().increment(key, "inStock", 1);
   }
 
-  private void createBid(double amount) {
-    Bid bid = new Bid(amount, LocalDateTime.now());
+  private void incrementInStockConcurrencyIssue() {
+    String key = "car:1";
+    Integer inStock = Optional.ofNullable(redisTemplate.opsForHash().get(key, "inStock"))
+      .map(o -> Integer.parseInt(String.valueOf(o)))
+      .orElseThrow();
 
-    redisTemplate.opsForList().rightPush("bids", serialize(bid));
-  }
+    inStock++;
 
-  private static String serialize(Bid bid) {
-    return bid.amount() + ":" + bid.createdAt().toInstant(ZoneOffset.ofHours(8)).toEpochMilli();
-  }
-
-  private Bid deserialize(String bid) {
-    String[] bidSeg = bid.split(":");
-    return new Bid(
-      Double.valueOf(bidSeg[0]),
-      Instant.ofEpochMilli(Long.parseLong(bidSeg[1])).atOffset(ZoneOffset.ofHours(8)).toLocalDateTime()
-    );
+    redisTemplate.opsForHash().put(key, "inStock", String.valueOf(inStock));
   }
 }
-
-record Bid(Double amount, LocalDateTime createdAt) {}
