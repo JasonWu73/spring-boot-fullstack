@@ -6,8 +6,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
 @Component
 @RequiredArgsConstructor
 public class SandBox implements CommandLineRunner {
@@ -17,21 +15,42 @@ public class SandBox implements CommandLineRunner {
   @Override
   public void run(String... args) {
     // 模拟多线程不安全的情况
-    ThreadUtil.execAsync(() -> {
-//      haveConcurrencyIssue("black");
-      noConcurrencyIssue("black");
-    });
-    ThreadUtil.execAsync(() -> {
-//      haveConcurrencyIssue("blue");
-      noConcurrencyIssue("blue");
-    });
+    ThreadUtil.execAsync(this::usingTransaction);
+    ThreadUtil.execAsync(this::usingTransaction);
   }
 
-  private void noConcurrencyIssue(String color) {
-    redisTemplate.opsForHash().putIfAbsent("cars:1", "color", color);
+private void usingTransaction() {
+  synchronized (this) {
+    redisTemplate.watch("list");
+
+    boolean isEmpty = isEmpty();
+    if (!isEmpty) {
+      return;
+    }
+
+    redisTemplate.multi();
+
+    addItem();
+
+    redisTemplate.exec();
+  }
+}
+
+  private void currencyIssue() {
+    boolean isEmpty = isEmpty();
+    if (!isEmpty) {
+      return;
+    }
+
+    addItem();
   }
 
-  private void haveConcurrencyIssue(String color) {
-    redisTemplate.opsForHash().put("cars:1", "color", color);
+  private void addItem() {
+    redisTemplate.opsForList().rightPush("list", "a");
+  }
+
+  private boolean isEmpty() {
+    Long size = redisTemplate.opsForList().size("list");
+    return size == null || size == 0;
   }
 }
