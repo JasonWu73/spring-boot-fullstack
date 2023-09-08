@@ -17,23 +17,21 @@ public class SandBox implements CommandLineRunner {
   @Override
   public void run(String... args) {
     // 模拟多线程不安全的情况
-    ThreadUtil.execAsync(this::incrementInStockNoConcurrencyIssue);
-    ThreadUtil.execAsync(this::incrementInStockNoConcurrencyIssue);
+    ThreadUtil.execAsync(() -> {
+//      haveConcurrencyIssue("black");
+      noConcurrencyIssue("black");
+    });
+    ThreadUtil.execAsync(() -> {
+//      haveConcurrencyIssue("blue");
+      noConcurrencyIssue("blue");
+    });
   }
 
-  private void incrementInStockNoConcurrencyIssue() {
-    String key = "car:1";
-    redisTemplate.opsForHash().increment(key, "inStock", 1);
+  private void noConcurrencyIssue(String color) {
+    redisTemplate.opsForHash().putIfAbsent("cars:1", "color", color);
   }
 
-  private void incrementInStockConcurrencyIssue() {
-    String key = "car:1";
-    Integer inStock = Optional.ofNullable(redisTemplate.opsForHash().get(key, "inStock"))
-      .map(o -> Integer.parseInt(String.valueOf(o)))
-      .orElseThrow();
-
-    inStock++;
-
-    redisTemplate.opsForHash().put(key, "inStock", String.valueOf(inStock));
+  private void haveConcurrencyIssue(String color) {
+    redisTemplate.opsForHash().put("cars:1", "color", color);
   }
 }
