@@ -18,6 +18,14 @@ public class SandBox implements CommandLineRunner {
   @Override
   public void run(String... args) {
     // 运行 LUA 脚本
+    new Thread(this::executeScript).start();
+    new Thread(this::executeScript).start();
+    new Thread(this::executeScript).start();
+    new Thread(this::executeScript).start();
+    new Thread(this::executeScript).start();
+  }
+
+  private void executeScript() {
     DefaultRedisScript<Long> script = new DefaultRedisScript<>();
     script.setScriptText("""
       local key = KEYS[1]
