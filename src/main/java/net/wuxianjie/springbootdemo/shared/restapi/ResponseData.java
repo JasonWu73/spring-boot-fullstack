@@ -7,7 +7,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public record ResponseData (LocalDateTime timestamp, int status, String error, String path) {
+public record ResponseData(LocalDateTime timestamp, int status, String error, String path) {
 
   public ResponseData(HttpStatus status, String error) {
     this(LocalDateTime.now(), status.value(), error, getRequestPath());
