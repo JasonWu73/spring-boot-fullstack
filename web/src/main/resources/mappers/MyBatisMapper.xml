@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.wuxianjie.web.mybatis.MyBatisMapper">
+  <insert id="insertData">
+    INSERT INTO mybatis (name, type, date, local_date_time, local_date)
+    VALUES (#{name}, #{type}, #{date}, #{localDateTime}, #{localDate})
+  </insert>
+
+  <select id="selectAllData" resultType="net.wuxianjie.web.mybatis.dto.MyBatisData">
+    SELECT id, name, type, date, local_date_time as localDateTime, local_date as localDate
+    FROM mybatis
+  </select>
+</mapper>
