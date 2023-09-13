@@ -27,6 +27,17 @@ public record ApiError(LocalDateTime timestamp, int status, String error, String
     this(LocalDateTime.now(), status.value(), error, getRequestPath());
   }
 
+  /**
+   * 构造错误响应结果。
+   *
+   * @param status HTTP 响应状态码
+   * @param error 错误信息
+   * @param path 请求地址
+   */
+  public ApiError(HttpStatus status, String error, String path) {
+    this(LocalDateTime.now(), status.value(), error, path);
+  }
+
   private static String getRequestPath() {
     ServletRequestAttributes sra = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
     return Objects.requireNonNull(sra).getRequest().getRequestURI();
