@@ -8,11 +8,11 @@ import org.apache.catalina.connector.ClientAbortException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageConversionException;
-import org.springframework.validation.BindException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.HttpMediaTypeException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -103,17 +103,27 @@ public class GlobalExceptionHandler {
    *   <li>方法参数是 POJO 类，且还可在嵌套属性上使用 {@link Valid}</li>
    * </ul>
    *
-   * @param e 参数绑定异常
+   * @param e 参数校验失败的异常
    * @return 响应结果
    */
-  @ExceptionHandler(BindException.class)
-  public ResponseEntity<ApiError> handleMethodArgumentNotValid(BindException e) {
+  @ExceptionHandler(MethodArgumentNotValidException.class)
+  public ResponseEntity<ApiError> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
     StringBuilder sb = new StringBuilder();
 
     e.getBindingResult().getFieldErrors().forEach(error -> {
       if (!sb.isEmpty()) {
         sb.append(ApiException.MESSAGE_SEPARATOR);
       }
+
+      if (error.isBindingFailure()) {
+        String field = error.getField();
+        Object rejectedValue = error.getRejectedValue();
+        String reason = String.format("参数值不合法 [%s=%s]", field, rejectedValue);
+
+        sb.append(reason);
+        return;
+      }
+
       sb.append(error.getDefaultMessage());
     });
 
@@ -154,8 +164,8 @@ public class GlobalExceptionHandler {
    * @param e 请求体内容解析异常
    * @return 响应结果
    */
-  @ExceptionHandler(HttpMessageConversionException.class)
-  public ResponseEntity<ApiError> handleHttpMessageConversionException(HttpMessageConversionException e) {
+  @ExceptionHandler(HttpMessageNotReadableException.class)
+  public ResponseEntity<ApiError> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
     return handleApiException(new ApiException(HttpStatus.BAD_REQUEST, "无法解析请求体内容", e));
   }
 

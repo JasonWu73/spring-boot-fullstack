@@ -43,6 +43,11 @@ public class DemoController {
     return data;
   }
 
+  @PostMapping("/demo/form")
+  public DemoData postFormData(@Valid DemoData data) {
+    return data;
+  }
+
   @Getter
   @ToString
   @RequiredArgsConstructor
