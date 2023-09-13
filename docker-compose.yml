@@ -15,10 +15,10 @@ services:
     ports:
       - '3307:3306'
     volumes:
-      # 初始化数据库表
+      # 初始化数据库表脚本，仅当容器第一次启动并且数据库为空（即数据目录为空）时执行
       - ./docker/init.sql:/docker-entrypoint-initdb.d/init.sql
-      # 将数据库数据存放在宿主机中：`/Users/wxj/Downloads/mysql/data`
-      - /Users/wxj/Downloads/mysql/data:/var/lib/mysql
+      # 将数据库数据存放在宿主机中：`/Users/wxj/Downloads/demo/db`
+      - /Users/wxj/Downloads/demo/db:/var/lib/mysql
     command: [ '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci' ]
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
@@ -31,7 +31,7 @@ services:
   demo-web:
     image: openjdk:17-jdk-slim
     platform: "linux/amd64"
-    container_name: spring-boot-demo
+    container_name: demo-web
     restart: always
     environment:
       TZ: Asia/Shanghai
@@ -45,9 +45,9 @@ services:
       # `docker compose up -d` 运行时：`jdbc:mysql://demo-db:3306`
       # `docker run` 运行时：`jdbc:mysql://host.docker.internal:3307`
       # 注意：容器内配置文件为 `localhost` 指的是容器自身，而不是宿主机
-      - /Users/wxj/Downloads/demo-web/web-0.0.1-SNAPSHOT.jar:/opt/web.jar
-      # 使得配置文件可放在容器外（即宿主机中）：`/Users/wxj/Downloads/demo-web/application.yml`
-      - /Users/wxj/Downloads/demo-web/config:/opt/config
+      - /Users/wxj/Downloads/demo/web/web-0.0.1-SNAPSHOT.jar:/opt/web.jar
+      # 使得配置文件可放在容器外（即宿主机中）：`/Users/wxj/Downloads/demo/web/application.yml`
+      - /Users/wxj/Downloads/demo/web/config:/opt/config
     depends_on:
       demo-db:
         condition: service_healthy
