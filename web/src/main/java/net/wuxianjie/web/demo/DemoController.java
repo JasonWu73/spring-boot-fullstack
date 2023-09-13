@@ -8,12 +8,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import net.wuxianjie.web.demo.dto.DemoData;
 import net.wuxianjie.web.demo.dto.DemoInnerData;
+import net.wuxianjie.web.shared.config.JsonConfig;
 import net.wuxianjie.web.shared.validator.EnumValidator;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Date;
 
 @Validated
@@ -25,10 +27,15 @@ public class DemoController {
   public DemoData getData(
     @RequestParam String name,
     @NotNull(message = "num 不能为 null") Integer num,
-    @EnumValidator(value = Type.class, message = "type 值不合法") Integer type
+    @EnumValidator(value = Type.class, message = "type 值不合法") Integer type,
+    @DateTimeFormat(pattern = JsonConfig.DATE_TIME_PATTERN) LocalDateTime dateTime
   ) {
-    System.out.println(name + "---" + num + "---" + type);
-    return new DemoData(100L, "测试数据", new DemoInnerData(new Date(), LocalDate.now(), LocalDateTime.now()));
+    System.out.println(name + "---" + num + "---" + type + "---" + dateTime);
+    return new DemoData(
+      100L,
+      "测试数据",
+      new DemoInnerData(Date.from(dateTime.toInstant(ZoneOffset.ofHours(8))), dateTime.toLocalDate(), dateTime)
+    );
   }
 
   @PostMapping("/demo/json")
