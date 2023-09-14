@@ -9,9 +9,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  */
 @SpringBootApplication
 @EnableScheduling
-public class WebApplication {
+public class BackendApp {
 
   public static void main(String[] args) {
-    SpringApplication.run(WebApplication.class, args);
+    SpringApplication.run(BackendApp.class, args);
   }
 }
