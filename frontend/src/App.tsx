@@ -1,34 +1,13 @@
 import Button from './components/button/Button.tsx';
 import { getRandomProduct } from './apis/dummyjson-api.ts';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function App() {
-  const [product, setProduct] = useState(''); // 商品信息
-  const [counter, setCounter] = useState(0); // 商品获取数
-  const [error, setError] = useState(''); // 错误信息
-  const [loading, setLoading] = useState(false); // 加载中
+
+  const { loading, setLoading, error, setError, product, setProduct, counter, setCounter } = useProduct();
 
   async function handleClick() {
-    // 首先清空原错误信息
-    setError('');
-
-    // 开始加载数据
-    setLoading(true);
-
-    // 获取商品
-    const [data, error] = await getRandomProduct();
-
-    // 结束加载数据
-    setLoading(false);
-
-    // 判断商品是否加载成功
-    if (data == null || error) {
-      setError(error ? error.message : '获取商品失败');
-      return;
-    }
-
-    setProduct(data.title);
-    setCounter(prev => prev + 1);
+    await getProduct(setLoading, setError, setProduct, setCounter);
   }
 
   return (
@@ -40,4 +19,46 @@ export default function App() {
       <p>已加载 <strong>{counter}</strong> 个商品</p>
     </div>
   );
+}
+
+function useProduct() {
+  const [loading, setLoading] = useState(false); // 加载中
+  const [error, setError] = useState(''); // 错误信息
+  const [product, setProduct] = useState(''); // 商品信息
+  const [counter, setCounter] = useState(0); // 商品获取数
+
+  // 首次进入页面时获取商品
+  useEffect(() => {
+    getProduct(setLoading, setError, setProduct, setCounter);
+  }, []);
+
+  return { loading, setLoading, error, setError, product, setProduct, counter, setCounter };
+}
+
+async function getProduct(
+  setLoading: (value: (((prevState: boolean) => boolean) | boolean)) => void,
+  setError: (value: (((prevState: string) => string) | string)) => void,
+  setProduct: (value: (((prevState: string) => string) | string)) => void,
+  setCounter: (value: (((prevState: number) => number) | number)) => void
+) {
+  // 首先清空原错误信息
+  setError('');
+
+  // 开始加载数据
+  setLoading(true);
+
+  // 获取商品
+  const [data, error] = await getRandomProduct();
+
+  // 结束加载数据
+  setLoading(false);
+
+  // 判断商品是否加载成功
+  if (data == null || error) {
+    setError(error ? error.message : '获取商品失败');
+    return;
+  }
+
+  setProduct(data.title);
+  setCounter(prev => prev + 1);
 }

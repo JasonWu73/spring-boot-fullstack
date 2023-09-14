@@ -22,6 +22,6 @@ type Error = {
  * 获取随机一个商品。
  */
 export async function getRandomProduct(): Promise<[Product | null, Error | null]> {
-  const randomId = Math.floor(Math.random() * 120);
+  const randomId = Math.floor(Math.random() * 110);
   return await get<Product, Error>({ url: `https://dummyjson.com/products/${randomId}` });
 }
