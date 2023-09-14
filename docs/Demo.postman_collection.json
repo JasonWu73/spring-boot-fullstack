@@ -188,6 +188,26 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "使用 Redis 实现分布式锁测试",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_URL}}/api/v1/redis/lock",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"redis",
+						"lock"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"event": [
