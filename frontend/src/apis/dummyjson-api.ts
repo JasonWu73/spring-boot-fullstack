@@ -1,6 +1,6 @@
-import { get } from '../utils/http.ts';
+import { getJson } from '../utils/http.ts';
 
-type Error = {
+type ApiError = {
   message: string;
 };
 
@@ -23,9 +23,9 @@ export type Product = {
  *
  * @param signal `AbortController` 实例的 `signal` 属性，用于主动取消请求
  */
-export async function getRandomProduct(signal?: AbortSignal): Promise<[Product | null, Error | null]> {
+export async function getRandomProduct(signal?: AbortSignal): Promise<[Product | null, ApiError | null]> {
   const randomId = Math.floor(Math.random() * 110);
-  const [data, error] = await get<Product, Error>({
+  const [data, error] = await getJson<Product, ApiError>({
     url: `https://dummyjson.com/products/${randomId}`,
     signal: signal
   });
