@@ -17,6 +17,8 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.multipart.MultipartException;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 import java.util.Optional;
 
@@ -136,9 +138,18 @@ public class GlobalExceptionHandler {
    * @param e 缺少参数异常
    * @return 响应结果
    */
-  @ExceptionHandler(MissingServletRequestParameterException.class)
-  public ResponseEntity<ApiError> handleMissingServletRequestParameterException(MissingServletRequestParameterException e) {
-    String reason = String.format("缺少必填参数 [%s]", e.getParameterName());
+  @ExceptionHandler({MissingServletRequestParameterException.class, MissingServletRequestPartException.class})
+  public ResponseEntity<ApiError> handleMissingServletRequestParameterException(Exception e) {
+    String paraName = "";
+    if (e instanceof MissingServletRequestParameterException ex) {
+      paraName = ex.getParameterName();
+    }
+
+    if (e instanceof MissingServletRequestPartException ex) {
+      paraName = ex.getRequestPartName();
+    }
+
+    String reason = String.format("缺少必填参数 [%s]", paraName);
 
     return handleApiException(new ApiException(HttpStatus.BAD_REQUEST, reason, e));
   }
@@ -201,6 +212,17 @@ public class GlobalExceptionHandler {
     String reason = String.format("不支持的媒体类型 [%s: %s]", HttpHeaders.CONTENT_TYPE, req.getHeader(HttpHeaders.CONTENT_TYPE));
 
     return handleApiException(new ApiException(HttpStatus.NOT_ACCEPTABLE, reason, e));
+  }
+
+  /**
+   * 处理因非 Multipart 请求与 API 不符合而产生的异常。
+   *
+   * @param e Multipart 解析失败的异常
+   * @return 响应结果
+   */
+  @ExceptionHandler(MultipartException.class)
+  public ResponseEntity<ApiError> handleMultipartException(MultipartException e) {
+    return handleApiException(new ApiException(HttpStatus.NOT_ACCEPTABLE, "仅支持 Multipart 请求", e));
   }
 
   /**

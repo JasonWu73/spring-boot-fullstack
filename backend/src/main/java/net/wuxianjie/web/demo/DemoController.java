@@ -2,6 +2,7 @@ package net.wuxianjie.web.demo;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ import net.wuxianjie.web.shared.validator.EnumValidator;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -48,6 +50,17 @@ public class DemoController {
   public DemoData postFormData(@Valid DemoData data) {
     return data;
   }
+
+  @PostMapping("/demo/upload")
+  public UploadResult uploadFile(@NotBlank String message, @RequestParam MultipartFile file) {
+    if (file == null || file.isEmpty()) {
+      return new UploadResult(false, null, message);
+    }
+
+    return new UploadResult(true, file.getOriginalFilename(), message);
+  }
+
+  record UploadResult(boolean success, String filename, String message) {}
 
   @Getter
   @ToString

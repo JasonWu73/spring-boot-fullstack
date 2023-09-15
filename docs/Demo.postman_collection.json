@@ -100,6 +100,48 @@
 			"response": []
 		},
 		{
+			"name": "文件上传测试",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "default",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "message",
+							"value": "测试文件",
+							"type": "text"
+						},
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/Users/wxj/Downloads/UOS适配认证.zip"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/api/v1/demo/upload",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"demo",
+						"upload"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Json 传参测试",
 			"request": {
 				"method": "POST",
