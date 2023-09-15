@@ -6,12 +6,7 @@ type ProductState = {
   loading: boolean;
   error: string;
   product: Product | null;
-  counter: number;
-};
-
-type TitleProps = {
-  label: string;
-  isError?: boolean;
+  count: number;
 };
 
 export default function App() {
@@ -44,10 +39,25 @@ export default function App() {
         disabled={state.loading}
       />
 
-      <p>已加载 <strong>{state.counter}</strong> 个商品</p>
+      <Message count={state.count} />
     </div>
   );
 }
+
+type MessageProps = {
+  count: ProductState['count'];
+};
+
+function Message({ count }: MessageProps) {
+  return (
+    <p>已加载 <strong>{count}</strong> 个商品</p>
+  );
+}
+
+type TitleProps = {
+  label: string;
+  isError?: boolean;
+};
 
 function Title({ label, isError }: TitleProps) {
   return (
@@ -62,7 +72,7 @@ function useProduct() {
     loading: false, // 加载中
     error: '', // 错误信息
     product: null, // 商品信息
-    counter: 0 // 商品获取计数
+    count: 0 // 商品获取计数
   });
 
   // 首次进入页面时获取商品
@@ -93,7 +103,7 @@ function useProduct() {
       return;
     }
 
-    setState(prev => ({ ...prev, product: data, counter: prev.counter + 1 }));
+    setState(prev => ({ ...prev, product: data, count: prev.count + 1 }));
   }
 
   return { state, getProduct };
