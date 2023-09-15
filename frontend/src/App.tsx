@@ -29,7 +29,12 @@ function useProduct() {
 
   // 首次进入页面时获取商品
   useEffect(() => {
-    getProduct(setLoading, setError, setProduct, setCounter);
+    const controller = new AbortController();
+    getProduct(setLoading, setError, setProduct, setCounter, controller.signal);
+
+    return () => {
+      controller.abort();
+    };
   }, []);
 
   return { loading, setLoading, error, setError, product, setProduct, counter, setCounter };
@@ -39,7 +44,8 @@ async function getProduct(
   setLoading: (value: (((prevState: boolean) => boolean) | boolean)) => void,
   setError: (value: (((prevState: string) => string) | string)) => void,
   setProduct: (value: (((prevState: string) => string) | string)) => void,
-  setCounter: (value: (((prevState: number) => number) | number)) => void
+  setCounter: (value: (((prevState: number) => number) | number)) => void,
+  signal?: AbortSignal
 ) {
   // 首先清空原错误信息
   setError('');
@@ -48,14 +54,18 @@ async function getProduct(
   setLoading(true);
 
   // 获取商品
-  const [data, error] = await getRandomProduct();
+  const [data, error] = await getRandomProduct(signal);
 
   // 结束加载数据
   setLoading(false);
 
   // 判断商品是否加载成功
-  if (data == null || error) {
-    setError(error ? error.message : '获取商品失败');
+  if (error) {
+    setError(error.message);
+    return;
+  }
+
+  if (!data) {
     return;
   }
 
