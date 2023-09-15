@@ -3,72 +3,61 @@ import { getRandomProduct } from './apis/dummyjson-api.ts';
 import { useEffect, useState } from 'react';
 
 export default function App() {
-
-  const { loading, setLoading, error, setError, product, setProduct, counter, setCounter } = useProduct();
+  const { state, getProduct } = useProduct();
 
   async function handleClick() {
-    await getProduct(setLoading, setError, setProduct, setCounter);
+    await getProduct();
   }
 
   return (
     <div className="mt-8 mx-8 p-4 rounded border shadow-sm">
-      <h1 className={`font-bold tracking-wider ${error ? 'text-red-500' : ''}`}>
-        {loading ? '加载中...' : error ? error : product ? product : '点击按钮获取商品标题'}
+      <h1 className={`font-bold tracking-wider ${state.error ? 'text-red-500' : ''}`}>
+        {state.loading ? '加载中...' : state.error || state.product}
       </h1>
       <Button label="获取商品" onClick={handleClick} className="my-4" />
-      <p>已加载 <strong>{counter}</strong> 个商品</p>
+      <p>已加载 <strong>{state.counter}</strong> 个商品</p>
     </div>
   );
 }
 
 function useProduct() {
-  const [loading, setLoading] = useState(false); // 加载中
-  const [error, setError] = useState(''); // 错误信息
-  const [product, setProduct] = useState(''); // 商品信息
-  const [counter, setCounter] = useState(0); // 商品获取数
+  const [state, setState] = useState({
+    loading: false, // 加载中
+    error: '', // 错误信息
+    product: '', // 商品名称
+    counter: 0 // 商品获取计数
+  });
 
   // 首次进入页面时获取商品
   useEffect(() => {
     const controller = new AbortController();
-    getProduct(setLoading, setError, setProduct, setCounter, controller.signal);
+    getProduct(controller.signal);
 
     return () => {
       controller.abort();
     };
   }, []);
 
-  return { loading, setLoading, error, setError, product, setProduct, counter, setCounter };
-}
+  async function getProduct(signal?: AbortSignal) {
+    // 初始化加载状态
+    setState(prev => ({ ...prev, loading: true, error: '' }));
 
-async function getProduct(
-  setLoading: (value: (((prevState: boolean) => boolean) | boolean)) => void,
-  setError: (value: (((prevState: string) => string) | string)) => void,
-  setProduct: (value: (((prevState: string) => string) | string)) => void,
-  setCounter: (value: (((prevState: number) => number) | number)) => void,
-  signal?: AbortSignal
-) {
-  // 首先清空原错误信息
-  setError('');
+    // 获取商品
+    const [data, error] = await getRandomProduct(signal);
 
-  // 开始加载数据
-  setLoading(true);
+    setState(prev => ({ ...prev, loading: false }));
 
-  // 获取商品
-  const [data, error] = await getRandomProduct(signal);
+    if (error) {
+      setState(prev => ({ ...prev, error: error.message }));
+      return;
+    }
 
-  // 结束加载数据
-  setLoading(false);
+    if (!data) {
+      return;
+    }
 
-  // 判断商品是否加载成功
-  if (error) {
-    setError(error.message);
-    return;
+    setState(prev => ({ ...prev, product: data.title, counter: prev.counter + 1 }));
   }
 
-  if (!data) {
-    return;
-  }
-
-  setProduct(data.title);
-  setCounter(prev => prev + 1);
+  return { state, getProduct };
 }
