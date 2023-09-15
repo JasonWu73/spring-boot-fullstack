@@ -1,18 +1,43 @@
 import Button from './components/button/Button.tsx';
 import { getRandomProduct, Product } from './apis/dummyjson-api.ts';
-import { useEffect, useState } from 'react';
+import { useEffect, useReducer } from 'react';
 
 type ProductState = {
-  loading: boolean;
+  isLoading: boolean;
   error: string;
   product: Product | null;
   count: number;
 };
 
+type Action =
+  | { type: 'startLoading' }
+  | { type: 'endLoading' }
+  | { type: 'setError', payload: string }
+  | { type: 'setProduct', payload: Product };
+
 export default function App() {
   const { state, getProduct } = useProduct();
 
-  const productContent = state.loading ? (
+  const productContent = getProductContent(state);
+
+  return (
+    <div className="mt-8 mx-8 p-4 rounded border shadow-sm">
+      {productContent}
+
+      <Button
+        label={`获取商品${state.isLoading ? '...' : ''}`}
+        onClick={() => getProduct()}
+        className="my-4"
+        disabled={state.isLoading}
+      />
+
+      <Message count={state.count} />
+    </div>
+  );
+}
+
+function getProductContent(state: ProductState) {
+  return state.isLoading ? (
     <Title label="加载中..." />
   ) : state.error ? (
     <Title label={state.error} isError />
@@ -26,21 +51,6 @@ export default function App() {
         className="w-32 h-32 object-cover rounded-full border border-gray-300 shadow-sm"
       />
     </>
-  );
-
-  return (
-    <div className="mt-8 mx-8 p-4 rounded border shadow-sm">
-      {productContent}
-
-      <Button
-        label={`获取商品${state.loading ? '...' : ''}`}
-        onClick={() => getProduct()}
-        className="my-4"
-        disabled={state.loading}
-      />
-
-      <Message count={state.count} />
-    </div>
   );
 }
 
@@ -68,10 +78,10 @@ function Title({ label, isError }: TitleProps) {
 }
 
 function useProduct() {
-  const [state, setState] = useState<ProductState>({
-    loading: false, // 加载中
-    error: '', // 错误信息
-    product: null, // 商品信息
+  const [state, dispatch] = useReducer(reducer, {
+    isLoading: false,
+    error: '',
+    product: null,
     count: 0 // 商品获取计数
   });
 
@@ -86,24 +96,36 @@ function useProduct() {
   }, []);
 
   async function getProduct(signal?: AbortSignal) {
-    // 初始化加载状态
-    setState(prev => ({ ...prev, loading: true, error: '' }));
+    dispatch({ type: 'startLoading' });
 
     // 获取商品
     const [data, error] = await getRandomProduct(signal);
 
-    setState(prev => ({ ...prev, loading: false }));
+    dispatch({ type: 'endLoading' });
 
     if (error) {
-      setState(prev => ({ ...prev, error: error.message }));
+      dispatch({ type: 'setError', payload: error.message });
       return;
     }
 
-    if (!data) {
-      return;
+    if (data) {
+      dispatch({ type: 'setProduct', payload: data });
     }
+  }
 
-    setState(prev => ({ ...prev, product: data, count: prev.count + 1 }));
+  function reducer(state: ProductState, action: Action) {
+    switch (action.type) {
+      case 'startLoading':
+        return { ...state, isLoading: true, error: '' };
+      case "endLoading":
+        return { ...state, isLoading: false };
+      case 'setError':
+        return { ...state, isLoading: false, error: action.payload };
+      case 'setProduct':
+        return { ...state, isLoading: false, error: '', product: action.payload, count: state.count + 1 };
+      default:
+        return state;
+    }
   }
 
   return { state, getProduct };
