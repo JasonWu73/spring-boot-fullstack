@@ -99,7 +99,7 @@ function useProduct() {
     dispatch({ type: 'startLoading' });
 
     // 获取商品
-    const [data, error] = await getRandomProduct(signal);
+    const { data, error } = await getRandomProduct(signal);
 
     dispatch({ type: 'endLoading' });
 
