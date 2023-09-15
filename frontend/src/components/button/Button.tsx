@@ -29,7 +29,7 @@ function getBtnClass(btn: ButtonProps['btn']) {
     case 'danger':
       return 'bg-red-500 text-white hover:bg-red-600 active:bg-red-700 focus:ring-red-300';
     case 'light':
-      return 'bg-slate-200 text-black hover:bg-slate-300 active:bg-slate-400 focus:ring-slate-100';
+      return 'bg-slate-100 text-black hover:bg-slate-200 active:bg-slate-300 focus:ring-slate-50';
     default:
       return 'bg-sky-500 text-white hover:bg-sky-600 active:bg-sky-700 focus:ring-sky-300';
   }
