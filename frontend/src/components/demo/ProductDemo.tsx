@@ -15,6 +15,11 @@ type Action =
   | { type: 'setError', payload: string }
   | { type: 'setProduct', payload: Product };
 
+/**
+ * 呈现产品演示组件。
+ *
+ * @return 渲染的产品演示组件
+ */
 export default function ProductDemo() {
   const { state, getProduct } = useProduct();
 
@@ -25,11 +30,12 @@ export default function ProductDemo() {
       {productContent}
 
       <Button
-        label={`获取商品${state.isLoading ? '...' : ''}`}
         onClick={() => getProduct()}
         className="my-4"
         disabled={state.isLoading}
-      />
+      >
+        {`获取商品${state.isLoading ? '...' : ''}`}
+      </Button>
 
       <Message count={state.count} />
     </div>

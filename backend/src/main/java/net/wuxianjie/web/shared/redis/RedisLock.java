@@ -10,6 +10,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * 基于 Redis 实现的分布式锁。
+ */
 @Slf4j
 @Component
 @RequiredArgsConstructor

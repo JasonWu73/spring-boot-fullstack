@@ -4,7 +4,7 @@ import classNames from 'classnames';
 type ButtonType = 'primary' | 'danger' | 'light';
 
 type ButtonProps = {
-  label: string;
+  children?: React.ReactNode;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
   btn?: ButtonType;
   type?: 'button' | 'submit' | 'reset';
@@ -12,14 +12,26 @@ type ButtonProps = {
   className?: string;
 };
 
+/**
+ * 使用可定制的属性渲染按钮组件。
+ *
+ * @param ButtonProps - 按钮组件的属性
+ * @param ButtonProps.children - 按钮的内容
+ * @param ButtonProps.onClick - 单击按钮时调用的函数
+ * @param ButtonProps.btn - 按钮的类型（默认值为 `primary`）
+ * @param ButtonProps.type - 按钮元素的类型（默认值为 `button`）
+ * @param ButtonProps.disabled - 指示按钮是否被禁用
+ * @param ButtonProps.className - 按钮的附加 CSS 类
+ * @return 渲染的按钮组件
+ */
 export default function Button({
-                                 label,
-                                 onClick,
-                                 btn = 'primary',
-                                 type = 'button',
-                                 disabled,
-                                 className
-                               }: ButtonProps) {
+  children,
+  onClick,
+  btn = 'primary',
+  type = 'button',
+  disabled,
+  className
+}: ButtonProps) {
   const btnClass = getBtnClass(btn);
 
   return (
@@ -33,7 +45,7 @@ export default function Button({
         className
       )}
     >
-      {label}
+      {children}
     </button>
   );
 }

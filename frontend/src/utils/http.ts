@@ -20,20 +20,28 @@ type Response<T, E> = {
 };
 
 /**
- * 发送 HTTP GET JSON 请求。
+ * 使用给定参数向指定 URL 发送请求并返回响应。
  *
- * @param url 请求地址
- * @param params URL 请求参数
- * @param signal `AbortController` 实例的 `signal` 属性，用于主动取消请求
+ * @template T - 成功响应时的数据类型
+ * @template E - 错误响应时的数据类型
+ *
+ * @param Request - 请求配置
+ * @param Request.method - 请求方法（默认值为 `GET`）
+ * @param Request.url - 请求地址
+ * @param Request.urlParams - URL 请求参数
+ * @param Request.contentType - 请求内容类型（默认值为 `JSON`）
+ * @param Request.bodyParams - 请求内容
+ * @param Request.signal - `AbortController` 实例的 `signal` 属性，用于主动取消请求
+ * @return 解析为包含数据和错误的响应对象的 `Promise`
  */
 export async function sendRequest<T, E>({
-                                          method = 'GET',
-                                          url,
-                                          urlParams,
-                                          contentType = 'JSON',
-                                          bodyParams,
-                                          signal
-                                        }: Request): Promise<Response<T, E>> {
+  method = 'GET',
+  url,
+  urlParams,
+  contentType = 'JSON',
+  bodyParams,
+  signal
+}: Request): Promise<Response<T, E>> {
   try {
     // 添加 URL 参数
     const paramsToUrl = appendParamsToUrl({ url, urlParams });

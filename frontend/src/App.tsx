@@ -1,5 +1,10 @@
 import ProductDemo from '@/components/demo/ProductDemo.tsx';
 
+/**
+ * 呈现主要应用程序组件。
+ *
+ * @return 呈现的应用程序组件
+ */
 export default function App() {
   return (
     <div className="mt-8 mx-8 p-4 rounded border shadow-sm">

@@ -24,9 +24,10 @@ export type Product = {
 };
 
 /**
- * 获取随机一个商品。
+ * 从 API 检索随机产品。
  *
- * @param signal `AbortController` 实例的 `signal` 属性，用于主动取消请求
+ * @param signal - `AbortController` 实例的 `signal` 属性，用于主动取消请求
+ * @return 解析为包含产品数据或错误的 `ApiResponse` 对象的 `Promise`
  */
 export async function getRandomProduct(signal?: AbortSignal): Promise<ApiResponse<Product>> {
   const randomId = Math.floor(Math.random() * 110);

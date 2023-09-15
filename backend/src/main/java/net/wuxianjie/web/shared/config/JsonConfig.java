@@ -22,7 +22,9 @@ public class JsonConfig {
   public static final String DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
 
   /**
-   * @return 支持将日期时间对象与可读字符串之间序列化与反序列化的 Jackson {@link ObjectMapper}
+   * 返回为 Java 8 {@code LocalDateTime} 和 {@code LocalDate} 配置的 {@link ObjectMapper} 对象，用于 JSON 序列化和反序列化。
+   *
+   * @return 配置必要模块和功能的 {@link ObjectMapper} 对象
    */
   @Bean
   public ObjectMapper objectMapper() {
