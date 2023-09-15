@@ -1,8 +1,18 @@
+type ContentType = 'JSON' | 'FORM';
+type UrlParams = { [key: string]: string | number | boolean };
+
 type Request = {
+  method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
   url: string;
-  params?: { [key: string]: string | number | boolean };
+  urlParams?: UrlParams;
+  contentType?: ContentType;
+  bodyParams?: object | UrlParams;
   signal?: AbortSignal;
 };
+
+type Url = Pick<Request, 'url' | 'urlParams'>;
+type RequestOptions = Pick<Request, 'method' | 'contentType' | 'bodyParams' | 'signal'>;
+type BodyOptions = Pick<Request, 'contentType' | 'bodyParams'>;
 
 type Response<T, E> = {
   data: T | null;
@@ -16,15 +26,25 @@ type Response<T, E> = {
  * @param params URL 请求参数
  * @param signal `AbortController` 实例的 `signal` 属性，用于主动取消请求
  */
-export async function getJson<T, E>({ url, params, signal }: Request): Promise<Response<T, E>> {
+export async function sendRequest<T, E>({
+                                          method = 'GET',
+                                          url,
+                                          urlParams,
+                                          contentType = 'JSON',
+                                          bodyParams,
+                                          signal
+                                        }: Request): Promise<Response<T, E>> {
   try {
-    // 使用 URLSearchParams 处理 GET 参数
-    const urlObj = new URL(url);
-    if (params) {
-      appendParamsToUrl(urlObj, params);
-    }
+    // 添加 URL 参数
+    const paramsToUrl = appendParamsToUrl({ url, urlParams });
 
-    const response = await fetch(urlObj.toString(), { signal });
+    // 获取请求配置项
+    const options = getRequestOptions({ method, contentType, bodyParams, signal });
+
+    // 发送请求
+    const response = await fetch(paramsToUrl, options);
+
+    // 解析请求
     const data = await response.json();
 
     if (!response.ok) {
@@ -33,14 +53,58 @@ export async function getJson<T, E>({ url, params, signal }: Request): Promise<R
 
     return { data, error: null };
   } catch (error) {
+    // 处理非程序异步，即用户主动取消请求的异步
     if (error instanceof Error && error.name === 'AbortError') {
       return { data: null, error: null };
     }
 
+    // 处理程序异常
     return { data: null, error: error + '' };
   }
 }
 
-function appendParamsToUrl(urlObj: URL, params: { [key: string]: string | number | boolean }) {
-  Object.keys(params).forEach(key => urlObj.searchParams.append(key, params[key].toString()));
+function appendParamsToUrl({ url, urlParams }: Url) {
+  // 使用 URLSearchParams 处理 URL 参数
+  const urlObj = new URL(url);
+  if (urlParams) {
+    Object.keys(urlParams).forEach(key => urlObj.searchParams.append(key, urlParams[key].toString()));
+  }
+  return urlObj.toString();
+}
+
+function getRequestOptions({ method, contentType, bodyParams, signal }: RequestOptions) {
+  if (method === 'GET') {
+    return { signal };
+  }
+
+  return {
+    method,
+    headers: { 'Content-Type': getContentType(contentType!) },
+    body: getBody({ contentType, bodyParams }),
+    signal
+  };
+}
+
+function getContentType(type: ContentType) {
+  const content = {
+    JSON: 'application/json',
+    FORM: 'application/x-www-form-urlencoded'
+  };
+
+  return content[type] || content.JSON;
+}
+
+function getBody({ contentType, bodyParams }: BodyOptions) {
+  switch (contentType) {
+    case 'FORM':
+      return getUrlEncodedData(bodyParams as UrlParams);
+    default:
+      return JSON.stringify(bodyParams);
+  }
+}
+
+function getUrlEncodedData(bodyParams: UrlParams) {
+  return Object.keys(bodyParams)
+    .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(bodyParams[key]))
+    .join('&');
 }

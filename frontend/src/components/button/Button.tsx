@@ -12,16 +12,14 @@ type ButtonProps = {
   className?: string;
 };
 
-export default function Button(
-  {
-    label,
-    onClick,
-    btn = 'primary',
-    type = 'button',
-    disabled,
-    className
-  }: ButtonProps
-) {
+export default function Button({
+                                 label,
+                                 onClick,
+                                 btn = 'primary',
+                                 type = 'button',
+                                 disabled,
+                                 className
+                               }: ButtonProps) {
   const btnClass = getBtnClass(btn);
 
   return (
