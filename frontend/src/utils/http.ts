@@ -1,4 +1,4 @@
-type ContentType = 'JSON' | 'FORM';
+type ContentType = 'JSON' | 'FORM' | 'FILE';
 type UrlParams = { [key: string]: string | number | boolean };
 
 type Request = {
@@ -6,7 +6,7 @@ type Request = {
   url: string;
   urlParams?: UrlParams;
   contentType?: ContentType;
-  bodyParams?: object | UrlParams;
+  bodyParams?: object | UrlParams | FormData;
   signal?: AbortSignal;
 };
 
@@ -77,25 +77,31 @@ function getRequestOptions({ method, contentType, bodyParams, signal }: RequestO
     return { signal };
   }
 
+  const headers = getHeaders(contentType!);
+
   return {
     method,
-    headers: { 'Content-Type': getContentType(contentType!) },
+    headers,
     body: getBody({ contentType, bodyParams }),
     signal
   };
 }
 
-function getContentType(type: ContentType) {
-  const content = {
-    JSON: 'application/json',
-    FORM: 'application/x-www-form-urlencoded'
-  };
-
-  return content[type] || content.JSON;
+function getHeaders(type: ContentType): Record<string, string> {
+  switch (type) {
+    case 'FILE':
+      return {};
+    case "FORM":
+      return { 'Content-Type': 'application/x-www-form-urlencoded' };
+    default:
+      return { 'Content-Type': 'application/json' };
+  }
 }
 
 function getBody({ contentType, bodyParams }: BodyOptions) {
   switch (contentType) {
+    case 'FILE':
+      return bodyParams as FormData;
     case 'FORM':
       return getUrlEncodedData(bodyParams as UrlParams);
     default:
