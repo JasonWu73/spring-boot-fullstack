@@ -1,11 +1,12 @@
 import Button from '@/components/button/Button.tsx';
-import { getRandomProduct, Product } from '@/apis/dummyjson-api.ts';
+import { getRandomProduct, ProductItem } from '@/apis/dummyjson-api.ts';
 import { useEffect, useReducer } from 'react';
+import classNames from 'classnames';
 
-type ProductState = {
+type State = {
   isLoading: boolean;
   error: string;
-  product: Product | null;
+  product: ProductItem | null;
   count: number;
 };
 
@@ -13,27 +14,25 @@ type Action =
   | { type: 'startLoading' }
   | { type: 'endLoading' }
   | { type: 'setError', payload: string }
-  | { type: 'setProduct', payload: Product };
+  | { type: 'setProduct', payload: ProductItem };
 
-/**
- * 呈现产品演示组件。
- *
- * @return 渲染的产品演示组件
- */
-export default function ProductDemo() {
+type TitleProps = {
+  label: string;
+  isError?: boolean;
+};
+
+type MessageProps = {
+  count: State['count'];
+};
+
+export default function ProductShowcase() {
   const { state, getProduct } = useProduct();
-
-  const productContent = getProductContent(state);
 
   return (
     <div className="mt-8 mx-8 p-4 rounded border shadow-sm">
-      {productContent}
+      {getProductContent(state)}
 
-      <Button
-        onClick={() => getProduct()}
-        className="my-4"
-        disabled={state.isLoading}
-      >
+      <Button onClick={() => getProduct()} className="my-4" disabled={state.isLoading}>
         {`获取商品${state.isLoading ? '...' : ''}`}
       </Button>
 
@@ -42,7 +41,13 @@ export default function ProductDemo() {
   );
 }
 
-function getProductContent(state: ProductState) {
+function Message({ count }: MessageProps) {
+  return (
+    <p>已加载 <strong>{count}</strong> 个商品</p>
+  );
+}
+
+function getProductContent(state: State) {
   return state.isLoading ? (
     <Title label="加载中..." />
   ) : state.error ? (
@@ -60,24 +65,12 @@ function getProductContent(state: ProductState) {
   );
 }
 
-type MessageProps = {
-  count: ProductState['count'];
-};
+function Title({ label, isError = false }: TitleProps) {
+  const commonClasses = 'font-bold tracking-wider';
+  const errorClass = { 'text-red-500': isError };
 
-function Message({ count }: MessageProps) {
   return (
-    <p>已加载 <strong>{count}</strong> 个商品</p>
-  );
-}
-
-type TitleProps = {
-  label: string;
-  isError?: boolean;
-};
-
-function Title({ label, isError }: TitleProps) {
-  return (
-    <h1 className={`font-bold tracking-wider ${isError ? 'text-red-500' : ''}`}>
+    <h1 className={classNames(commonClasses, errorClass)}>
       {label}
     </h1>
   );
@@ -91,7 +84,6 @@ function useProduct() {
     count: 0 // 商品获取计数
   });
 
-  // 首次进入页面时获取商品
   useEffect(() => {
     const controller = new AbortController();
     getProduct(controller.signal);
@@ -104,7 +96,6 @@ function useProduct() {
   async function getProduct(signal?: AbortSignal) {
     dispatch({ type: 'startLoading' });
 
-    // 获取商品
     const { data, error } = await getRandomProduct(signal);
 
     dispatch({ type: 'endLoading' });
@@ -119,20 +110,20 @@ function useProduct() {
     }
   }
 
-  function reducer(state: ProductState, action: Action) {
-    switch (action.type) {
-      case 'startLoading':
-        return { ...state, isLoading: true, error: '' };
-      case "endLoading":
-        return { ...state, isLoading: false };
-      case 'setError':
-        return { ...state, isLoading: false, error: action.payload };
-      case 'setProduct':
-        return { ...state, isLoading: false, error: '', product: action.payload, count: state.count + 1 };
-      default:
-        return state;
-    }
-  }
-
   return { state, getProduct };
+}
+
+function reducer(state: State, action: Action) {
+  switch (action.type) {
+    case 'startLoading':
+      return { ...state, isLoading: true, error: '' };
+    case 'endLoading':
+      return { ...state, isLoading: false };
+    case 'setError':
+      return { ...state, isLoading: false, error: action.payload };
+    case 'setProduct':
+      return { ...state, isLoading: false, error: '', product: action.payload, count: state.count + 1 };
+    default:
+      return state;
+  }
 }

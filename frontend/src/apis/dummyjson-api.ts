@@ -9,7 +9,7 @@ type ApiResponse<T> = {
   error: ApiError | null;
 };
 
-export type Product = {
+export type ProductItem = {
   id: number;
   title: string;
   description: string;
@@ -23,15 +23,9 @@ export type Product = {
   images: string[];
 };
 
-/**
- * 从 API 检索随机产品。
- *
- * @param signal - `AbortController` 实例的 `signal` 属性，用于主动取消请求
- * @return 解析为包含产品数据或错误的 `ApiResponse` 对象的 `Promise`
- */
-export async function getRandomProduct(signal?: AbortSignal): Promise<ApiResponse<Product>> {
+export async function getRandomProduct(signal?: AbortSignal): Promise<ApiResponse<ProductItem>> {
   const randomId = Math.floor(Math.random() * 110);
-  const { data, error } = await sendRequest<Product, ApiError>({
+  const { data, error } = await sendRequest<ProductItem, ApiError>({
     url: `https://dummyjson.com/products/${randomId}`,
     signal: signal
   });

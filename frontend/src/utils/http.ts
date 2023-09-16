@@ -1,18 +1,18 @@
 type ContentType = 'JSON' | 'FORM' | 'FILE';
-type UrlParams = { [key: string]: string | number | boolean };
+type UrlData = Record<string, string | number | boolean>
 
 type Request = {
-  method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
   url: string;
-  urlParams?: UrlParams;
+  method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
   contentType?: ContentType;
-  bodyParams?: object | UrlParams | FormData;
+  urlData?: UrlData;
+  bodyData?: Record<string, unknown> | UrlData | FormData;
   signal?: AbortSignal;
 };
 
-type Url = Pick<Request, 'url' | 'urlParams'>;
-type RequestOptions = Pick<Request, 'method' | 'contentType' | 'bodyParams' | 'signal'>;
-type BodyOptions = Pick<Request, 'contentType' | 'bodyParams'>;
+type UrlInfo = Pick<Request, 'url' | 'urlData'>;
+type RequestConfig = Pick<Request, 'method' | 'contentType' | 'bodyData' | 'signal'>;
+type RequestBody = Pick<Request, 'contentType' | 'bodyData'>;
 
 type Response<T, E> = {
   data: T | null;
@@ -20,49 +20,49 @@ type Response<T, E> = {
 };
 
 /**
- * 使用给定参数向指定 URL 发送请求并返回响应。
+ * 发送 HTTP 请求, 并以 JSON 数据格式解析响应数据.
  *
  * @template T - 成功响应时的数据类型
  * @template E - 错误响应时的数据类型
  *
- * @param Request - 请求配置
- * @param Request.method - 请求方法（默认值为 `GET`）
- * @param Request.url - 请求地址
- * @param Request.urlParams - URL 请求参数
- * @param Request.contentType - 请求内容类型（默认值为 `JSON`）
- * @param Request.bodyParams - 请求内容
- * @param Request.signal - `AbortController` 实例的 `signal` 属性，用于主动取消请求
- * @return 解析为包含数据和错误的响应对象的 `Promise`
+ * @param Request - 请求的配置属性
+ * @param Request.url - URL 地址
+ * @param Request.method - 请求方法, 默认为 `GET`
+ * @param Request.contentType - 请求体的内容类型, 默认为 `JSON`
+ * @param Request.urlData - URL 参数
+ * @param Request.bodyData - 请求体数据
+ * @param Request.signal - `AbortController` 实例的 `signal` 属性, 用于主动取消请求
+ * @return 以 JSON 数据格式解析后的正常或异常响应数据
  */
 export async function sendRequest<T, E>({
-  method = 'GET',
   url,
-  urlParams,
+  method = 'GET',
   contentType = 'JSON',
-  bodyParams,
+  urlData,
+  bodyData,
   signal
 }: Request): Promise<Response<T, E>> {
   try {
-    // 添加 URL 参数
-    const paramsToUrl = appendParamsToUrl({ url, urlParams });
+    // 追加 URL 参数
+    const splicedUrl = appendParamsToUrl({ url, urlData });
 
-    // 获取请求配置项
-    const options = getRequestOptions({ method, contentType, bodyParams, signal });
+    // 发送 HTTP 请求
+    const response = await fetch(splicedUrl, getRequestOptions({ method, contentType, bodyData, signal }));
 
-    // 发送请求
-    const response = await fetch(paramsToUrl, options);
+    // 以 JSON 数据格式解析请求
+    const responseData = await response.json();
 
-    // 解析请求
-    const data = await response.json();
-
+    // 请求失败时，返回异常响应数据
     if (!response.ok) {
-      return { data: null, error: data };
+      return { data: null, error: responseData };
     }
 
-    return { data, error: null };
+    // 请求成功时，返回正常响应数据
+    return { data: responseData, error: null };
   } catch (error) {
-    // 处理非程序异步，即用户主动取消请求的异步
+    // 处理因主动取消请求而产生的非程序异常
     if (error instanceof Error && error.name === 'AbortError') {
+      // 忽略已经取消的请求, 直接返回空值
       return { data: null, error: null };
     }
 
@@ -71,54 +71,51 @@ export async function sendRequest<T, E>({
   }
 }
 
-function appendParamsToUrl({ url, urlParams }: Url) {
-  // 使用 URLSearchParams 处理 URL 参数
-  const urlObj = new URL(url);
-  if (urlParams) {
-    Object.keys(urlParams).forEach(key => urlObj.searchParams.append(key, urlParams[key].toString()));
-  }
-  return urlObj.toString();
-}
-
-function getRequestOptions({ method, contentType, bodyParams, signal }: RequestOptions) {
+function getRequestOptions({ method, contentType = 'JSON', bodyData, signal }: RequestConfig) {
   if (method === 'GET') {
     return { signal };
   }
 
-  const headers = getHeaders(contentType!);
+  const headers = getHeaders(contentType);
 
   return {
     method,
     headers,
-    body: getBody({ contentType, bodyParams }),
+    body: getBody({ contentType, bodyData }),
     signal
   };
+}
+
+function getBody({ contentType, bodyData }: RequestBody) {
+  switch (contentType) {
+    case 'FILE':
+      return bodyData as FormData;
+    case 'FORM':
+      return getUrlEncodedData(bodyData as UrlData);
+    default:
+      return JSON.stringify(bodyData);
+  }
+}
+
+function getUrlEncodedData(bodyData: UrlData) {
+  return Object.keys(bodyData)
+    .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(bodyData[key]))
+    .join('&');
 }
 
 function getHeaders(type: ContentType): Record<string, string> {
   switch (type) {
     case 'FILE':
       return {};
-    case "FORM":
+    case 'FORM':
       return { 'Content-Type': 'application/x-www-form-urlencoded' };
     default:
       return { 'Content-Type': 'application/json' };
   }
 }
 
-function getBody({ contentType, bodyParams }: BodyOptions) {
-  switch (contentType) {
-    case 'FILE':
-      return bodyParams as FormData;
-    case 'FORM':
-      return getUrlEncodedData(bodyParams as UrlParams);
-    default:
-      return JSON.stringify(bodyParams);
-  }
-}
-
-function getUrlEncodedData(bodyParams: UrlParams) {
-  return Object.keys(bodyParams)
-    .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(bodyParams[key]))
-    .join('&');
+function appendParamsToUrl({ url, urlData }: UrlInfo) {
+  const urlObj = new URL(url);
+  urlData && Object.keys(urlData).forEach(key => urlObj.searchParams.append(key, urlData[key].toString()));
+  return urlObj.toString();
 }
