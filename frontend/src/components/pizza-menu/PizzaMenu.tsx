@@ -36,5 +36,12 @@ function Header() {
 }
 
 function Footer() {
-  return <footer className="my-4">{new Date().toLocaleTimeString()} 现已开放购买</footer>;
+  const time = new Date();
+  const currentHour = time.getHours();
+  const openHour = 12;
+  const closeHour = 22;
+  const isOpen = currentHour >= openHour && currentHour < closeHour;
+  console.log(`是否处于营业时间: ${isOpen}`);
+
+  return <footer className="my-4">{time.toLocaleTimeString()} 目前营业中</footer>;
 }
