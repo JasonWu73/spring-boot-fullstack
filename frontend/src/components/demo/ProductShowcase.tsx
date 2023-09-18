@@ -42,12 +42,6 @@ export default function ProductShowcase() {
   );
 }
 
-function Message({ count }: MessageProps) {
-  return (
-    <p>已加载 <strong>{count}</strong> 个商品</p>
-  );
-}
-
 function getProductContent(state: State) {
   return state.isLoading ? (
     <Title label="加载中..." />
@@ -74,6 +68,12 @@ function Title({ label, isError = false }: TitleProps) {
     <h1 className={classNames(commonClasses, errorClass)}>
       {label}
     </h1>
+  );
+}
+
+function Message({ count }: MessageProps) {
+  return (
+    <p>已加载 <strong>{count}</strong> 个商品</p>
   );
 }
 

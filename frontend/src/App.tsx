@@ -1,7 +1,7 @@
-import PizzaMenu from "@/components/pizza-menu/PizzaMenu.tsx";
+import ProfileCard from "@/components/drafts/ProfileCard.tsx";
 
 export default function App() {
   return (
-    <PizzaMenu />
+    <ProfileCard />
   );
 }

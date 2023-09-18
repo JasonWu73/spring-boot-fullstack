@@ -71,6 +71,12 @@ export async function sendRequest<T, E>({
   }
 }
 
+function appendParamsToUrl({ url, urlData }: UrlInfo) {
+  const urlObj = new URL(url);
+  urlData && Object.keys(urlData).forEach(key => urlObj.searchParams.append(key, urlData[key].toString()));
+  return urlObj.toString();
+}
+
 function getRequestOptions({ method, contentType = "JSON", bodyData, signal }: RequestConfig) {
   if (method === "GET") {
     return { signal };
@@ -84,6 +90,17 @@ function getRequestOptions({ method, contentType = "JSON", bodyData, signal }: R
     body: getBody({ contentType, bodyData }),
     signal
   };
+}
+
+function getHeaders(type: ContentType): Record<string, string> {
+  switch (type) {
+    case "FILE":
+      return {};
+    case "FORM":
+      return { "Content-Type": "application/x-www-form-urlencoded" };
+    default:
+      return { "Content-Type": "application/json" };
+  }
 }
 
 function getBody({ contentType, bodyData }: RequestBody) {
@@ -101,21 +118,4 @@ function getUrlEncodedData(bodyData: UrlData) {
   return Object.keys(bodyData)
     .map(key => encodeURIComponent(key) + "=" + encodeURIComponent(bodyData[key]))
     .join("&");
-}
-
-function getHeaders(type: ContentType): Record<string, string> {
-  switch (type) {
-    case "FILE":
-      return {};
-    case "FORM":
-      return { "Content-Type": "application/x-www-form-urlencoded" };
-    default:
-      return { "Content-Type": "application/json" };
-  }
-}
-
-function appendParamsToUrl({ url, urlData }: UrlInfo) {
-  const urlObj = new URL(url);
-  urlData && Object.keys(urlData).forEach(key => urlObj.searchParams.append(key, urlData[key].toString()));
-  return urlObj.toString();
 }
