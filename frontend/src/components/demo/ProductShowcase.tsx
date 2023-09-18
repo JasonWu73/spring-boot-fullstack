@@ -1,12 +1,13 @@
 import Button from "@/components/button/Button.tsx";
-import { getRandomProduct, ProductItem } from "@/apis/dummyjson-api.ts";
+import { getRandomProduct } from "@/apis/dummyjson/product.ts";
 import { useEffect, useReducer } from "react";
 import classNames from "classnames";
+import { type Product } from "@/apis/dummyjson/types.ts";
 
 type State = {
   isLoading: boolean;
   error: string;
-  product: ProductItem | null;
+  product: Product | null;
   count: number;
 };
 
@@ -14,7 +15,7 @@ type Action =
   | { type: "startLoading" }
   | { type: "endLoading" }
   | { type: "setError", payload: string }
-  | { type: "setProduct", payload: ProductItem };
+  | { type: "setProduct", payload: Product };
 
 type TitleProps = {
   label: string;

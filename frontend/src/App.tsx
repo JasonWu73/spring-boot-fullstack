@@ -1,7 +1,7 @@
-import PizzaMenu from "@/components/pizza-menu/PizzaMenu.tsx";
+import ProductShowcase from "@/components/demo/ProductShowcase.tsx";
 
 export default function App() {
   return (
-    <PizzaMenu />
+    <ProductShowcase />
   );
 }

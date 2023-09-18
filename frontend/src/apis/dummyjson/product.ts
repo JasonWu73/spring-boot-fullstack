@@ -1,4 +1,5 @@
 import { sendRequest } from "@/utils/http.ts";
+import { type Product } from "@/apis/dummyjson/types.ts";
 
 type ApiError = {
   message: string;
@@ -9,23 +10,9 @@ type ApiResponse<T> = {
   error: ApiError | null;
 };
 
-export type ProductItem = {
-  id: number;
-  title: string;
-  description: string;
-  price: number;
-  discountPercentage: number;
-  rating: number;
-  stock: number;
-  brand: string;
-  category: string;
-  thumbnail: string;
-  images: string[];
-};
-
-export async function getRandomProduct(signal?: AbortSignal): Promise<ApiResponse<ProductItem>> {
+export async function getRandomProduct(signal?: AbortSignal): Promise<ApiResponse<Product>> {
   const randomId = Math.floor(Math.random() * 110);
-  const { data, error } = await sendRequest<ProductItem, ApiError>({
+  const { data, error } = await sendRequest<Product, ApiError>({
     url: `https://dummyjson.com/products/${randomId}`,
     signal: signal
   });
