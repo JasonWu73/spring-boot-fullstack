@@ -1,3 +1,7 @@
+import data from "./data.json";
+
+type Pizza = typeof data[0];
+
 export default function PizzaMenu() {
 
   return (
@@ -13,21 +17,38 @@ function Menu() {
   return (
     <>
       <h2 className="mb-4 text-xl font-bold">我们的菜单</h2>
-      <Pizza />
-      <Pizza />
-      <Pizza />
+
+      <Pizza
+        name="Focaccia"
+        photoName="/pizzas/focaccia.jpg"
+        ingredients="Bread with italian olive oil and rosemary"
+        price={6}
+      />
+
+      <Pizza
+        name="Pizza Margherita"
+        photoName="/pizzas/margherita.jpg"
+        ingredients="Tomato and mozarella"
+        price={10}
+      />
     </>
   );
 }
 
-function Pizza() {
-  const img = "/src/assets/pizzas/focaccia.jpg";
+function Pizza({ name, photoName, ingredients, price }: Pizza) {
   return (
-    <>
-      <img src={img} alt="Pizza" />
-      <h2 className="text-lg font-bold">佛卡夏</h2>
-      <p className="mt-4">面包、盐、胡椒</p>
-    </>
+    <div className="w-4/5 mb-4 flex items-center justify-center gap-4">
+      <img
+        src={photoName}
+        alt={name}
+        className="w-32 h-32 object-cover rounded-full border border-gray-300 shadow-sm"
+      />
+      <div className="w-2/5">
+        <h2 className="text-lg font-bold">{name}</h2>
+        <p className="mt-4">{ingredients}</p>
+        <span>{price + 3}</span>
+      </div>
+    </div>
   );
 }
 
