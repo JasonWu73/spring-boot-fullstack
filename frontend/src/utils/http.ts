@@ -1,18 +1,18 @@
-type ContentType = 'JSON' | 'FORM' | 'FILE';
+type ContentType = "JSON" | "FORM" | "FILE";
 type UrlData = Record<string, string | number | boolean>
 
 type Request = {
   url: string;
-  method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
+  method?: "GET" | "POST" | "PUT" | "DELETE";
   contentType?: ContentType;
   urlData?: UrlData;
   bodyData?: Record<string, unknown> | UrlData | FormData;
   signal?: AbortSignal;
 };
 
-type UrlInfo = Pick<Request, 'url' | 'urlData'>;
-type RequestConfig = Pick<Request, 'method' | 'contentType' | 'bodyData' | 'signal'>;
-type RequestBody = Pick<Request, 'contentType' | 'bodyData'>;
+type UrlInfo = Pick<Request, "url" | "urlData">;
+type RequestConfig = Pick<Request, "method" | "contentType" | "bodyData" | "signal">;
+type RequestBody = Pick<Request, "contentType" | "bodyData">;
 
 type Response<T, E> = {
   data: T | null;
@@ -36,8 +36,8 @@ type Response<T, E> = {
  */
 export async function sendRequest<T, E>({
   url,
-  method = 'GET',
-  contentType = 'JSON',
+  method = "GET",
+  contentType = "JSON",
   urlData,
   bodyData,
   signal
@@ -61,18 +61,18 @@ export async function sendRequest<T, E>({
     return { data: responseData, error: null };
   } catch (error) {
     // 处理因主动取消请求而产生的非程序异常
-    if (error instanceof Error && error.name === 'AbortError') {
+    if (error instanceof Error && error.name === "AbortError") {
       // 忽略已经取消的请求, 直接返回空值
       return { data: null, error: null };
     }
 
     // 处理程序异常
-    return { data: null, error: error + '' };
+    return { data: null, error: error + "" };
   }
 }
 
-function getRequestOptions({ method, contentType = 'JSON', bodyData, signal }: RequestConfig) {
-  if (method === 'GET') {
+function getRequestOptions({ method, contentType = "JSON", bodyData, signal }: RequestConfig) {
+  if (method === "GET") {
     return { signal };
   }
 
@@ -88,9 +88,9 @@ function getRequestOptions({ method, contentType = 'JSON', bodyData, signal }: R
 
 function getBody({ contentType, bodyData }: RequestBody) {
   switch (contentType) {
-    case 'FILE':
+    case "FILE":
       return bodyData as FormData;
-    case 'FORM':
+    case "FORM":
       return getUrlEncodedData(bodyData as UrlData);
     default:
       return JSON.stringify(bodyData);
@@ -99,18 +99,18 @@ function getBody({ contentType, bodyData }: RequestBody) {
 
 function getUrlEncodedData(bodyData: UrlData) {
   return Object.keys(bodyData)
-    .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(bodyData[key]))
-    .join('&');
+    .map(key => encodeURIComponent(key) + "=" + encodeURIComponent(bodyData[key]))
+    .join("&");
 }
 
 function getHeaders(type: ContentType): Record<string, string> {
   switch (type) {
-    case 'FILE':
+    case "FILE":
       return {};
-    case 'FORM':
-      return { 'Content-Type': 'application/x-www-form-urlencoded' };
+    case "FORM":
+      return { "Content-Type": "application/x-www-form-urlencoded" };
     default:
-      return { 'Content-Type': 'application/json' };
+      return { "Content-Type": "application/json" };
   }
 }
 

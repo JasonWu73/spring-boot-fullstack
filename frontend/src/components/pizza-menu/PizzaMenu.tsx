@@ -21,7 +21,7 @@ function Menu() {
 }
 
 function Pizza() {
-  const img = '/src/assets/pizzas/focaccia.jpg';
+  const img = "/src/assets/pizzas/focaccia.jpg";
   return (
     <>
       <img src={img} alt="Pizza" />

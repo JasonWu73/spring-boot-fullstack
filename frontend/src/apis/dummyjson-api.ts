@@ -1,4 +1,4 @@
-import { sendRequest } from '@/utils/http.ts';
+import { sendRequest } from "@/utils/http.ts";
 
 type ApiError = {
   message: string;
@@ -31,7 +31,7 @@ export async function getRandomProduct(signal?: AbortSignal): Promise<ApiRespons
   });
 
   // 统一处理错误
-  if (typeof error === 'string') {
+  if (typeof error === "string") {
     return { data, error: { message: error } };
   }
 

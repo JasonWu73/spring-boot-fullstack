@@ -1,7 +1,7 @@
-import Button from '@/components/button/Button.tsx';
-import { getRandomProduct, ProductItem } from '@/apis/dummyjson-api.ts';
-import { useEffect, useReducer } from 'react';
-import classNames from 'classnames';
+import Button from "@/components/button/Button.tsx";
+import { getRandomProduct, ProductItem } from "@/apis/dummyjson-api.ts";
+import { useEffect, useReducer } from "react";
+import classNames from "classnames";
 
 type State = {
   isLoading: boolean;
@@ -11,10 +11,10 @@ type State = {
 };
 
 type Action =
-  | { type: 'startLoading' }
-  | { type: 'endLoading' }
-  | { type: 'setError', payload: string }
-  | { type: 'setProduct', payload: ProductItem };
+  | { type: "startLoading" }
+  | { type: "endLoading" }
+  | { type: "setError", payload: string }
+  | { type: "setProduct", payload: ProductItem };
 
 type TitleProps = {
   label: string;
@@ -22,7 +22,7 @@ type TitleProps = {
 };
 
 type MessageProps = {
-  count: State['count'];
+  count: State["count"];
 };
 
 export default function ProductShowcase() {
@@ -33,7 +33,7 @@ export default function ProductShowcase() {
       {getProductContent(state)}
 
       <Button onClick={() => getProduct()} className="my-4" disabled={state.isLoading}>
-        {`获取商品${state.isLoading ? '...' : ''}`}
+        {`获取商品${state.isLoading ? "..." : ""}`}
       </Button>
 
       <Message count={state.count} />
@@ -66,8 +66,8 @@ function getProductContent(state: State) {
 }
 
 function Title({ label, isError = false }: TitleProps) {
-  const commonClasses = 'font-bold tracking-wider';
-  const errorClass = { 'text-red-500': isError };
+  const commonClasses = "font-bold tracking-wider";
+  const errorClass = { "text-red-500": isError };
 
   return (
     <h1 className={classNames(commonClasses, errorClass)}>
@@ -79,7 +79,7 @@ function Title({ label, isError = false }: TitleProps) {
 function useProduct() {
   const [state, dispatch] = useReducer(reducer, {
     isLoading: false,
-    error: '',
+    error: "",
     product: null,
     count: 0 // 商品获取计数
   });
@@ -94,19 +94,19 @@ function useProduct() {
   }, []);
 
   async function getProduct(signal?: AbortSignal) {
-    dispatch({ type: 'startLoading' });
+    dispatch({ type: "startLoading" });
 
     const { data, error } = await getRandomProduct(signal);
 
-    dispatch({ type: 'endLoading' });
+    dispatch({ type: "endLoading" });
 
     if (error) {
-      dispatch({ type: 'setError', payload: error.message });
+      dispatch({ type: "setError", payload: error.message });
       return;
     }
 
     if (data) {
-      dispatch({ type: 'setProduct', payload: data });
+      dispatch({ type: "setProduct", payload: data });
     }
   }
 
@@ -115,14 +115,14 @@ function useProduct() {
 
 function reducer(state: State, action: Action) {
   switch (action.type) {
-    case 'startLoading':
-      return { ...state, isLoading: true, error: '' };
-    case 'endLoading':
+    case "startLoading":
+      return { ...state, isLoading: true, error: "" };
+    case "endLoading":
       return { ...state, isLoading: false };
-    case 'setError':
+    case "setError":
       return { ...state, isLoading: false, error: action.payload };
-    case 'setProduct':
-      return { ...state, isLoading: false, error: '', product: action.payload, count: state.count + 1 };
+    case "setProduct":
+      return { ...state, isLoading: false, error: "", product: action.payload, count: state.count + 1 };
     default:
       return state;
   }
