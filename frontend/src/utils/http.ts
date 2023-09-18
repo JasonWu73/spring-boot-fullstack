@@ -63,6 +63,7 @@ export async function sendRequest<T, E>({
     // 处理因主动取消请求而产生的非程序异常
     if (error instanceof Error && error.name === "AbortError") {
       // 忽略已经取消的请求, 直接返回空值
+      console.log(`${error.message} [${method.toUpperCase()} ${url}]`);
       return { data: null, error: null };
     }
 

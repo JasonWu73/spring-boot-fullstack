@@ -42,22 +42,27 @@ export default function ProductShowcase() {
   );
 }
 
-function getProductContent(state: State) {
-  return state.isLoading ? (
-    <Title label="加载中..." />
-  ) : state.error ? (
-    <Title label={state.error} isError />
-  ) : state.product && (
-    <>
-      <Title label={state.product.title} />
+function getProductContent({ isLoading, error, product }: State) {
+  if (isLoading) {
+    return <Title label="加载中..." />;
+  }
 
-      <img
-        src={state.product.thumbnail}
-        alt={state.product.title}
-        className="w-32 h-32 object-cover rounded-full border border-gray-300 shadow-sm"
-      />
-    </>
-  );
+  if (error) {
+    return <Title label={error} isError />;
+  }
+
+  if (product) {
+    return (
+      <>
+        <Title label={product.title} />
+        <img
+          src={product.thumbnail}
+          alt={product.title}
+          className="w-32 h-32 object-cover rounded-full border border-gray-300 shadow-sm"
+        />
+      </>
+    );
+  }
 }
 
 function Title({ label, isError = false }: TitleProps) {

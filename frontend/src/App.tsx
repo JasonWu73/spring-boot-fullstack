@@ -1,7 +1,7 @@
-import ProfileCard from "@/components/drafts/ProfileCard.tsx";
+import ProductShowcase from "@/components/demo/ProductShowcase.tsx";
 
 export default function App() {
   return (
-    <ProfileCard />
+    <ProductShowcase />
   );
 }
