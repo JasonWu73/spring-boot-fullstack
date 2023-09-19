@@ -1,7 +1,7 @@
-import ProductShowcase from "@/components/demo/ProductShowcase.tsx";
+import Draft from "@/components/drafts/Draft.tsx";
 
 export default function App() {
   return (
-    <ProductShowcase />
+    <Draft />
   );
 }
