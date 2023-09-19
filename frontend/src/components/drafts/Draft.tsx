@@ -22,9 +22,15 @@ type StepAction = {
 
 export default function Draft() {
   return (
-    <StepCard>
-      <Step />
-    </StepCard>
+    <>
+      <StepCard>
+        <Steps />
+      </StepCard>
+
+      <StepCard>
+        <Steps />
+      </StepCard>
+    </>
   );
 }
 
@@ -36,7 +42,7 @@ function StepCard({ children }: StepCardProps) {
   );
 }
 
-function Step() {
+function Steps() {
   const [step, setStep] = useState(1);
   const [isOpen, setIsOpen] = useState(true);
 
@@ -48,16 +54,16 @@ function Step() {
 
       {isOpen && (
         <div className="p-4 flex flex-col items-center justify-center gap-4">
-          <StepNumber step={step} />
+          <StepNumbers step={step} />
           <p>{`${step}. ${messages[step - 1]}`}</p>
-          <StepAction setStep={setStep} />
+          <StepActions setStep={setStep} />
         </div>
       )}
     </>
   );
 }
 
-function StepNumber({ step }: StepNumberProps) {
+function StepNumbers({ step }: StepNumberProps) {
   return (
     <ul className="w-full flex justify-around">
       {[1, 2, 3].map((number) => (
@@ -80,7 +86,7 @@ function StepNumber({ step }: StepNumberProps) {
   );
 }
 
-function StepAction({ setStep }: StepAction) {
+function StepActions({ setStep }: StepAction) {
   function handlePrevious() {
     setStep(prev => {
       if (prev <= 1) {
