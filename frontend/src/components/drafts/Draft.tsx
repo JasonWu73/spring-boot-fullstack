@@ -54,14 +54,17 @@ function StepNumber({ step }: StepNumberProps) {
       {[1, 2, 3].map((number) => (
         <li key={number}>
           <Button
-            size="sm" className={classNames(
-            "w-8 h-8 rounded-full",
-            {
-              "bg-sky-500 text-slate-50": (step >= number),
-              "bg-slate-50 text-slate-500": (step < number)
-            }
-          )}
-          >{number}</Button>
+            size="sm"
+            className={classNames(
+              "w-8 h-8 rounded-full",
+              {
+                "bg-sky-500 text-slate-50": (step >= number),
+                "bg-slate-50 text-slate-500": (step < number)
+              }
+            )}
+          >
+            {number}
+          </Button>
         </li>
       ))}
     </ul>
@@ -69,10 +72,18 @@ function StepNumber({ step }: StepNumberProps) {
 }
 
 function StepAction() {
+  function handlePrevious() {
+    console.log("previous");
+  }
+
+  function handleNext() {
+    console.log("next");
+  }
+
   return (
     <div className="w-full flex justify-around">
-      <Button size="sm">Previous</Button>
-      <Button size="sm">Next</Button>
+      <Button onClick={handlePrevious} size="sm">Previous</Button>
+      <Button onClick={handleNext} size="sm">Next</Button>
     </div>
   );
 }
