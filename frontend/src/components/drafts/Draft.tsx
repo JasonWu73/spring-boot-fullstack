@@ -1,5 +1,5 @@
 import Button from "@/components/button/Button.tsx";
-import React from "react";
+import React, { useState } from "react";
 import classNames from "classnames";
 
 type StepCardProps = {
@@ -12,10 +12,12 @@ const messages = [
   "Invest your new income 🤑"
 ];
 
-type Step = 1 | 2 | 3;
-
 type StepNumberProps = {
-  step: Step;
+  step: number;
+};
+
+type StepAction = {
+  setStep: React.Dispatch<React.SetStateAction<number>>;
 };
 
 export default function Draft() {
@@ -35,15 +37,13 @@ function StepCard({ children }: StepCardProps) {
 }
 
 function Step() {
-  // const [step, setStep] = useState<Step>(1);
-  // setStep(2);
-  const step = 2;
+  const [step, setStep] = useState(1);
 
   return (
     <div className="p-4 flex flex-col items-center justify-center gap-4">
       <StepNumber step={step} />
       <p>{`${step}. ${messages[step - 1]}`}</p>
-      <StepAction />
+      <StepAction setStep={setStep} />
     </div>
   );
 }
@@ -58,8 +58,8 @@ function StepNumber({ step }: StepNumberProps) {
             className={classNames(
               "w-8 h-8 rounded-full",
               {
-                "bg-sky-500 text-slate-50": (step >= number),
-                "bg-slate-50 text-slate-500": (step < number)
+                "bg-sky-500": (step >= number),
+                "bg-slate-400": (step < number)
               }
             )}
           >
@@ -71,13 +71,25 @@ function StepNumber({ step }: StepNumberProps) {
   );
 }
 
-function StepAction() {
+function StepAction({ setStep }: StepAction) {
   function handlePrevious() {
-    console.log("previous");
+    setStep(prev => {
+      if (prev <= 1) {
+        return prev;
+      }
+
+      return prev - 1;
+    });
   }
 
   function handleNext() {
-    console.log("next");
+    setStep(prev => {
+      if (prev >= 3) {
+        return prev;
+      }
+
+      return prev + 1;
+    });
   }
 
   return (
