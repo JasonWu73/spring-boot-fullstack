@@ -30,7 +30,7 @@ export default function Draft() {
 
 function StepCard({ children }: StepCardProps) {
   return (
-    <div className="w-96 mt-8 mx-auto border border-amber-500 bg-slate-200 rounded shadow-sm">
+    <div className="w-96 min-h-[10rem] mt-8 pt-8 mx-auto border border-amber-500 bg-slate-200 rounded shadow-sm relative">
       {children}
     </div>
   );
@@ -38,13 +38,22 @@ function StepCard({ children }: StepCardProps) {
 
 function Step() {
   const [step, setStep] = useState(1);
+  const [isOpen, setIsOpen] = useState(true);
 
   return (
-    <div className="p-4 flex flex-col items-center justify-center gap-4">
-      <StepNumber step={step} />
-      <p>{`${step}. ${messages[step - 1]}`}</p>
-      <StepAction setStep={setStep} />
-    </div>
+    <>
+      <Button onClick={() => setIsOpen(prev => !prev)} size="sm" className="absolute top-1 right-1">
+        {isOpen ? "×" : "✓"}
+      </Button>
+
+      {isOpen && (
+        <div className="p-4 flex flex-col items-center justify-center gap-4">
+          <StepNumber step={step} />
+          <p>{`${step}. ${messages[step - 1]}`}</p>
+          <StepAction setStep={setStep} />
+        </div>
+      )}
+    </>
   );
 }
 
