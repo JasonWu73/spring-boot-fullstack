@@ -5,6 +5,7 @@ type Variant = "primary" | "danger" | "light";
 type Size = "sm" | "md" | "lg";
 
 type ButtonProps = React.ComponentPropsWithoutRef<"button"> & {
+  label?: React.ReactNode;
   variant?: Variant;
   size?: Size;
 };
@@ -13,11 +14,13 @@ type ButtonProps = React.ComponentPropsWithoutRef<"button"> & {
  * Button 组件用于渲染一个按钮, 支持原生 HTML `button` 属性.
  *
  * @param ButtonProps - 按钮组件的属性
+ * @param ButtonProps.label - 按钮的内容, 如存在 `children` 值, 则会忽略该属性
  * @param ButtonProps.variant - 按钮的样式, 默认为 `primary`
  * @param ButtonProps.size - 按钮的尺寸, 默认为 `md`
  * @return 按钮组件
  */
 export default function Button({
+  label,
   variant = "primary",
   size = "md",
   children,
@@ -30,7 +33,7 @@ export default function Button({
 
   return (
     <button className={classNames(commonClasses, styleClasses, sizeClasses, className)} {...rest}>
-      {children}
+      {children ?? label}
     </button>
   );
 }

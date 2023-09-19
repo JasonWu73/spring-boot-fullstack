@@ -1,116 +1,50 @@
 import Button from "@/components/button/Button.tsx";
 import React, { useState } from "react";
-import classNames from "classnames";
 
-type StepCardProps = {
-  children: React.ReactNode;
-};
-
-const messages = [
-  "Learn React ⚛️",
-  "Apply for jobs 💼",
-  "Invest your new income 🤑"
-];
-
-type StepNumberProps = {
-  step: number;
-};
-
-type StepAction = {
-  setStep: React.Dispatch<React.SetStateAction<number>>;
-};
+type CriteriaProps = {
+  type: "step" | "count";
+  count: number;
+  setCount: React.Dispatch<React.SetStateAction<number>>;
+}
 
 export default function Draft() {
   return (
-    <>
-      <StepCard>
-        <Steps />
-      </StepCard>
-
-      <StepCard>
-        <Steps />
-      </StepCard>
-    </>
-  );
-}
-
-function StepCard({ children }: StepCardProps) {
-  return (
-    <div className="w-96 min-h-[10rem] mt-8 pt-8 mx-auto border border-amber-500 bg-slate-200 rounded shadow-sm relative">
-      {children}
+    <div>
+      <Counter />
     </div>
   );
 }
 
-function Steps() {
-  const [step, setStep] = useState(1);
-  const [isOpen, setIsOpen] = useState(true);
+function Counter() {
+  const [step, setStep] = useState(0);
+  const [count, setCount] = useState(0);
+  const days = count * step;
+  const timestamp = new Date().setDate(new Date().getDate() + days);
+  const dateStr = new Date(timestamp).toDateString();
 
   return (
-    <>
-      <Button onClick={() => setIsOpen(prev => !prev)} size="sm" className="absolute top-1 right-1">
-        {isOpen ? "×" : "✓"}
-      </Button>
+    <div className="w-96 mt-8 mx-auto p-4 rounded border border-amber-500 shadow-sm flex flex-col items-center justify-center gap-4 dark:text-slate-300">
+      <Criteria count={step} setCount={setStep} type="step" />
+      <Criteria count={count} setCount={setCount} type="count" />
 
-      {isOpen && (
-        <div className="p-4 flex flex-col items-center justify-center gap-4">
-          <StepNumbers step={step} />
-          <p>{`${step}. ${messages[step - 1]}`}</p>
-          <StepActions setStep={setStep} />
-        </div>
-      )}
-    </>
-  );
-}
-
-function StepNumbers({ step }: StepNumberProps) {
-  return (
-    <ul className="w-full flex justify-around">
-      {[1, 2, 3].map((number) => (
-        <li key={number}>
-          <Button
-            size="sm"
-            className={classNames(
-              "w-8 h-8 rounded-full",
-              {
-                "bg-sky-500": (step >= number),
-                "bg-slate-400": (step < number)
-              }
-            )}
-          >
-            {number}
-          </Button>
-        </li>
-      ))}
-    </ul>
-  );
-}
-
-function StepActions({ setStep }: StepAction) {
-  function handlePrevious() {
-    setStep(prev => {
-      if (prev <= 1) {
-        return prev;
-      }
-
-      return prev - 1;
-    });
-  }
-
-  function handleNext() {
-    setStep(prev => {
-      if (prev >= 3) {
-        return prev;
-      }
-
-      return prev + 1;
-    });
-  }
-
-  return (
-    <div className="w-full flex justify-around">
-      <Button onClick={handlePrevious} size="sm">Previous</Button>
-      <Button onClick={handleNext} size="sm">Next</Button>
+      {days === 0 && `Today is ${dateStr}`}
+      {days < 0 && `${-days} days ago was ${dateStr}`}
+      {days > 0 && `${days} days after is ${dateStr}`}
     </div>
   );
+}
+
+function Criteria({ type, count, setCount }: CriteriaProps) {
+  return (
+    <div className="w-full flex items-center justify-center gap-4">
+      <Button onClick={() => setCount(prev => prev - 1)} label="-" />
+
+      <span className="w-1/2 text-center">
+        {type === "step" && "Step: "}
+        {type === "count" && "Count: "}
+        <span>{count}</span>
+      </span>
+
+      <Button onClick={() => setCount(prev => prev + 1)} label="+" />
+    </div>);
 }
