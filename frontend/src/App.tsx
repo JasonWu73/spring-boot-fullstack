@@ -1,11 +1,11 @@
-import TravelList from "@/components/drafts/TravelList.tsx";
 import { useEffect } from "react";
+import FlashCards from "@/components/drafts/FlashCards.tsx";
 
 export default function App() {
   useTheme();
 
   return (
-    <TravelList />
+    <FlashCards />
   );
 }
 
