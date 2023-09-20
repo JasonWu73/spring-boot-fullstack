@@ -27,7 +27,7 @@ type ItemProps = {
   item: typeof initialItems[0];
 };
 
-export default function Draft() {
+export default function TravelList() {
   return (
     <div className="min-h-screen flex flex-col">
       <Logo />

@@ -1,11 +1,11 @@
-import Draft from "@/components/drafts/Draft.tsx";
+import TravelList from "@/components/drafts/TravelList.tsx";
 import { useEffect } from "react";
 
 export default function App() {
   useTheme();
 
   return (
-    <Draft />
+    <TravelList />
   );
 }
 
