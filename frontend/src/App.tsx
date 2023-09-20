@@ -1,11 +1,11 @@
 import { useEffect } from "react";
-import FlashCards from "@/components/drafts/FlashCards.tsx";
+import DateCounter from "@/components/drafts/DateCounter.tsx";
 
 export default function App() {
   useTheme();
 
   return (
-    <FlashCards />
+    <DateCounter />
   );
 }
 
