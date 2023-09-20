@@ -39,6 +39,10 @@ type PackingListProps = {
   onToggleItem: (itemId: number) => void;
 };
 
+type FooterProps = {
+  children: React.ReactNode
+};
+
 export default function TravelList() {
   const [items, setItems] = useState(initialItems);
 
@@ -68,7 +72,7 @@ export default function TravelList() {
       <Logo />
       <Form onAddItem={handleAddItem} />
       <PackingList items={items} onDeleteItem={handleDeleteItem} onToggleItem={handleToggleItem} />
-      <Stats />
+      <Stats items={items} />
     </div>
   );
 }
@@ -135,7 +139,7 @@ function Form({ onAddItem }: FormProps) {
 function PackingList({ items, onDeleteItem, onToggleItem }: PackingListProps) {
   return (
     <div className="self-stretch flex-grow bg-amber-900 text-slate-50 h-16 py-4 text-lg">
-      <ul className="mx-24 flex gap-80">
+      <ul className="mx-24 flex flex-wrap gap-x-20 gap-y-8">
         {items.map((item) => (
           <Item key={item.id} item={item} onDelete={onDeleteItem} onToggleItem={onToggleItem} />
         ))}
@@ -164,10 +168,29 @@ function Item({ item, onDelete, onToggleItem }: ItemProps) {
   );
 }
 
-function Stats() {
+function Stats({ items }: Pick<PackingListProps, "items">) {
+  if (!items.length) {
+    return (
+      <Footer>
+        <em>Start adding some items to your packing list 🚀</em>
+      </Footer>
+    );
+  }
+
+  const packedItems = items.filter(item => item.packed);
+  const packedPercent = Math.round(packedItems.length / items.length * 100);
+
   return (
-    <footer className="bg-cyan-500 text-gray-800 h-16 flex justify-center items-center">
-      <em className="text-lg font-semibold">💼 You have X items on your list, and you already packed X (X%)</em>
-    </footer>
+    <Footer>
+      <em className="text-lg font-semibold">
+        {packedPercent === 100
+          ? "You got everything! Ready to go ✈️"
+          : `💼 You have ${items.length} items on your list, and you already packed ${packedItems.length} (${packedPercent}%)`}
+      </em>
+    </Footer>
   );
+}
+
+function Footer({ children }: FooterProps) {
+  return <footer className="bg-cyan-500 text-gray-800 h-16 flex justify-center items-center">{children}</footer>;
 }
