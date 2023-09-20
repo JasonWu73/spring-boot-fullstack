@@ -4,6 +4,6 @@
 
 /* 暗色主题 */
 body.dark {
-  background-color: #2E3440;
-  color: #ECEFF4;
+  background-color: #2E3440; /* nord-500 */
+  color: #ECEFF4; /* nord-200 */
 }

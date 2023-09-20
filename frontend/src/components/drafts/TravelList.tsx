@@ -26,6 +26,7 @@ const initialItems = [
 type ItemProps = {
   item: typeof initialItems[0];
   onDelete: (itemId: number) => void;
+  onToggleItem: (itemId: number) => void;
 };
 
 type FormProps = {
@@ -35,6 +36,7 @@ type FormProps = {
 type PackingListProps = {
   items: typeof initialItems;
   onDeleteItem: (itemId: number) => void;
+  onToggleItem: (itemId: number) => void;
 };
 
 export default function TravelList() {
@@ -48,11 +50,24 @@ export default function TravelList() {
     setItems((prevItems) => prevItems.filter(item => item.id !== itemId));
   }
 
+  function handleToggleItem(itemId: number) {
+    setItems((prevItems) => prevItems.map(item => {
+      if (item.id !== itemId) {
+        return item;
+      }
+
+      return {
+        ...item,
+        packed: !item.packed
+      };
+    }));
+  }
+
   return (
     <div className="min-h-screen flex flex-col">
       <Logo />
       <Form onAddItem={handleAddItem} />
-      <PackingList items={items} onDeleteItem={handleDeleteItem} />
+      <PackingList items={items} onDeleteItem={handleDeleteItem} onToggleItem={handleToggleItem} />
       <Stats />
     </div>
   );
@@ -117,25 +132,34 @@ function Form({ onAddItem }: FormProps) {
   );
 }
 
-function PackingList({ items, onDeleteItem }: PackingListProps) {
+function PackingList({ items, onDeleteItem, onToggleItem }: PackingListProps) {
   return (
     <div className="self-stretch flex-grow bg-amber-900 text-slate-50 h-16 py-4 text-lg">
       <ul className="mx-24 flex gap-80">
         {items.map((item) => (
-          <Item key={item.id} item={item} onDelete={onDeleteItem} />
+          <Item key={item.id} item={item} onDelete={onDeleteItem} onToggleItem={onToggleItem} />
         ))}
       </ul>
     </div>
   );
 }
 
-function Item({ item, onDelete }: ItemProps) {
+function Item({ item, onDelete, onToggleItem }: ItemProps) {
   return (
-    <li className="flex items-center">
-      <span className={classNames({ "line-through": item.packed })}>
+    <li className="flex items-center justify-center gap-2">
+      <label className="flex items-center gap-2">
+        <input
+          type="checkbox"
+          checked={item.packed}
+          onChange={() => onToggleItem(item.id)}
+          className="w-4 h-4 accent-amber-500"
+        />
+        <span className={classNames({ "line-through": item.packed })}>
         {item.quantity} {item.description}
       </span>
-      <button onClick={() => onDelete(item.id)} className="ml-3 text-xs block">❌</button>
+      </label>
+
+      <button onClick={() => onDelete(item.id)} className="text-sm h-4">❌</button>
     </li>
   );
 }
