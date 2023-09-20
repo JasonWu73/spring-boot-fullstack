@@ -1,3 +1,30 @@
+import classNames from "classnames";
+
+const initialItems = [
+  {
+    id: 1,
+    description: "Passports",
+    quantity: 2,
+    packed: false
+  },
+  {
+    id: 2,
+    description: "Socks",
+    quantity: 12,
+    packed: false
+  },
+  {
+    id: 3,
+    description: "Charger",
+    quantity: 1,
+    packed: false
+  }
+];
+
+type ItemProps = {
+  item: typeof initialItems[0];
+};
+
 export default function Draft() {
   return (
     <div className="min-h-screen flex flex-col">
@@ -27,9 +54,24 @@ function Form() {
 
 function PackingList() {
   return (
-    <div className="self-stretch flex-grow bg-amber-700 text-slate-50 h-16 flex justify-center py-4">
-      LIST
+    <div className="self-stretch flex-grow bg-amber-900 text-slate-50 h-16 py-4 text-lg">
+      <ul className="mx-24 flex gap-80">
+        {initialItems.map((item) => (
+          <Item key={item.id} item={item} />
+        ))}
+      </ul>
     </div>
+  );
+}
+
+function Item({ item }: ItemProps) {
+  return (
+    <li className="flex items-center">
+      <span className={classNames({ "line-through": item.packed })}>
+        ${item.quantity} {item.description}
+      </span>
+      <button className="ml-3 text-xs block">❌</button>
+    </li>
   );
 }
 
