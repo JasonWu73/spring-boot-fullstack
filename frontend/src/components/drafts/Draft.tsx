@@ -1,50 +1,42 @@
-import Button from "@/components/button/Button.tsx";
-import React, { useState } from "react";
-
-type CriteriaProps = {
-  type: "step" | "count";
-  count: number;
-  setCount: React.Dispatch<React.SetStateAction<number>>;
-}
-
 export default function Draft() {
   return (
-    <div>
-      <Counter />
+    <div className="min-h-screen flex flex-col">
+      <Logo />
+      <Form />
+      <PackingList />
+      <Stats />
     </div>
   );
 }
 
-function Counter() {
-  const [step, setStep] = useState(0);
-  const [count, setCount] = useState(0);
-  const days = count * step;
-  const timestamp = new Date().setDate(new Date().getDate() + days);
-  const dateStr = new Date(timestamp).toDateString();
-
+function Logo() {
   return (
-    <div className="w-96 mt-8 mx-auto p-4 rounded border border-amber-500 shadow-sm flex flex-col items-center justify-center gap-4 dark:text-slate-300">
-      <Criteria count={step} setCount={setStep} type="step" />
-      <Criteria count={count} setCount={setCount} type="count" />
-
-      {days === 0 && `Today is ${dateStr}`}
-      {days < 0 && `${-days} days ago was ${dateStr}`}
-      {days > 0 && `${days} days after is ${dateStr}`}
+    <div className="bg-amber-500 text-gray-800 h-20 flex justify-center items-center">
+      <h1 className="text-4xl font-extrabold tracking-widest">🏝️ Far Away</h1>
     </div>
   );
 }
 
-function Criteria({ type, count, setCount }: CriteriaProps) {
+function Form() {
   return (
-    <div className="w-full flex items-center justify-center gap-4">
-      <Button onClick={() => setCount(prev => prev - 1)} label="-" />
+    <div className="bg-orange-500 text-gray-800 h-16 flex justify-center items-center">
+      <h3 className="text-2xl font-bold tracking-wider">What do you need for your 🥰 trip?</h3>
+    </div>
+  );
+}
 
-      <span className="w-1/2 text-center">
-        {type === "step" && "Step: "}
-        {type === "count" && "Count: "}
-        <span>{count}</span>
-      </span>
+function PackingList() {
+  return (
+    <div className="self-stretch flex-grow bg-amber-700 text-slate-50 h-16 flex justify-center py-4">
+      LIST
+    </div>
+  );
+}
 
-      <Button onClick={() => setCount(prev => prev + 1)} label="+" />
-    </div>);
+function Stats() {
+  return (
+    <footer className="bg-cyan-500 text-gray-800 h-16 flex justify-center items-center">
+      <em className="text-lg font-semibold">💼 You have X items on your list, and you already packed X (X%)</em>
+    </footer>
+  );
 }
