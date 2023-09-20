@@ -13,7 +13,7 @@ const initialItems = [
     id: 2,
     description: "Socks",
     quantity: 12,
-    packed: false
+    packed: true
   },
   {
     id: 3,
@@ -25,28 +25,34 @@ const initialItems = [
 
 type ItemProps = {
   item: typeof initialItems[0];
+  onDelete: (itemId: number) => void;
 };
 
 type FormProps = {
-  onAddItem: (item: typeof initialItems[0]) => void
+  onAddItem: (item: typeof initialItems[0]) => void;
 };
 
 type PackingListProps = {
-  items: typeof initialItems
+  items: typeof initialItems;
+  onDeleteItem: (itemId: number) => void;
 };
 
 export default function TravelList() {
-  const [items, setItems] = useState<typeof initialItems>([]);
+  const [items, setItems] = useState(initialItems);
 
   function handleAddItem(item: typeof initialItems[0]) {
     setItems((prevItems) => [...prevItems, item]);
+  }
+
+  function handleDeleteItem(itemId: number) {
+    setItems((prevItems) => prevItems.filter(item => item.id !== itemId));
   }
 
   return (
     <div className="min-h-screen flex flex-col">
       <Logo />
       <Form onAddItem={handleAddItem} />
-      <PackingList items={items} />
+      <PackingList items={items} onDeleteItem={handleDeleteItem} />
       <Stats />
     </div>
   );
@@ -111,25 +117,25 @@ function Form({ onAddItem }: FormProps) {
   );
 }
 
-function PackingList({ items }: PackingListProps) {
+function PackingList({ items, onDeleteItem }: PackingListProps) {
   return (
     <div className="self-stretch flex-grow bg-amber-900 text-slate-50 h-16 py-4 text-lg">
       <ul className="mx-24 flex gap-80">
         {items.map((item) => (
-          <Item key={item.id} item={item} />
+          <Item key={item.id} item={item} onDelete={onDeleteItem} />
         ))}
       </ul>
     </div>
   );
 }
 
-function Item({ item }: ItemProps) {
+function Item({ item, onDelete }: ItemProps) {
   return (
     <li className="flex items-center">
       <span className={classNames({ "line-through": item.packed })}>
         {item.quantity} {item.description}
       </span>
-      <button className="ml-3 text-xs block">❌</button>
+      <button onClick={() => onDelete(item.id)} className="ml-3 text-xs block">❌</button>
     </li>
   );
 }
