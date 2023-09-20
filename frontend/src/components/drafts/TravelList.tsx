@@ -27,12 +27,26 @@ type ItemProps = {
   item: typeof initialItems[0];
 };
 
+type FormProps = {
+  onAddItem: (item: typeof initialItems[0]) => void
+};
+
+type PackingListProps = {
+  items: typeof initialItems
+};
+
 export default function TravelList() {
+  const [items, setItems] = useState<typeof initialItems>([]);
+
+  function handleAddItem(item: typeof initialItems[0]) {
+    setItems((prevItems) => [...prevItems, item]);
+  }
+
   return (
     <div className="min-h-screen flex flex-col">
       <Logo />
-      <Form />
-      <PackingList />
+      <Form onAddItem={handleAddItem} />
+      <PackingList items={items} />
       <Stats />
     </div>
   );
@@ -46,7 +60,7 @@ function Logo() {
   );
 }
 
-function Form() {
+function Form({ onAddItem }: FormProps) {
   const [quantity, setQuantity] = useState(1);
   const [description, setDescription] = useState("");
 
@@ -63,7 +77,8 @@ function Form() {
       quantity,
       packed: false
     };
-    console.log(newItem);
+
+    onAddItem(newItem);
 
     setQuantity(1);
     setDescription("");
@@ -96,11 +111,11 @@ function Form() {
   );
 }
 
-function PackingList() {
+function PackingList({ items }: PackingListProps) {
   return (
     <div className="self-stretch flex-grow bg-amber-900 text-slate-50 h-16 py-4 text-lg">
       <ul className="mx-24 flex gap-80">
-        {initialItems.map((item) => (
+        {items.map((item) => (
           <Item key={item.id} item={item} />
         ))}
       </ul>
@@ -112,7 +127,7 @@ function Item({ item }: ItemProps) {
   return (
     <li className="flex items-center">
       <span className={classNames({ "line-through": item.packed })}>
-        ${item.quantity} {item.description}
+        {item.quantity} {item.description}
       </span>
       <button className="ml-3 text-xs block">❌</button>
     </li>

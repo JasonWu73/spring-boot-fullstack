@@ -1,11 +1,11 @@
 import { useEffect } from "react";
-import DateCounter from "@/components/drafts/DateCounter.tsx";
+import TravelList from "@/components/drafts/TravelList.tsx";
 
 export default function App() {
   useTheme();
 
   return (
-    <DateCounter />
+    <TravelList />
   );
 }
 
