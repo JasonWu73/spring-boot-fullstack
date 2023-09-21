@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import TravelList from "@/components/drafts/TravelList.tsx";
+import TravelList from "@/components/drafts/travel-list/TravelList.tsx";
 
 export default function App() {
   useTheme();
