@@ -5,41 +5,50 @@ const questions = [
   {
     id: 1,
     question: "What is React?",
-    answer: "A library for managing user interfaces."
+    answer: "A library for managing user interfaces. It is maintained by Facebook."
   },
   {
     id: 2,
     question: "Where do you make Ajax requests in React?",
-    answer: "The componentDidMount lifecycle event"
+    answer: "The componentDidMount lifecycle event. It fires when the component is first rendered to the DOM."
   },
   {
     id: 3,
     question: "How do you pass data to a React component?",
-    answer: "You can pass data to a React component using props"
+    answer: "You can pass data to a React component using props. Props are read-only. They are used to pass data from one component to another. Props are read-only. They are used to pass data from one component to another."
   }
 ];
 
+type OpenId = number | null;
+
 type AccordionCardProps = {
   question: typeof questions[0];
+  isOpen: boolean;
+  onOpen: (id: OpenId) => void;
 };
 
 export default function Accordion() {
+  const [openId, setOpenId] = useState<OpenId>(null);
+
   return (
     <div>
       {questions.map(question => (
-        <AccordionCard key={question.id} question={question} />
+        <AccordionCard
+          key={question.id}
+          question={question}
+          isOpen={openId === question.id}
+          onOpen={(id) => setOpenId(id)}
+        />
       ))}
     </div>
   );
 }
 
-function AccordionCard({ question }: AccordionCardProps) {
-  const [isOpen, setIsOpen] = useState(false);
-
+function AccordionCard({ question, isOpen, onOpen }: AccordionCardProps) {
   return (
     <div className="w-1/3 mt-8 mx-auto p-4 border-t-4 border-t-green-600 shadow">
       <header
-        onClick={() => setIsOpen(prevIsOpen => !prevIsOpen)}
+        onClick={() => onOpen(isOpen ? null : question.id)}
         className="relative flex justify-center items-center cursor-pointer"
       >
         <h2
