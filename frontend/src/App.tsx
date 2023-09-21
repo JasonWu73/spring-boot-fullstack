@@ -1,11 +1,11 @@
 import { useEffect } from "react";
-import TipCalculator from "@/components/drafts/TipCalculator.tsx";
+import EatAndSplit from "@/components/drafts/eat-n-split/EatAndSplit.tsx";
 
 export default function App() {
   useTheme();
 
   return (
-    <TipCalculator />
+    <EatAndSplit />
   );
 }
 
