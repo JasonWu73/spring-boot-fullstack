@@ -1,11 +1,11 @@
 import { useEffect } from "react";
-import TravelList from "@/components/drafts/travel-list/TravelList.tsx";
+import Accordion from "@/components/drafts/Accordion.tsx";
 
 export default function App() {
   useTheme();
 
   return (
-    <TravelList />
+    <Accordion />
   );
 }
 
