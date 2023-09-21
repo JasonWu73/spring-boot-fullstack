@@ -37,16 +37,18 @@ type PackingListProps = {
   items: typeof initialItems;
   onDeleteItem: (itemId: number) => void;
   onToggleItem: (itemId: number) => void;
+  onClear: () => void;
 };
 
 type FooterProps = {
-  children: React.ReactNode
+  children: React.ReactNode;
 };
 
 type SortBy = "input" | "description" | "packed";
 
 type SortProps = {
-  onSort: (sortBy: SortBy) => void
+  onSort: (sortBy: SortBy) => void;
+  onClear: () => void;
 };
 
 export default function TravelList() {
@@ -73,11 +75,21 @@ export default function TravelList() {
     }));
   }
 
+  function handleClearItems() {
+    const isConfirmed = window.confirm("Are you sure you want to clear your list?");
+    isConfirmed && setItems([]);
+  }
+
   return (
     <div className="min-h-screen flex flex-col">
       <Logo />
       <Form onAddItem={handleAddItem} />
-      <PackingList items={items} onDeleteItem={handleDeleteItem} onToggleItem={handleToggleItem} />
+      <PackingList
+        items={items}
+        onDeleteItem={handleDeleteItem}
+        onToggleItem={handleToggleItem}
+        onClear={handleClearItems}
+      />
       <Stats items={items} />
     </div>
   );
@@ -142,7 +154,7 @@ function Form({ onAddItem }: FormProps) {
   );
 }
 
-function PackingList({ items, onDeleteItem, onToggleItem }: PackingListProps) {
+function PackingList({ items, onDeleteItem, onToggleItem, onClear }: PackingListProps) {
   const [sortBy, setSortBy] = useState<SortBy>("input");
 
   let sortedItems = items;
@@ -163,7 +175,10 @@ function PackingList({ items, onDeleteItem, onToggleItem }: PackingListProps) {
         ))}
       </ul>
 
-      <Sort onSort={(sortBy) => setSortBy(sortBy)} />
+      <Sort
+        onSort={(sortBy) => setSortBy(sortBy)}
+        onClear={onClear}
+      />
     </div>
   );
 }
@@ -188,7 +203,7 @@ function Item({ item, onDelete, onToggleItem }: ItemProps) {
   );
 }
 
-function Sort({ onSort }: SortProps) {
+function Sort({ onSort, onClear }: SortProps) {
   const [sortBy, setSortBy] = useState<SortBy>("input");
 
   return (
@@ -214,7 +229,11 @@ function Sort({ onSort }: SortProps) {
         <option value="packed">sort by packed status</option>
       </select>
 
-      <button className="ml-8 text-sm font-bold bg-amber-200 text-black px-4 py-2 rounded-full uppercase">clear list
+      <button
+        onClick={onClear}
+        className="ml-8 text-sm font-bold bg-amber-200 text-black px-4 py-2 rounded-full uppercase"
+      >
+        clear list
       </button>
     </div>
   );

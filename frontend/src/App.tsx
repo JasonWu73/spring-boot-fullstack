@@ -12,7 +12,7 @@ export default function App() {
 function useTheme() {
   useEffect(() => {
     // 监听暗色模式变化
-    const mediaQuery = matchMedia("(prefers-color-scheme: dark)");
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
     // 初始化
     mediaQuery.matches && addDarkBodyClass();
