@@ -1,8 +1,8 @@
 import React from "react";
 import classNames from "classnames";
+import { type Size } from "@/components/ui/types.ts";
 
 type Variant = "primary" | "danger" | "light";
-type Size = "sm" | "md" | "lg";
 
 type ButtonProps = React.ComponentPropsWithoutRef<"button"> & {
   label?: React.ReactNode;
@@ -13,10 +13,10 @@ type ButtonProps = React.ComponentPropsWithoutRef<"button"> & {
 /**
  * Button 组件用于渲染一个按钮, 支持原生 HTML `button` 属性.
  *
- * @param ButtonProps - 按钮组件的属性
- * @param ButtonProps.label - 按钮的内容, 如存在 `children` 值, 则会忽略该属性
- * @param ButtonProps.variant - 按钮的样式, 默认为 `primary`
- * @param ButtonProps.size - 按钮的尺寸, 默认为 `md`
+ * @param ButtonProps - 组件属性
+ * @param ButtonProps.label - 内容, 如存在 `children` 值, 则会忽略该属性
+ * @param ButtonProps.variant - 样式, 默认为 `primary`
+ * @param ButtonProps.size - 尺寸, 默认为 `md`
  * @return 按钮组件
  */
 export default function Button({
@@ -27,12 +27,19 @@ export default function Button({
   className,
   ...rest
 }: ButtonProps) {
-  const commonClasses = "rounded shadow-sm focus:outline-none focus:ring disabled:opacity-50 disabled:cursor-not-allowed";
   const styleClasses = getStyleClasses(variant);
   const sizeClasses = getSizeClasses(size);
 
   return (
-    <button className={classNames(commonClasses, styleClasses, sizeClasses, className)} {...rest}>
+    <button
+      className={classNames(
+        "rounded shadow-sm focus:outline-none focus:ring disabled:opacity-50 disabled:cursor-not-allowed",
+        styleClasses,
+        sizeClasses,
+        className
+      )}
+      {...rest}
+    >
       {children ?? label}
     </button>
   );

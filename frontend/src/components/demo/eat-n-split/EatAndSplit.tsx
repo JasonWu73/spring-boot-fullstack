@@ -1,6 +1,5 @@
-import FriendList from "@/components/drafts/eat-n-split/FriendList.tsx";
-import NewBill from "@/components/drafts/eat-n-split/NewBill.tsx";
-import NewFriend from "@/components/drafts/eat-n-split/NewFriend.tsx";
+import FriendList from "@/components/demo/eat-n-split/FriendList.tsx";
+import FormSplitBill from "@/components/demo/eat-n-split/FormSplitBill.tsx";
 import { useState } from "react";
 
 const initialFriends = [
@@ -28,15 +27,13 @@ export default function EatAndSplit() {
   const [friends, setFriends] = useState(initialFriends);
 
   return (
-    <div className="h-screen grid grid-rows-2 grid-cols-2 gap-4">
-      <div className="row-span-1 col-span-1">
+    <div className="h-screen grid grid-flow-row md:grid-rows-1 md:grid-cols-2 md:gap-16">
+      <div className="min-w-min row-span-1 col-span-1 md:flex md:justify-end">
         <FriendList friends={friends} />
       </div>
-      <div className="row-span-2 col-span-1">
-        <NewBill />
-      </div>
-      <div className="row-span-1 col-span-1">
-        <NewFriend />
+
+      <div className="min-w-min row-span-1 col-span-1">
+        <FormSplitBill />
       </div>
     </div>
   );

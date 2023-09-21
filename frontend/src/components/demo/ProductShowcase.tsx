@@ -1,4 +1,4 @@
-import Button from "@/components/button/Button.tsx";
+import Button from "@/components/ui/Button.tsx";
 import { getRandomProduct } from "@/apis/dummyjson/product.ts";
 import { useEffect, useReducer } from "react";
 import classNames from "classnames";
