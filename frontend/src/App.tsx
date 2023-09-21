@@ -1,11 +1,11 @@
 import { useEffect } from "react";
-import Accordion from "@/components/drafts/Accordion.tsx";
+import TipCalculator from "@/components/drafts/TipCalculator.tsx";
 
 export default function App() {
   useTheme();
 
   return (
-    <Accordion />
+    <TipCalculator />
   );
 }
 
