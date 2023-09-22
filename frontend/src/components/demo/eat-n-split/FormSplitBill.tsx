@@ -7,9 +7,9 @@ import { Input } from "@/components/ui/Input.tsx";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx";
 
 const formSchema = z.object({
-  bill: z.number().min(0.1, { message: "Bill must be greater than 0" }),
-  yourExpense: z.number().min(0.1, { message: "Expense must be greater than 0" }),
-  friendExpense: z.number().min(0.1, { message: "Expense must be greater than 0" }),
+  bill: z.coerce.number().min(0.1, { message: "Bill must be greater than 0" }),
+  yourExpense: z.coerce.number().min(0.1, { message: "Expense must be greater than 0" }),
+  friendExpense: z.coerce.number().min(0.1, { message: "Expense must be greater than 0" }),
   friend: z.string().min(2, { message: "Friend name must be at least 2 characters" })
 });
 
