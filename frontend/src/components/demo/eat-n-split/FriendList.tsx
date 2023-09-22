@@ -1,6 +1,7 @@
 import FormAddFriend from "@/components/demo/eat-n-split/FormAddFriend.tsx";
 import { Button } from "@/components/ui/Button.tsx";
 import { type Friend } from "@/components/demo/eat-n-split/EatAndSplit.tsx";
+import { useState } from "react";
 
 type FriendListProps = {
   friends: Friend[];
@@ -11,17 +12,23 @@ type FriendItemProps = {
 };
 
 export default function FriendList({ friends }: FriendListProps) {
+  const [showAddFriend, setShowAddFriend] = useState(false);
+
   return (
     <div className="w-full md:max-w-lg md:ml-16 md:mt-16 md:flex md:justify-end">
       <ul className="p-4 w-full overflow-auto flex flex-col gap-4">
         {friends.map((friend) => (<FriendItem key={friend.id} friend={friend} />))}
 
-        <li>
-          <FormAddFriend />
-        </li>
+        {showAddFriend && (
+          <li>
+            <FormAddFriend />
+          </li>
+        )}
 
         <li className="text-right">
-          <Button>Add friend</Button>
+          <Button onClick={() => setShowAddFriend((prevState) => !prevState)}>
+            {showAddFriend ? "Close" : "Add friend"}
+          </Button>
         </li>
       </ul>
     </div>
