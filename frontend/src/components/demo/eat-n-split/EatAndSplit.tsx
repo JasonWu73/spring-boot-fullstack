@@ -28,10 +28,14 @@ export type Friend = typeof initialFriends[0];
 export default function EatAndSplit() {
   const [friends, setFriends] = useState(initialFriends);
 
+  function handleAddFriend(friend: Friend) {
+    setFriends((prevState) => [...prevState, friend]);
+  }
+
   return (
     <div className="h-screen grid grid-flow-row md:grid-rows-1 md:grid-cols-2 md:gap-16">
       <div className="min-w-min row-span-1 col-span-1 md:flex md:justify-end">
-        <FriendList friends={friends} />
+        <FriendList friends={friends} onAddFriend={handleAddFriend} />
       </div>
 
       <div className="min-w-min row-span-1 col-span-1">

@@ -5,14 +5,20 @@ import { useState } from "react";
 
 type FriendListProps = {
   friends: Friend[];
+  onAddFriend: (friend: Friend) => void;
 };
 
 type FriendItemProps = {
   friend: Friend
 };
 
-export default function FriendList({ friends }: FriendListProps) {
+export default function FriendList({ friends, onAddFriend }: FriendListProps) {
   const [showAddFriend, setShowAddFriend] = useState(false);
+
+  function handleAddFriend(friend: Friend) {
+    onAddFriend(friend);
+    setShowAddFriend(false);
+  }
 
   return (
     <div className="w-full md:max-w-lg md:ml-16 md:mt-16 md:flex md:justify-end">
@@ -21,7 +27,7 @@ export default function FriendList({ friends }: FriendListProps) {
 
         {showAddFriend && (
           <li>
-            <FormAddFriend />
+            <FormAddFriend onAddFriend={handleAddFriend} />
           </li>
         )}
 
