@@ -57,21 +57,21 @@ export default function FormSplitBill() {
       >
         <h2 className="text-2xl font-bold">Split a bill with X</h2>
 
-        <ControllerFormField
+        <ControlledFormField
           control={form.control}
           name="bill"
           label="💰 Bill value"
           placeholder="Bill value"
         />
 
-        <ControllerFormField
+        <ControlledFormField
           control={form.control}
           name="yourExpense"
           label="💸 Your expense"
           placeholder="Your expense"
         />
 
-        <ControllerFormField
+        <ControlledFormField
           control={form.control}
           name="friendExpense"
           label="👫 X's expense"
@@ -115,7 +115,7 @@ type ControllerFormFieldProps = {
   disabled?: boolean;
 };
 
-function ControllerFormField({ control, name, label, placeholder, disabled }: ControllerFormFieldProps) {
+function ControlledFormField({ control, name, label, placeholder, disabled }: ControllerFormFieldProps) {
   return (
     <FormField
       control={control}

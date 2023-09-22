@@ -45,9 +45,9 @@ export default function FormAddFriend({ onAddFriend }: FormAddFriendProps) {
         onSubmit={form.handleSubmit(onSubmit)}
         className="p-4 flex flex-col gap-4 rounded border shadow-sm bg-amber-100 text-slate-700"
       >
-        <ControllerFormField control={form.control} name="name" label="👫 Friend name" placeholder="Friend name" />
+        <ControlledFormField control={form.control} name="name" label="👫 Friend name" placeholder="Friend name" />
 
-        <ControllerFormField control={form.control} name="image" label="🌄 Image URL" placeholder="Image URL" />
+        <ControlledFormField control={form.control} name="image" label="🌄 Image URL" placeholder="Image URL" />
 
         <Button type="submit" className="self-end">Add</Button>
       </form>
@@ -62,7 +62,7 @@ type ControllerFormFieldProps = {
   placeholder: string;
 };
 
-function ControllerFormField({ control, name, label, placeholder }: ControllerFormFieldProps) {
+function ControlledFormField({ control, name, label, placeholder }: ControllerFormFieldProps) {
   return (
     <FormField
       control={control}
