@@ -1,10 +1,9 @@
-import React from "react";
+import React, { useId } from "react";
 import classNames from "classnames";
 import { type Size } from "@/components/ui/types.ts";
 
 type FormItemProps = React.ComponentPropsWithRef<"input"> & {
   label?: React.ReactNode;
-  fieldName: string;
   itemSize?: Size;
   labelClass?: string;
   inputClass?: string;
@@ -15,7 +14,6 @@ type FormItemProps = React.ComponentPropsWithRef<"input"> & {
  *
  * @param FormItemProps - 组件属性
  * @param FormItemProps.label - 标签内容, 如存在 `children` 值, 则会忽略该属性
- * @param FormItemProps.fieldName - 字段名
  * @param FormItemProps.itemSize - 尺寸, 默认 `md`
  * @param FormItemProps.labelClass - 标签样式
  * @param FormItemProps.inputClass - 输入框样式
@@ -23,7 +21,6 @@ type FormItemProps = React.ComponentPropsWithRef<"input"> & {
  */
 export default function FormItem({
   label,
-  fieldName,
   itemSize = "md",
   labelClass,
   inputClass,
@@ -31,6 +28,8 @@ export default function FormItem({
   type = "text",
   ...rest
 }: FormItemProps) {
+  const id = useId();
+
   const sizeClasses = getSizeClasses(itemSize);
 
   return (
@@ -43,13 +42,13 @@ export default function FormItem({
         }
       )}
     >
-      <label htmlFor={fieldName} className={classNames("min-w-[120px]", sizeClasses, labelClass)}>
+      <label htmlFor={id} className={classNames("min-w-[120px]", sizeClasses, labelClass)}>
         {children ?? label}
       </label>
 
       <input
         type={type}
-        id={fieldName}
+        id={id}
         className={classNames(
           "flex-1 rounded shadow-sm border border-slate-400 focus:outline-none focus:ring focus:ring-sky-300",
           sizeClasses,
