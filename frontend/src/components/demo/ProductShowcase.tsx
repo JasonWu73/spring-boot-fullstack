@@ -1,4 +1,4 @@
-import { getRandomProduct, type Product } from "@/apis/dummyjson/product.ts";
+import { getRandomProduct, type Product } from "@/api/dummyjson/product.ts";
 import { useEffect, useReducer } from "react";
 import classNames from "classnames";
 import { ReloadIcon } from "@radix-ui/react-icons";

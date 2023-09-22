@@ -14,30 +14,34 @@ type UrlInfo = Pick<Request, "url" | "urlData">;
 type RequestConfig = Pick<Request, "method" | "contentType" | "bodyData" | "signal">;
 type RequestBody = Pick<Request, "contentType" | "bodyData">;
 
-type Response<TData, TError> = {
-  data: TData | null;
-  error: TError | string | null;
+type Response<T, E> = {
+  data: T | null;
+  error: E | string | null;
 };
 
 /**
  * 发送 HTTP 请求, 并以 JSON 数据格式解析响应数据.
  *
- * @template TData - 成功响应时的数据类型
- * @template TError - 错误响应时的数据类型
+ * @template T 成功响应时的数据类型
+ * @template E 错误响应时的数据类型
  *
- * @param Request - 请求的配置属性
- * @param Request.url - URL 地址
- * @param Request.method - 请求方法, 默认为 `GET`
- * @param Request.contentType - 请求体的内容类型, 默认为 `JSON`
- * @param Request.urlData - URL 参数
- * @param Request.bodyData - 请求体数据
- * @param Request.signal - `AbortController` 实例的 `signal` 属性, 用于主动取消请求
- * @return 以 JSON 数据格式解析后的正常或异常响应数据
+ * @param Request 请求的配置属性
+ * @param Request.url URL 地址
+ * @param Request.method 请求方法, 默认为 `GET`
+ * @param Request.contentType 请求体的内容类型, 默认为 `JSON`
+ * @param Request.urlData URL 参数
+ * @param Request.bodyData 请求体数据
+ * @param Request.signal `AbortController` 实例的 `signal` 属性, 用于主动取消请求
+ * @returns {Promise<Response<T, E>>} 以 JSON 数据格式解析后的正常或异常响应数据
  */
-export async function sendRequest<
-  TData,
-  TError
->({ url, method = "GET", contentType = "JSON", urlData, bodyData, signal }: Request): Promise<Response<TData, TError>> {
+export async function sendRequest<T, E>({
+  url,
+  method = "GET",
+  contentType = "JSON",
+  urlData,
+  bodyData,
+  signal
+}: Request): Promise<Response<T, E>> {
   try {
     // 追加 URL 参数
     const splicedUrl = appendParamsToUrl({ url, urlData });

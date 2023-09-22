@@ -6,6 +6,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/Input.tsx";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx";
 import { useEffect } from "react";
+import { isNumber } from "@/lib/number.ts";
 
 const formSchema = z.object({
   bill: z.string().trim()
@@ -139,19 +140,19 @@ function useWatchExpense(form: UseFormReturn<FormSchema>) {
   const yourExpense = watch("yourExpense");
 
   useEffect(() => {
-    const billNumber = Number(bill);
-    const yourExpenseNumber = Number(yourExpense);
-
-    if (bill.trim() === "" || Number.isNaN(billNumber) || Number.isNaN(yourExpenseNumber)) {
+    if (!isNumber(bill) || !isNumber(yourExpense)) {
       setValue("friendExpense", "");
       return;
     }
 
-    if (yourExpenseNumber > billNumber) {
+    const nBill = Number(bill);
+    const nYourExpense = Number(yourExpense);
+
+    if (nYourExpense > nBill) {
       setValue("friendExpense", "0");
       return;
     }
 
-    setValue("friendExpense", String(billNumber - yourExpenseNumber));
+    setValue("friendExpense", String(nBill - nYourExpense));
   }, [bill, yourExpense, setValue]);
 }
