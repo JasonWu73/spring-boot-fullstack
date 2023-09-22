@@ -64,7 +64,7 @@ export async function sendRequest<
     }
 
     // 处理程序异常
-    return { data: null, error: error + "" };
+    return { data: null, error: String(error) };
   }
 }
 

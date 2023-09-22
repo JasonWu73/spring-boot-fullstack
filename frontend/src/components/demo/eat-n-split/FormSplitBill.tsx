@@ -1,39 +1,51 @@
 import { Button } from "@/components/ui/Button.tsx";
 import { z } from "zod";
-import { Control, useForm } from "react-hook-form";
+import { type Control, useForm, type UseFormReturn } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/Form.tsx";
 import { Input } from "@/components/ui/Input.tsx";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx";
+import { useEffect } from "react";
 
 const formSchema = z.object({
-  bill: z.string()
+  bill: z.string().trim()
     .nonempty("Must enter a bill")
-    .refine((value) => !Number.isNaN(Number(value)), { message: "Bill must be a number" })
-    .transform(parseFloat)
-    .refine((value) => value > 0, { message: "Bill must be greater than 0" }),
-  yourExpense: z.string()
+    .refine((value) => !Number.isNaN(Number(value)), "Bill must be a number")
+    .refine((value) => Number(value) > 0, "Bill must be greater than 0"),
+  yourExpense: z.string().trim()
     .nonempty("Must enter your expense")
-    .refine((value) => !Number.isNaN(Number(value)), { message: "Expense must be a number" })
-    .transform(parseFloat)
-    .refine((value) => value >= 0, { message: "Expense must be greater or equal to 0" }),
-  friendExpense: z.coerce.number(),
-  who: z.string().nonempty("Must select who is paying")
-});
+    .refine((value) => !Number.isNaN(Number(value)), "Expense must be a number")
+    .refine((value) => Number(value) >= 0, "Expense must be greater or equal to 0"),
+  friendExpense: z.string(),
+  who: z.literal("user").or(z.literal("friend")).default("user")
+})
+  .refine((values) => Number(values.yourExpense) <= Number(values.bill), {
+    message: "Your expense must be less than or equal to the bill",
+    path: ["yourExpense"]
+  });
+
+type FormSchema = z.infer<typeof formSchema>;
 
 export default function FormSplitBill() {
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       bill: "",
       yourExpense: "",
       friendExpense: "",
       who: "user"
-    } as unknown as z.infer<typeof formSchema>
+    }
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  useWatchExpense(form);
+
+  function onSubmit(values: FormSchema) {
+    const bill = Number(values.bill);
+    const yourExpense = Number(values.yourExpense);
+    const friendExpense = Number(values.friendExpense);
+    const who = values.who;
+
+    console.log(form.formState.isValid, { bill, yourExpense, friendExpense, who });
   }
 
   return (
@@ -95,7 +107,7 @@ export default function FormSplitBill() {
 }
 
 type ControllerFormFieldProps = {
-  control: Control<z.infer<typeof formSchema>>;
+  control: Control<FormSchema>;
   name: "bill" | "yourExpense" | "friendExpense" | "who";
   label: string;
   placeholder: string;
@@ -118,4 +130,28 @@ function ControllerFormField({ control, name, label, placeholder, disabled }: Co
       )}
     />
   );
+}
+
+function useWatchExpense(form: UseFormReturn<FormSchema>) {
+  const { watch, setValue } = form;
+
+  const bill = watch("bill");
+  const yourExpense = watch("yourExpense");
+
+  useEffect(() => {
+    const billNumber = Number(bill);
+    const yourExpenseNumber = Number(yourExpense);
+
+    if (bill.trim() === "" || Number.isNaN(billNumber) || Number.isNaN(yourExpenseNumber)) {
+      setValue("friendExpense", "");
+      return;
+    }
+
+    if (yourExpenseNumber > billNumber) {
+      setValue("friendExpense", "0");
+      return;
+    }
+
+    setValue("friendExpense", String(billNumber - yourExpenseNumber));
+  }, [bill, yourExpense, setValue]);
 }

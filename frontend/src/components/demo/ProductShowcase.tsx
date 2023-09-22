@@ -6,24 +6,24 @@ import { Button } from "@/components/ui/Button.tsx";
 
 // noinspection JSUnusedGlobalSymbols
 export default function ProductShowcase() {
-  const { state, getProduct } = useProduct();
+  const { isLoading, error, product, count, getProduct } = useProduct();
 
   function getProductContent() {
-    if (state.isLoading) {
+    if (isLoading) {
       return <Title label="加载中..." />;
     }
 
-    if (state.error) {
-      return <Title label={state.error} isError />;
+    if (error) {
+      return <Title label={error} isError />;
     }
 
-    if (state.product) {
+    if (product) {
       return (
         <>
-          <Title label={state.product.title} />
+          <Title label={product.title} />
           <img
-            src={state.product.thumbnail}
-            alt={state.product.title}
+            src={product.thumbnail}
+            alt={product.title}
             className="w-32 h-32 object-cover rounded-full border border-gray-300 shadow-sm"
           />
         </>
@@ -35,12 +35,12 @@ export default function ProductShowcase() {
     <div className="mt-8 mx-8 p-4 rounded border shadow-sm">
       {getProductContent()}
 
-      <Button onClick={() => getProduct()} className="my-4" disabled={state.isLoading}>
-        {state.isLoading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
+      <Button onClick={() => getProduct()} className="my-4" disabled={isLoading}>
+        {isLoading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
         获取商品
       </Button>
 
-      <Message count={state.count} />
+      <Message count={count} />
     </div>
   );
 }
@@ -135,5 +135,5 @@ function useProduct() {
     }
   }
 
-  return { state, getProduct };
+  return { ...state, getProduct };
 }
