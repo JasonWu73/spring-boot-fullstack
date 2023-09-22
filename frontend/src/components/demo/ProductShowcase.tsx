@@ -8,9 +8,32 @@ import { Button } from "@/components/ui/Button.tsx";
 export default function ProductShowcase() {
   const { state, getProduct } = useProduct();
 
+  function getProductContent() {
+    if (state.isLoading) {
+      return <Title label="加载中..." />;
+    }
+
+    if (state.error) {
+      return <Title label={state.error} isError />;
+    }
+
+    if (state.product) {
+      return (
+        <>
+          <Title label={state.product.title} />
+          <img
+            src={state.product.thumbnail}
+            alt={state.product.title}
+            className="w-32 h-32 object-cover rounded-full border border-gray-300 shadow-sm"
+          />
+        </>
+      );
+    }
+  }
+
   return (
     <div className="mt-8 mx-8 p-4 rounded border shadow-sm">
-      {getProductContent(state)}
+      {getProductContent()}
 
       <Button onClick={() => getProduct()} className="my-4" disabled={state.isLoading}>
         {state.isLoading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
@@ -20,36 +43,6 @@ export default function ProductShowcase() {
       <Message count={state.count} />
     </div>
   );
-}
-
-type State = {
-  isLoading: boolean;
-  error: string;
-  product: Product | null;
-  count: number;
-};
-
-function getProductContent({ isLoading, error, product }: State) {
-  if (isLoading) {
-    return <Title label="加载中..." />;
-  }
-
-  if (error) {
-    return <Title label={error} isError />;
-  }
-
-  if (product) {
-    return (
-      <>
-        <Title label={product.title} />
-        <img
-          src={product.thumbnail}
-          alt={product.title}
-          className="w-32 h-32 object-cover rounded-full border border-gray-300 shadow-sm"
-        />
-      </>
-    );
-  }
 }
 
 type TitleProps = {
@@ -78,6 +71,34 @@ function Message({ count }: MessageProps) {
   return (
     <p>已加载 <strong>{count}</strong> 个商品</p>
   );
+}
+
+type State = {
+  isLoading: boolean;
+  error: string;
+  product: Product | null;
+  count: number;
+};
+
+type Action =
+  | { type: "startLoading" }
+  | { type: "endLoading" }
+  | { type: "setError", payload: string }
+  | { type: "setProduct", payload: Product };
+
+function reducer(state: State, action: Action) {
+  switch (action.type) {
+    case "startLoading":
+      return { ...state, isLoading: true, error: "" };
+    case "endLoading":
+      return { ...state, isLoading: false };
+    case "setError":
+      return { ...state, isLoading: false, error: action.payload };
+    case "setProduct":
+      return { ...state, isLoading: false, error: "", product: action.payload, count: state.count + 1 };
+    default:
+      return state;
+  }
 }
 
 function useProduct() {
@@ -115,25 +136,4 @@ function useProduct() {
   }
 
   return { state, getProduct };
-}
-
-type Action =
-  | { type: "startLoading" }
-  | { type: "endLoading" }
-  | { type: "setError", payload: string }
-  | { type: "setProduct", payload: Product };
-
-function reducer(state: State, action: Action) {
-  switch (action.type) {
-    case "startLoading":
-      return { ...state, isLoading: true, error: "" };
-    case "endLoading":
-      return { ...state, isLoading: false };
-    case "setError":
-      return { ...state, isLoading: false, error: action.payload };
-    case "setProduct":
-      return { ...state, isLoading: false, error: "", product: action.payload, count: state.count + 1 };
-    default:
-      return state;
-  }
 }
