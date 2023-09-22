@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/Button.tsx";
 import { z } from "zod";
-import { useForm } from "react-hook-form";
+import { type Control, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/Form.tsx";
 import { Input } from "@/components/ui/Input.tsx";
@@ -11,7 +11,7 @@ type FormAddFriendProps = {
 };
 
 const formSchema = z.object({
-  name: z.string().min(2, { message: "Name must be at least 2 characters" }),
+  name: z.string().nonempty("Must enter a name"),
   image: z.string().url({ message: "Image must be a valid URL" })
 });
 
@@ -45,40 +45,37 @@ export default function FormAddFriend({ onAddFriend }: FormAddFriendProps) {
         onSubmit={form.handleSubmit(onSubmit)}
         className="p-4 flex flex-col gap-4 rounded border shadow-sm bg-amber-100 text-slate-700"
       >
-        <FormField
-          control={form.control}
-          name="name"
-          render={
-            ({ field }) => (
-              <FormItem className="lg:flex flex-wrap items-center justify-between">
-                <FormLabel className="min-w-[120px]">👫 Friend name</FormLabel>
-                <FormControl className="bg-white flex-1">
-                  <Input placeholder="Friend name" {...field} />
-                </FormControl>
-                <FormMessage className="w-full" />
-              </FormItem>
-            )
-          }
-        />
+        <ControllerFormField control={form.control} name="name" label="👫 Friend name" placeholder="Friend name" />
 
-        <FormField
-          control={form.control}
-          name="image"
-          render={
-            ({ field }) => (
-              <FormItem className="lg:flex flex-wrap items-center justify-between">
-                <FormLabel className="min-w-[120px]">🌄 Image URL</FormLabel>
-                <FormControl className="bg-white flex-1">
-                  <Input placeholder="Image URL" {...field} />
-                </FormControl>
-                <FormMessage className="w-full" />
-              </FormItem>
-            )
-          }
-        />
+        <ControllerFormField control={form.control} name="image" label="🌄 Image URL" placeholder="Image URL" />
 
         <Button type="submit" className="self-end">Add</Button>
       </form>
     </Form>
+  );
+}
+
+type ControllerFormFieldProps = {
+  control: Control<z.infer<typeof formSchema>>;
+  name: "name" | "image";
+  label: string;
+  placeholder: string;
+};
+
+function ControllerFormField({ control, name, label, placeholder }: ControllerFormFieldProps) {
+  return (
+    <FormField
+      control={control}
+      name={name}
+      render={({ field }) => (
+        <FormItem className="lg:flex flex-wrap items-center justify-between">
+          <FormLabel className="min-w-[120px]">{label}</FormLabel>
+          <FormControl className="bg-white flex-1">
+            <Input placeholder={placeholder} {...field} />
+          </FormControl>
+          <FormMessage className="w-full" />
+        </FormItem>
+      )}
+    />
   );
 }

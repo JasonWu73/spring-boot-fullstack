@@ -1,27 +1,35 @@
 import { Button } from "@/components/ui/Button.tsx";
 import { z } from "zod";
-import { useForm } from "react-hook-form";
+import { Control, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/Form.tsx";
 import { Input } from "@/components/ui/Input.tsx";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx";
 
 const formSchema = z.object({
-  bill: z.coerce.number().min(0.1, { message: "Bill must be greater than 0" }),
-  yourExpense: z.coerce.number().min(0.1, { message: "Expense must be greater than 0" }),
-  friendExpense: z.coerce.number().min(0.1, { message: "Expense must be greater than 0" }),
-  friend: z.string().min(2, { message: "Friend name must be at least 2 characters" })
+  bill: z.string()
+    .nonempty("Must enter a bill")
+    .refine((value) => !Number.isNaN(Number(value)), { message: "Bill must be a number" })
+    .transform(parseFloat)
+    .refine((value) => value > 0, { message: "Bill must be greater than 0" }),
+  yourExpense: z.string()
+    .nonempty("Must enter your expense")
+    .refine((value) => !Number.isNaN(Number(value)), { message: "Expense must be a number" })
+    .transform(parseFloat)
+    .refine((value) => value >= 0, { message: "Expense must be greater or equal to 0" }),
+  friendExpense: z.coerce.number(),
+  who: z.string().nonempty("Must select who is paying")
 });
 
 export default function FormSplitBill() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      bill: 0,
-      yourExpense: 0,
-      friendExpense: 0,
-      friend: ""
-    }
+      bill: "",
+      yourExpense: "",
+      friendExpense: "",
+      who: "user"
+    } as unknown as z.infer<typeof formSchema>
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
@@ -36,51 +44,31 @@ export default function FormSplitBill() {
       >
         <h2 className="text-2xl font-bold">Split a bill with X</h2>
 
-        <FormField
+        <ControllerFormField
           control={form.control}
           name="bill"
-          render={({ field }) => (
-            <FormItem className="w-full lg:flex flex-wrap items-center justify-between">
-              <FormLabel className="min-w-[180px]">💰 Bill value</FormLabel>
-              <FormControl className="bg-white flex-1">
-                <Input placeholder="Bill value" {...field} />
-              </FormControl>
-              <FormMessage className="w-full" />
-            </FormItem>
-          )}
+          label="💰 Bill value"
+          placeholder="Bill value"
         />
 
-        <FormField
+        <ControllerFormField
           control={form.control}
           name="yourExpense"
-          render={({ field }) => (
-            <FormItem className="w-full lg:flex flex-wrap items-center justify-between">
-              <FormLabel className="min-w-[180px]">💸 Your expense</FormLabel>
-              <FormControl className="bg-white flex-1">
-                <Input placeholder="Your expense" {...field} />
-              </FormControl>
-              <FormMessage className="w-full" />
-            </FormItem>
-          )}
+          label="💸 Your expense"
+          placeholder="Your expense"
         />
 
-        <FormField
+        <ControllerFormField
           control={form.control}
           name="friendExpense"
-          render={({ field }) => (
-            <FormItem className="w-full lg:flex flex-wrap items-center justify-between">
-              <FormLabel className="min-w-[180px]">👫 X's expense</FormLabel>
-              <FormControl className="bg-white flex-1">
-                <Input placeholder="X's expense" {...field} />
-              </FormControl>
-              <FormMessage className="w-full" />
-            </FormItem>
-          )}
+          label="👫 X's expense"
+          placeholder="X's expense"
+          disabled
         />
 
         <FormField
           control={form.control}
-          name="friend"
+          name="who"
           render={({ field }) => (
             <FormItem className="w-full lg:flex flex-wrap items-center justify-between">
               <FormLabel className="min-w-[180px]">🤑 Who is paying the bill</FormLabel>
@@ -103,5 +91,31 @@ export default function FormSplitBill() {
         <Button type="submit" className="self-end">Split bill</Button>
       </form>
     </Form>
+  );
+}
+
+type ControllerFormFieldProps = {
+  control: Control<z.infer<typeof formSchema>>;
+  name: "bill" | "yourExpense" | "friendExpense" | "who";
+  label: string;
+  placeholder: string;
+  disabled?: boolean;
+};
+
+function ControllerFormField({ control, name, label, placeholder, disabled }: ControllerFormFieldProps) {
+  return (
+    <FormField
+      control={control}
+      name={name}
+      render={({ field }) => (
+        <FormItem className="w-full lg:flex flex-wrap items-center justify-between">
+          <FormLabel className="min-w-[180px]">{label}</FormLabel>
+          <FormControl className="bg-white flex-1">
+            <Input placeholder={placeholder} {...field} disabled={disabled} />
+          </FormControl>
+          <FormMessage className="w-full" />
+        </FormItem>
+      )}
+    />
   );
 }

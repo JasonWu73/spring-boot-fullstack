@@ -14,9 +14,9 @@ type UrlInfo = Pick<Request, "url" | "urlData">;
 type RequestConfig = Pick<Request, "method" | "contentType" | "bodyData" | "signal">;
 type RequestBody = Pick<Request, "contentType" | "bodyData">;
 
-type Response<T, E> = {
-  data: T | null;
-  error: E | string | null;
+type Response<TData, TError> = {
+  data: TData | null;
+  error: TError | string | null;
 };
 
 /**
