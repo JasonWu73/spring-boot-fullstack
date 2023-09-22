@@ -3,8 +3,6 @@ import { Slot } from "@radix-ui/react-slot";
 import { cva, VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
-// https://ui.shadcn.com/docs/components/button
-
 type ButtonProps = React.ComponentPropsWithRef<"button"> & VariantProps<typeof buttonVariants> & {
   asChild?: boolean;
 };
@@ -39,6 +37,9 @@ const buttonVariants = cva(
   }
 );
 
+/**
+ * {@link https://ui.shadcn.com/docs/components/button|Button - shadcn/ui}
+ */
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";

@@ -10,28 +10,31 @@ export default function App() {
 }
 
 function useTheme() {
-  useEffect(() => {
-    // 监听暗色模式变化
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+  useEffect(
+    () => {
+      // 监听暗色模式变化
+      const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
-    // 初始化
-    mediaQuery.matches && addDarkBodyClass();
+      // 初始化
+      mediaQuery.matches && addDarkBodyClass();
 
-    function handleDarkMode(e: MediaQueryListEvent) {
-      if (e.matches) {
-        addDarkBodyClass();
-        return;
+      function handleDarkMode(e: MediaQueryListEvent) {
+        if (e.matches) {
+          addDarkBodyClass();
+          return;
+        }
+
+        removeDarkBodyClass();
       }
 
-      removeDarkBodyClass();
-    }
+      mediaQuery.addEventListener("change", handleDarkMode);
 
-    mediaQuery.addEventListener("change", handleDarkMode);
-
-    return () => {
-      mediaQuery.removeEventListener("change", handleDarkMode);
-    };
-  }, []);
+      return () => {
+        mediaQuery.removeEventListener("change", handleDarkMode);
+      };
+    },
+    []
+  );
 }
 
 function addDarkBodyClass() {

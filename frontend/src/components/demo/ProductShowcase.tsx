@@ -3,6 +3,7 @@ import { getRandomProduct } from "@/apis/dummyjson/product.ts";
 import { useEffect, useReducer } from "react";
 import classNames from "classnames";
 import { type Product } from "@/apis/dummyjson/types.ts";
+import { ReloadIcon } from "@radix-ui/react-icons";
 
 type State = {
   isLoading: boolean;
@@ -34,7 +35,8 @@ export default function ProductShowcase() {
       {getProductContent(state)}
 
       <Button onClick={() => getProduct()} className="my-4" disabled={state.isLoading}>
-        {`获取商品${state.isLoading ? "..." : ""}`}
+        {state.isLoading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
+        获取商品
       </Button>
 
       <Message count={state.count} />
@@ -83,21 +85,27 @@ function Message({ count }: MessageProps) {
 }
 
 function useProduct() {
-  const [state, dispatch] = useReducer(reducer, {
-    isLoading: false,
-    error: "",
-    product: null,
-    count: 0 // 商品获取计数
-  });
+  const [state, dispatch] = useReducer(
+    reducer,
+    {
+      isLoading: false,
+      error: "",
+      product: null,
+      count: 0 // 商品获取计数
+    }
+  );
 
-  useEffect(() => {
-    const controller = new AbortController();
-    getProduct(controller.signal);
+  useEffect(
+    () => {
+      const controller = new AbortController();
+      getProduct(controller.signal);
 
-    return () => {
-      controller.abort();
-    };
-  }, []);
+      return () => {
+        controller.abort();
+      };
+    },
+    []
+  );
 
   async function getProduct(signal?: AbortSignal) {
     dispatch({ type: "startLoading" });
