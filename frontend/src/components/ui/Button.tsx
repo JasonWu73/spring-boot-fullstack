@@ -1,58 +1,58 @@
-import React from "react";
-import classNames from "classnames";
-import { type Size } from "@/components/ui/types.ts";
-import { getSizeClasses } from "@/components/ui/classes.ts";
+import React, { forwardRef } from "react";
+import { Slot } from "@radix-ui/react-slot";
+import { cva, VariantProps } from "class-variance-authority";
+import { cn } from "@/lib/utils";
 
-type Variant = "primary" | "danger" | "light";
+// https://ui.shadcn.com/docs/components/button
 
-type ButtonProps = React.ComponentPropsWithoutRef<"button"> & {
-  label?: React.ReactNode;
-  variant?: Variant;
-  size?: Size;
+type ButtonProps = React.ComponentPropsWithRef<"button"> & VariantProps<typeof buttonVariants> & {
+  asChild?: boolean;
 };
 
-/**
- * Button 组件用于渲染一个按钮, 支持原生 HTML `button` 属性.
- *
- * @param ButtonProps - 组件属性
- * @param ButtonProps.label - 内容, 如存在 `children` 值, 则会忽略该属性
- * @param ButtonProps.variant - 样式, 默认为 `primary`
- * @param ButtonProps.size - 尺寸, 默认为 `md`
- * @return 按钮组件
- */
-export default function Button({
-  label,
-  variant = "primary",
-  size = "md",
-  children,
-  className,
-  ...rest
-}: ButtonProps) {
-  const styleClasses = getStyleClasses(variant);
-  const sizeClasses = getSizeClasses(size);
-
-  return (
-    <button
-      className={classNames(
-        "rounded shadow-sm focus:outline-none focus:ring disabled:opacity-50 disabled:cursor-not-allowed",
-        styleClasses,
-        sizeClasses,
-        className
-      )}
-      {...rest}
-    >
-      {children ?? label}
-    </button>
-  );
-}
-
-function getStyleClasses(variant: Variant) {
-  switch (variant) {
-    case "danger":
-      return "bg-red-500 text-white hover:bg-red-600 active:bg-red-700 focus:ring-red-300";
-    case "light":
-      return "bg-slate-100 text-black hover:bg-slate-200 active:bg-slate-300 focus:ring-slate-50";
-    default:
-      return "bg-sky-500 text-white hover:bg-sky-600 active:bg-sky-700 focus:ring-sky-300";
+const buttonVariants = cva(
+  "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-slate-950 disabled:pointer-events-none disabled:opacity-50 dark:focus-visible:ring-slate-300",
+  {
+    variants: {
+      variant: {
+        default:
+          "bg-sky-900 text-sky-50 shadow hover:bg-sky-900/90 dark:bg-sky-50 dark:text-sky-900 dark:hover:bg-sky-50/90",
+        destructive:
+          "bg-red-500 text-slate-50 shadow-sm hover:bg-red-500/90 dark:bg-red-900 dark:text-slate-50 dark:hover:bg-red-900/90",
+        outline:
+          "border border-slate-200 bg-transparent shadow-sm hover:bg-slate-100 hover:text-slate-900 dark:border-slate-800 dark:hover:bg-slate-800 dark:hover:text-slate-50",
+        secondary:
+          "bg-slate-100 text-slate-900 shadow-sm hover:bg-slate-100/80 dark:bg-slate-800 dark:text-slate-50 dark:hover:bg-slate-800/80",
+        ghost: "hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-800 dark:hover:text-slate-50",
+        link: "text-slate-900 underline-offset-4 hover:underline dark:text-slate-50"
+      },
+      size: {
+        default: "h-9 px-4 py-2",
+        sm: "h-8 rounded-md px-3 text-xs",
+        lg: "h-10 rounded-md px-8",
+        icon: "h-9 w-9"
+      }
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default"
+    }
   }
-}
+);
+
+const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant, size, asChild = false, ...props }, ref) => {
+    const Comp = asChild ? Slot : "button";
+
+    return (
+      <Comp
+        className={cn(buttonVariants({ variant, size, className }))}
+        ref={ref}
+        {...props}
+      />
+    );
+  }
+);
+
+Button.displayName = "Button";
+
+export default Button;

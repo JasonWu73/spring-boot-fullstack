@@ -6,22 +6,22 @@ type FriendListProps = {
   friends: Friend[];
 };
 
-type FriendItemProps = { friend: Friend };
+type FriendItemProps = {
+  friend: Friend
+};
 
 export default function FriendList({ friends }: FriendListProps) {
   return (
     <div className="w-full md:max-w-lg md:ml-16 md:mt-16 md:flex md:justify-end dark:text-nord-400">
       <ul className="p-4 overflow-auto flex flex-col gap-4">
-        {friends.map((friend) => (
-          <FriendItem key={friend.id} friend={friend} />
-        ))}
+        {friends.map((friend) => (<FriendItem key={friend.id} friend={friend} />))}
 
         <li>
           <FormAddFriend />
         </li>
 
         <li className="text-right">
-          <Button label="Add friend" size="sm" />
+          <Button>Add friend</Button>
         </li>
       </ul>
     </div>
@@ -55,7 +55,7 @@ function FriendItem({ friend }: FriendItemProps) {
         )}
       </div>
 
-      <Button label="Select" size="sm" />
+      <Button>Select</Button>
     </li>
   );
 }

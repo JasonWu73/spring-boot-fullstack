@@ -31,7 +31,7 @@ export default function FormSplitBill() {
       </SelectItem>
 
       <div className="self-end">
-        <Button size="sm" className="w-28">Split bill</Button>
+        <Button>Split bill</Button>
       </div>
       ;
     </form>

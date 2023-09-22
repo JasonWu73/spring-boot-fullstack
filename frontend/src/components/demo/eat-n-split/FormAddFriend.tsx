@@ -1,5 +1,6 @@
-import Button from "@/components/ui/Button.tsx";
 import InputItem from "@/components/ui/form/InputItem.tsx";
+import Button from "@/components/ui/Button.tsx";
+import { ReloadIcon } from "@radix-ui/react-icons";
 
 export default function FormAddFriend() {
   return (
@@ -13,7 +14,10 @@ export default function FormAddFriend() {
       </InputItem>
 
       <div className="self-end">
-        <Button size="sm" className="w-28">Add</Button>
+        <Button>
+          <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+          Add
+        </Button>
       </div>
     </form>
   );
