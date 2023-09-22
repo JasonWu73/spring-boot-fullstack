@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/Button.tsx";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/Form.tsx";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/Form.tsx";
 import { Input } from "@/components/ui/Input.tsx";
 
 const formSchema = z.object(
@@ -38,11 +38,12 @@ export default function FormAddFriend() {
           name="name"
           render={
             ({ field }) => (
-              <FormItem className="md:flex items-center justify-between">
+              <FormItem className="md:flex flex-wrap items-center justify-between">
                 <FormLabel className="min-w-[120px]">👫 Friend name</FormLabel>
-                <FormControl>
+                <FormControl className="bg-white">
                   <Input placeholder="Friend name" {...field} />
                 </FormControl>
+                <FormMessage />
               </FormItem>
             )
           }
@@ -53,11 +54,12 @@ export default function FormAddFriend() {
           name="image"
           render={
             ({ field }) => (
-              <FormItem className="md:flex items-center justify-between">
+              <FormItem className="md:flex flex-wrap items-center justify-between">
                 <FormLabel className="min-w-[120px]">🌄 Image URL</FormLabel>
-                <FormControl>
+                <FormControl className="bg-white">
                   <Input placeholder="Image URL" {...field} />
                 </FormControl>
+                <FormMessage />
               </FormItem>
             )
           }

@@ -2,16 +2,16 @@ import { Button } from "@/components/ui/Button.tsx";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/Form.tsx";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/Form.tsx";
 import { Input } from "@/components/ui/Input.tsx";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx";
 
 const formSchema = z.object(
   {
-    bill: z.number().min(0, { message: "Bill must be greater than 0" }),
-    yourExpense: z.number().min(0, { message: "Expense must be greater than 0" }),
-    friendExpense: z.number().min(0, { message: "Expense must be greater than 0" }),
-    friend: z.string().min(0, { message: "Friend name must be greater than 0" })
+    bill: z.number().min(0.1, { message: "Bill must be greater than 0" }),
+    yourExpense: z.number().min(0.1, { message: "Expense must be greater than 0" }),
+    friendExpense: z.number().min(0.1, { message: "Expense must be greater than 0" }),
+    friend: z.string().min(2, { message: "Friend name must be at least 2 characters" })
   }
 );
 
@@ -44,11 +44,12 @@ export default function FormSplitBill() {
           control={form.control}
           name="bill"
           render={({ field }) => (
-            <FormItem className="w-full md:flex items-center justify-between">
+            <FormItem className="w-full md:flex flex-wrap items-center justify-between">
               <FormLabel className="min-w-[180px]">💰 Bill value</FormLabel>
-              <FormControl>
+              <FormControl className="bg-white">
                 <Input placeholder="Bill value" {...field} />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -57,11 +58,12 @@ export default function FormSplitBill() {
           control={form.control}
           name="yourExpense"
           render={({ field }) => (
-            <FormItem className="w-full md:flex items-center justify-between">
+            <FormItem className="w-full md:flex flex-wrap items-center justify-between">
               <FormLabel className="min-w-[180px]">🧍‍♂️ Your expense</FormLabel>
-              <FormControl>
+              <FormControl className="bg-white">
                 <Input placeholder="Your expense" {...field} />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -70,11 +72,12 @@ export default function FormSplitBill() {
           control={form.control}
           name="friendExpense"
           render={({ field }) => (
-            <FormItem className="w-full md:flex items-center justify-between">
+            <FormItem className="w-full md:flex flex-wrap items-center justify-between">
               <FormLabel className="min-w-[180px]">👫 X's expense</FormLabel>
-              <FormControl>
+              <FormControl className="bg-white">
                 <Input placeholder="X's expense" {...field} />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -83,14 +86,15 @@ export default function FormSplitBill() {
           control={form.control}
           name="friend"
           render={({ field }) => (
-            <FormItem className="w-full md:flex items-center justify-between">
+            <FormItem className="w-full md:flex flex-wrap items-center justify-between">
               <FormLabel className="min-w-[180px]">🤑 Who is paying the bill</FormLabel>
               <Select defaultValue={field.value} onValueChange={field.onChange}>
-                <FormControl>
+                <FormControl className="bg-white">
                   <SelectTrigger>
                     <SelectValue placeholder="Who is paying the bill" />
                   </SelectTrigger>
                 </FormControl>
+                <FormMessage />
                 <SelectContent>
                   <SelectItem value="user">You</SelectItem>
                   <SelectItem value="friend">X</SelectItem>
