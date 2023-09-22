@@ -1,16 +1,16 @@
 import Button from "@/components/ui/Button.tsx";
-import FormItem from "@/components/ui/FormItem.tsx";
+import InputItem from "@/components/ui/form/InputItem.tsx";
 
 export default function FormAddFriend() {
   return (
     <form className="p-4 flex flex-col gap-4 rounded border shadow-sm bg-amber-100 text-slate-700">
-      <FormItem itemSize="sm">
+      <InputItem itemSize="sm">
         👫 Friend name
-      </FormItem>
+      </InputItem>
 
-      <FormItem itemSize="sm">
+      <InputItem itemSize="sm">
         🌄 Image URL
-      </FormItem>
+      </InputItem>
 
       <div className="self-end">
         <Button size="sm" className="w-28">Add</Button>

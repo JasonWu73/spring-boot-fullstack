@@ -1,6 +1,7 @@
 import React from "react";
 import classNames from "classnames";
 import { type Size } from "@/components/ui/types.ts";
+import { getSizeClasses } from "@/components/ui/classes.ts";
 
 type Variant = "primary" | "danger" | "light";
 
@@ -53,16 +54,5 @@ function getStyleClasses(variant: Variant) {
       return "bg-slate-100 text-black hover:bg-slate-200 active:bg-slate-300 focus:ring-slate-50";
     default:
       return "bg-sky-500 text-white hover:bg-sky-600 active:bg-sky-700 focus:ring-sky-300";
-  }
-}
-
-function getSizeClasses(size: Size) {
-  switch (size) {
-    case "sm":
-      return "px-2 py-1 text-sm";
-    case "lg":
-      return "px-6 py-3 text-lg";
-    default:
-      return "px-4 py-2 text-base";
   }
 }

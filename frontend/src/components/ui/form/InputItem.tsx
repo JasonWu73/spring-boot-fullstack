@@ -1,6 +1,8 @@
 import React, { useId } from "react";
 import classNames from "classnames";
 import { type Size } from "@/components/ui/types.ts";
+import ItemWrapper from "@/components/ui/form/ItemWrapper.tsx";
+import { getSizeClasses } from "@/components/ui/classes.ts";
 
 type FormItemProps = React.ComponentPropsWithRef<"input"> & {
   label?: React.ReactNode;
@@ -19,7 +21,7 @@ type FormItemProps = React.ComponentPropsWithRef<"input"> & {
  * @param FormItemProps.inputClass - 输入框样式
  * @return
  */
-export default function FormItem({
+export default function InputItem({
   label,
   itemSize = "md",
   labelClass,
@@ -33,15 +35,7 @@ export default function FormItem({
   const sizeClasses = getSizeClasses(itemSize);
 
   return (
-    <div
-      className={classNames(
-        "w-full flex justify-between items-center",
-        {
-          "gap-2": itemSize === "sm",
-          "gap-4": itemSize !== "sm"
-        }
-      )}
-    >
+    <ItemWrapper>
       <label htmlFor={id} className={classNames("min-w-[120px]", sizeClasses, labelClass)}>
         {children ?? label}
       </label>
@@ -55,17 +49,6 @@ export default function FormItem({
           inputClass
         )}
         {...rest} />
-    </div>
+    </ItemWrapper>
   );
-}
-
-function getSizeClasses(size: Size) {
-  switch (size) {
-    case "sm":
-      return "px-2 py-1 text-sm";
-    case "lg":
-      return "px-6 py-3 text-lg";
-    default:
-      return "px-4 py-2 text-base";
-  }
 }
