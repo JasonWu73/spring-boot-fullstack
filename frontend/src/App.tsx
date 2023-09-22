@@ -11,7 +11,7 @@ export default function App() {
 
 function useTheme() {
   useEffect(() => {
-    // 监听暗色模式变化
+    // 监听暗色主题变化
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
     // 初始化

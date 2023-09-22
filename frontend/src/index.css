@@ -4,6 +4,6 @@
 
 /* 暗色主题 */
 body.dark {
-  background-color: #2E3440; /* nord-500 */
-  color: #ECEFF4; /* nord-200 */
+  background-color: #2E3440; /* night-1 */
+  color: #ECEFF4; /* snow-1 */
 }
