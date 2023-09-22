@@ -1,31 +1,8 @@
-import Button from "@/components/ui/Button.tsx";
-import { getRandomProduct } from "@/apis/dummyjson/product.ts";
+import { getRandomProduct, type Product } from "@/apis/dummyjson/product.ts";
 import { useEffect, useReducer } from "react";
 import classNames from "classnames";
-import { type Product } from "@/apis/dummyjson/types.ts";
 import { ReloadIcon } from "@radix-ui/react-icons";
-
-type State = {
-  isLoading: boolean;
-  error: string;
-  product: Product | null;
-  count: number;
-};
-
-type Action =
-  | { type: "startLoading" }
-  | { type: "endLoading" }
-  | { type: "setError", payload: string }
-  | { type: "setProduct", payload: Product };
-
-type TitleProps = {
-  label: string;
-  isError?: boolean;
-};
-
-type MessageProps = {
-  count: State["count"];
-};
+import { Button } from "@/components/ui/Button.tsx";
 
 export default function ProductShowcase() {
   const { state, getProduct } = useProduct();
@@ -43,6 +20,14 @@ export default function ProductShowcase() {
     </div>
   );
 }
+
+type State = {
+  isLoading: boolean;
+  error: string;
+  product: Product | null;
+  count: number;
+};
+
 
 function getProductContent({ isLoading, error, product }: State) {
   if (isLoading) {
@@ -67,6 +52,11 @@ function getProductContent({ isLoading, error, product }: State) {
   }
 }
 
+type TitleProps = {
+  label: string;
+  isError?: boolean;
+};
+
 function Title({ label, isError = false }: TitleProps) {
   const commonClasses = "font-bold tracking-wider";
   const errorClass = { "text-red-500": isError };
@@ -77,6 +67,10 @@ function Title({ label, isError = false }: TitleProps) {
     </h1>
   );
 }
+
+type MessageProps = {
+  count: State["count"];
+};
 
 function Message({ count }: MessageProps) {
   return (
@@ -126,6 +120,25 @@ function useProduct() {
 
   return { state, getProduct };
 }
+
+type Action =
+  {
+    type: "startLoading"
+  }
+  |
+  {
+    type: "endLoading"
+  }
+  |
+  {
+    type: "setError",
+    payload: string
+  }
+  |
+  {
+    type: "setProduct",
+    payload: Product
+  };
 
 function reducer(state: State, action: Action) {
   switch (action.type) {

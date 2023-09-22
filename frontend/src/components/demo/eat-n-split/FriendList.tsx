@@ -1,6 +1,6 @@
 import { type Friend } from "@/components/demo/eat-n-split/types.ts";
-import Button from "@/components/ui/Button.tsx";
 import FormAddFriend from "@/components/demo/eat-n-split/FormAddFriend.tsx";
+import { Button } from "@/components/ui/Button.tsx";
 
 type FriendListProps = {
   friends: Friend[];

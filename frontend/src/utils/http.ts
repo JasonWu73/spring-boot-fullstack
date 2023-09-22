@@ -22,8 +22,8 @@ type Response<T, E> = {
 /**
  * 发送 HTTP 请求, 并以 JSON 数据格式解析响应数据.
  *
- * @template T - 成功响应时的数据类型
- * @template E - 错误响应时的数据类型
+ * @template TData - 成功响应时的数据类型
+ * @template TError - 错误响应时的数据类型
  *
  * @param Request - 请求的配置属性
  * @param Request.url - URL 地址
@@ -34,14 +34,14 @@ type Response<T, E> = {
  * @param Request.signal - `AbortController` 实例的 `signal` 属性, 用于主动取消请求
  * @return 以 JSON 数据格式解析后的正常或异常响应数据
  */
-export async function sendRequest<T, E>({
+export async function sendRequest<TData, TError>({
   url,
   method = "GET",
   contentType = "JSON",
   urlData,
   bodyData,
   signal
-}: Request): Promise<Response<T, E>> {
+}: Request): Promise<Response<TData, TError>> {
   try {
     // 追加 URL 参数
     const splicedUrl = appendParamsToUrl({ url, urlData });

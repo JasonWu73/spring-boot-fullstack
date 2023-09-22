@@ -1,6 +1,6 @@
 import InputItem from "@/components/ui/form/InputItem.tsx";
-import Button from "@/components/ui/Button.tsx";
 import SelectItem from "@/components/ui/form/SelectItem.tsx";
+import { Button } from "@/components/ui/Button.tsx";
 
 export default function FormSplitBill() {
   return (
