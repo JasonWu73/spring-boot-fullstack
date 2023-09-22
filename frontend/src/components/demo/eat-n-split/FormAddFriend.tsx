@@ -38,8 +38,8 @@ export default function FormAddFriend() {
           name="name"
           render={
             ({ field }) => (
-              <FormItem>
-                <FormLabel>👫 Friend name</FormLabel>
+              <FormItem className="md:flex items-center justify-between">
+                <FormLabel className="min-w-[120px]">👫 Friend name</FormLabel>
                 <FormControl>
                   <Input placeholder="Friend name" {...field} />
                 </FormControl>
@@ -53,8 +53,8 @@ export default function FormAddFriend() {
           name="image"
           render={
             ({ field }) => (
-              <FormItem>
-                <FormLabel>🌄 Image URL</FormLabel>
+              <FormItem className="md:flex items-center justify-between">
+                <FormLabel className="min-w-[120px]">🌄 Image URL</FormLabel>
                 <FormControl>
                   <Input placeholder="Image URL" {...field} />
                 </FormControl>
@@ -63,9 +63,7 @@ export default function FormAddFriend() {
           }
         />
 
-        <div className="self-end">
-          <Button type="submit">Add</Button>
-        </div>
+        <Button type="submit" className="self-end">Add</Button>
       </form>
     </Form>
   );

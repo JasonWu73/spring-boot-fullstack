@@ -13,7 +13,7 @@ type FriendItemProps = {
 export default function FriendList({ friends }: FriendListProps) {
   return (
     <div className="w-full md:max-w-lg md:ml-16 md:mt-16 md:flex md:justify-end">
-      <ul className="p-4 overflow-auto flex flex-col gap-4">
+      <ul className="p-4 w-full overflow-auto flex flex-col gap-4">
         {friends.map((friend) => (<FriendItem key={friend.id} friend={friend} />))}
 
         <li>

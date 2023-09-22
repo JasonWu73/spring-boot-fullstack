@@ -33,7 +33,7 @@ export default function FormSplitBill() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(handleSubmit)}
-        className="max-w-lg md:mt-16 mx-4 mb-8 p-8 bg-amber-100 text-slate-700 rounded border shadow flex flex-col gap-4 items-center justify-center"
+        className="md:max-w-md md:mt-16 mx-4 mb-8 p-8 bg-amber-100 text-slate-700 rounded border shadow flex flex-col gap-4 items-center justify-center"
       >
         <h2 className="text-2xl font-bold">Split a bill with X</h2>
 
@@ -42,8 +42,8 @@ export default function FormSplitBill() {
           name="bill"
           render={
             ({ field }) => (
-              <FormItem>
-                <FormLabel>💰 Bill value</FormLabel>
+              <FormItem className="w-full md:flex items-center justify-between">
+                <FormLabel className="min-w-[120px]">💰 Bill value</FormLabel>
                 <FormControl>
                   <Input placeholder="Bill value" {...field} />
                 </FormControl>
@@ -57,8 +57,8 @@ export default function FormSplitBill() {
           name="yourExpense"
           render={
             ({ field }) => (
-              <FormItem>
-                <FormLabel>🧍‍♂️ Your expense</FormLabel>
+              <FormItem className="w-full md:flex items-center justify-between">
+                <FormLabel className="min-w-[120px]">🧍‍♂️ Your expense</FormLabel>
                 <FormControl>
                   <Input placeholder="Your expense" {...field} />
                 </FormControl>
@@ -72,8 +72,8 @@ export default function FormSplitBill() {
           name="friendExpense"
           render={
             ({ field }) => (
-              <FormItem>
-                <FormLabel>👫 X's expense</FormLabel>
+              <FormItem className="w-full md:flex items-center justify-between">
+                <FormLabel className="min-w-[120px]">👫 X's expense</FormLabel>
                 <FormControl>
                   <Input placeholder="X's expense" {...field} />
                 </FormControl>
@@ -95,9 +95,7 @@ export default function FormSplitBill() {
         </SelectItem>
         */}
 
-        <div className="self-end">
-          <Button type="submit">Split bill</Button>
-        </div>
+        <Button type="submit" className="self-end">Split bill</Button>
       </form>
     </Form>
   );
