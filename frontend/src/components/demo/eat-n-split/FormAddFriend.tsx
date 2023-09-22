@@ -34,12 +34,12 @@ export default function FormAddFriend() {
           name="name"
           render={
             ({ field }) => (
-              <FormItem className="md:flex flex-wrap items-center justify-between">
+              <FormItem className="lg:flex flex-wrap items-center justify-between">
                 <FormLabel className="min-w-[120px]">👫 Friend name</FormLabel>
-                <FormControl className="bg-white">
+                <FormControl className="bg-white flex-1">
                   <Input placeholder="Friend name" {...field} />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="w-full" />
               </FormItem>
             )
           }
@@ -50,12 +50,12 @@ export default function FormAddFriend() {
           name="image"
           render={
             ({ field }) => (
-              <FormItem className="md:flex flex-wrap items-center justify-between">
+              <FormItem className="lg:flex flex-wrap items-center justify-between">
                 <FormLabel className="min-w-[120px]">🌄 Image URL</FormLabel>
-                <FormControl className="bg-white">
+                <FormControl className="bg-white flex-1">
                   <Input placeholder="Image URL" {...field} />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="w-full" />
               </FormItem>
             )
           }

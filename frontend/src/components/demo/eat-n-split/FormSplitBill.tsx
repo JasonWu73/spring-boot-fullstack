@@ -40,12 +40,12 @@ export default function FormSplitBill() {
           control={form.control}
           name="bill"
           render={({ field }) => (
-            <FormItem className="w-full md:flex flex-wrap items-center justify-between">
+            <FormItem className="w-full lg:flex flex-wrap items-center justify-between">
               <FormLabel className="min-w-[180px]">💰 Bill value</FormLabel>
-              <FormControl className="bg-white">
+              <FormControl className="bg-white flex-1">
                 <Input placeholder="Bill value" {...field} />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="w-full" />
             </FormItem>
           )}
         />
@@ -54,12 +54,12 @@ export default function FormSplitBill() {
           control={form.control}
           name="yourExpense"
           render={({ field }) => (
-            <FormItem className="w-full md:flex flex-wrap items-center justify-between">
-              <FormLabel className="min-w-[180px]">🧍‍♂️ Your expense</FormLabel>
-              <FormControl className="bg-white">
+            <FormItem className="w-full lg:flex flex-wrap items-center justify-between">
+              <FormLabel className="min-w-[180px]">💸 Your expense</FormLabel>
+              <FormControl className="bg-white flex-1">
                 <Input placeholder="Your expense" {...field} />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="w-full" />
             </FormItem>
           )}
         />
@@ -68,12 +68,12 @@ export default function FormSplitBill() {
           control={form.control}
           name="friendExpense"
           render={({ field }) => (
-            <FormItem className="w-full md:flex flex-wrap items-center justify-between">
+            <FormItem className="w-full lg:flex flex-wrap items-center justify-between">
               <FormLabel className="min-w-[180px]">👫 X's expense</FormLabel>
-              <FormControl className="bg-white">
+              <FormControl className="bg-white flex-1">
                 <Input placeholder="X's expense" {...field} />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="w-full" />
             </FormItem>
           )}
         />
@@ -82,15 +82,15 @@ export default function FormSplitBill() {
           control={form.control}
           name="friend"
           render={({ field }) => (
-            <FormItem className="w-full md:flex flex-wrap items-center justify-between">
+            <FormItem className="w-full lg:flex flex-wrap items-center justify-between">
               <FormLabel className="min-w-[180px]">🤑 Who is paying the bill</FormLabel>
               <Select defaultValue={field.value} onValueChange={field.onChange}>
-                <FormControl className="bg-white">
+                <FormControl className="bg-white flex-1">
                   <SelectTrigger>
                     <SelectValue placeholder="Who is paying the bill" />
                   </SelectTrigger>
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="w-full" />
                 <SelectContent>
                   <SelectItem value="user">You</SelectItem>
                   <SelectItem value="friend">X</SelectItem>
