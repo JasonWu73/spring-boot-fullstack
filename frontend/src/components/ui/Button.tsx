@@ -40,20 +40,25 @@ export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & Varian
 /**
  * {@link https://ui.shadcn.com/docs/components/button|Button - shadcn/ui}
  */
-const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
-    const Comp = asChild ? Slot : "button";
+const Button = forwardRef<
+  HTMLButtonElement,
+  ButtonProps
+>(({ className, variant, size, asChild = false, ...props }, ref) => {
+  const Comp = asChild ? Slot : "button";
 
-    return (
-      <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
-        ref={ref}
-        {...props}
-      />
-    );
-  }
-);
+  return (
+    <Comp
+      className={cn(buttonVariants({ variant, size, className }))}
+      ref={ref}
+      {...props}
+    />
+  );
+});
 
 Button.displayName = "Button";
 
-export { Button, buttonVariants };
+export {
+  Button,
+  // eslint-disable-next-line react-refresh/only-export-components
+  buttonVariants
+};

@@ -23,6 +23,8 @@ const initialFriends = [
   }
 ];
 
+export type Friend = typeof initialFriends[0];
+
 export default function EatAndSplit() {
   const [friends, setFriends] = useState(initialFriends);
 

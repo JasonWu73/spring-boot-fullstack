@@ -4,6 +4,7 @@ import classNames from "classnames";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/Button.tsx";
 
+// noinspection JSUnusedGlobalSymbols
 export default function ProductShowcase() {
   const { state, getProduct } = useProduct();
 
@@ -27,7 +28,6 @@ type State = {
   product: Product | null;
   count: number;
 };
-
 
 function getProductContent({ isLoading, error, product }: State) {
   if (isLoading) {
@@ -58,11 +58,13 @@ type TitleProps = {
 };
 
 function Title({ label, isError = false }: TitleProps) {
-  const commonClasses = "font-bold tracking-wider";
-  const errorClass = { "text-red-500": isError };
-
   return (
-    <h1 className={classNames(commonClasses, errorClass)}>
+    <h1
+      className={classNames(
+        "font-bold tracking-wider",
+        { "text-red-500": isError }
+      )}
+    >
       {label}
     </h1>
   );
@@ -79,27 +81,21 @@ function Message({ count }: MessageProps) {
 }
 
 function useProduct() {
-  const [state, dispatch] = useReducer(
-    reducer,
-    {
-      isLoading: false,
-      error: "",
-      product: null,
-      count: 0 // 商品获取计数
-    }
-  );
+  const [state, dispatch] = useReducer(reducer, {
+    isLoading: false,
+    error: "",
+    product: null,
+    count: 0 // 商品获取计数
+  });
 
-  useEffect(
-    () => {
-      const controller = new AbortController();
-      getProduct(controller.signal);
+  useEffect(() => {
+    const controller = new AbortController();
+    getProduct(controller.signal).then();
 
-      return () => {
-        controller.abort();
-      };
-    },
-    []
-  );
+    return () => {
+      controller.abort();
+    };
+  }, []);
 
   async function getProduct(signal?: AbortSignal) {
     dispatch({ type: "startLoading" });
@@ -122,23 +118,10 @@ function useProduct() {
 }
 
 type Action =
-  {
-    type: "startLoading"
-  }
-  |
-  {
-    type: "endLoading"
-  }
-  |
-  {
-    type: "setError",
-    payload: string
-  }
-  |
-  {
-    type: "setProduct",
-    payload: Product
-  };
+  | { type: "startLoading" }
+  | { type: "endLoading" }
+  | { type: "setError", payload: string }
+  | { type: "setProduct", payload: Product };
 
 function reducer(state: State, action: Action) {
   switch (action.type) {

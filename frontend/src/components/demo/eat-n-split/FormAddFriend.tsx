@@ -5,23 +5,19 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/Form.tsx";
 import { Input } from "@/components/ui/Input.tsx";
 
-const formSchema = z.object(
-  {
-    name: z.string().min(2, { message: "Name must be at least 2 characters" }),
-    image: z.string().url({ message: "Image must be a valid URL" })
-  }
-);
+const formSchema = z.object({
+  name: z.string().min(2, { message: "Name must be at least 2 characters" }),
+  image: z.string().url({ message: "Image must be a valid URL" })
+});
 
 export default function FormAddFriend() {
-  const form = useForm<z.infer<typeof formSchema>>(
-    {
-      resolver: zodResolver(formSchema),
-      defaultValues: {
-        name: "",
-        image: ""
-      }
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      image: ""
     }
-  );
+  });
 
   function handleSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);

@@ -6,27 +6,23 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/Input.tsx";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx";
 
-const formSchema = z.object(
-  {
-    bill: z.number().min(0.1, { message: "Bill must be greater than 0" }),
-    yourExpense: z.number().min(0.1, { message: "Expense must be greater than 0" }),
-    friendExpense: z.number().min(0.1, { message: "Expense must be greater than 0" }),
-    friend: z.string().min(2, { message: "Friend name must be at least 2 characters" })
-  }
-);
+const formSchema = z.object({
+  bill: z.number().min(0.1, { message: "Bill must be greater than 0" }),
+  yourExpense: z.number().min(0.1, { message: "Expense must be greater than 0" }),
+  friendExpense: z.number().min(0.1, { message: "Expense must be greater than 0" }),
+  friend: z.string().min(2, { message: "Friend name must be at least 2 characters" })
+});
 
 export default function FormSplitBill() {
-  const form = useForm<z.infer<typeof formSchema>>(
-    {
-      resolver: zodResolver(formSchema),
-      defaultValues: {
-        bill: 0,
-        yourExpense: 0,
-        friendExpense: 0,
-        friend: ""
-      }
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      bill: 0,
+      yourExpense: 0,
+      friendExpense: 0,
+      friend: ""
     }
-  );
+  });
 
   function handleSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);

@@ -34,14 +34,10 @@ type Response<T, E> = {
  * @param Request.signal - `AbortController` 实例的 `signal` 属性, 用于主动取消请求
  * @return 以 JSON 数据格式解析后的正常或异常响应数据
  */
-export async function sendRequest<TData, TError>({
-  url,
-  method = "GET",
-  contentType = "JSON",
-  urlData,
-  bodyData,
-  signal
-}: Request): Promise<Response<TData, TError>> {
+export async function sendRequest<
+  TData,
+  TError
+>({ url, method = "GET", contentType = "JSON", urlData, bodyData, signal }: Request): Promise<Response<TData, TError>> {
   try {
     // 追加 URL 参数
     const splicedUrl = appendParamsToUrl({ url, urlData });
