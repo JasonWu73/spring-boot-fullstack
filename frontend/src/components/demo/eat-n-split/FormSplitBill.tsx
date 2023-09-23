@@ -78,6 +78,7 @@ export default function FormSplitBill({ friend, onSplitBill }: FormSplitBillProp
           control={form.control}
           name="bill"
           label="💰 Bill value"
+          type="number"
           placeholder="Bill value"
         />
 
@@ -85,6 +86,7 @@ export default function FormSplitBill({ friend, onSplitBill }: FormSplitBillProp
           control={form.control}
           name="userExpense"
           label="💸 Your expense"
+          type="number"
           placeholder="Your expense"
         />
 
@@ -92,6 +94,7 @@ export default function FormSplitBill({ friend, onSplitBill }: FormSplitBillProp
           control={form.control}
           name="friendExpense"
           label={`👫 ${friend.name}'s expense`}
+          type="number"
           placeholder={`${friend.name}'s expense`}
           disabled
         />
@@ -128,11 +131,12 @@ type ControllerFormFieldProps = {
   control: Control<FormSchema>;
   name: "bill" | "userExpense" | "friendExpense" | "whoIsPaying";
   label: string;
+  type?: "text" | "number";
   placeholder: string;
   disabled?: boolean;
 };
 
-function ControlledFormField({ control, name, label, placeholder, disabled }: ControllerFormFieldProps) {
+function ControlledFormField({ control, name, label, type = "text", placeholder, disabled }: ControllerFormFieldProps) {
   return (
     <FormField
       control={control}
@@ -141,7 +145,7 @@ function ControlledFormField({ control, name, label, placeholder, disabled }: Co
         <FormItem className="w-full lg:flex flex-wrap items-center justify-between">
           <FormLabel className="min-w-[180px]">{label}</FormLabel>
           <FormControl className="bg-white flex-1">
-            <Input placeholder={placeholder} {...field} disabled={disabled} />
+            <Input type={type} placeholder={placeholder} {...field} disabled={disabled} />
           </FormControl>
           <FormMessage className="w-full" />
         </FormItem>
@@ -165,7 +169,6 @@ function useWatchExpense(form: UseFormReturn<FormSchema>) {
     const nUserExpense = Number(userExpense);
 
     if (nUserExpense > nBill) {
-      setValue("friendExpense", "0");
       return;
     }
 
