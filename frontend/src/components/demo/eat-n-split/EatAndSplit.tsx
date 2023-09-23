@@ -48,6 +48,8 @@ export default function EatAndSplit() {
 
       return prevFriend;
     }));
+
+    setSelectedFriend(null);
   }
 
   return (
