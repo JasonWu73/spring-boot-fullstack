@@ -2,6 +2,7 @@ import FormAddFriend from "@/components/demo/eat-n-split/FormAddFriend.tsx";
 import { Button } from "@/components/ui/Button.tsx";
 import { type Friend } from "@/components/demo/eat-n-split/EatAndSplit.tsx";
 import { useState } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar.tsx";
 
 type FriendListProps = {
   friends: Friend[];
@@ -44,7 +45,10 @@ export default function FriendList({ friends, onAddFriend }: FriendListProps) {
 function FriendItem({ friend }: FriendItemProps) {
   return (
     <li className="flex items-center justify-between gap-2">
-      <img src={friend.image} alt={friend.name} className="w-12 h-12 rounded-full border border-slate-400 shadow" />
+      <Avatar>
+        <AvatarImage src={friend.image} alt={friend.name} />
+        <AvatarFallback>{friend.name}</AvatarFallback>
+      </Avatar>
 
       <div className="flex-1">
         <h3 className="text-lg font-bold">{friend.name}</h3>
