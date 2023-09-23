@@ -14,42 +14,54 @@ const formSchema = z.object({
     .nonempty("Must enter a bill")
     .refine((value) => !Number.isNaN(Number(value)), "Bill must be a number")
     .refine((value) => Number(value) > 0, "Bill must be greater than 0"),
-  yourExpense: z.string().trim()
+  userExpense: z.string().trim()
     .nonempty("Must enter your expense")
     .refine((value) => !Number.isNaN(Number(value)), "Expense must be a number")
     .refine((value) => Number(value) >= 0, "Expense must be greater or equal to 0"),
   friendExpense: z.string(),
-  who: z.literal("user").or(z.literal("friend")).default("user")
+  whoIsPaying: z.literal("user").or(z.literal("friend")).default("user")
 })
-  .refine((values) => Number(values.yourExpense) <= Number(values.bill), {
+  .refine((values) => Number(values.userExpense) <= Number(values.bill), {
     message: "Your expense must be less than or equal to the bill",
-    path: ["yourExpense"]
+    path: ["userExpense"]
   });
 
 type FormSchema = z.infer<typeof formSchema>;
 
-type FormSplitBillProps = { friend: Friend };
+export type Bill = {
+  friendId: Friend["id"];
+  expense: number;
+};
 
-export default function FormSplitBill({ friend }: FormSplitBillProps) {
+type FormSplitBillProps = {
+  friend: Friend;
+  onSplitBill: (bill: Bill) => void;
+};
+
+export default function FormSplitBill({ friend, onSplitBill }: FormSplitBillProps) {
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       bill: "",
-      yourExpense: "",
+      userExpense: "",
       friendExpense: "",
-      who: "user"
+      whoIsPaying: "user"
     }
   });
 
   useWatchExpense(form);
 
   function onSubmit(values: FormSchema) {
-    const bill = Number(values.bill);
-    const yourExpense = Number(values.yourExpense);
+    const userExpense = Number(values.userExpense);
     const friendExpense = Number(values.friendExpense);
-    const who = values.who;
+    const whoIsPaying = values.whoIsPaying;
 
-    console.log(form.formState.isValid, { bill, yourExpense, friendExpense, who });
+    const bill = {
+      friendId: friend.id,
+      expense: whoIsPaying === "user" ? -friendExpense : userExpense
+    };
+
+    onSplitBill(bill);
   }
 
   return (
@@ -69,7 +81,7 @@ export default function FormSplitBill({ friend }: FormSplitBillProps) {
 
         <ControlledFormField
           control={form.control}
-          name="yourExpense"
+          name="userExpense"
           label="💸 Your expense"
           placeholder="Your expense"
         />
@@ -84,7 +96,7 @@ export default function FormSplitBill({ friend }: FormSplitBillProps) {
 
         <FormField
           control={form.control}
-          name="who"
+          name="whoIsPaying"
           render={({ field }) => (
             <FormItem className="w-full lg:flex flex-wrap items-center justify-between">
               <FormLabel className="min-w-[180px]">🤑 Who is paying the bill</FormLabel>
@@ -112,7 +124,7 @@ export default function FormSplitBill({ friend }: FormSplitBillProps) {
 
 type ControllerFormFieldProps = {
   control: Control<FormSchema>;
-  name: "bill" | "yourExpense" | "friendExpense" | "who";
+  name: "bill" | "userExpense" | "friendExpense" | "whoIsPaying";
   label: string;
   placeholder: string;
   disabled?: boolean;
@@ -140,22 +152,22 @@ function useWatchExpense(form: UseFormReturn<FormSchema>) {
   const { watch, setValue } = form;
 
   const bill = watch("bill");
-  const yourExpense = watch("yourExpense");
+  const userExpense = watch("userExpense");
 
   useEffect(() => {
-    if (!isNumber(bill) || !isNumber(yourExpense)) {
+    if (!isNumber(bill) || !isNumber(userExpense)) {
       setValue("friendExpense", "");
       return;
     }
 
     const nBill = Number(bill);
-    const nYourExpense = Number(yourExpense);
+    const nUserExpense = Number(userExpense);
 
-    if (nYourExpense > nBill) {
+    if (nUserExpense > nBill) {
       setValue("friendExpense", "0");
       return;
     }
 
-    setValue("friendExpense", String(nBill - nYourExpense));
-  }, [bill, yourExpense, setValue]);
+    setValue("friendExpense", String(nBill - nUserExpense));
+  }, [bill, userExpense, setValue]);
 }

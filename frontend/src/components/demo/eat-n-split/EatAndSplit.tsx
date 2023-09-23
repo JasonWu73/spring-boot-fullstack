@@ -1,5 +1,5 @@
 import FriendList from "@/components/demo/eat-n-split/FriendList.tsx";
-import FormSplitBill from "@/components/demo/eat-n-split/FormSplitBill.tsx";
+import FormSplitBill, { type Bill } from "@/components/demo/eat-n-split/FormSplitBill.tsx";
 import { useState } from "react";
 
 const initialFriends = [
@@ -37,6 +37,19 @@ export default function EatAndSplit() {
     setSelectedFriend(prevSelectedFriend => prevSelectedFriend?.id === friend.id ? null : friend);
   }
 
+  function handleSplitBill(bill: Bill) {
+    setFriends((prevFriends) => prevFriends.map((prevFriend) => {
+      if (prevFriend.id === bill.friendId) {
+        return {
+          ...prevFriend,
+          balance: prevFriend.balance - bill.expense
+        };
+      }
+
+      return prevFriend;
+    }));
+  }
+
   return (
     <div className="h-screen grid grid-flow-row md:grid-rows-1 md:grid-cols-2 md:gap-16">
       <div className="min-w-min row-span-1 col-span-1 md:flex md:justify-end">
@@ -49,7 +62,7 @@ export default function EatAndSplit() {
       </div>
 
       <div className="min-w-min row-span-1 col-span-1">
-        {selectedFriend && <FormSplitBill friend={selectedFriend} />}
+        {selectedFriend && <FormSplitBill friend={selectedFriend} onSplitBill={handleSplitBill} />}
       </div>
     </div>
   );
