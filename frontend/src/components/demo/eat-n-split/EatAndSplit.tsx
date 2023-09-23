@@ -42,7 +42,7 @@ export default function EatAndSplit() {
       if (prevFriend.id === bill.friendId) {
         return {
           ...prevFriend,
-          balance: prevFriend.balance - bill.expense
+          balance: Number((prevFriend.balance - bill.expense).toFixed(2))
         };
       }
 

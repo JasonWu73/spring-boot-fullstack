@@ -6,8 +6,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/Input.tsx";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx";
 import { useEffect } from "react";
-import { isNumber } from "@/lib/number.ts";
 import { type Friend } from "./EatAndSplit";
+import { isNumeric } from "@/lib/number.ts";
 
 const formSchema = z.object({
   bill: z.string().trim()
@@ -17,7 +17,7 @@ const formSchema = z.object({
   userExpense: z.string().trim()
     .nonempty("Must enter your expense")
     .refine((value) => !Number.isNaN(Number(value)), "Expense must be a number")
-    .refine((value) => Number(value) >= 0, "Expense must be greater or equal to 0"),
+    .refine((value) => Number(value) >= 0, "Expense must be greater than or equal to 0"),
   friendExpense: z.string(),
   whoIsPaying: z.literal("user").or(z.literal("friend")).default("user")
 })
@@ -157,8 +157,7 @@ function useWatchExpense(form: UseFormReturn<FormSchema>) {
   const userExpense = watch("userExpense");
 
   useEffect(() => {
-    if (!isNumber(bill) || !isNumber(userExpense)) {
-      setValue("friendExpense", "");
+    if (!isNumeric(bill) || !isNumeric(userExpense)) {
       return;
     }
 
@@ -170,6 +169,6 @@ function useWatchExpense(form: UseFormReturn<FormSchema>) {
       return;
     }
 
-    setValue("friendExpense", String(nBill - nUserExpense));
+    setValue("friendExpense", (nBill - nUserExpense).toFixed(2));
   }, [bill, userExpense, setValue]);
 }
