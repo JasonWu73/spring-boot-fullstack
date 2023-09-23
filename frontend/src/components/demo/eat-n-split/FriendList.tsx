@@ -3,6 +3,9 @@ import { type Friend } from "@/components/demo/eat-n-split/EatAndSplit.tsx";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar.tsx";
 import classNames from "classnames";
 import { Separator } from "@/components/ui/Separator.tsx";
+import { ScrollArea } from "@/components/ui/ScrollArea.tsx";
+import { truncate } from "@/lib/utils.ts";
+import React from "react";
 
 type FriendListProps = {
   friends: Friend[];
@@ -12,19 +15,21 @@ type FriendListProps = {
 
 export default function FriendList({ friends, selectedFriend, onSelectFriend }: FriendListProps) {
   return (
-    <ul className="md:max-w-md">
-      {friends.map((friend, index, array) => (
-        <>
-          <FriendItem
-            key={friend.id}
-            friend={friend}
-            isSelected={friend.id === selectedFriend?.id}
-            onSelectFriend={(friend) => onSelectFriend(friend)}
-          />
-          {index < array.length - 1 && <Separator />}
-        </>
-      ))}
-    </ul>
+    <ScrollArea className="h-96 w-96 rounded-md border">
+      <ul>
+        {friends.map((friend, index, array) => (
+          <React.Fragment key={friend.id}>
+            <FriendItem
+              friend={friend}
+              isSelected={friend.id === selectedFriend?.id}
+              onSelectFriend={(friend) => onSelectFriend(friend)}
+            />
+
+            {index < array.length - 1 && <Separator />}
+          </React.Fragment>
+        ))}
+      </ul>
+    </ScrollArea>
   );
 }
 
@@ -35,6 +40,8 @@ type FriendItemProps = {
 };
 
 function FriendItem({ friend, isSelected, onSelectFriend }: FriendItemProps) {
+  const name = truncate(friend.name, 5);
+
   return (
     <li
       className={classNames(
@@ -43,28 +50,28 @@ function FriendItem({ friend, isSelected, onSelectFriend }: FriendItemProps) {
       )}
     >
       <Avatar>
-        <AvatarImage src={friend.image} alt={friend.name} />
-        <AvatarFallback>{friend.name}</AvatarFallback>
+        <AvatarImage src={friend.image} alt={name} />
+        <AvatarFallback>{name}</AvatarFallback>
       </Avatar>
 
-      <div className="flex-1">
-        <h3 className="text-lg font-bold">{friend.name}</h3>
+      <div className="flex-1 w-32">
+        <h3 className="text-lg font-bold">{name}</h3>
 
         {friend.balance > 0 && (
           <p className="text-green-500">
-            {friend.name} owes you ${friend.balance}
+            {name} owes you ${friend.balance}
           </p>
         )}
 
         {friend.balance < 0 && (
           <p className="text-red-500">
-            You owe {friend.name} ${Math.abs(friend.balance)}
+            You owe {name} ${Math.abs(friend.balance)}
           </p>
         )}
 
         {friend.balance === 0 && (
           <p>
-            You and {friend.name} are even
+            You and {name} are even
           </p>
         )}
       </div>

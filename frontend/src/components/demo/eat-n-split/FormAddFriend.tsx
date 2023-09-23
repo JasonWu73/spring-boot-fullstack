@@ -45,7 +45,7 @@ export default function FormAddFriend({ onAddFriend }: FormAddFriendProps) {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="md:max-w-md bg-amber-100 text-slate-700 p-4 space-y-2 flex flex-col justify-center rounded shadow"
+        className="w-96 bg-amber-100 text-slate-700 p-4 space-y-4 rounded shadow flex flex-col justify-center"
       >
         <ControlledFormField
           control={form.control}
