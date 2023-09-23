@@ -82,7 +82,6 @@ export default function FormSplitBill({ friend, onSplitBill }: FormSplitBillProp
           control={form.control}
           name="bill"
           label="💰 Bill value"
-          type="number"
           placeholder="Bill value"
           isError={form.getFieldState("bill")?.invalid}
         />
@@ -91,7 +90,6 @@ export default function FormSplitBill({ friend, onSplitBill }: FormSplitBillProp
           control={form.control}
           name="userExpense"
           label="💸 Your expense"
-          type="number"
           placeholder="Your expense"
           isError={form.getFieldState("userExpense")?.invalid}
         />
@@ -100,7 +98,6 @@ export default function FormSplitBill({ friend, onSplitBill }: FormSplitBillProp
           control={form.control}
           name="friendExpense"
           label={`👫 ${name}'s expense`}
-          type="number"
           placeholder={`${name}'s expense`}
           disabled
         />
@@ -137,7 +134,6 @@ type ControllerFormFieldProps = {
   control: Control<FormSchema>;
   name: "bill" | "userExpense" | "friendExpense" | "whoIsPaying";
   label: string;
-  type?: "text" | "number";
   placeholder: string;
   disabled?: boolean;
   isError?: boolean;
@@ -147,7 +143,6 @@ function ControlledFormField({
   control,
   name,
   label,
-  type = "text",
   placeholder,
   disabled,
   isError
@@ -160,7 +155,7 @@ function ControlledFormField({
         <FormItem className="md:flex md:items-center md:justify-center md:flex-wrap">
           <FormLabel className="min-w-[180px] md:max-w-[40%] text-ellipsis overflow-hidden">{label}</FormLabel>
           <FormControl className="bg-slate-100 md:flex-1">
-            <Input type={type} placeholder={placeholder} {...field} disabled={disabled} isError={isError} />
+            <Input type="text" placeholder={placeholder} {...field} disabled={disabled} isError={isError} />
           </FormControl>
           <FormMessage className="w-full" />
         </FormItem>
