@@ -63,8 +63,8 @@ function FriendItem({ friend, isSelected, onSelectFriend }: FriendItemProps) {
   return (
     <li
       className={classNames(
-        "px-4 py-2 rounded flex items-center justify-between gap-2 hover:bg-amber-100",
-        { "bg-amber-100": isSelected }
+        "px-4 py-2 rounded flex items-center justify-between gap-2 hover:bg-amber-100 dark:hover:text-night-1",
+        { "bg-amber-100 dark:text-night-1": isSelected }
       )}
     >
       <Avatar>
