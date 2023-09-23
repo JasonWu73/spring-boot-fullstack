@@ -80,6 +80,7 @@ export default function FormSplitBill({ friend, onSplitBill }: FormSplitBillProp
           label="💰 Bill value"
           type="number"
           placeholder="Bill value"
+          isError={form.getFieldState("bill")?.invalid}
         />
 
         <ControlledFormField
@@ -88,6 +89,7 @@ export default function FormSplitBill({ friend, onSplitBill }: FormSplitBillProp
           label="💸 Your expense"
           type="number"
           placeholder="Your expense"
+          isError={form.getFieldState("userExpense")?.invalid}
         />
 
         <ControlledFormField
@@ -134,9 +136,18 @@ type ControllerFormFieldProps = {
   type?: "text" | "number";
   placeholder: string;
   disabled?: boolean;
+  isError?: boolean;
 };
 
-function ControlledFormField({ control, name, label, type = "text", placeholder, disabled }: ControllerFormFieldProps) {
+function ControlledFormField({
+  control,
+  name,
+  label,
+  type = "text",
+  placeholder,
+  disabled,
+  isError
+}: ControllerFormFieldProps) {
   return (
     <FormField
       control={control}
@@ -145,7 +156,7 @@ function ControlledFormField({ control, name, label, type = "text", placeholder,
         <FormItem className="w-full lg:flex flex-wrap items-center justify-between">
           <FormLabel className="min-w-[180px]">{label}</FormLabel>
           <FormControl className="bg-white flex-1">
-            <Input type={type} placeholder={placeholder} {...field} disabled={disabled} />
+            <Input type={type} placeholder={placeholder} {...field} disabled={disabled} isError={isError} />
           </FormControl>
           <FormMessage className="w-full" />
         </FormItem>

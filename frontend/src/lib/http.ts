@@ -22,17 +22,17 @@ type Response<T, E> = {
 /**
  * 发送 HTTP 请求, 并以 JSON 数据格式解析响应数据.
  *
- * @template T 成功响应时的数据类型
- * @template E 错误响应时的数据类型
+ * @template T - 成功响应时的数据类型
+ * @template E - 错误响应时的数据类型
  *
- * @param Request 请求的配置属性
- * @param Request.url URL 地址
- * @param Request.method 请求方法, 默认为 `GET`
- * @param Request.contentType 请求体的内容类型, 默认为 `JSON`
- * @param Request.urlData URL 参数
- * @param Request.bodyData 请求体数据
- * @param Request.signal `AbortController` 实例的 `signal` 属性, 用于主动取消请求
- * @returns {Promise<Response<T, E>>} 以 JSON 数据格式解析后的正常或异常响应数据
+ * @param Request - 请求的配置属性
+ * @param Request.url - URL 地址
+ * @param Request.method - 请求方法, 默认为 `GET`
+ * @param Request.contentType - 请求体的内容类型, 默认为 `JSON`
+ * @param Request.urlData - URL 参数
+ * @param Request.bodyData - 请求体数据
+ * @param Request.signal - `AbortController` 实例的 `signal` 属性, 用于主动取消请求
+ * @returns {Promise<Response<T, E>>} - 以 JSON 数据格式解析后的正常或异常响应数据
  */
 export async function sendRequest<T, E>({
   url,

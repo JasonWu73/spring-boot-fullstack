@@ -73,7 +73,7 @@ function ControlledFormField({ control, name, label, placeholder }: ControllerFo
         <FormItem className="lg:flex flex-wrap items-center justify-between">
           <FormLabel className="min-w-[120px]">{label}</FormLabel>
           <FormControl className="bg-white flex-1">
-            <Input placeholder={placeholder} {...field} />
+            <Input type="text" placeholder={placeholder} {...field} />
           </FormControl>
           <FormMessage className="w-full" />
         </FormItem>
