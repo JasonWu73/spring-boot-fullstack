@@ -15,8 +15,10 @@ const formSchema = z.object({
   image: z.string().url({ message: "Image must be a valid URL" })
 });
 
+type FormSchema = z.infer<typeof formSchema>;
+
 export default function FormAddFriend({ onAddFriend }: FormAddFriendProps) {
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
@@ -24,7 +26,7 @@ export default function FormAddFriend({ onAddFriend }: FormAddFriendProps) {
     }
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  function onSubmit(values: FormSchema) {
     const newFriendId = Date.now();
 
     const newFriend: Friend = {
@@ -56,7 +58,7 @@ export default function FormAddFriend({ onAddFriend }: FormAddFriendProps) {
 }
 
 type ControllerFormFieldProps = {
-  control: Control<z.infer<typeof formSchema>>;
+  control: Control<FormSchema>;
   name: "name" | "image";
   label: string;
   placeholder: string;

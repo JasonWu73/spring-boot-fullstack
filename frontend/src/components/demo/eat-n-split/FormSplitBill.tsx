@@ -62,6 +62,8 @@ export default function FormSplitBill({ friend, onSplitBill }: FormSplitBillProp
     };
 
     onSplitBill(bill);
+
+    form.reset();
   }
 
   return (
@@ -70,7 +72,7 @@ export default function FormSplitBill({ friend, onSplitBill }: FormSplitBillProp
         onSubmit={form.handleSubmit(onSubmit)}
         className="md:max-w-md md:mt-16 mx-4 mb-8 p-8 bg-amber-100 text-slate-700 rounded border shadow flex flex-col gap-4 items-center justify-center"
       >
-        <h2 className="text-2xl font-bold">Split a bill with X</h2>
+        <h2 className="text-2xl font-bold">Split a bill with {friend.name}</h2>
 
         <ControlledFormField
           control={form.control}
@@ -100,17 +102,17 @@ export default function FormSplitBill({ friend, onSplitBill }: FormSplitBillProp
           render={({ field }) => (
             <FormItem className="w-full lg:flex flex-wrap items-center justify-between">
               <FormLabel className="min-w-[180px]">🤑 Who is paying the bill</FormLabel>
-              <Select defaultValue={field.value} onValueChange={field.onChange}>
+              <Select value={field.value} onValueChange={field.onChange}>
                 <FormControl className="bg-white flex-1">
                   <SelectTrigger>
                     <SelectValue placeholder="Who is paying the bill" />
                   </SelectTrigger>
                 </FormControl>
-                <FormMessage className="w-full" />
                 <SelectContent>
                   <SelectItem value="user">You</SelectItem>
                   <SelectItem value="friend">{friend.name}</SelectItem>
                 </SelectContent>
+                <FormMessage className="w-full" />
               </Select>
             </FormItem>
           )}
