@@ -27,19 +27,29 @@ export type Friend = typeof initialFriends[0];
 
 export default function EatAndSplit() {
   const [friends, setFriends] = useState(initialFriends);
+  const [selectedFriend, setSelectedFriend] = useState<Friend | null>(null);
 
   function handleAddFriend(friend: Friend) {
-    setFriends((prevState) => [...prevState, friend]);
+    setFriends((prevFriends) => [...prevFriends, friend]);
+  }
+
+  function handleSelectFriend(friend: Friend) {
+    setSelectedFriend(prevSelectedFriend => prevSelectedFriend?.id === friend.id ? null : friend);
   }
 
   return (
     <div className="h-screen grid grid-flow-row md:grid-rows-1 md:grid-cols-2 md:gap-16">
       <div className="min-w-min row-span-1 col-span-1 md:flex md:justify-end">
-        <FriendList friends={friends} onAddFriend={handleAddFriend} />
+        <FriendList
+          friends={friends}
+          onAddFriend={handleAddFriend}
+          selectedFriend={selectedFriend}
+          onSelectFriend={handleSelectFriend}
+        />
       </div>
 
       <div className="min-w-min row-span-1 col-span-1">
-        <FormSplitBill />
+        {selectedFriend && <FormSplitBill friend={selectedFriend} />}
       </div>
     </div>
   );

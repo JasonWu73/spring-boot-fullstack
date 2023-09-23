@@ -3,17 +3,16 @@ import { Button } from "@/components/ui/Button.tsx";
 import { type Friend } from "@/components/demo/eat-n-split/EatAndSplit.tsx";
 import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar.tsx";
+import classNames from "classnames";
 
 type FriendListProps = {
   friends: Friend[];
   onAddFriend: (friend: Friend) => void;
+  selectedFriend: Friend | null;
+  onSelectFriend: (friend: Friend) => void;
 };
 
-type FriendItemProps = {
-  friend: Friend
-};
-
-export default function FriendList({ friends, onAddFriend }: FriendListProps) {
+export default function FriendList({ friends, onAddFriend, selectedFriend, onSelectFriend }: FriendListProps) {
   const [showAddFriend, setShowAddFriend] = useState(false);
 
   function handleAddFriend(friend: Friend) {
@@ -21,19 +20,31 @@ export default function FriendList({ friends, onAddFriend }: FriendListProps) {
     setShowAddFriend(false);
   }
 
+  function handleSelectFriend(friend: Friend) {
+    onSelectFriend(friend);
+    setShowAddFriend(false);
+  }
+
   return (
     <div className="w-full md:max-w-lg md:ml-16 md:mt-16 md:flex md:justify-end">
-      <ul className="p-4 w-full overflow-auto flex flex-col gap-4">
-        {friends.map((friend) => (<FriendItem key={friend.id} friend={friend} />))}
+      <ul className="p-4 w-full overflow-auto flex flex-col">
+        {friends.map((friend) => (
+          <FriendItem
+            key={friend.id}
+            friend={friend}
+            isSelected={friend.id === selectedFriend?.id}
+            onSelectFriend={handleSelectFriend}
+          />
+        ))}
 
         {showAddFriend && (
-          <li>
+          <li className="mt-4">
             <FormAddFriend onAddFriend={handleAddFriend} />
           </li>
         )}
 
-        <li className="text-right">
-          <Button onClick={() => setShowAddFriend((prevState) => !prevState)}>
+        <li className="mt-4 text-right">
+          <Button onClick={() => setShowAddFriend((prevShowAddFriend) => !prevShowAddFriend)}>
             {showAddFriend ? "Close" : "Add friend"}
           </Button>
         </li>
@@ -42,9 +53,20 @@ export default function FriendList({ friends, onAddFriend }: FriendListProps) {
   );
 }
 
-function FriendItem({ friend }: FriendItemProps) {
+type FriendItemProps = {
+  friend: Friend;
+  isSelected: boolean;
+  onSelectFriend: (friend: Friend) => void;
+};
+
+function FriendItem({ friend, isSelected, onSelectFriend }: FriendItemProps) {
   return (
-    <li className="flex items-center justify-between gap-2">
+    <li
+      className={classNames(
+        "px-4 py-2 rounded flex items-center justify-between gap-2 hover:bg-amber-100",
+        { "bg-amber-100": isSelected }
+      )}
+    >
       <Avatar>
         <AvatarImage src={friend.image} alt={friend.name} />
         <AvatarFallback>{friend.name}</AvatarFallback>
@@ -72,7 +94,7 @@ function FriendItem({ friend }: FriendItemProps) {
         )}
       </div>
 
-      <Button>Select</Button>
+      <Button onClick={() => onSelectFriend(friend)}>Select</Button>
     </li>
   );
 }

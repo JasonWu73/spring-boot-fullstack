@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/Input.tsx";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx";
 import { useEffect } from "react";
 import { isNumber } from "@/lib/number.ts";
+import { type Friend } from "./EatAndSplit";
 
 const formSchema = z.object({
   bill: z.string().trim()
@@ -27,7 +28,9 @@ const formSchema = z.object({
 
 type FormSchema = z.infer<typeof formSchema>;
 
-export default function FormSplitBill() {
+type FormSplitBillProps = { friend: Friend };
+
+export default function FormSplitBill({ friend }: FormSplitBillProps) {
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -74,8 +77,8 @@ export default function FormSplitBill() {
         <ControlledFormField
           control={form.control}
           name="friendExpense"
-          label="👫 X's expense"
-          placeholder="X's expense"
+          label={`👫 ${friend.name}'s expense`}
+          placeholder={`${friend.name}'s expense`}
           disabled
         />
 
@@ -94,7 +97,7 @@ export default function FormSplitBill() {
                 <FormMessage className="w-full" />
                 <SelectContent>
                   <SelectItem value="user">You</SelectItem>
-                  <SelectItem value="friend">X</SelectItem>
+                  <SelectItem value="friend">{friend.name}</SelectItem>
                 </SelectContent>
               </Select>
             </FormItem>
