@@ -45,11 +45,23 @@ export default function FormAddFriend({ onAddFriend }: FormAddFriendProps) {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="p-4 flex flex-col gap-4 rounded border shadow-sm bg-amber-100 text-slate-700"
+        className="md:max-w-md bg-amber-100 text-slate-700 p-4 space-y-2 flex flex-col justify-center rounded shadow"
       >
-        <ControlledFormField control={form.control} name="name" label="👫 Friend name" placeholder="Friend name" />
+        <ControlledFormField
+          control={form.control}
+          name="name"
+          label="👫 Friend name"
+          placeholder="Friend name"
+          isError={form.getFieldState("name")?.invalid}
+        />
 
-        <ControlledFormField control={form.control} name="image" label="🌄 Image URL" placeholder="Image URL" />
+        <ControlledFormField
+          control={form.control}
+          name="image"
+          label="🌄 Image URL"
+          placeholder="Image URL"
+          isError={form.getFieldState("image")?.invalid}
+        />
 
         <Button type="submit" className="self-end">Add</Button>
       </form>
@@ -62,18 +74,19 @@ type ControllerFormFieldProps = {
   name: "name" | "image";
   label: string;
   placeholder: string;
+  isError?: boolean;
 };
 
-function ControlledFormField({ control, name, label, placeholder }: ControllerFormFieldProps) {
+function ControlledFormField({ control, name, label, placeholder, isError }: ControllerFormFieldProps) {
   return (
     <FormField
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className="lg:flex flex-wrap items-center justify-between">
+        <FormItem className="md:flex md:items-center md:justify-center md:flex-wrap">
           <FormLabel className="min-w-[120px]">{label}</FormLabel>
-          <FormControl className="bg-white flex-1">
-            <Input type="text" placeholder={placeholder} {...field} />
+          <FormControl className="bg-slate-100 md:flex-1">
+            <Input type="text" placeholder={placeholder} {...field} isError={isError} />
           </FormControl>
           <FormMessage className="w-full" />
         </FormItem>

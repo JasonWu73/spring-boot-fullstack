@@ -70,9 +70,9 @@ export default function FormSplitBill({ friend, onSplitBill }: FormSplitBillProp
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="md:max-w-md md:mt-16 mx-4 mb-8 p-8 bg-amber-100 text-slate-700 rounded border shadow flex flex-col gap-4 items-center justify-center"
+        className="md:max-w-md bg-amber-100 text-slate-700 p-4 space-y-4 rounded shadow flex flex-col justify-center"
       >
-        <h2 className="text-2xl font-bold">Split a bill with {friend.name}</h2>
+        <h2 className="text-2xl font-bold text-center">Split a bill with {friend.name}</h2>
 
         <ControlledFormField
           control={form.control}
@@ -105,10 +105,10 @@ export default function FormSplitBill({ friend, onSplitBill }: FormSplitBillProp
           control={form.control}
           name="whoIsPaying"
           render={({ field }) => (
-            <FormItem className="w-full lg:flex flex-wrap items-center justify-between">
+            <FormItem className="md:flex md:items-center md:justify-center md:flex-wrap">
               <FormLabel className="min-w-[180px]">🤑 Who is paying the bill</FormLabel>
               <Select value={field.value} onValueChange={field.onChange}>
-                <FormControl className="bg-white flex-1">
+                <FormControl className="bg-slate-100 md:flex-1">
                   <SelectTrigger>
                     <SelectValue placeholder="Who is paying the bill" />
                   </SelectTrigger>
@@ -153,9 +153,9 @@ function ControlledFormField({
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className="w-full lg:flex flex-wrap items-center justify-between">
+        <FormItem className="md:flex md:items-center md:justify-center md:flex-wrap">
           <FormLabel className="min-w-[180px]">{label}</FormLabel>
-          <FormControl className="bg-white flex-1">
+          <FormControl className="bg-slate-100 md:flex-1">
             <Input type={type} placeholder={placeholder} {...field} disabled={disabled} isError={isError} />
           </FormControl>
           <FormMessage className="w-full" />

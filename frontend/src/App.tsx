@@ -1,11 +1,11 @@
 import { useEffect } from "react";
-import UseBeauty from "@/components/demo/use-beauty/UseBeauty.tsx";
+import EatAndSplit from "@/components/demo/eat-n-split/EatAndSplit.tsx";
 
 export default function App() {
   useTheme();
 
   return (
-    <UseBeauty />
+    <EatAndSplit />
   );
 }
 

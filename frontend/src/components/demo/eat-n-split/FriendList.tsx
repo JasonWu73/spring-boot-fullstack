@@ -1,55 +1,26 @@
-import FormAddFriend from "@/components/demo/eat-n-split/FormAddFriend.tsx";
 import { Button } from "@/components/ui/Button.tsx";
 import { type Friend } from "@/components/demo/eat-n-split/EatAndSplit.tsx";
-import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar.tsx";
 import classNames from "classnames";
 
 type FriendListProps = {
   friends: Friend[];
-  onAddFriend: (friend: Friend) => void;
   selectedFriend: Friend | null;
   onSelectFriend: (friend: Friend) => void;
 };
 
-export default function FriendList({ friends, onAddFriend, selectedFriend, onSelectFriend }: FriendListProps) {
-  const [showAddFriend, setShowAddFriend] = useState(false);
-
-  function handleAddFriend(friend: Friend) {
-    onAddFriend(friend);
-    setShowAddFriend(false);
-  }
-
-  function handleSelectFriend(friend: Friend) {
-    onSelectFriend(friend);
-    setShowAddFriend(false);
-  }
-
+export default function FriendList({ friends, selectedFriend, onSelectFriend }: FriendListProps) {
   return (
-    <div className="w-full md:max-w-lg md:ml-16 md:mt-16 md:flex md:justify-end">
-      <ul className="p-4 w-full overflow-auto flex flex-col">
-        {friends.map((friend) => (
-          <FriendItem
-            key={friend.id}
-            friend={friend}
-            isSelected={friend.id === selectedFriend?.id}
-            onSelectFriend={handleSelectFriend}
-          />
-        ))}
-
-        {showAddFriend && (
-          <li className="mt-4">
-            <FormAddFriend onAddFriend={handleAddFriend} />
-          </li>
-        )}
-
-        <li className="mt-4 text-right">
-          <Button onClick={() => setShowAddFriend((prevShowAddFriend) => !prevShowAddFriend)}>
-            {showAddFriend ? "Close" : "Add friend"}
-          </Button>
-        </li>
-      </ul>
-    </div>
+    <ul className="md:max-w-md">
+      {friends.map((friend) => (
+        <FriendItem
+          key={friend.id}
+          friend={friend}
+          isSelected={friend.id === selectedFriend?.id}
+          onSelectFriend={(friend) => onSelectFriend(friend)}
+        />
+      ))}
+    </ul>
   );
 }
 
@@ -63,7 +34,7 @@ function FriendItem({ friend, isSelected, onSelectFriend }: FriendItemProps) {
   return (
     <li
       className={classNames(
-        "px-4 py-2 rounded flex items-center justify-between gap-2 hover:bg-amber-100 dark:hover:text-night-1",
+        "flex items-center justify-between gap-2 py-2 px-4 rounded hover:bg-amber-100 dark:hover:text-slate-700",
         { "bg-amber-100 dark:text-night-1": isSelected }
       )}
     >
