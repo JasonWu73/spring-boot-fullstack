@@ -3,6 +3,7 @@ import FormSplitBill, { type Bill } from "@/components/demo/eat-n-split/FormSpli
 import { useState } from "react";
 import FormAddFriend from "@/components/demo/eat-n-split/FormAddFriend.tsx";
 import { Button } from "@/components/ui/Button.tsx";
+import { ScrollArea } from "@/components/ui/ScrollArea.tsx";
 
 const initialFriends = [
   {
@@ -176,15 +177,17 @@ export default function EatAndSplit() {
 
   return (
     <div className="p-4 grid md:grid-rows-2 md:grid-cols-2 gap-2 md:gap-4 items-center h-screen">
-      <div className="md:row-span-1 md:col-span-1 justify-self-end overflow-auto max-h-full w-full">
-        <FriendList
-          friends={friends}
-          selectedFriend={selectedFriend}
-          onSelectFriend={handleSelectFriend}
-        />
+      <div className="md:row-span-1 md:col-span-1 justify-self-end">
+        <ScrollArea className="h-96 md:w-[28rem] rounded-md border">
+          <FriendList
+            friends={friends}
+            selectedFriend={selectedFriend}
+            onSelectFriend={handleSelectFriend}
+          />
+        </ScrollArea>
       </div>
 
-      <div className="md:row-span-1 md:col-span-1 justify-self-end self-start w-full flex flex-col justify-center gap-2 md:gap-4">
+      <div className="md:row-span-1 md:col-span-1 justify-self-end self-start flex flex-col justify-center gap-2 md:gap-4 md:w-[28rem]">
         {showAddFriend && <FormAddFriend onAddFriend={handleAddFriend} />}
 
         <Button onClick={handleToggleForm} className="self-end">
@@ -192,7 +195,7 @@ export default function EatAndSplit() {
         </Button>
       </div>
 
-      <div className="md:row-start-1 md:row-end-2 md:col-start-2 md:col-end-3 w-full">
+      <div className="md:row-start-1 md:row-end-2 md:col-start-2 md:col-end-3">
         {selectedFriend && <FormSplitBill friend={selectedFriend} onSplitBill={handleSplitBill} />}
       </div>
     </div>

@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/Button.tsx";
 import { type Friend } from "@/components/demo/eat-n-split/EatAndSplit.tsx";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar.tsx";
 import classNames from "classnames";
+import { Separator } from "@/components/ui/Separator.tsx";
 
 type FriendListProps = {
   friends: Friend[];
@@ -12,13 +13,16 @@ type FriendListProps = {
 export default function FriendList({ friends, selectedFriend, onSelectFriend }: FriendListProps) {
   return (
     <ul className="md:max-w-md">
-      {friends.map((friend) => (
-        <FriendItem
-          key={friend.id}
-          friend={friend}
-          isSelected={friend.id === selectedFriend?.id}
-          onSelectFriend={(friend) => onSelectFriend(friend)}
-        />
+      {friends.map((friend, index, array) => (
+        <>
+          <FriendItem
+            key={friend.id}
+            friend={friend}
+            isSelected={friend.id === selectedFriend?.id}
+            onSelectFriend={(friend) => onSelectFriend(friend)}
+          />
+          {index < array.length - 1 && <Separator />}
+        </>
       ))}
     </ul>
   );
