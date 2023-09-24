@@ -69,6 +69,14 @@ export default function EatAndSplit() {
     setSelectedFriend(prev => prev?.id === friend.id ? null : friend);
   }
 
+  function handleDeleteFriend(friend: Friend) {
+    setFriends((prev) => prev.filter((prev) => prev.id !== friend.id));
+
+    if (selectedFriend?.id === friend.id) {
+      setSelectedFriend(null);
+    }
+  }
+
   function handleSplitBill(bill: Bill) {
     setFriends((prev) => prev.map((prev) => {
       if (prev.id === bill.friendId) {
@@ -91,6 +99,7 @@ export default function EatAndSplit() {
           friends={friends}
           selectedFriend={selectedFriend}
           onSelectFriend={handleSelectFriend}
+          onDeleteFriend={handleDeleteFriend}
         />
       </div>
 
