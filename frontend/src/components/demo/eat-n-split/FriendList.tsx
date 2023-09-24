@@ -19,6 +19,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger
 } from "@/components/ui/AlertDialog.tsx";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/Alert.tsx";
+import { RocketIcon } from "@radix-ui/react-icons";
 
 type FriendListProps = {
   friends: Friend[];
@@ -33,9 +35,13 @@ export default function FriendList({ friends, selectedFriend, onSelectFriend, on
       <ScrollArea className="h-96 md:h-[30rem] lg:h-[24rem] w-full md:w-[22rem] lg:w-[30rem]">
         <div className="p-4">
           {friends.length === 0 && (
-            <p className="text-center text-slate-500 dark:text-slate-400">
-              No friends yet. Add a friend to split a bill.
-            </p>
+            <Alert>
+              <RocketIcon className="w-4 h-4" />
+              <AlertTitle>Heads up!</AlertTitle>
+              <AlertDescription>
+                No friends yet. Add a friend to split a bill.
+              </AlertDescription>
+            </Alert>
           )}
 
           {friends.length > 0 && (
