@@ -3,6 +3,7 @@ import FormSplitBill, { type Bill } from "@/components/demo/eat-n-split/FormSpli
 import { useState } from "react";
 import FormAddFriend from "@/components/demo/eat-n-split/FormAddFriend.tsx";
 import { Button } from "@/components/ui/Button.tsx";
+import { useToast } from "@/components/ui/use-toast.ts";
 
 const initialFriends = [
   {
@@ -55,6 +56,7 @@ export default function EatAndSplit() {
   const [friends, setFriends] = useState(initialFriends);
   const [showAddFriend, setShowAddFriend] = useState(false);
   const [selectedFriend, setSelectedFriend] = useState<Friend | null>(null);
+  const { toast } = useToast();
 
   function handleAddFriend(friend: Friend) {
     setFriends((prev) => [...prev, friend]);
@@ -75,6 +77,11 @@ export default function EatAndSplit() {
     if (selectedFriend?.id === friend.id) {
       setSelectedFriend(null);
     }
+
+    toast({
+      title: "Friend deleted",
+      description: `${friend.name} was deleted`
+    });
   }
 
   function handleSplitBill(bill: Bill) {
