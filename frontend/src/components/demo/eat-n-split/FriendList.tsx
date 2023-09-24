@@ -6,6 +6,7 @@ import { Separator } from "@/components/ui/Separator.tsx";
 import { ScrollArea } from "@/components/ui/ScrollArea.tsx";
 import { truncate } from "@/lib/utils.ts";
 import React from "react";
+import { Card, CardContent } from "@/components/ui/Card.tsx";
 
 type FriendListProps = {
   friends: Friend[];
@@ -15,21 +16,25 @@ type FriendListProps = {
 
 export default function FriendList({ friends, selectedFriend, onSelectFriend }: FriendListProps) {
   return (
-    <ScrollArea className="h-96 w-96 rounded-md border">
-      <ul>
-        {friends.map((friend, index, array) => (
-          <React.Fragment key={friend.id}>
-            <FriendItem
-              friend={friend}
-              isSelected={friend.id === selectedFriend?.id}
-              onSelectFriend={(friend) => onSelectFriend(friend)}
-            />
+    <Card className="w-full md:w-[22rem] lg:w-[30rem]">
+      <CardContent>
+        <ScrollArea className="h-96 md:h-[30rem] lg:h-[24rem] pt-6">
+          <ul>
+            {friends.map((friend, index, array) => (
+              <React.Fragment key={friend.id}>
+                <FriendItem
+                  friend={friend}
+                  isSelected={friend.id === selectedFriend?.id}
+                  onSelectFriend={(friend) => onSelectFriend(friend)}
+                />
 
-            {index < array.length - 1 && <Separator />}
-          </React.Fragment>
-        ))}
-      </ul>
-    </ScrollArea>
+                {index < array.length - 1 && <Separator />}
+              </React.Fragment>
+            ))}
+          </ul>
+        </ScrollArea>
+      </CardContent>
+    </Card>
   );
 }
 

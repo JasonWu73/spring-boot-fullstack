@@ -43,7 +43,7 @@ export default function FormAddFriend({ onAddFriend }: FormAddFriendProps) {
   }
 
   return (
-    <Card className="w-96 bg-amber-100 dark:bg-amber-100 dark:text-slate-700 text-slate-700 p-4">
+    <Card className="w-full md:w-[22rem] lg:w-[30rem] bg-amber-100 dark:bg-amber-100 dark:text-slate-700 text-slate-700 p-4">
       <CardHeader>
         <CardTitle className="text-xl font-bold">
           Add a friend
@@ -90,9 +90,9 @@ function ControlledFormField({ control, name, label, placeholder, isError }: Con
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className="md:flex md:items-center md:justify-center md:flex-wrap">
+        <FormItem className="lg:flex lg:items-center lg:justify-center lg:flex-wrap">
           <FormLabel className="min-w-[120px]">{label}</FormLabel>
-          <FormControl className="bg-slate-100 md:flex-1">
+          <FormControl className="bg-slate-100 lg:flex-1">
             <Input type="text" placeholder={placeholder} {...field} isError={isError} />
           </FormControl>
           <FormMessage className="w-full" />
