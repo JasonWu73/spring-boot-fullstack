@@ -9,6 +9,7 @@ import { useEffect } from "react";
 import { type Friend } from "./EatAndSplit";
 import { isNumeric, truncate } from "@/lib/utils.ts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/Card.tsx";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip.tsx";
 
 const formSchema = z.object({
   bill: z.string().trim()
@@ -76,7 +77,15 @@ export default function FormSplitBill({ friend, onSplitBill }: FormSplitBillProp
           Split bill, my friend
         </CardTitle>
         <CardDescription>
-          Split a bill with <strong className="font-semibold text-cyan-500">{name}</strong>
+          Split a bill with {" "}
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger className="font-semibold text-cyan-500 cursor-text">{name}</TooltipTrigger>
+              <TooltipContent>
+                {friend.name}
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </CardDescription>
       </CardHeader>
       <CardContent>

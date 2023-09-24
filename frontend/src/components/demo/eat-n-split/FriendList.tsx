@@ -7,6 +7,7 @@ import { ScrollArea } from "@/components/ui/ScrollArea.tsx";
 import { truncate } from "@/lib/utils.ts";
 import React from "react";
 import { Card, CardContent } from "@/components/ui/Card.tsx";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip.tsx";
 
 type FriendListProps = {
   friends: Friend[];
@@ -60,7 +61,14 @@ function FriendItem({ friend, isSelected, onSelectFriend }: FriendItemProps) {
       </Avatar>
 
       <div className="flex-1 w-32">
-        <h3 className="text-lg font-bold">{name}</h3>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger className="text-lg font-bold cursor-text">{name}</TooltipTrigger>
+            <TooltipContent>
+              {friend.name}
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
 
         {friend.balance > 0 && (
           <p className="text-green-500">
