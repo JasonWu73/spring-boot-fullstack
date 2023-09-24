@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/Form.tsx";
 import { Input } from "@/components/ui/Input.tsx";
 import { type Friend } from "@/components/demo/eat-n-split/EatAndSplit.tsx";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card.tsx";
 
 type FormAddFriendProps = {
   onAddFriend: (friend: Friend) => void;
@@ -42,30 +43,36 @@ export default function FormAddFriend({ onAddFriend }: FormAddFriendProps) {
   }
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="w-96 bg-amber-100 text-slate-700 p-4 space-y-4 rounded shadow flex flex-col justify-center"
-      >
-        <ControlledFormField
-          control={form.control}
-          name="name"
-          label="👫 Friend name"
-          placeholder="Friend name"
-          isError={form.getFieldState("name")?.invalid}
-        />
+    <Card className="w-96 bg-amber-100 dark:bg-amber-100 dark:text-slate-700 text-slate-700 p-4">
+      <CardHeader>
+        <CardTitle className="text-xl font-bold">
+          Add a friend
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
+            <ControlledFormField
+              control={form.control}
+              name="name"
+              label="👫 Friend name"
+              placeholder="Friend name"
+              isError={form.getFieldState("name")?.invalid}
+            />
 
-        <ControlledFormField
-          control={form.control}
-          name="image"
-          label="🌄 Image URL"
-          placeholder="Image URL"
-          isError={form.getFieldState("image")?.invalid}
-        />
+            <ControlledFormField
+              control={form.control}
+              name="image"
+              label="🌄 Image URL"
+              placeholder="Image URL"
+              isError={form.getFieldState("image")?.invalid}
+            />
 
-        <Button type="submit" className="self-end">Add</Button>
-      </form>
-    </Form>
+            <Button type="submit" className="self-end">Add</Button>
+          </form>
+        </Form>
+      </CardContent>
+    </Card>
   );
 }
 

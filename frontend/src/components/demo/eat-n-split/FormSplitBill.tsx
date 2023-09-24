@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useEffect } from "react";
 import { type Friend } from "./EatAndSplit";
 import { isNumeric, truncate } from "@/lib/utils.ts";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/Card.tsx";
 
 const formSchema = z.object({
   bill: z.string().trim()
@@ -69,64 +70,69 @@ export default function FormSplitBill({ friend, onSplitBill }: FormSplitBillProp
   const name = truncate(friend.name, 5);
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="w-96 bg-amber-100 text-slate-700 p-4 space-y-4 rounded shadow flex flex-col justify-center"
-      >
-        <h2 className="text-2xl font-bold text-center">
-          Split a bill with <strong className="font-medium text-cyan-500">{name}</strong>
-        </h2>
+    <Card className="w-96 bg-amber-100 dark:bg-amber-100 dark:text-slate-700 text-slate-700 p-4">
+      <CardHeader>
+        <CardTitle className="text-xl font-bold">
+          Split bill, my friend
+        </CardTitle>
+        <CardDescription>
+          Split a bill with <strong className="font-semibold text-cyan-500">{name}</strong>
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
+            <ControlledFormField
+              control={form.control}
+              name="bill"
+              label="💰 Bill value"
+              placeholder="Bill value"
+              isError={form.getFieldState("bill")?.invalid}
+            />
 
-        <ControlledFormField
-          control={form.control}
-          name="bill"
-          label="💰 Bill value"
-          placeholder="Bill value"
-          isError={form.getFieldState("bill")?.invalid}
-        />
+            <ControlledFormField
+              control={form.control}
+              name="userExpense"
+              label="💸 Your expense"
+              placeholder="Your expense"
+              isError={form.getFieldState("userExpense")?.invalid}
+            />
 
-        <ControlledFormField
-          control={form.control}
-          name="userExpense"
-          label="💸 Your expense"
-          placeholder="Your expense"
-          isError={form.getFieldState("userExpense")?.invalid}
-        />
+            <ControlledFormField
+              control={form.control}
+              name="friendExpense"
+              label={`👫 ${name}'s expense`}
+              placeholder={`${name}'s expense`}
+              disabled
+            />
 
-        <ControlledFormField
-          control={form.control}
-          name="friendExpense"
-          label={`👫 ${name}'s expense`}
-          placeholder={`${name}'s expense`}
-          disabled
-        />
+            <FormField
+              control={form.control}
+              name="whoIsPaying"
+              render={({ field }) => (
+                <FormItem className="md:flex md:items-center md:justify-center md:flex-wrap">
+                  <FormLabel className="min-w-[180px]">🤑 Who is paying the bill</FormLabel>
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <FormControl className="bg-slate-100 md:flex-1">
+                      <SelectTrigger>
+                        <SelectValue placeholder="Who is paying the bill" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="user">You</SelectItem>
+                      <SelectItem value="friend">{name}</SelectItem>
+                    </SelectContent>
+                    <FormMessage className="w-full" />
+                  </Select>
+                </FormItem>
+              )}
+            />
 
-        <FormField
-          control={form.control}
-          name="whoIsPaying"
-          render={({ field }) => (
-            <FormItem className="md:flex md:items-center md:justify-center md:flex-wrap">
-              <FormLabel className="min-w-[180px]">🤑 Who is paying the bill</FormLabel>
-              <Select value={field.value} onValueChange={field.onChange}>
-                <FormControl className="bg-slate-100 md:flex-1">
-                  <SelectTrigger>
-                    <SelectValue placeholder="Who is paying the bill" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="user">You</SelectItem>
-                  <SelectItem value="friend">{name}</SelectItem>
-                </SelectContent>
-                <FormMessage className="w-full" />
-              </Select>
-            </FormItem>
-          )}
-        />
-
-        <Button type="submit" className="self-end">Split bill</Button>
-      </form>
-    </Form>
+            <Button type="submit" className="self-end">Split bill</Button>
+          </form>
+        </Form>
+      </CardContent>
+    </Card>
   );
 }
 

@@ -61,7 +61,7 @@ export default function EatAndSplit() {
   }
 
   return (
-    <div className="p-4 md:mt-16 grid grid-flow-row md:grid-rows-2 md:grid-cols-2 gap-2 md:gap-4 items-center justify-center">
+    <div className="p-6 md:mt-16 grid grid-flow-row md:grid-rows-2 md:grid-cols-2 gap-6 items-center justify-center">
       <div className="md:row-span-1 md:col-span-1 md:justify-self-end">
         <FriendList
           friends={friends}
@@ -70,7 +70,7 @@ export default function EatAndSplit() {
         />
       </div>
 
-      <div className="md:row-span-1 md:col-span-1 md:justify-self-end self-start flex flex-col gap-2 md:gap-4">
+      <div className="md:row-span-1 md:col-span-1 md:justify-self-end self-start flex flex-col gap-6">
         {showAddFriend && <FormAddFriend onAddFriend={handleAddFriend} />}
 
         <Button onClick={handleToggleForm} className="self-end">
