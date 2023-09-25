@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import EatAndSplit from "@/components/demo/eat-n-split/EatAndSplit.tsx";
 import { Toaster } from "@/components/ui/Toaster.tsx";
+import EatAndSplit from "@/components/demo/eat-n-split/EatAndSplit.tsx";
 
 export default function App() {
   useTheme();
