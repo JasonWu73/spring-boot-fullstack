@@ -1,61 +1,61 @@
-import { Button } from "@/components/ui/Button.tsx";
-import { z } from "zod";
-import { useForm, type UseFormReturn } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Form } from "@/components/ui/Form.tsx";
-import { useEffect } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/Card.tsx";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip.tsx";
-import { Friend } from "@/components/demo/eat-n-split/friend-data.ts";
-import { FormInput, FormSelect } from "@/components/ui/CustomFormField.tsx";
+import { Button } from '@/components/ui/Button.tsx'
+import { z } from 'zod'
+import { useForm, type UseFormReturn } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Form } from '@/components/ui/Form.tsx'
+import { useEffect } from 'react'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card.tsx'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip.tsx'
+import { Friend } from '@/components/demo/eat-n-split/friend-data.ts'
+import { FormInput, FormSelect } from '@/components/ui/CustomFormField.tsx'
 
-const whoIsPayingOptions = [{ value: "user", label: "You" }, { value: "friend", label: "friend" }];
+const whoIsPayingOptions = [{ value: 'user', label: 'You' }, { value: 'friend', label: 'friend' }]
 
 const formSchema = z.object({
-  bill: z.coerce.number({ invalid_type_error: "Bill must be a number" })
-    .min(0, "Bill must be greater than or equal to 0"),
+  bill: z.coerce.number({ invalid_type_error: 'Bill must be a number' })
+    .min(0, 'Bill must be greater than or equal to 0'),
 
-  userExpense: z.coerce.number({ invalid_type_error: "Expense must be a number" })
-    .min(0, "Expense must be greater than or equal to 0"),
+  userExpense: z.coerce.number({ invalid_type_error: 'Expense must be a number' })
+    .min(0, 'Expense must be greater than or equal to 0'),
 
-  friendExpense: z.coerce.number({ invalid_type_error: "Expense must be a number" })
-    .min(0, "Expense must be greater than or equal to 0"),
+  friendExpense: z.coerce.number({ invalid_type_error: 'Expense must be a number' })
+    .min(0, 'Expense must be greater than or equal to 0'),
 
-  whoIsPaying: z.string({ required_error: "Must select who is paying the bill" }).trim()
+  whoIsPaying: z.string({ required_error: 'Must select who is paying the bill' }).trim()
     .refine((value) => {
-      return whoIsPayingOptions.map(({ value }) => value).includes(value);
+      return whoIsPayingOptions.map(({ value }) => value).includes(value)
     }, {
-      message: `Must be a valid option: ${whoIsPayingOptions.map(({ value }) => `"${value}"`).join(", ")}`
+      message: `Must be a valid option: ${whoIsPayingOptions.map(({ value }) => `"${value}"`).join(', ')}`
     })
 })
   .refine(({ userExpense, bill }) => userExpense <= bill, {
-    message: "Your expense must be less than or equal to the bill",
-    path: ["userExpense"]
+    message: 'Your expense must be less than or equal to the bill',
+    path: ['userExpense']
   })
   .refine(({ userExpense, friendExpense, whoIsPaying }) => {
-    if (whoIsPaying === "user" && userExpense > 0) {
-      return true;
+    if (whoIsPaying === 'user' && userExpense > 0) {
+      return true
     }
 
-    return whoIsPaying === "friend" && friendExpense > 0;
+    return whoIsPaying === 'friend' && friendExpense > 0
   }, {
-    message: "Must enter a valid expense",
-    path: ["userExpense"]
-  });
+    message: 'Must enter a valid expense',
+    path: ['userExpense']
+  })
 
-type FormSchema = z.infer<typeof formSchema>;
+type FormSchema = z.infer<typeof formSchema>
 
-export type Bill = {
-  friendId: Friend["id"];
-  expense: number;
-};
+type Bill = {
+  friendId: Friend['id']
+  expense: number
+}
 
 type FormSplitBillProps = {
-  friend: Friend;
-  onSplitBill: (bill: Bill) => void;
-};
+  friend: Friend
+  onSplitBill: (bill: Bill) => void
+}
 
-export default function FormSplitBill({ friend, onSplitBill }: FormSplitBillProps) {
+function FormSplitBill({ friend, onSplitBill }: FormSplitBillProps) {
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -64,19 +64,19 @@ export default function FormSplitBill({ friend, onSplitBill }: FormSplitBillProp
       friendExpense: 0,
       whoIsPaying: whoIsPayingOptions[0].value
     }
-  });
+  })
 
-  useWatchExpense(form);
+  useWatchExpense(form)
 
   function onSubmit({ userExpense, friendExpense, whoIsPaying }: FormSchema) {
     const bill = {
       friendId: friend.id,
-      expense: whoIsPaying === "user" ? -friendExpense : userExpense
-    };
+      expense: whoIsPaying === 'user' ? -friendExpense : userExpense
+    }
 
-    onSplitBill(bill);
+    onSplitBill(bill)
 
-    form.reset();
+    form.reset()
   }
 
   return (
@@ -84,7 +84,7 @@ export default function FormSplitBill({ friend, onSplitBill }: FormSplitBillProp
       <CardHeader>
         <CardTitle>Split bill, my friend</CardTitle>
         <CardDescription className="max-w-xs whitespace-nowrap text-ellipsis overflow-hidden">
-          Split a bill with{" "}
+          Split a bill with{' '}
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -107,7 +107,7 @@ export default function FormSplitBill({ friend, onSplitBill }: FormSplitBillProp
               label="💰 Bill value"
               labelWidth={160}
               placeholder="Bill value"
-              isError={form.getFieldState("bill")?.invalid}
+              isError={form.getFieldState('bill')?.invalid}
             />
 
             <FormInput
@@ -117,7 +117,7 @@ export default function FormSplitBill({ friend, onSplitBill }: FormSplitBillProp
               label="💸 Your expense"
               labelWidth={160}
               placeholder="Your expense"
-              isError={form.getFieldState("userExpense")?.invalid}
+              isError={form.getFieldState('userExpense')?.invalid}
             />
 
             <FormInput
@@ -136,7 +136,7 @@ export default function FormSplitBill({ friend, onSplitBill }: FormSplitBillProp
               label="🤑 Who is paying the bill"
               labelWidth={160}
               options={getSelections(friend.name)}
-              isError={form.getFieldState("whoIsPaying")?.invalid}
+              isError={form.getFieldState('whoIsPaying')?.invalid}
             />
 
             <Button type="submit" className="self-end">Split bill</Button>
@@ -144,37 +144,39 @@ export default function FormSplitBill({ friend, onSplitBill }: FormSplitBillProp
         </Form>
       </CardContent>
     </Card>
-  );
+  )
 }
 
 function useWatchExpense(form: UseFormReturn<FormSchema>) {
-  const { watch, setValue } = form;
+  const { watch, setValue } = form
 
-  const bill = watch("bill");
-  const userExpense = watch("userExpense");
+  const bill = watch('bill')
+  const userExpense = watch('userExpense')
 
   useEffect(() => {
     // 虽然通过 `zod` 的校验最终从 `handleSubmit` 得到的是 `number`, 但在这里的值却是 `string`
     // 所以需要转换一下
-    const nBill = Number(bill);
-    const nUserExpense = Number(userExpense);
+    const nBill = Number(bill)
+    const nUserExpense = Number(userExpense)
 
     if (nUserExpense > nBill) {
-      return;
+      return
     }
 
-    setValue("friendExpense", Number((nBill - nUserExpense).toFixed(2)));
-  }, [bill, userExpense, setValue]);
+    setValue('friendExpense', Number((nBill - nUserExpense).toFixed(2)))
+  }, [bill, userExpense, setValue])
 }
 
 // 为测试校验, 添加一个不在 options 中的值
 function getSelections(friend: string) {
   const options = whoIsPayingOptions.map(({ value, label }) => ({
     value,
-    label: value === "friend" ? friend : label
-  }));
+    label: value === 'friend' ? friend : label
+  }))
 
-  options.push({ value: "anonymous", label: "Anonymous" });
+  options.push({ value: 'anonymous', label: 'Anonymous' })
 
-  return options;
+  return options
 }
+
+export { type Bill, FormSplitBill }

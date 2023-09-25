@@ -1,6 +1,6 @@
-import React, { forwardRef } from "react";
-import * as AvatarPrimitive from "@radix-ui/react-avatar";
-import { cn } from "@/lib/utils";
+import React, { forwardRef } from 'react'
+import * as AvatarPrimitive from '@radix-ui/react-avatar'
+import { cn } from '@/lib/utils'
 
 /**
  * {@link https://ui.shadcn.com/docs/components/avatar|Avatar - shadcn/ui}
@@ -12,14 +12,14 @@ const Avatar = forwardRef<
   <AvatarPrimitive.Root
     ref={ref}
     className={cn(
-      "relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full",
+      'relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full',
       className
     )}
     {...props}
   />
-));
+))
 
-Avatar.displayName = AvatarPrimitive.Root.displayName;
+Avatar.displayName = AvatarPrimitive.Root.displayName
 
 const AvatarImage = forwardRef<
   React.ElementRef<typeof AvatarPrimitive.Image>,
@@ -27,12 +27,12 @@ const AvatarImage = forwardRef<
 >(({ className, ...props }, ref) => (
   <AvatarPrimitive.Image
     ref={ref}
-    className={cn("aspect-square h-full w-full", className)}
+    className={cn('aspect-square h-full w-full', className)}
     {...props}
   />
-));
+))
 
-AvatarImage.displayName = AvatarPrimitive.Image.displayName;
+AvatarImage.displayName = AvatarPrimitive.Image.displayName
 
 const AvatarFallback = forwardRef<
   React.ElementRef<typeof AvatarPrimitive.Fallback>,
@@ -41,17 +41,13 @@ const AvatarFallback = forwardRef<
   <AvatarPrimitive.Fallback
     ref={ref}
     className={cn(
-      "flex h-full w-full items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800",
+      'flex h-full w-full items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800',
       className
     )}
     {...props}
   />
-));
+))
 
-AvatarFallback.displayName = AvatarPrimitive.Fallback.displayName;
+AvatarFallback.displayName = AvatarPrimitive.Fallback.displayName
 
-export {
-  Avatar,
-  AvatarImage,
-  AvatarFallback
-};
+export { Avatar, AvatarImage, AvatarFallback }

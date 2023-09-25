@@ -1,45 +1,45 @@
-import { Button } from "@/components/ui/Button.tsx";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Form } from "@/components/ui/Form.tsx";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card.tsx";
-import { type Friend } from "@/components/demo/eat-n-split/friend-data.ts";
-import { FormInput } from "@/components/ui/CustomFormField.tsx";
+import { Button } from '@/components/ui/Button.tsx'
+import { z } from 'zod'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Form } from '@/components/ui/Form.tsx'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card.tsx'
+import { type Friend } from '@/components/demo/eat-n-split/friend-data.ts'
+import { FormInput } from '@/components/ui/CustomFormField.tsx'
 
 const formSchema = z.object({
-  name: z.string().trim().nonempty("Must enter a name"),
-  image: z.string().trim().url({ message: "Image must be a valid URL" })
-});
+  name: z.string().trim().nonempty('Must enter a name'),
+  image: z.string().trim().url({ message: 'Image must be a valid URL' })
+})
 
-type FormSchema = z.infer<typeof formSchema>;
+type FormSchema = z.infer<typeof formSchema>
 
 type FormAddFriendProps = {
-  onAddFriend: (friend: Friend) => void;
-};
+  onAddFriend: (friend: Friend) => void
+}
 
-export default function FormAddFriend({ onAddFriend }: FormAddFriendProps) {
+function FormAddFriend({ onAddFriend }: FormAddFriendProps) {
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      image: "" // https://i.pravatar.cc/150?u=xxx
+      name: '',
+      image: '' // https://i.pravatar.cc/150?u=xxx
     }
-  });
+  })
 
   function onSubmit(values: FormSchema) {
-    const newFriendId = Date.now();
+    const newFriendId = Date.now()
 
     const newFriend: Friend = {
       id: newFriendId,
       name: values.name,
       image: `${values.image}?u=${newFriendId}`,
       balance: 0
-    };
+    }
 
-    onAddFriend(newFriend);
+    onAddFriend(newFriend)
 
-    form.reset();
+    form.reset()
   }
 
   return (
@@ -58,7 +58,7 @@ export default function FormAddFriend({ onAddFriend }: FormAddFriendProps) {
               label="👫 Friend name"
               labelWidth={100}
               placeholder="Friend name"
-              isError={form.getFieldState("name")?.invalid}
+              isError={form.getFieldState('name')?.invalid}
             />
 
             <FormInput
@@ -68,7 +68,7 @@ export default function FormAddFriend({ onAddFriend }: FormAddFriendProps) {
               label="🌄 Image URL"
               labelWidth={100}
               placeholder="Image URL"
-              isError={form.getFieldState("image")?.invalid}
+              isError={form.getFieldState('image')?.invalid}
             />
 
             <Button type="submit" className="self-end">Add</Button>
@@ -76,5 +76,7 @@ export default function FormAddFriend({ onAddFriend }: FormAddFriendProps) {
         </Form>
       </CardContent>
     </Card>
-  );
+  )
 }
+
+export { FormAddFriend }

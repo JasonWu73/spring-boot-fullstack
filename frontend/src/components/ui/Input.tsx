@@ -1,9 +1,9 @@
-import React, { forwardRef } from "react";
-import { cn } from "@/lib/utils";
+import React, { forwardRef } from 'react'
+import { cn } from '@/lib/utils'
 
 type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
-  isError?: boolean;
-};
+  isError?: boolean
+}
 
 /**
  * {@link https://ui.shadcn.com/docs/components/input|Input - shadcn/ui}
@@ -19,17 +19,17 @@ const Input = forwardRef<
     <input
       type={type}
       className={cn(
-        "flex h-9 w-full rounded-md border bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-1 disabled:cursor-not-allowed disabled:opacity-50 dark:placeholder:text-slate-400",
+        'flex h-9 w-full rounded-md border bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-1 disabled:cursor-not-allowed disabled:opacity-50 dark:placeholder:text-slate-400',
         inputErrorClasses(isError),
         className
       )}
       ref={ref}
       {...props}
     />
-  );
-});
+  )
+})
 
-Input.displayName = "Input";
+Input.displayName = 'Input'
 
 /**
  * 自定义的错误边框样式.
@@ -39,9 +39,9 @@ Input.displayName = "Input";
  */
 function inputErrorClasses(isError: boolean): Record<string, boolean> {
   return {
-    "border-slate-200 dark:border-slate-800 focus-visible:ring-slate-950 dark:focus-visible:ring-slate-300": !isError,
-    "border-red-500 dark:border-red-900 focus-visible:ring-red-500 dark:focus-visible:ring-red-600": isError
-  };
+    'border-slate-200 dark:border-slate-800 focus-visible:ring-slate-950 dark:focus-visible:ring-slate-300': !isError,
+    'border-red-500 dark:border-red-900 focus-visible:ring-red-500 dark:focus-visible:ring-red-600': isError
+  }
 }
 
-export { Input, inputErrorClasses };
+export { Input, inputErrorClasses }

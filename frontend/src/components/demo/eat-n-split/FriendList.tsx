@@ -1,20 +1,20 @@
-import { Separator } from "@/components/ui/Separator.tsx";
-import { ScrollArea } from "@/components/ui/ScrollArea.tsx";
-import React from "react";
-import { Card } from "@/components/ui/Card.tsx";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/Alert.tsx";
-import { RocketIcon } from "@radix-ui/react-icons";
-import { Friend } from "@/components/demo/eat-n-split/friend-data.ts";
-import FriendItem from "@/components/demo/eat-n-split/FriendItem.tsx";
+import { Separator } from '@/components/ui/Separator.tsx'
+import { ScrollArea } from '@/components/ui/ScrollArea.tsx'
+import React from 'react'
+import { Card } from '@/components/ui/Card.tsx'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/Alert.tsx'
+import { RocketIcon } from '@radix-ui/react-icons'
+import { Friend } from '@/components/demo/eat-n-split/friend-data.ts'
+import { FriendItem } from '@/components/demo/eat-n-split/FriendItem.tsx'
 
 type FriendListProps = {
-  friends: Friend[];
-  selectedFriend: Friend | null;
-  onSelectFriend: (friend: Friend) => void;
-  onDeleteFriend: (friend: Friend) => void;
-};
+  friends: Friend[]
+  selectedFriend: Friend | null
+  onSelectFriend: (friend: Friend) => void
+  onDeleteFriend: (friend: Friend) => void
+}
 
-export default function FriendList({ friends, selectedFriend, onSelectFriend, onDeleteFriend }: FriendListProps) {
+function FriendList({ friends, selectedFriend, onSelectFriend, onDeleteFriend }: FriendListProps) {
   return (
     <Card>
       <ScrollArea className="h-96 md:h-[30rem] lg:h-[24rem] md:w-[22rem] lg:w-[30rem]">
@@ -48,5 +48,7 @@ export default function FriendList({ friends, selectedFriend, onSelectFriend, on
         </div>
       </ScrollArea>
     </Card>
-  );
+  )
 }
+
+export { FriendList }

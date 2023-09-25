@@ -1,8 +1,8 @@
-import { Friend } from "@/components/demo/eat-n-split/friend-data.ts";
-import { cn, truncate } from "@/lib/utils.ts";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar.tsx";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip.tsx";
-import { Button } from "@/components/ui/Button.tsx";
+import { Friend } from '@/components/demo/eat-n-split/friend-data.ts'
+import { cn, truncate } from '@/lib/utils.ts'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar.tsx'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip.tsx'
+import { Button } from '@/components/ui/Button.tsx'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,23 +13,23 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger
-} from "@/components/ui/AlertDialog.tsx";
+} from '@/components/ui/AlertDialog.tsx'
 
 type FriendItemProps = {
-  friend: Friend;
-  isSelected: boolean;
-  onSelectFriend: (friend: Friend) => void;
-  onDeleteFriend: (friend: Friend) => void;
-};
+  friend: Friend
+  isSelected: boolean
+  onSelectFriend: (friend: Friend) => void
+  onDeleteFriend: (friend: Friend) => void
+}
 
-export default function FriendItem({ friend, isSelected, onSelectFriend, onDeleteFriend }: FriendItemProps) {
-  const name = truncate(friend.name, 5);
+function FriendItem({ friend, isSelected, onSelectFriend, onDeleteFriend }: FriendItemProps) {
+  const name = truncate(friend.name, 5)
 
   return (
     <li
       className={cn(
-        "group relative flex justify-between items-center gap-2 py-2 px-4 rounded hover:bg-amber-100 dark:hover:text-slate-700",
-        { "bg-amber-100 dark:text-night-1": isSelected }
+        'group relative flex justify-between items-center gap-2 py-2 px-4 rounded hover:bg-amber-100 dark:hover:text-slate-700',
+        { 'bg-amber-100 dark:text-night-1': isSelected }
       )}
     >
       <DeleteFriendButton onDelete={() => onDeleteFriend(friend)} />
@@ -69,14 +69,14 @@ export default function FriendItem({ friend, isSelected, onSelectFriend, onDelet
         )}
       </div>
 
-      <Button onClick={() => onSelectFriend(friend)}>{isSelected ? "Deselect" : "Select"}</Button>
+      <Button onClick={() => onSelectFriend(friend)}>{isSelected ? 'Deselect' : 'Select'}</Button>
     </li>
-  );
+  )
 }
 
 type DeleteFriendButtonProps = {
-  onDelete: () => void;
-};
+  onDelete: () => void
+}
 
 function DeleteFriendButton({ onDelete }: DeleteFriendButtonProps) {
   return (
@@ -98,5 +98,7 @@ function DeleteFriendButton({ onDelete }: DeleteFriendButtonProps) {
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  );
+  )
 }
+
+export { FriendItem }

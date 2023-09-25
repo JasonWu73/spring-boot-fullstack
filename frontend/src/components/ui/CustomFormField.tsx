@@ -1,26 +1,26 @@
-import { type Control, type FieldValues, type Path } from "react-hook-form";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/Form.tsx";
-import { Input } from "@/components/ui/Input.tsx";
-import { HTMLInputTypeAttribute } from "react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select.tsx";
+import { type Control, type FieldValues, type Path } from 'react-hook-form'
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/Form.tsx'
+import { Input } from '@/components/ui/Input.tsx'
+import { HTMLInputTypeAttribute } from 'react'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select.tsx'
 
 type FormInputProps<T extends FieldValues> = {
-  control: Control<T>;
-  name: Path<T>;
-  label: string;
-  labelWidth: number;
-  type?: HTMLInputTypeAttribute;
-  placeholder?: string;
-  disabled?: boolean;
-  isError?: boolean;
-};
+  control: Control<T>
+  name: Path<T>
+  label: string
+  labelWidth: number
+  type?: HTMLInputTypeAttribute
+  placeholder?: string
+  disabled?: boolean
+  isError?: boolean
+}
 
-export function FormInput<T extends FieldValues>({
+function FormInput<T extends FieldValues>({
   control,
   name,
   label,
   labelWidth,
-  type = "text",
+  type = 'text',
   placeholder,
   disabled,
   isError
@@ -51,22 +51,22 @@ export function FormInput<T extends FieldValues>({
         </FormItem>
       )}
     />
-  );
+  )
 }
 
 type SelectOption = {
-  value: string;
-  label: string;
-};
+  value: string
+  label: string
+}
 
-type FormSelectProps<T extends FieldValues> = Omit<FormInputProps<T>, "type"> & {
-  options: SelectOption[];
-};
+type FormSelectProps<T extends FieldValues> = Omit<FormInputProps<T>, 'type'> & {
+  options: SelectOption[]
+}
 
 /**
  * 下拉组件不需要考虑 `placeholder`, 而应该拥有默认值.
  */
-export function FormSelect<T extends FieldValues>({
+function FormSelect<T extends FieldValues>({
   control,
   name,
   label,
@@ -107,5 +107,7 @@ export function FormSelect<T extends FieldValues>({
         </FormItem>
       )}
     />
-  );
+  )
 }
+
+export { FormInput, FormSelect }

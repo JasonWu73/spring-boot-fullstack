@@ -1,43 +1,43 @@
-import FriendList from "@/components/demo/eat-n-split/FriendList.tsx";
-import FormSplitBill, { type Bill } from "@/components/demo/eat-n-split/FormSplitBill.tsx";
-import { useState } from "react";
-import FormAddFriend from "@/components/demo/eat-n-split/FormAddFriend.tsx";
-import { Button } from "@/components/ui/Button.tsx";
-import { useToast } from "@/components/ui/use-toast.ts";
-import { type Friend, initialFriends } from "@/components/demo/eat-n-split/friend-data.ts";
+import { type Bill, FormSplitBill } from '@/components/demo/eat-n-split/FormSplitBill.tsx'
+import { useState } from 'react'
+import { Button } from '@/components/ui/Button.tsx'
+import { useToast } from '@/components/ui/use-toast.ts'
+import { type Friend, initialFriends } from '@/components/demo/eat-n-split/friend-data.ts'
+import { FriendList } from '@/components/demo/eat-n-split/FriendList.tsx'
+import { FormAddFriend } from '@/components/demo/eat-n-split/FormAddFriend.tsx'
 
-export default function EatAndSplit() {
-  const [friends, setFriends] = useState(initialFriends);
-  const [showAddFriend, setShowAddFriend] = useState(false);
-  const [selectedFriend, setSelectedFriend] = useState<Friend | null>(null);
-  const { toast } = useToast();
+function EatAndSplit() {
+  const [friends, setFriends] = useState(initialFriends)
+  const [showAddFriend, setShowAddFriend] = useState(false)
+  const [selectedFriend, setSelectedFriend] = useState<Friend | null>(null)
+  const { toast } = useToast()
 
-  document.title = "Eat & Split";
+  document.title = 'Eat & Split'
 
   function handleAddFriend(friend: Friend) {
-    setFriends((prev) => [...prev, friend]);
+    setFriends((prev) => [...prev, friend])
   }
 
   function handleToggleForm() {
-    setShowAddFriend((prev) => !prev);
+    setShowAddFriend((prev) => !prev)
   }
 
   function handleSelectFriend(friend: Friend) {
-    setShowAddFriend(false);
-    setSelectedFriend(prev => prev?.id === friend.id ? null : friend);
+    setShowAddFriend(false)
+    setSelectedFriend(prev => prev?.id === friend.id ? null : friend)
   }
 
   function handleDeleteFriend(friend: Friend) {
-    setFriends((prev) => prev.filter((prev) => prev.id !== friend.id));
+    setFriends((prev) => prev.filter((prev) => prev.id !== friend.id))
 
     if (selectedFriend?.id === friend.id) {
-      setSelectedFriend(null);
+      setSelectedFriend(null)
     }
 
     toast({
-      title: "Friend deleted",
+      title: 'Friend deleted',
       description: `${friend.name} was deleted`
-    });
+    })
   }
 
   function handleSplitBill(bill: Bill) {
@@ -46,13 +46,13 @@ export default function EatAndSplit() {
         return {
           ...prev,
           balance: Number((prev.balance - bill.expense).toFixed(2))
-        };
+        }
       }
 
-      return prev;
-    }));
+      return prev
+    }))
 
-    setSelectedFriend(null);
+    setSelectedFriend(null)
   }
 
   return (
@@ -71,7 +71,7 @@ export default function EatAndSplit() {
 
         <div className="self-end">
           <Button onClick={handleToggleForm}>
-            {showAddFriend ? "Close" : "Add friend"}
+            {showAddFriend ? 'Close' : 'Add friend'}
           </Button>
         </div>
       </div>
@@ -80,5 +80,7 @@ export default function EatAndSplit() {
         {selectedFriend && <FormSplitBill friend={selectedFriend} onSplitBill={handleSplitBill} />}
       </div>
     </div>
-  );
+  )
 }
+
+export { EatAndSplit }

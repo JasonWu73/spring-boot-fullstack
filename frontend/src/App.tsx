@@ -1,47 +1,47 @@
-import { useEffect } from "react";
-import { Toaster } from "@/components/ui/Toaster.tsx";
-import EatAndSplit from "@/components/demo/eat-n-split/EatAndSplit.tsx";
+import { useEffect } from 'react'
+import { Toaster } from '@/components/ui/Toaster.tsx'
+import { EatAndSplit } from '@/components/demo/eat-n-split/EatAndSplit.tsx'
 
 export default function App() {
-  useTheme();
+  useTheme()
 
   return (
     <>
       <EatAndSplit />
       <Toaster />
     </>
-  );
+  )
 }
 
 function useTheme() {
   useEffect(() => {
     // 监听暗色主题变化
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
 
     // 初始化
-    mediaQuery.matches && addDarkBodyClass();
+    mediaQuery.matches && addDarkBodyClass()
 
     function handleDarkMode(e: MediaQueryListEvent) {
       if (e.matches) {
-        addDarkBodyClass();
-        return;
+        addDarkBodyClass()
+        return
       }
 
-      removeDarkBodyClass();
+      removeDarkBodyClass()
     }
 
-    mediaQuery.addEventListener("change", handleDarkMode);
+    mediaQuery.addEventListener('change', handleDarkMode)
 
     return () => {
-      mediaQuery.removeEventListener("change", handleDarkMode);
-    };
-  }, []);
+      mediaQuery.removeEventListener('change', handleDarkMode)
+    }
+  }, [])
 }
 
 function addDarkBodyClass() {
-  document.body.classList.add("dark");
+  document.body.classList.add('dark')
 }
 
 function removeDarkBodyClass() {
-  document.body.classList.remove("dark");
+  document.body.classList.remove('dark')
 }
