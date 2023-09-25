@@ -1,10 +1,9 @@
 import { Button } from "@/components/ui/Button.tsx";
 import { type Friend } from "@/components/demo/eat-n-split/EatAndSplit.tsx";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar.tsx";
-import classNames from "classnames";
 import { Separator } from "@/components/ui/Separator.tsx";
 import { ScrollArea } from "@/components/ui/ScrollArea.tsx";
-import { truncate } from "@/lib/utils.ts";
+import { cn, truncate } from "@/lib/utils.ts";
 import React from "react";
 import { Card } from "@/components/ui/Card.tsx";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip.tsx";
@@ -78,7 +77,7 @@ function FriendItem({ friend, isSelected, onSelectFriend, onDeleteFriend }: Frie
 
   return (
     <li
-      className={classNames(
+      className={cn(
         "flex items-center justify-between gap-2 py-2 px-4 rounded hover:bg-amber-100 dark:hover:text-slate-700 relative group",
         { "bg-amber-100 dark:text-night-1": isSelected }
       )}

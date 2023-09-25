@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui/Card.tsx";
 import { useState } from "react";
-import classNames from "classnames";
+import { cn } from "@/lib/utils.ts";
 
 type StarRatingProps = {
   maxRating?: number;
@@ -38,9 +38,7 @@ function Star({ onRate, isFilled = false }: StarSvgProps) {
   return (
     <span
       onClick={onRate}
-      className={classNames(
-        { "text-amber-500": isFilled }
-      )}
+      className={cn({ "text-amber-500": isFilled })}
     >
     <StarEmpty />
     </span>

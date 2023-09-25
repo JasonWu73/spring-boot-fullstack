@@ -1,8 +1,8 @@
 import { getRandomProduct, type Product } from "@/api/dummyjson/product.ts";
 import { useEffect, useReducer } from "react";
-import classNames from "classnames";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/Button.tsx";
+import { cn } from "@/lib/utils.ts";
 
 // noinspection JSUnusedGlobalSymbols
 export default function ProductShowcase() {
@@ -53,7 +53,7 @@ type TitleProps = {
 function Title({ label, isError = false }: TitleProps) {
   return (
     <h1
-      className={classNames(
+      className={cn(
         "font-bold tracking-wider",
         { "text-red-500": isError }
       )}
