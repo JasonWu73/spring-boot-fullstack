@@ -14,14 +14,13 @@ type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
 const Input = forwardRef<
   HTMLInputElement,
   InputProps
->(({ isError, className, type, ...props }, ref) => {
+>(({ isError = false, className, type, ...props }, ref) => {
   return (
     <input
       type={type}
       className={cn(
         "flex h-9 w-full rounded-md border bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-1 disabled:cursor-not-allowed disabled:opacity-50 dark:placeholder:text-slate-400",
-        !isError && "border-slate-200 dark:border-slate-800 focus-visible:ring-slate-950 dark:focus-visible:ring-slate-300",
-        isError && "border-red-500 dark:border-red-900 focus-visible:ring-red-500 dark:focus-visible:ring-red-600",
+        inputErrorClasses(isError),
         className
       )}
       ref={ref}
@@ -32,4 +31,17 @@ const Input = forwardRef<
 
 Input.displayName = "Input";
 
-export { Input };
+/**
+ * 自定义的错误边框样式.
+ *
+ * @param isError - 是否为错误状态
+ * @returns {Record<string, boolean>} - 错误边框样式类对象, 用于 `cn` 函数
+ */
+function inputErrorClasses(isError: boolean): Record<string, boolean> {
+  return {
+    "border-slate-200 dark:border-slate-800 focus-visible:ring-slate-950 dark:focus-visible:ring-slate-300": !isError,
+    "border-red-500 dark:border-red-900 focus-visible:ring-red-500 dark:focus-visible:ring-red-600": isError
+  };
+}
+
+export { Input, inputErrorClasses };

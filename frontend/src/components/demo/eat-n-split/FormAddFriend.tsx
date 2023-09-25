@@ -1,22 +1,22 @@
 import { Button } from "@/components/ui/Button.tsx";
 import { z } from "zod";
-import { type Control, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/Form.tsx";
-import { Input } from "@/components/ui/Input.tsx";
-import { type Friend } from "@/components/demo/eat-n-split/EatAndSplit.tsx";
+import { Form } from "@/components/ui/Form.tsx";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card.tsx";
+import { type Friend } from "@/components/demo/eat-n-split/friend-data.ts";
+import { FormInput } from "@/components/ui/CustomFormField.tsx";
+
+const formSchema = z.object({
+  name: z.string().trim().nonempty("Must enter a name"),
+  image: z.string().trim().url({ message: "Image must be a valid URL" })
+});
+
+type FormSchema = z.infer<typeof formSchema>;
 
 type FormAddFriendProps = {
   onAddFriend: (friend: Friend) => void;
 };
-
-const formSchema = z.object({
-  name: z.string().nonempty("Must enter a name"),
-  image: z.string().url({ message: "Image must be a valid URL" })
-});
-
-type FormSchema = z.infer<typeof formSchema>;
 
 export default function FormAddFriend({ onAddFriend }: FormAddFriendProps) {
   const form = useForm<FormSchema>({
@@ -43,27 +43,30 @@ export default function FormAddFriend({ onAddFriend }: FormAddFriendProps) {
   }
 
   return (
-    <Card className="w-full md:w-[22rem] lg:w-[30rem] bg-amber-100 dark:bg-amber-100 dark:text-slate-700 text-slate-700 p-4">
+    <Card className="md:w-[22rem] lg:w-[30rem] bg-amber-100 dark:bg-amber-100 dark:text-slate-700 text-slate-700">
       <CardHeader>
-        <CardTitle className="text-xl font-bold">
-          Add a friend
-        </CardTitle>
+        <CardTitle>Add a friend</CardTitle>
       </CardHeader>
+
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
-            <ControlledFormField
+            <FormInput
               control={form.control}
               name="name"
+              type="text"
               label="👫 Friend name"
+              labelWidth={100}
               placeholder="Friend name"
               isError={form.getFieldState("name")?.invalid}
             />
 
-            <ControlledFormField
+            <FormInput
               control={form.control}
               name="image"
+              type="text"
               label="🌄 Image URL"
+              labelWidth={100}
               placeholder="Image URL"
               isError={form.getFieldState("image")?.invalid}
             />
@@ -73,31 +76,5 @@ export default function FormAddFriend({ onAddFriend }: FormAddFriendProps) {
         </Form>
       </CardContent>
     </Card>
-  );
-}
-
-type ControllerFormFieldProps = {
-  control: Control<FormSchema>;
-  name: "name" | "image";
-  label: string;
-  placeholder: string;
-  isError?: boolean;
-};
-
-function ControlledFormField({ control, name, label, placeholder, isError }: ControllerFormFieldProps) {
-  return (
-    <FormField
-      control={control}
-      name={name}
-      render={({ field }) => (
-        <FormItem className="lg:flex lg:items-center lg:justify-center lg:flex-wrap">
-          <FormLabel className="min-w-[120px]">{label}</FormLabel>
-          <FormControl className="bg-slate-100 lg:flex-1">
-            <Input type="text" placeholder={placeholder} {...field} isError={isError} />
-          </FormControl>
-          <FormMessage className="w-full" />
-        </FormItem>
-      )}
-    />
   );
 }

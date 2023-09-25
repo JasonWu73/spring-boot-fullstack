@@ -1,27 +1,34 @@
 import { Button } from "@/components/ui/Button.tsx";
 import { z } from "zod";
-import { type Control, useForm, type UseFormReturn } from "react-hook-form";
+import { useForm, type UseFormReturn } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/Form.tsx";
-import { Input } from "@/components/ui/Input.tsx";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx";
+import { Form } from "@/components/ui/Form.tsx";
 import { useEffect } from "react";
-import { type Friend } from "./EatAndSplit";
-import { isNumeric, truncate } from "@/lib/utils.ts";
+import { isNumeric } from "@/lib/utils.ts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/Card.tsx";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip.tsx";
+import { Friend } from "@/components/demo/eat-n-split/friend-data.ts";
+import { FormInput, FormSelect } from "@/components/ui/CustomFormField.tsx";
+
+const whoIsPayingOptions = [{ value: "user", label: "You" }, { value: "friend", label: "friend" }];
 
 const formSchema = z.object({
   bill: z.string().trim()
     .nonempty("Must enter a bill")
     .refine((value) => !Number.isNaN(Number(value)), "Bill must be a number")
     .refine((value) => Number(value) > 0, "Bill must be greater than 0"),
+
   userExpense: z.string().trim()
     .nonempty("Must enter your expense")
     .refine((value) => !Number.isNaN(Number(value)), "Expense must be a number")
     .refine((value) => Number(value) >= 0, "Expense must be greater than or equal to 0"),
-  friendExpense: z.string(),
-  whoIsPaying: z.literal("user").or(z.literal("friend")).default("user")
+
+  friendExpense: z.string().trim(),
+
+  whoIsPaying: z.string({ required_error: "Must select who is paying the bill" })
+    .refine((value) => {
+      return whoIsPayingOptions.map(({ value }) => value).includes(value);
+    }, "Must be either 'user' or 'friend'")
 })
   .refine((values) => Number(values.userExpense) <= Number(values.bill), {
     message: "Your expense must be less than or equal to the bill",
@@ -47,7 +54,9 @@ export default function FormSplitBill({ friend, onSplitBill }: FormSplitBillProp
       bill: "",
       userExpense: "",
       friendExpense: "",
-      whoIsPaying: "user"
+      // 下拉框组件时, 默认值设置为空字符串, 会导致 placeholder 不显示
+      // 但不设置默认值, 又会在表单重置后, 依旧显示上次选择的值
+      whoIsPaying: ""
     }
   });
 
@@ -68,73 +77,65 @@ export default function FormSplitBill({ friend, onSplitBill }: FormSplitBillProp
     form.reset();
   }
 
-  const name = truncate(friend.name, 5);
-
   return (
-    <Card className="w-full md:w-[22rem] lg:w-[30rem] bg-amber-100 dark:bg-amber-100 dark:text-slate-700 text-slate-700 p-4">
+    <Card className="md:w-[22rem] lg:w-[30rem] bg-amber-100 dark:bg-amber-100 dark:text-slate-700 text-slate-700">
       <CardHeader>
-        <CardTitle className="text-xl font-bold">
-          Split bill, my friend
-        </CardTitle>
-        <CardDescription>
-          Split a bill with {" "}
+        <CardTitle>Split bill, my friend</CardTitle>
+        <CardDescription className="max-w-xs whitespace-nowrap text-ellipsis overflow-hidden">
+          Split a bill with{" "}
           <TooltipProvider>
             <Tooltip>
-              <TooltipTrigger className="font-semibold text-cyan-500 cursor-text">{name}</TooltipTrigger>
-              <TooltipContent>
-                {friend.name}
-              </TooltipContent>
+              <TooltipTrigger asChild>
+                <span className="font-semibold text-cyan-500">{friend.name}</span>
+              </TooltipTrigger>
+
+              <TooltipContent>{friend.name}</TooltipContent>
             </Tooltip>
           </TooltipProvider>
         </CardDescription>
       </CardHeader>
+
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
-            <ControlledFormField
+            <FormInput
               control={form.control}
               name="bill"
+              type="text"
               label="💰 Bill value"
+              labelWidth={160}
               placeholder="Bill value"
               isError={form.getFieldState("bill")?.invalid}
             />
 
-            <ControlledFormField
+            <FormInput
               control={form.control}
               name="userExpense"
+              type="text"
               label="💸 Your expense"
+              labelWidth={160}
               placeholder="Your expense"
               isError={form.getFieldState("userExpense")?.invalid}
             />
 
-            <ControlledFormField
+            <FormInput
               control={form.control}
               name="friendExpense"
-              label={`👫 ${name}'s expense`}
-              placeholder={`${name}'s expense`}
+              type="text"
+              label={`👫 ${friend.name}'s expense`}
+              labelWidth={160}
+              placeholder={`${friend.name}'s expense`}
               disabled
             />
 
-            <FormField
+            <FormSelect
               control={form.control}
               name="whoIsPaying"
-              render={({ field }) => (
-                <FormItem className="lg:flex lg:items-center lg:justify-center lg:flex-wrap">
-                  <FormLabel className="min-w-[180px]">🤑 Who is paying the bill</FormLabel>
-                  <Select value={field.value} onValueChange={field.onChange}>
-                    <FormControl className="bg-slate-100 lg:flex-1">
-                      <SelectTrigger>
-                        <SelectValue placeholder="Who is paying the bill" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="user">You</SelectItem>
-                      <SelectItem value="friend">{name}</SelectItem>
-                    </SelectContent>
-                    <FormMessage className="w-full" />
-                  </Select>
-                </FormItem>
-              )}
+              label="🤑 Who is paying the bill"
+              labelWidth={160}
+              options={getSelections(friend.name)}
+              placeholder="Who is paying the bill"
+              isError={form.getFieldState("whoIsPaying")?.invalid}
             />
 
             <Button type="submit" className="self-end">Split bill</Button>
@@ -142,40 +143,6 @@ export default function FormSplitBill({ friend, onSplitBill }: FormSplitBillProp
         </Form>
       </CardContent>
     </Card>
-  );
-}
-
-type ControllerFormFieldProps = {
-  control: Control<FormSchema>;
-  name: "bill" | "userExpense" | "friendExpense" | "whoIsPaying";
-  label: string;
-  placeholder: string;
-  disabled?: boolean;
-  isError?: boolean;
-};
-
-function ControlledFormField({
-  control,
-  name,
-  label,
-  placeholder,
-  disabled,
-  isError
-}: ControllerFormFieldProps) {
-  return (
-    <FormField
-      control={control}
-      name={name}
-      render={({ field }) => (
-        <FormItem className="lg:flex lg:items-center lg:justify-center lg:flex-wrap">
-          <FormLabel className="min-w-[180px] lg:max-w-[40%] text-ellipsis overflow-hidden">{label}</FormLabel>
-          <FormControl className="bg-slate-100 lg:flex-1">
-            <Input type="text" placeholder={placeholder} {...field} disabled={disabled} isError={isError} />
-          </FormControl>
-          <FormMessage className="w-full" />
-        </FormItem>
-      )}
-    />
   );
 }
 
@@ -199,4 +166,16 @@ function useWatchExpense(form: UseFormReturn<FormSchema>) {
 
     setValue("friendExpense", (nBill - nUserExpense).toFixed(2));
   }, [bill, userExpense, setValue]);
+}
+
+// 为测试校验, 添加一个不在 options 中的值
+function getSelections(friend: string) {
+  const options = whoIsPayingOptions.map(({ value, label }) => ({
+    value,
+    label: value === "friend" ? friend : label
+  }));
+
+  options.push({ value: "anonymous", label: "Anonymous" });
+
+  return options;
 }
