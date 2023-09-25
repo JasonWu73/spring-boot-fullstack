@@ -4,7 +4,6 @@ import { useForm, type UseFormReturn } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "@/components/ui/Form.tsx";
 import { useEffect } from "react";
-import { isNumeric } from "@/lib/utils.ts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/Card.tsx";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip.tsx";
 import { Friend } from "@/components/demo/eat-n-split/friend-data.ts";
@@ -13,25 +12,34 @@ import { FormInput, FormSelect } from "@/components/ui/CustomFormField.tsx";
 const whoIsPayingOptions = [{ value: "user", label: "You" }, { value: "friend", label: "friend" }];
 
 const formSchema = z.object({
-  bill: z.string().trim()
-    .nonempty("Must enter a bill")
-    .refine((value) => !Number.isNaN(Number(value)), "Bill must be a number")
-    .refine((value) => Number(value) > 0, "Bill must be greater than 0"),
+  bill: z.coerce.number({ invalid_type_error: "Bill must be a number" })
+    .min(0, "Bill must be greater than or equal to 0"),
 
-  userExpense: z.string().trim()
-    .nonempty("Must enter your expense")
-    .refine((value) => !Number.isNaN(Number(value)), "Expense must be a number")
-    .refine((value) => Number(value) >= 0, "Expense must be greater than or equal to 0"),
+  userExpense: z.coerce.number({ invalid_type_error: "Expense must be a number" })
+    .min(0, "Expense must be greater than or equal to 0"),
 
-  friendExpense: z.string().trim(),
+  friendExpense: z.coerce.number({ invalid_type_error: "Expense must be a number" })
+    .min(0, "Expense must be greater than or equal to 0"),
 
-  whoIsPaying: z.string({ required_error: "Must select who is paying the bill" })
+  whoIsPaying: z.string({ required_error: "Must select who is paying the bill" }).trim()
     .refine((value) => {
       return whoIsPayingOptions.map(({ value }) => value).includes(value);
-    }, "Must be either 'user' or 'friend'")
+    }, {
+      message: `Must be a valid option: ${whoIsPayingOptions.map(({ value }) => `"${value}"`).join(", ")}`
+    })
 })
-  .refine((values) => Number(values.userExpense) <= Number(values.bill), {
+  .refine(({ userExpense, bill }) => userExpense <= bill, {
     message: "Your expense must be less than or equal to the bill",
+    path: ["userExpense"]
+  })
+  .refine(({ userExpense, friendExpense, whoIsPaying }) => {
+    if (whoIsPaying === "user" && userExpense > 0) {
+      return true;
+    }
+
+    return whoIsPaying === "friend" && friendExpense > 0;
+  }, {
+    message: "Must enter a valid expense",
     path: ["userExpense"]
   });
 
@@ -51,22 +59,16 @@ export default function FormSplitBill({ friend, onSplitBill }: FormSplitBillProp
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      bill: "",
-      userExpense: "",
-      friendExpense: "",
-      // 下拉框组件时, 默认值设置为空字符串, 会导致 placeholder 不显示
-      // 但不设置默认值, 又会在表单重置后, 依旧显示上次选择的值
-      whoIsPaying: ""
+      bill: 0,
+      userExpense: 0,
+      friendExpense: 0,
+      whoIsPaying: whoIsPayingOptions[0].value
     }
   });
 
   useWatchExpense(form);
 
-  function onSubmit(values: FormSchema) {
-    const userExpense = Number(values.userExpense);
-    const friendExpense = Number(values.friendExpense);
-    const whoIsPaying = values.whoIsPaying;
-
+  function onSubmit({ userExpense, friendExpense, whoIsPaying }: FormSchema) {
     const bill = {
       friendId: friend.id,
       expense: whoIsPaying === "user" ? -friendExpense : userExpense
@@ -101,7 +103,7 @@ export default function FormSplitBill({ friend, onSplitBill }: FormSplitBillProp
             <FormInput
               control={form.control}
               name="bill"
-              type="text"
+              type="number"
               label="💰 Bill value"
               labelWidth={160}
               placeholder="Bill value"
@@ -111,7 +113,7 @@ export default function FormSplitBill({ friend, onSplitBill }: FormSplitBillProp
             <FormInput
               control={form.control}
               name="userExpense"
-              type="text"
+              type="number"
               label="💸 Your expense"
               labelWidth={160}
               placeholder="Your expense"
@@ -121,7 +123,7 @@ export default function FormSplitBill({ friend, onSplitBill }: FormSplitBillProp
             <FormInput
               control={form.control}
               name="friendExpense"
-              type="text"
+              type="number"
               label={`👫 ${friend.name}'s expense`}
               labelWidth={160}
               placeholder={`${friend.name}'s expense`}
@@ -134,7 +136,6 @@ export default function FormSplitBill({ friend, onSplitBill }: FormSplitBillProp
               label="🤑 Who is paying the bill"
               labelWidth={160}
               options={getSelections(friend.name)}
-              placeholder="Who is paying the bill"
               isError={form.getFieldState("whoIsPaying")?.invalid}
             />
 
@@ -153,10 +154,8 @@ function useWatchExpense(form: UseFormReturn<FormSchema>) {
   const userExpense = watch("userExpense");
 
   useEffect(() => {
-    if (!isNumeric(bill) || !isNumeric(userExpense)) {
-      return;
-    }
-
+    // 虽然通过 `zod` 的校验最终从 `handleSubmit` 得到的是 `number`, 但在这里的值却是 `string`
+    // 所以需要转换一下
     const nBill = Number(bill);
     const nUserExpense = Number(userExpense);
 
@@ -164,7 +163,7 @@ function useWatchExpense(form: UseFormReturn<FormSchema>) {
       return;
     }
 
-    setValue("friendExpense", (nBill - nUserExpense).toFixed(2));
+    setValue("friendExpense", Number((nBill - nUserExpense).toFixed(2)));
   }, [bill, userExpense, setValue]);
 }
 

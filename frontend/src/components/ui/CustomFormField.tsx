@@ -39,7 +39,12 @@ export function FormInput<T extends FieldValues>({
           </FormLabel>
 
           <FormControl className="bg-slate-100">
-            <Input type={type} placeholder={placeholder} {...field} disabled={disabled} isError={isError} />
+            <Input
+              type={type}
+              placeholder={placeholder} {...field}
+              disabled={disabled}
+              isError={isError}
+            />
           </FormControl>
 
           <FormMessage className="lg:row-span-1 lg:col-start-2 lg:col-end-3" />
@@ -58,6 +63,9 @@ type FormSelectProps<T extends FieldValues> = Omit<FormInputProps<T>, "type"> & 
   options: SelectOption[];
 };
 
+/**
+ * 下拉组件不需要考虑 `placeholder`, 而应该拥有默认值.
+ */
 export function FormSelect<T extends FieldValues>({
   control,
   name,
