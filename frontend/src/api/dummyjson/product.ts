@@ -23,7 +23,9 @@ type Product = {
   images: string[]
 }
 
-async function getRandomProduct(signal?: AbortSignal): Promise<ApiResponse<Product>> {
+async function getRandomProduct(
+  signal?: AbortSignal
+): Promise<ApiResponse<Product>> {
   const randomId = Math.floor(Math.random() * 110)
   const { data, error } = await sendRequest<Product, ApiError>({
     url: `https://dummyjson.com/products/${randomId}`,
