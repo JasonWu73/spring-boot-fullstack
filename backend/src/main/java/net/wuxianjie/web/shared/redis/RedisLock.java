@@ -1,17 +1,16 @@
 package net.wuxianjie.web.shared.redis;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 /**
- * 基于 Redis 实现的分布式锁。
+ * 基于 Redis 实现的分布式锁.
  */
 @Slf4j
 @Component
@@ -26,33 +25,33 @@ public class RedisLock {
   private final Map<String, AtomicBoolean> renewFlags = new ConcurrentHashMap<>();
 
   /**
-   * 上锁。
+   * 上锁.
    *
-   * <p>当一个方法获取了 Lock 但执行时间超过了 Lock 的超时时间（Timeout），
-   * 这种情况下，Lock 会自动释放，这可能会导致其他线程或实例获取该 Lock，从而引发数据不一致的问题。
-   * 故该方法支持对 Lock 自动续期。
+   * <p>当一个方法获取了 Lock 但执行时间超过了 Lock 的超时时间（Timeout）, 这种情况下,
+   * Lock 会自动释放, 这可能会导致其他线程或实例获取该 Lock, 从而引发数据不一致的问题, 故该方法支持对 Lock 自动续期.
    *
-   * @param key 锁的键
+   * @param key   锁的键
    * @param value 锁的值
    * @return 是否上锁成功
    */
   public boolean lock(String key, String value) {
     // 上锁
-    Boolean isLocked = stringRedisTemplate.opsForValue().setIfAbsent(key, value, LOCK_TIMEOUT_SECS, TimeUnit.SECONDS);
+    Boolean isLocked = stringRedisTemplate.opsForValue()
+        .setIfAbsent(key, value, LOCK_TIMEOUT_SECS, TimeUnit.SECONDS);
     if (isLocked == null || !isLocked) {
       return false;
     }
 
-    // 上锁成功，开启 Lock 自动续期线程
+    // 上锁成功, 开启 Lock 自动续期线程
     startRenewLockThread(key, value);
 
     return true;
   }
 
   /**
-   * 解锁。
+   * 解锁.
    *
-   * @param key 锁的键
+   * @param key   锁的键
    * @param value 锁的值
    */
   public void unlock(String key, String value) {
@@ -88,7 +87,7 @@ public class RedisLock {
       return;
     }
 
-    // 启动一个单独的线程或定时任务来负责 Lock 的续期。这个线程会在 Lock 快到期时，对 Lock 进行续期
+    // 启动一个单独的线程或定时任务来负责 Lock 的续期. 这个线程会在 Lock 快到期时, 对 Lock 进行续期
     new Thread(() -> {
       // 使用标志变量控制线程
       while (renewFlag.get()) {

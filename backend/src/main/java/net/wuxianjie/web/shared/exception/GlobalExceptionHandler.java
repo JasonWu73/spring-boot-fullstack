@@ -3,6 +3,7 @@ package net.wuxianjie.web.shared.exception;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.connector.ClientAbortException;
 import org.springframework.http.HttpHeaders;
@@ -20,17 +21,15 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
-import java.util.Optional;
-
 /**
- * 全局异常处理。
+ * 全局异常处理.
  */
 @Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
   /**
-   * 处理自定义 API 异常。
+   * 处理自定义 API 异常.
    *
    * @param e API 异常
    * @return 响应结果
@@ -39,12 +38,12 @@ public class GlobalExceptionHandler {
   public ResponseEntity<ApiError> handleApiException(ApiException e) {
     writeLog(e);
     return ResponseEntity
-      .status(e.getStatus())
-      .body(new ApiError(e.getStatus(), e.getReason()));
+        .status(e.getStatus())
+        .body(new ApiError(e.getStatus(), e.getReason()));
   }
 
   /**
-   * 处理所有未被特定 {@code handleXxxException(...)} 捕获的异常。
+   * 处理所有未被特定 {@code handleXxxException(...)} 捕获的异常.
    *
    * @param e 超类异常
    * @return 响应结果
@@ -61,14 +60,14 @@ public class GlobalExceptionHandler {
     log.error("落空的服务异常: {}", e.getMessage(), e);
 
     return ResponseEntity
-      .status(status)
-      .body(new ApiError(status, "服务异常"));
+        .status(status)
+        .body(new ApiError(status, "服务异常"));
   }
 
   /**
-   * 处理因请求参数不合法而产生的异常。
+   * 处理因请求参数不合法而产生的异常.
    *
-   * <p>触发本异常的校验方式：
+   * <p>触发本异常的校验方式:
    *
    * <ul>
    *   <li>Controller 类必须有 {@link Validated} 注解</li>
@@ -79,26 +78,27 @@ public class GlobalExceptionHandler {
    * @return 响应结果
    */
   @ExceptionHandler(ConstraintViolationException.class)
-  public ResponseEntity<ApiError> handleConstraintViolationException(ConstraintViolationException e) {
+  public ResponseEntity<ApiError> handleConstraintViolationException(
+      ConstraintViolationException e) {
     StringBuilder sb = new StringBuilder();
 
     Optional.ofNullable(e.getConstraintViolations()).ifPresent(
-      violations -> violations.forEach(v -> {
-        if (!sb.isEmpty()) {
-          sb.append(ApiException.MESSAGE_SEPARATOR);
-        }
+        violations -> violations.forEach(v -> {
+          if (!sb.isEmpty()) {
+            sb.append(ApiException.MESSAGE_SEPARATOR);
+          }
 
-        sb.append(v.getMessage());
-      })
+          sb.append(v.getMessage());
+        })
     );
 
     return handleApiException(new ApiException(HttpStatus.BAD_REQUEST, sb.toString(), e));
   }
 
   /**
-   * 处理因请求参数不合法而产生的异常。
+   * 处理因请求参数不合法而产生的异常.
    *
-   * <p>触发本异常的校验方式：
+   * <p>触发本异常的校验方式:
    *
    * <ul>
    *   <li>对方法参数使用 {@link Valid} 注解</li>
@@ -109,7 +109,8 @@ public class GlobalExceptionHandler {
    * @return 响应结果
    */
   @ExceptionHandler(MethodArgumentNotValidException.class)
-  public ResponseEntity<ApiError> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+  public ResponseEntity<ApiError> handleMethodArgumentNotValidException(
+      MethodArgumentNotValidException e) {
     StringBuilder sb = new StringBuilder();
 
     e.getBindingResult().getFieldErrors().forEach(error -> {
@@ -133,12 +134,13 @@ public class GlobalExceptionHandler {
   }
 
   /**
-   * 处理因缺少请求参数（{@code @RequestParam} 默认为必填参数）而产生的异常。
+   * 处理因缺少请求参数（{@code @RequestParam} 默认为必填参数）而产生的异常.
    *
    * @param e 缺少参数异常
    * @return 响应结果
    */
-  @ExceptionHandler({MissingServletRequestParameterException.class, MissingServletRequestPartException.class})
+  @ExceptionHandler({MissingServletRequestParameterException.class,
+      MissingServletRequestPartException.class})
   public ResponseEntity<ApiError> handleMissingServletRequestParameterException(Exception e) {
     String paraName = "";
     if (e instanceof MissingServletRequestParameterException ex) {
@@ -155,13 +157,14 @@ public class GlobalExceptionHandler {
   }
 
   /**
-   * 处理因请求参数值不合法而产生的异常。
+   * 处理因请求参数值不合法而产生的异常.
    *
    * @param e 方法参数类型不匹配的异常
    * @return 响应结果
    */
   @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-  public ResponseEntity<ApiError> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
+  public ResponseEntity<ApiError> handleMethodArgumentTypeMismatchException(
+      MethodArgumentTypeMismatchException e) {
     String paramName = e.getName();
     Object paramValue = e.getValue();
     String reason = String.format("参数值不合法 [%s=%s]", paramName, paramValue);
@@ -170,27 +173,28 @@ public class GlobalExceptionHandler {
   }
 
   /**
-   * 处理因请求体内容（如 JSON）不合法而产生的异常。
+   * 处理因请求体内容（如 JSON）不合法而产生的异常.
    *
    * @param e 请求体内容解析异常
    * @return 响应结果
    */
   @ExceptionHandler(HttpMessageNotReadableException.class)
-  public ResponseEntity<ApiError> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+  public ResponseEntity<ApiError> handleHttpMessageNotReadableException(
+      HttpMessageNotReadableException e) {
     return handleApiException(new ApiException(HttpStatus.BAD_REQUEST, "无法解析请求体内容", e));
   }
 
   /**
-   * 处理因不支持请求方法而产生的异常。
+   * 处理因不支持请求方法而产生的异常.
    *
-   * @param e 请求方法不支持异常
+   * @param e   请求方法不支持异常
    * @param req HTTP 请求对象
    * @return 响应结果
    */
   @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
   public ResponseEntity<ApiError> handleHttpRequestMethodNotSupportedException(
-    HttpRequestMethodNotSupportedException e,
-    HttpServletRequest req
+      HttpRequestMethodNotSupportedException e,
+      HttpServletRequest req
   ) {
     String reason = String.format("不支持的请求方法 [%s]", req.getMethod());
 
@@ -198,35 +202,37 @@ public class GlobalExceptionHandler {
   }
 
   /**
-   * 处理因不支持请求头中指定的 MIME Content-Type而产生的异常。
+   * 处理因不支持请求头中指定的 MIME Content-Type而产生的异常.
    *
-   * @param e 不支持媒体类型的异常
+   * @param e   不支持媒体类型的异常
    * @param req HTTP 请求对象
    * @return 响应结果
    */
   @ExceptionHandler(HttpMediaTypeException.class)
   public ResponseEntity<ApiError> handleHttpMediaTypeException(
-    HttpMediaTypeException e,
-    HttpServletRequest req
+      HttpMediaTypeException e,
+      HttpServletRequest req
   ) {
-    String reason = String.format("不支持的媒体类型 [%s: %s]", HttpHeaders.CONTENT_TYPE, req.getHeader(HttpHeaders.CONTENT_TYPE));
+    String reason = String.format("不支持的媒体类型 [%s: %s]", HttpHeaders.CONTENT_TYPE,
+        req.getHeader(HttpHeaders.CONTENT_TYPE));
 
     return handleApiException(new ApiException(HttpStatus.NOT_ACCEPTABLE, reason, e));
   }
 
   /**
-   * 处理因非 Multipart 请求与 API 不符合而产生的异常。
+   * 处理因非 Multipart 请求与 API 不符合而产生的异常.
    *
    * @param e Multipart 解析失败的异常
    * @return 响应结果
    */
   @ExceptionHandler(MultipartException.class)
   public ResponseEntity<ApiError> handleMultipartException(MultipartException e) {
-    return handleApiException(new ApiException(HttpStatus.NOT_ACCEPTABLE, "仅支持 Multipart 请求", e));
+    return handleApiException(
+        new ApiException(HttpStatus.NOT_ACCEPTABLE, "仅支持 Multipart 请求", e));
   }
 
   /**
-   * 处理网络连接因请求处理过程中被中断而产生的异常。
+   * 处理网络连接因请求处理过程中被中断而产生的异常.
    */
   @ExceptionHandler(ClientAbortException.class)
   public ResponseEntity<String> handleClientAbortException() {

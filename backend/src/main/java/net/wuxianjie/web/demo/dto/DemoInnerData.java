@@ -1,15 +1,14 @@
 package net.wuxianjie.web.demo.dto;
 
 import jakarta.validation.constraints.NotNull;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.wuxianjie.web.shared.config.JsonConfig;
 import org.springframework.format.annotation.DateTimeFormat;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
 
 @Data
 @NoArgsConstructor

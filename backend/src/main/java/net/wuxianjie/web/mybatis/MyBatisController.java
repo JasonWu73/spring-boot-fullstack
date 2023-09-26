@@ -1,14 +1,16 @@
 package net.wuxianjie.web.mybatis;
 
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
-import net.wuxianjie.web.demo.dto.DemoData;
 import net.wuxianjie.web.mybatis.dto.MyBatisData;
 import net.wuxianjie.web.mybatis.dto.MyBatisType;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @Validated
 @RestController

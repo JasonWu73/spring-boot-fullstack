@@ -4,18 +4,18 @@ import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 /**
- * 需要将异常信息返回给客户端时使用的 API 异常。
+ * 需要将异常信息返回给客户端时使用的 API 异常.
  */
 @Getter
 public class ApiException extends RuntimeException {
 
   /**
-   * 错误消息的分隔符。
+   * 错误消息的分隔符.
    */
   public static final String MESSAGE_SEPARATOR = "; ";
 
   /**
-   * 返回给客户端的 HTTP 错误状态码。
+   * 返回给客户端的 HTTP 错误状态码.
    */
   private final HttpStatus status;
 
@@ -25,7 +25,7 @@ public class ApiException extends RuntimeException {
   private final String reason;
 
   /**
-   * 构造 API 异常。
+   * 构造 API 异常.
    *
    * @param status HTTP 状态码
    * @param reason 返回给客户端的错误信息
@@ -37,11 +37,11 @@ public class ApiException extends RuntimeException {
   }
 
   /**
-   * 构造 API 异常。
+   * 构造 API 异常.
    *
    * @param status HTTP 状态码
    * @param reason 返回给客户端的错误信息
-   * @param cause 导致该异常产生的异常
+   * @param cause  导致该异常产生的异常
    */
   public ApiException(HttpStatus status, String reason, Throwable cause) {
     super(reason, cause);
@@ -68,10 +68,10 @@ public class ApiException extends RuntimeException {
 
     StringBuilder sb = new StringBuilder();
     sb.append("嵌套异常 [")
-      .append(cause.getClass().getName())
-      .append(": ")
-      .append(cause.getMessage())
-      .append("]");
+        .append(cause.getClass().getName())
+        .append(": ")
+        .append(cause.getMessage())
+        .append("]");
 
     StringBuilder nestedMessage = getNestedMessage(cause.getCause());
     if (nestedMessage == null) {

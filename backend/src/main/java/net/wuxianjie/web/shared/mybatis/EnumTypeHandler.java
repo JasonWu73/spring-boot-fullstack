@@ -1,20 +1,19 @@
 package net.wuxianjie.web.shared.mybatis;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import org.apache.ibatis.type.BaseTypeHandler;
-import org.apache.ibatis.type.JdbcType;
-import org.springframework.stereotype.Component;
-
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Optional;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import org.apache.ibatis.type.BaseTypeHandler;
+import org.apache.ibatis.type.JdbcType;
+import org.springframework.stereotype.Component;
 
 /**
- * 枚举类型与数据库 int 类型的类型转换器。
+ * 枚举类型与数据库 int 类型的类型转换器.
  */
 @Component
 @NoArgsConstructor
@@ -24,7 +23,8 @@ public class EnumTypeHandler<E extends Enum<?> & EnumType> extends BaseTypeHandl
   private Class<E> enumType;
 
   @Override
-  public void setNonNullParameter(PreparedStatement ps, int i, EnumType parameter, JdbcType jdbcType) throws SQLException {
+  public void setNonNullParameter(PreparedStatement ps, int i, EnumType parameter,
+      JdbcType jdbcType) throws SQLException {
     ps.setInt(i, parameter.getCode());
   }
 
@@ -45,10 +45,10 @@ public class EnumTypeHandler<E extends Enum<?> & EnumType> extends BaseTypeHandl
 
   private E toEnum(Class<E> enumClass, int value) {
     return Optional.ofNullable(enumClass.getEnumConstants())
-      .flatMap(enums -> Arrays.stream(enums)
-        .filter(e -> e.getCode() == value)
-        .findFirst()
-      )
-      .orElse(null);
+        .flatMap(enums -> Arrays.stream(enums)
+            .filter(e -> e.getCode() == value)
+            .findFirst()
+        )
+        .orElse(null);
   }
 }
