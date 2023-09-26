@@ -43,6 +43,6 @@ const initialFriends = [
   }
 ]
 
-type Friend = typeof initialFriends[0]
+type Friend = (typeof initialFriends)[0]
 
 export { initialFriends, type Friend }

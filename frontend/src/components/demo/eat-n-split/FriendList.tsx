@@ -14,7 +14,12 @@ type FriendListProps = {
   onDeleteFriend: (friend: Friend) => void
 }
 
-function FriendList({ friends, selectedFriend, onSelectFriend, onDeleteFriend }: FriendListProps) {
+function FriendList({
+  friends,
+  selectedFriend,
+  onSelectFriend,
+  onDeleteFriend
+}: FriendListProps) {
   return (
     <Card>
       <ScrollArea className="h-96 md:h-[30rem] lg:h-[24rem] md:w-[22rem] lg:w-[30rem]">

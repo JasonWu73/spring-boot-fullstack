@@ -13,7 +13,10 @@ type Request = {
 
 type UrlInfo = Pick<Request, 'url' | 'urlData'>
 
-type RequestConfig = Pick<Request, 'method' | 'contentType' | 'bodyData' | 'signal'>
+type RequestConfig = Pick<
+  Request,
+  'method' | 'contentType' | 'bodyData' | 'signal'
+>
 
 type RequestBody = Pick<Request, 'contentType' | 'bodyData'>
 
@@ -50,7 +53,10 @@ async function sendRequest<T, E>({
     const splicedUrl = appendParamsToUrl({ url, urlData })
 
     // 发送 HTTP 请求
-    const response = await fetch(splicedUrl, getRequestOptions({ method, contentType, bodyData, signal }))
+    const response = await fetch(
+      splicedUrl,
+      getRequestOptions({ method, contentType, bodyData, signal })
+    )
 
     // 以 JSON 数据格式解析请求
     const responseData = await response.json()
@@ -77,11 +83,19 @@ async function sendRequest<T, E>({
 
 function appendParamsToUrl({ url, urlData }: UrlInfo) {
   const urlObj = new URL(url)
-  urlData && Object.keys(urlData).forEach(key => urlObj.searchParams.append(key, urlData[key].toString()))
+  urlData &&
+    Object.keys(urlData).forEach((key) =>
+      urlObj.searchParams.append(key, urlData[key].toString())
+    )
   return urlObj.toString()
 }
 
-function getRequestOptions({ method, contentType = 'JSON', bodyData, signal }: RequestConfig) {
+function getRequestOptions({
+  method,
+  contentType = 'JSON',
+  bodyData,
+  signal
+}: RequestConfig) {
   if (method === 'GET') {
     return { signal }
   }
@@ -120,7 +134,9 @@ function getBody({ contentType, bodyData }: RequestBody) {
 
 function getUrlEncodedData(bodyData: UrlData) {
   return Object.keys(bodyData)
-    .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(bodyData[key]))
+    .map(
+      (key) => encodeURIComponent(key) + '=' + encodeURIComponent(bodyData[key])
+    )
     .join('&')
 }
 

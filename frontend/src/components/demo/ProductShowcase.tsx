@@ -34,7 +34,11 @@ function ProductShowcase() {
     <div className="mt-8 mx-8 p-4 rounded border shadow-sm">
       {getProductContent()}
 
-      <Button onClick={() => getProduct()} className="my-4" disabled={isLoading}>
+      <Button
+        onClick={() => getProduct()}
+        className="my-4"
+        disabled={isLoading}
+      >
         {isLoading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
         获取商品
       </Button>
@@ -51,12 +55,7 @@ type TitleProps = {
 
 function Title({ label, isError = false }: TitleProps) {
   return (
-    <h1
-      className={cn(
-        'font-bold tracking-wider',
-        { 'text-red-500': isError }
-      )}
-    >
+    <h1 className={cn('font-bold tracking-wider', { 'text-red-500': isError })}>
       {label}
     </h1>
   )
@@ -68,7 +67,9 @@ type MessageProps = {
 
 function Message({ count }: MessageProps) {
   return (
-    <p>已加载 <strong>{count}</strong> 个商品</p>
+    <p>
+      已加载 <strong>{count}</strong> 个商品
+    </p>
   )
 }
 
@@ -82,8 +83,8 @@ type State = {
 type Action =
   | { type: 'startLoading' }
   | { type: 'endLoading' }
-  | { type: 'setError', payload: string }
-  | { type: 'setProduct', payload: Product }
+  | { type: 'setError'; payload: string }
+  | { type: 'setProduct'; payload: Product }
 
 function reducer(state: State, action: Action) {
   switch (action.type) {
@@ -94,7 +95,13 @@ function reducer(state: State, action: Action) {
     case 'setError':
       return { ...state, isLoading: false, error: action.payload }
     case 'setProduct':
-      return { ...state, isLoading: false, error: '', product: action.payload, count: state.count + 1 }
+      return {
+        ...state,
+        isLoading: false,
+        error: '',
+        product: action.payload,
+        count: state.count + 1
+      }
     default:
       return state
   }

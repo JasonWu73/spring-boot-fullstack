@@ -1,8 +1,20 @@
 import { type Control, type FieldValues, type Path } from 'react-hook-form'
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/Form.tsx'
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
+} from '@/components/ui/Form.tsx'
 import { Input } from '@/components/ui/Input.tsx'
 import { HTMLInputTypeAttribute } from 'react'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select.tsx'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/Select.tsx'
 
 type FormInputProps<T extends FieldValues> = {
   control: Control<T>
@@ -41,7 +53,8 @@ function FormInput<T extends FieldValues>({
           <FormControl className="bg-slate-100">
             <Input
               type={type}
-              placeholder={placeholder} {...field}
+              placeholder={placeholder}
+              {...field}
               disabled={disabled}
               isError={isError}
             />
@@ -59,7 +72,10 @@ type SelectOption = {
   label: string
 }
 
-type FormSelectProps<T extends FieldValues> = Omit<FormInputProps<T>, 'type'> & {
+type FormSelectProps<T extends FieldValues> = Omit<
+  FormInputProps<T>,
+  'type'
+> & {
   options: SelectOption[]
 }
 
@@ -98,7 +114,9 @@ function FormSelect<T extends FieldValues>({
 
             <SelectContent>
               {options.map(({ value, label }) => (
-                <SelectItem key={value} value={value}>{label}</SelectItem>
+                <SelectItem key={value} value={value}>
+                  {label}
+                </SelectItem>
               ))}
             </SelectContent>
           </Select>

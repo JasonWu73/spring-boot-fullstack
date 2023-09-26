@@ -3,7 +3,12 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Form } from '@/components/ui/Form.tsx'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card.tsx'
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/Card.tsx'
 import { type Friend } from '@/components/demo/eat-n-split/friend-data.ts'
 import { FormInput } from '@/components/ui/CustomFormField.tsx'
 
@@ -50,7 +55,10 @@ function FormAddFriend({ onAddFriend }: FormAddFriendProps) {
 
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="flex flex-col gap-4"
+          >
             <FormInput
               control={form.control}
               name="name"
@@ -71,7 +79,9 @@ function FormAddFriend({ onAddFriend }: FormAddFriendProps) {
               isError={form.getFieldState('image')?.invalid}
             />
 
-            <Button type="submit" className="self-end">Add</Button>
+            <Button type="submit" className="self-end">
+              Add
+            </Button>
           </form>
         </Form>
       </CardContent>

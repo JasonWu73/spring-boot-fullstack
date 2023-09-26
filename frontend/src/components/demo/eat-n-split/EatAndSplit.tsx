@@ -1,8 +1,14 @@
-import { type Bill, FormSplitBill } from '@/components/demo/eat-n-split/FormSplitBill.tsx'
+import {
+  type Bill,
+  FormSplitBill
+} from '@/components/demo/eat-n-split/FormSplitBill.tsx'
 import { useState } from 'react'
 import { Button } from '@/components/ui/Button.tsx'
 import { useToast } from '@/components/ui/use-toast.ts'
-import { type Friend, initialFriends } from '@/components/demo/eat-n-split/friend-data.ts'
+import {
+  type Friend,
+  initialFriends
+} from '@/components/demo/eat-n-split/friend-data.ts'
 import { FriendList } from '@/components/demo/eat-n-split/FriendList.tsx'
 import { FormAddFriend } from '@/components/demo/eat-n-split/FormAddFriend.tsx'
 
@@ -24,7 +30,7 @@ function EatAndSplit() {
 
   function handleSelectFriend(friend: Friend) {
     setShowAddFriend(false)
-    setSelectedFriend(prev => prev?.id === friend.id ? null : friend)
+    setSelectedFriend((prev) => (prev?.id === friend.id ? null : friend))
   }
 
   function handleDeleteFriend(friend: Friend) {
@@ -41,16 +47,18 @@ function EatAndSplit() {
   }
 
   function handleSplitBill(bill: Bill) {
-    setFriends((prev) => prev.map((prev) => {
-      if (prev.id === bill.friendId) {
-        return {
-          ...prev,
-          balance: Number((prev.balance - bill.expense).toFixed(2))
+    setFriends((prev) =>
+      prev.map((prev) => {
+        if (prev.id === bill.friendId) {
+          return {
+            ...prev,
+            balance: Number((prev.balance - bill.expense).toFixed(2))
+          }
         }
-      }
 
-      return prev
-    }))
+        return prev
+      })
+    )
 
     setSelectedFriend(null)
   }
@@ -77,7 +85,12 @@ function EatAndSplit() {
       </div>
 
       <div className="md:row-span-1 md:col-start-2 md:col-end-3">
-        {selectedFriend && <FormSplitBill friend={selectedFriend} onSplitBill={handleSplitBill} />}
+        {selectedFriend && (
+          <FormSplitBill
+            friend={selectedFriend}
+            onSplitBill={handleSplitBill}
+          />
+        )}
       </div>
     </div>
   )

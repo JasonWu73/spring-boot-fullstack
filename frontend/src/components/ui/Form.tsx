@@ -31,7 +31,9 @@ const FormFieldContext = createContext<FormFieldContextValue>(
 const FormField = <
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
->({ ...props }: ControllerProps<TFieldValues, TName>) => {
+>({
+  ...props
+}: ControllerProps<TFieldValues, TName>) => {
   return (
     <FormFieldContext.Provider value={{ name: props.name }}>
       <Controller {...props} />
@@ -113,7 +115,10 @@ const FormDescription = forwardRef<
     <p
       ref={ref}
       id={formDescriptionId}
-      className={cn('text-[0.8rem] text-slate-500 dark:text-slate-400', className)}
+      className={cn(
+        'text-[0.8rem] text-slate-500 dark:text-slate-400',
+        className
+      )}
       {...props}
     />
   )
@@ -137,7 +142,10 @@ const FormMessage = forwardRef<
     <p
       ref={ref}
       id={formMessageId}
-      className={cn('text-[0.8rem] font-medium text-red-500 dark:text-red-900', className)}
+      className={cn(
+        'text-[0.8rem] font-medium text-red-500 dark:text-red-900',
+        className
+      )}
       {...props}
     >
       {body}

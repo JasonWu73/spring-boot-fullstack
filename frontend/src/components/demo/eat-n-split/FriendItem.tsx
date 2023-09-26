@@ -1,7 +1,12 @@
 import { Friend } from '@/components/demo/eat-n-split/friend-data.ts'
 import { cn, truncate } from '@/lib/utils.ts'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar.tsx'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip.tsx'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
+} from '@/components/ui/tooltip.tsx'
 import { Button } from '@/components/ui/Button.tsx'
 import {
   AlertDialog,
@@ -22,7 +27,12 @@ type FriendItemProps = {
   onDeleteFriend: (friend: Friend) => void
 }
 
-function FriendItem({ friend, isSelected, onSelectFriend, onDeleteFriend }: FriendItemProps) {
+function FriendItem({
+  friend,
+  isSelected,
+  onSelectFriend,
+  onDeleteFriend
+}: FriendItemProps) {
   const name = truncate(friend.name, 5)
 
   return (
@@ -62,14 +72,12 @@ function FriendItem({ friend, isSelected, onSelectFriend, onDeleteFriend }: Frie
           </p>
         )}
 
-        {friend.balance === 0 && (
-          <p>
-            You and {name} are even
-          </p>
-        )}
+        {friend.balance === 0 && <p>You and {name} are even</p>}
       </div>
 
-      <Button onClick={() => onSelectFriend(friend)}>{isSelected ? 'Deselect' : 'Select'}</Button>
+      <Button onClick={() => onSelectFriend(friend)}>
+        {isSelected ? 'Deselect' : 'Select'}
+      </Button>
     </li>
   )
 }
@@ -81,7 +89,9 @@ type DeleteFriendButtonProps = {
 function DeleteFriendButton({ onDelete }: DeleteFriendButtonProps) {
   return (
     <AlertDialog>
-      <AlertDialogTrigger className="absolute top-1 left-2 text-xs hidden group-hover:block">❌</AlertDialogTrigger>
+      <AlertDialogTrigger className="absolute top-1 left-2 text-xs hidden group-hover:block">
+        ❌
+      </AlertDialogTrigger>
 
       <AlertDialogContent>
         <AlertDialogHeader>

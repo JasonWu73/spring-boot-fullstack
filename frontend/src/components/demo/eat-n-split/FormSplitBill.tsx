@@ -4,44 +4,72 @@ import { useForm, type UseFormReturn } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Form } from '@/components/ui/Form.tsx'
 import { useEffect } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card.tsx'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip.tsx'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/Card.tsx'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
+} from '@/components/ui/tooltip.tsx'
 import { Friend } from '@/components/demo/eat-n-split/friend-data.ts'
 import { FormInput, FormSelect } from '@/components/ui/CustomFormField.tsx'
 
-const whoIsPayingOptions = [{ value: 'user', label: 'You' }, { value: 'friend', label: 'friend' }]
+const whoIsPayingOptions = [
+  { value: 'user', label: 'You' },
+  { value: 'friend', label: 'friend' }
+]
 
-const formSchema = z.object({
-  bill: z.coerce.number({ invalid_type_error: 'Bill must be a number' })
-    .min(0, 'Bill must be greater than or equal to 0'),
+const formSchema = z
+  .object({
+    bill: z.coerce
+      .number({ invalid_type_error: 'Bill must be a number' })
+      .min(0, 'Bill must be greater than or equal to 0'),
 
-  userExpense: z.coerce.number({ invalid_type_error: 'Expense must be a number' })
-    .min(0, 'Expense must be greater than or equal to 0'),
+    userExpense: z.coerce
+      .number({ invalid_type_error: 'Expense must be a number' })
+      .min(0, 'Expense must be greater than or equal to 0'),
 
-  friendExpense: z.coerce.number({ invalid_type_error: 'Expense must be a number' })
-    .min(0, 'Expense must be greater than or equal to 0'),
+    friendExpense: z.coerce
+      .number({ invalid_type_error: 'Expense must be a number' })
+      .min(0, 'Expense must be greater than or equal to 0'),
 
-  whoIsPaying: z.string({ required_error: 'Must select who is paying the bill' }).trim()
-    .refine((value) => {
-      return whoIsPayingOptions.map(({ value }) => value).includes(value)
-    }, {
-      message: `Must be a valid option: ${whoIsPayingOptions.map(({ value }) => `"${value}"`).join(', ')}`
-    })
-})
+    whoIsPaying: z
+      .string({ required_error: 'Must select who is paying the bill' })
+      .trim()
+      .refine(
+        (value) => {
+          return whoIsPayingOptions.map(({ value }) => value).includes(value)
+        },
+        {
+          message: `Must be a valid option: ${whoIsPayingOptions
+            .map(({ value }) => `"${value}"`)
+            .join(', ')}`
+        }
+      )
+  })
   .refine(({ userExpense, bill }) => userExpense <= bill, {
     message: 'Your expense must be less than or equal to the bill',
     path: ['userExpense']
   })
-  .refine(({ userExpense, friendExpense, whoIsPaying }) => {
-    if (whoIsPaying === 'user' && userExpense > 0) {
-      return true
-    }
+  .refine(
+    ({ userExpense, friendExpense, whoIsPaying }) => {
+      if (whoIsPaying === 'user' && userExpense > 0) {
+        return true
+      }
 
-    return whoIsPaying === 'friend' && friendExpense > 0
-  }, {
-    message: 'Must enter a valid expense',
-    path: ['userExpense']
-  })
+      return whoIsPaying === 'friend' && friendExpense > 0
+    },
+    {
+      message: 'Must enter a valid expense',
+      path: ['userExpense']
+    }
+  )
 
 type FormSchema = z.infer<typeof formSchema>
 
@@ -88,7 +116,9 @@ function FormSplitBill({ friend, onSplitBill }: FormSplitBillProps) {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <span className="font-semibold text-cyan-500">{friend.name}</span>
+                <span className="font-semibold text-cyan-500">
+                  {friend.name}
+                </span>
               </TooltipTrigger>
 
               <TooltipContent>{friend.name}</TooltipContent>
@@ -99,7 +129,10 @@ function FormSplitBill({ friend, onSplitBill }: FormSplitBillProps) {
 
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="flex flex-col gap-4"
+          >
             <FormInput
               control={form.control}
               name="bill"
@@ -139,7 +172,9 @@ function FormSplitBill({ friend, onSplitBill }: FormSplitBillProps) {
               isError={form.getFieldState('whoIsPaying')?.invalid}
             />
 
-            <Button type="submit" className="self-end">Split bill</Button>
+            <Button type="submit" className="self-end">
+              Split bill
+            </Button>
           </form>
         </Form>
       </CardContent>
@@ -179,4 +214,4 @@ function getSelections(friend: string) {
   return options
 }
 
-export { type Bill, FormSplitBill }
+export { FormSplitBill, type Bill }

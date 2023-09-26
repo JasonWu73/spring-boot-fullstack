@@ -40,4 +40,4 @@ async function getRandomProduct(
   return { data, error }
 }
 
-export { type Product, getRandomProduct }
+export { getRandomProduct, type Product }
