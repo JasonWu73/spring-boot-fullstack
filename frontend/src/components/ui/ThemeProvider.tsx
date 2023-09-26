@@ -1,24 +1,11 @@
-import React, { createContext, useContext, useEffect, useState } from 'react'
-
-type Theme = 'dark' | 'light' | 'system'
+import React, { useEffect, useState } from 'react'
+import { type Theme, ThemeProviderContext } from '@/components/ui/use-theme.ts'
 
 type ThemeProviderProps = {
   children: React.ReactNode
   defaultTheme?: Theme
   storageKey?: string
 }
-
-type ThemeProviderState = {
-  theme: Theme
-  setTheme: (theme: Theme) => void
-}
-
-const initialState: ThemeProviderState = {
-  theme: 'system',
-  setTheme: () => null
-}
-
-const ThemeProviderContext = createContext<ThemeProviderState>(initialState)
 
 function ThemeProvider({
   children,
@@ -67,16 +54,6 @@ function ThemeProvider({
   )
 }
 
-function useTheme() {
-  const context = useContext(ThemeProviderContext)
-
-  if (context === undefined) {
-    throw new Error('useTheme must be used within a ThemeProvider')
-  }
-
-  return context
-}
-
 function resetTheme() {
   const root = window.document.documentElement
   root.classList.remove('light', 'dark')
@@ -96,4 +73,4 @@ function handleAutoToggleTheme(event: MediaQueryListEvent) {
   root.classList.add('light')
 }
 
-export { ThemeProvider, useTheme }
+export { ThemeProvider }

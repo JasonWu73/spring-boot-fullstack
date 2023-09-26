@@ -2,7 +2,7 @@ import React, { forwardRef } from 'react'
 import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons'
 import * as SelectPrimitive from '@radix-ui/react-select'
 import { cn } from '@/lib/utils'
-import { inputErrorClasses } from '@/components/ui/Input.tsx'
+import { inputErrorClasses } from '@/components/ui/form.ts'
 
 const Select = SelectPrimitive.Root
 

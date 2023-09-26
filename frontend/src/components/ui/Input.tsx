@@ -1,5 +1,6 @@
 import React, { forwardRef } from 'react'
 import { cn } from '@/lib/utils'
+import { inputErrorClasses } from '@/components/ui/form.ts'
 
 type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
   isError?: boolean
@@ -30,19 +31,4 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
 
 Input.displayName = 'Input'
 
-/**
- * 自定义的错误边框样式.
- *
- * @param isError - 是否为错误状态
- * @returns {Record<string, boolean>} - 错误边框样式类对象, 用于 `cn` 函数
- */
-function inputErrorClasses(isError: boolean): Record<string, boolean> {
-  return {
-    'border-slate-200 dark:border-slate-800 focus-visible:ring-slate-950 dark:focus-visible:ring-slate-300':
-      !isError,
-    'border-red-500 dark:border-red-900 focus-visible:ring-red-500 dark:focus-visible:ring-red-600':
-      isError
-  }
-}
-
-export { Input, inputErrorClasses }
+export { Input }
