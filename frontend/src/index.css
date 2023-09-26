@@ -2,8 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 自定义样式变量 */
+:root {
+  /* night-1 */
+  --bg-dark-color: #2e3440;
+
+  /* snow-1 */
+  --fg-dark-color: #eceff4;
+}
+
 /* 暗色主题 */
-body.dark {
-  background-color: #2e3440; /* night-1 */
-  color: #eceff4; /* snow-1 */
+html.dark {
+  background-color: var(--bg-dark-color);
+  color: var(--fg-dark-color);
 }
