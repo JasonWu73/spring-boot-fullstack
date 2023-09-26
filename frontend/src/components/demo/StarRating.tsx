@@ -14,7 +14,7 @@ function StarRating({ maxRating = 5 }: StarRatingProps) {
   }
 
   return (
-    <Card className="w-96 mt-8 mx-auto p-4">
+    <Card className="mx-auto mt-8 w-96 p-4">
       <ul className="flex items-center gap-1">
         {Array.from({ length: maxRating }, (_, i) => (
           <li key={i}>
@@ -22,7 +22,7 @@ function StarRating({ maxRating = 5 }: StarRatingProps) {
           </li>
         ))}
         <li>
-          <span className="h-[15px] w-[15px] flex items-center">
+          <span className="flex h-[15px] w-[15px] items-center">
             {rating || ''}
           </span>
         </li>

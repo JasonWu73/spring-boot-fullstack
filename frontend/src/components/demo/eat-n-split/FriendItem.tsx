@@ -38,7 +38,7 @@ function FriendItem({
   return (
     <li
       className={cn(
-        'group relative flex justify-between items-center gap-2 py-2 px-4 rounded hover:bg-amber-100 dark:hover:text-slate-700',
+        'group relative flex items-center justify-between gap-2 rounded px-4 py-2 hover:bg-amber-100 dark:hover:text-slate-700',
         { 'bg-amber-100 dark:text-night-1': isSelected }
       )}
     >
@@ -89,7 +89,7 @@ type DeleteFriendButtonProps = {
 function DeleteFriendButton({ onDelete }: DeleteFriendButtonProps) {
   return (
     <AlertDialog>
-      <AlertDialogTrigger className="absolute top-1 left-2 text-xs hidden group-hover:block">
+      <AlertDialogTrigger className="absolute left-2 top-1 hidden text-xs group-hover:block">
         ❌
       </AlertDialogTrigger>
 

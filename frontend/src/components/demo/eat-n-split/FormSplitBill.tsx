@@ -108,10 +108,10 @@ function FormSplitBill({ friend, onSplitBill }: FormSplitBillProps) {
   }
 
   return (
-    <Card className="md:w-[22rem] lg:w-[30rem] bg-amber-100 dark:bg-amber-100 dark:text-slate-700 text-slate-700">
+    <Card className="bg-amber-100 text-slate-700 dark:bg-amber-100 dark:text-slate-700 md:w-[22rem] lg:w-[30rem]">
       <CardHeader>
         <CardTitle>Split bill, my friend</CardTitle>
-        <CardDescription className="max-w-xs whitespace-nowrap text-ellipsis overflow-hidden">
+        <CardDescription className="max-w-xs overflow-hidden text-ellipsis whitespace-nowrap">
           Split a bill with{' '}
           <TooltipProvider>
             <Tooltip>

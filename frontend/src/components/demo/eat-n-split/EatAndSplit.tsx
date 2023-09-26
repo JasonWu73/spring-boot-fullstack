@@ -64,8 +64,8 @@ function EatAndSplit() {
   }
 
   return (
-    <div className="grid grid-flow-row md:grid-rows-2 md:grid-cols-2 gap-6 justify-center items-center md:mt-16 p-6">
-      <div className="md:row-span-1 md:col-span-1 md:justify-self-end">
+    <div className="grid grid-flow-row items-center justify-center gap-6 p-6 md:mt-16 md:grid-cols-2  md:grid-rows-2">
+      <div className="md:col-span-1 md:row-span-1 md:justify-self-end">
         <FriendList
           friends={friends}
           selectedFriend={selectedFriend}
@@ -74,7 +74,7 @@ function EatAndSplit() {
         />
       </div>
 
-      <div className="md:row-start-2 md:row-end-3 md:col-span-1 md:justify-self-end self-start flex flex-col gap-6">
+      <div className="flex flex-col gap-6 self-start md:col-span-1 md:row-start-2 md:row-end-3 md:justify-self-end">
         {showAddFriend && <FormAddFriend onAddFriend={handleAddFriend} />}
 
         <div className="self-end">
@@ -84,7 +84,7 @@ function EatAndSplit() {
         </div>
       </div>
 
-      <div className="md:row-span-1 md:col-start-2 md:col-end-3">
+      <div className="md:col-start-2 md:col-end-3 md:row-span-1">
         {selectedFriend && (
           <FormSplitBill
             friend={selectedFriend}

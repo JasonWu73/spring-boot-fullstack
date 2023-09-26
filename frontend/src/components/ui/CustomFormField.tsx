@@ -42,10 +42,10 @@ function FormInput<T extends FieldValues>({
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className="grid grid-flow-row lg:grid-cols-[auto_1fr] items-center gap-1">
+        <FormItem className="grid grid-flow-row items-center gap-1 lg:grid-cols-[auto_1fr]">
           <FormLabel
             style={{ width: labelWidth }}
-            className="whitespace-nowrap text-ellipsis overflow-hidden"
+            className="overflow-hidden text-ellipsis whitespace-nowrap"
           >
             {label}
           </FormLabel>
@@ -60,7 +60,7 @@ function FormInput<T extends FieldValues>({
             />
           </FormControl>
 
-          <FormMessage className="lg:row-span-1 lg:col-start-2 lg:col-end-3" />
+          <FormMessage className="lg:col-start-2 lg:col-end-3 lg:row-span-1" />
         </FormItem>
       )}
     />
@@ -97,10 +97,10 @@ function FormSelect<T extends FieldValues>({
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className="grid grid-flow-row lg:grid-cols-[auto_1fr] items-center gap-1">
+        <FormItem className="grid grid-flow-row items-center gap-1 lg:grid-cols-[auto_1fr]">
           <FormLabel
             style={{ width: labelWidth }}
-            className="whitespace-nowrap text-ellipsis overflow-hidden"
+            className="overflow-hidden text-ellipsis whitespace-nowrap"
           >
             {label}
           </FormLabel>
@@ -121,7 +121,7 @@ function FormSelect<T extends FieldValues>({
             </SelectContent>
           </Select>
 
-          <FormMessage className="lg:row-span-1 lg:col-start-2 lg:col-end-3" />
+          <FormMessage className="lg:col-start-2 lg:col-end-3 lg:row-span-1" />
         </FormItem>
       )}
     />

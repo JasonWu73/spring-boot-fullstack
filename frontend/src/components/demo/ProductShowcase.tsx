@@ -23,7 +23,7 @@ function ProductShowcase() {
           <img
             src={product.thumbnail}
             alt={product.title}
-            className="w-32 h-32 object-cover rounded-full border border-gray-300 shadow-sm"
+            className="h-32 w-32 rounded-full border border-gray-300 object-cover shadow-sm"
           />
         </>
       )
@@ -31,7 +31,7 @@ function ProductShowcase() {
   }
 
   return (
-    <div className="mt-8 mx-8 p-4 rounded border shadow-sm">
+    <div className="mx-8 mt-8 rounded border p-4 shadow-sm">
       {getProductContent()}
 
       <Button
