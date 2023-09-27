@@ -20,7 +20,7 @@ function StarRating({
   isShowLabel = true,
   className
 }: StarRatingProps) {
-  const [rating, setRating] = useState(defaultRating / 0.5)
+  const [rating, setRating] = useState(0)
   const [tempRating, setTempRating] = useState(0)
   const sizePx = getSizePx(size)
 
@@ -53,7 +53,13 @@ function StarRating({
             color={color}
             size={sizePx}
             type={i % 2 === 0 ? 'half' : 'full'}
-            isFilled={tempRating ? tempRating >= i + 1 : rating >= i + 1}
+            isFilled={
+              tempRating
+                ? tempRating >= i + 1
+                : rating
+                ? rating >= i + 1
+                : defaultRating / 0.5 >= i + 1
+            }
             onRate={() => setRating(i + 1)}
             onHoverIn={() => setTempRating(i + 1)}
             onHoverOut={() => setTempRating(0)}
@@ -74,7 +80,7 @@ function StarRating({
               color: color
             }}
           >
-            {tempRating / 2 || rating / 2 || ''}
+            {tempRating / 2 || rating / 2 || defaultRating || ''}
           </span>
         </li>
       )}

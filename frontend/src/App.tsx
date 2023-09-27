@@ -10,7 +10,7 @@ export default function App() {
       <NavBar />
 
       <Card className="mx-auto mt-8 max-w-lg p-4">
-        <StarRating defaultRating={0.5} />
+        <StarRating defaultRating={4} />
       </Card>
 
       <Toaster />
