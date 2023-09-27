@@ -19,6 +19,7 @@ import {
 } from '@/components/ui/tooltip.tsx'
 import { Friend } from '@/components/demo/eat-n-split/friend-data.ts'
 import { FormInput, FormSelect } from '@/components/ui/CustomFormField.tsx'
+import { StarRating } from '@/components/ui/StarRating.tsx'
 
 const whoIsPayingOptions = [
   { value: 'user', label: 'You' },
@@ -81,9 +82,14 @@ type Bill = {
 type FormSplitBillProps = {
   friend: Friend
   onSplitBill: (bill: Bill) => void
+  onCreditRating: (rating: number) => void
 }
 
-function FormSplitBill({ friend, onSplitBill }: FormSplitBillProps) {
+function FormSplitBill({
+  friend,
+  onSplitBill,
+  onCreditRating
+}: FormSplitBillProps) {
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -111,6 +117,7 @@ function FormSplitBill({ friend, onSplitBill }: FormSplitBillProps) {
     <Card className="bg-amber-100 text-slate-700 dark:bg-amber-100 dark:text-slate-700 md:w-[22rem] lg:w-[30rem]">
       <CardHeader>
         <CardTitle>Split bill, my friend</CardTitle>
+
         <CardDescription className="max-w-xs overflow-hidden text-ellipsis whitespace-nowrap">
           Split a bill with{' '}
           <TooltipProvider>
@@ -125,6 +132,13 @@ function FormSplitBill({ friend, onSplitBill }: FormSplitBillProps) {
             </Tooltip>
           </TooltipProvider>
         </CardDescription>
+
+        <StarRating
+          size="lg"
+          key={friend.id} // 为了避免共用组件 (在未关闭表单组件前)
+          defaultRating={friend.creditRating}
+          onRate={(rating) => onCreditRating(rating)}
+        />
       </CardHeader>
 
       <CardContent>

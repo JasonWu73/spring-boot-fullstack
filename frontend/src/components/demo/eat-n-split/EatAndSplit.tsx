@@ -46,6 +46,25 @@ function EatAndSplit() {
     })
   }
 
+  function handleCreditRating(creditRating: number) {
+    setFriends((prev) => {
+      if (selectedFriend) {
+        return prev.map((prev) => {
+          if (prev.id === selectedFriend.id) {
+            return {
+              ...prev,
+              creditRating
+            }
+          }
+
+          return prev
+        })
+      }
+
+      return prev
+    })
+  }
+
   function handleSplitBill(bill: Bill) {
     setFriends((prev) =>
       prev.map((prev) => {
@@ -89,6 +108,7 @@ function EatAndSplit() {
           <FormSplitBill
             friend={selectedFriend}
             onSplitBill={handleSplitBill}
+            onCreditRating={handleCreditRating}
           />
         )}
       </div>

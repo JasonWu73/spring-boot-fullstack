@@ -165,10 +165,10 @@ function HalfStart({ color = '#f59e0b', isFilled, size = 20 }: StarProps) {
       xmlns="http://www.w3.org/2000/svg"
       width={width}
       height={size}
-      viewBox={`0 0 ${width} 24`}
+      viewBox={`0 0 ${width + 2} 24`}
       fill={isFilled ? color : 'none'}
       stroke={color}
-      strokeWidth="2"
+      strokeWidth="1"
       strokeLinecap="round"
       strokeLinejoin="round"
       className="lucide lucide-star"
@@ -183,7 +183,7 @@ function getSizePx(size: Size) {
     case 'sm':
       return 16
     case 'lg':
-      return 24
+      return 22
     default:
       return 20
   }
