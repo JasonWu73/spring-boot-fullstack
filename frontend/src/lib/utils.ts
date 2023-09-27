@@ -14,20 +14,6 @@ function cn(...inputs: ClassValue[]): string {
 }
 
 /**
- * 检查字符串是否为数字.
- *
- * @param value - 要检查的字符串
- * @returns {boolean} - 是否为数字
- */
-function isNumeric(value: string | null | undefined): boolean {
-  if (value === null || value === undefined || value.trim() === '') {
-    return false
-  }
-
-  return Number.isFinite(Number(value))
-}
-
-/**
  * 截断字符串.
  *
  * @param str - 需要截断的字符串
@@ -42,4 +28,4 @@ function truncate(str: string, maxlength: number): string {
   return str.slice(0, maxlength - 1) + '…'
 }
 
-export { cn, isNumeric, truncate }
+export { cn, truncate }
