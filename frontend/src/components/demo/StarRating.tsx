@@ -1,52 +1,86 @@
-import { Card } from '@/components/ui/Card.tsx'
 import React, { useState } from 'react'
 import { cn } from '@/lib/utils.ts'
 
+type Size = 'default' | 'sm' | 'lg'
+
 type StarRatingProps = {
   maxRating?: number
+  color?: string
+  size?: Size
+  isShowLabel?: boolean
 }
 
-const array = [0, 0, 20, 20, 40, 40, 60, 60, 80, 80]
-
-function StarRating({ maxRating = 5 }: StarRatingProps) {
+function StarRating({
+  maxRating = 5,
+  color = '#f59e0b',
+  size = 'default',
+  isShowLabel = true
+}: StarRatingProps) {
   const [rating, setRating] = useState(0)
   const [tempRating, setTempRating] = useState(0)
+  const sizePx = getSizePx(size)
+
+  const leftPxOffsets = Array.from({ length: maxRating * 2 }, (_, i) => {
+    if (i % 2 === 0) {
+      return (i / 2) * sizePx
+    } else {
+      return (i / 2) * sizePx - sizePx / 2
+    }
+  })
 
   return (
-    <Card className="mx-auto mt-8 w-96 p-4">
-      <ul className="relative flex items-center gap-1">
-        {Array.from({ length: maxRating * 2 }, (_, i) => (
-          <li
-            key={i}
-            className="absolute"
+    <ul
+      className="relative flex items-center"
+      style={{
+        height: `${size}px`,
+        width: `${maxRating * sizePx}px`
+      }}
+    >
+      {Array.from({ length: maxRating * 2 }, (_, i) => (
+        <li
+          key={i}
+          className="absolute"
+          style={{
+            left: `${leftPxOffsets[i]}px`,
+            zIndex: i % 2 === 0 ? 10 : 0
+          }}
+        >
+          <StarBox
+            color={color}
+            size={sizePx}
+            type={i % 2 === 0 ? 'half' : 'full'}
+            isFilled={tempRating ? tempRating >= i + 1 : rating >= i + 1}
+            onRate={() => setRating(i + 1)}
+            onHoverIn={() => setTempRating(i + 1)}
+            onHoverOut={() => setTempRating(0)}
+          />
+        </li>
+      ))}
+
+      {isShowLabel && (
+        <li>
+          <span
+            className={cn({
+              'text-lg': size !== 'sm' && size !== 'lg',
+              'text-sm': size === 'sm',
+              'text-xl': size === 'lg'
+            })}
             style={{
-              left: `${array[i]}px`,
-              zIndex: i % 2 === 0 ? 10 : 0
+              marginLeft: `${leftPxOffsets[maxRating * 2 - 1] + sizePx + 6}px`,
+              color: color
             }}
           >
-            <StarBox
-              type={i % 2 === 0 ? 'half' : 'full'}
-              isFilled={rating >= i + 1 || tempRating >= i + 1}
-              onRate={() => setRating(i + 1)}
-              onHoverIn={(e) => {
-                console.log(e.target)
-                setTempRating(i + 1)
-              }}
-              // onHoverOut={() => setTempRating(0)}
-            />
-          </li>
-        ))}
-        <li>
-          <span className="ml-28 text-amber-500">
             {tempRating / 2 || rating / 2 || ''}
           </span>
         </li>
-      </ul>
-    </Card>
+      )}
+    </ul>
   )
 }
 
 type StarBoxProps = {
+  color?: string
+  size?: number
   type?: 'full' | 'half'
   isFilled?: boolean
   onRate?: () => void
@@ -55,6 +89,8 @@ type StarBoxProps = {
 }
 
 function StarBox({
+  color,
+  size,
   type = 'full',
   isFilled,
   onRate,
@@ -71,27 +107,29 @@ function StarBox({
       })}
     >
       {type === 'full' ? (
-        <FullStar isFilled={isFilled} />
+        <FullStar isFilled={isFilled} color={color} size={size} />
       ) : (
-        <HalfStart isFilled={isFilled} />
+        <HalfStart isFilled={isFilled} color={color} size={size} />
       )}
     </span>
   )
 }
 
 type StarProps = {
+  color?: string
   isFilled?: boolean
+  size?: number
 }
 
-function FullStar({ isFilled }: StarProps) {
+function FullStar({ color = '#f59e0b', isFilled, size = 20 }: StarProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="20"
-      height="20"
+      width={size}
+      height={size}
       viewBox="0 0 24 24"
-      fill={isFilled ? '#f59e0b' : 'none'}
-      stroke="#f59e0b"
+      fill={isFilled ? color : 'none'}
+      stroke={color}
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -102,23 +140,36 @@ function FullStar({ isFilled }: StarProps) {
   )
 }
 
-function HalfStart({ isFilled }: StarProps) {
+function HalfStart({ color = '#f59e0b', isFilled, size = 20 }: StarProps) {
+  const width = size / 2
+
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="10"
-      height="20"
-      viewBox="0 0 12 24"
-      fill={isFilled ? '#f59e0b' : 'none'}
-      stroke="#f59e0b"
+      width={width}
+      height={size}
+      viewBox={`0 0 ${width} 24`}
+      fill={isFilled ? color : 'none'}
+      stroke={color}
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="lucide lucide-star-half"
+      className="lucide lucide-star"
     >
       <path d="M12 17.8 5.8 21 7 14.1 2 9.3l7-1L12 2" />
     </svg>
   )
+}
+
+function getSizePx(size: Size) {
+  switch (size) {
+    case 'sm':
+      return 16
+    case 'lg':
+      return 24
+    default:
+      return 20
+  }
 }
 
 export { StarRating }
