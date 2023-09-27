@@ -39,7 +39,8 @@ function FormAddFriend({ onAddFriend }: FormAddFriendProps) {
       id: newFriendId,
       name: name,
       image: `${image}?u=${newFriendId}`,
-      balance: 0
+      balance: 0,
+      creditRating: 0
     }
 
     onAddFriend(newFriend)

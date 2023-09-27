@@ -134,10 +134,10 @@ function FormSplitBill({
         </CardDescription>
 
         <StarRating
-          size="lg"
           key={friend.id} // 为了避免共用组件 (在未关闭表单组件前)
           defaultRating={friend.creditRating}
           onRate={(rating) => onCreditRating(rating)}
+          size="lg"
         />
       </CardHeader>
 
