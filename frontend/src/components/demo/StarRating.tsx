@@ -5,18 +5,22 @@ type Size = 'default' | 'sm' | 'lg'
 
 type StarRatingProps = {
   maxRating?: number
+  defaultRating?: number
   color?: string
   size?: Size
   isShowLabel?: boolean
+  className?: string
 }
 
 function StarRating({
   maxRating = 5,
+  defaultRating = 0,
   color = '#f59e0b',
   size = 'default',
-  isShowLabel = true
+  isShowLabel = true,
+  className
 }: StarRatingProps) {
-  const [rating, setRating] = useState(0)
+  const [rating, setRating] = useState(defaultRating / 0.5)
   const [tempRating, setTempRating] = useState(0)
   const sizePx = getSizePx(size)
 
@@ -30,7 +34,7 @@ function StarRating({
 
   return (
     <ul
-      className="relative flex items-center"
+      className={cn('relative flex items-center', className)}
       style={{
         height: `${size}px`,
         width: `${maxRating * sizePx}px`
