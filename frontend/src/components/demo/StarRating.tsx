@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils.ts'
 type Size = 'default' | 'sm' | 'lg'
 
 type StarRatingProps = {
+  onRate: (rate: number) => void
   maxRating?: number
   defaultRating?: number
   color?: string
@@ -13,6 +14,7 @@ type StarRatingProps = {
 }
 
 function StarRating({
+  onRate,
   maxRating = 5,
   defaultRating = 0,
   color = '#f59e0b',
@@ -31,6 +33,11 @@ function StarRating({
       return (i / 2) * sizePx - sizePx / 2
     }
   })
+
+  function handleRate(rate: number) {
+    setRating(rate)
+    onRate(rate)
+  }
 
   return (
     <ul
@@ -55,13 +62,13 @@ function StarRating({
             type={i % 2 === 0 ? 'half' : 'full'}
             isFilled={
               tempRating
-                ? tempRating >= i + 1
+                ? tempRating * 2 >= i + 1
                 : rating
-                ? rating >= i + 1
+                ? rating * 2 >= i + 1
                 : defaultRating / 0.5 >= i + 1
             }
-            onRate={() => setRating(i + 1)}
-            onHoverIn={() => setTempRating(i + 1)}
+            onRate={() => handleRate((i + 1) / 2)}
+            onHoverIn={() => setTempRating((i + 1) / 2)}
             onHoverOut={() => setTempRating(0)}
           />
         </li>
@@ -80,7 +87,7 @@ function StarRating({
               color: color
             }}
           >
-            {tempRating / 2 || rating / 2 || defaultRating || ''}
+            {tempRating || rating || defaultRating || ''}
           </span>
         </li>
       )}
