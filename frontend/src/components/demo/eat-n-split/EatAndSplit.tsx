@@ -123,6 +123,7 @@ function EatAndSplit() {
       <div className="md:col-start-2 md:col-end-3 md:row-span-1">
         {selectedFriend && (
           <FormSplitBill
+            key={selectedFriend.id}
             friend={selectedFriend}
             onSplitBill={handleSplitBill}
             onCreditRating={handleCreditRating}
