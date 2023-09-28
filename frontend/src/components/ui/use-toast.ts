@@ -1,6 +1,6 @@
 // Inspired by react-hot-toast library
 import React, { useEffect, useState } from 'react'
-import type { ToastActionElement, ToastProps } from '@/components/ui/Toast.tsx'
+import type { ToastActionElement, ToastProps } from '@/components/ui/Toast'
 
 // To display multiple toasts at the same time, you can update the TOAST_LIMIT
 const TOAST_LIMIT = 1

@@ -1,6 +1,6 @@
 import React, { forwardRef } from 'react'
 import { cn } from '@/lib/utils'
-import { inputErrorClasses } from '@/components/ui/form.ts'
+import { inputErrorClasses } from '@/components/ui/form-utils'
 
 type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
   isError?: boolean

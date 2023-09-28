@@ -1,16 +1,30 @@
 import {
   type Bill,
   FormSplitBill
-} from '@/components/demo/eat-n-split/FormSplitBill.tsx'
-import { useState } from 'react'
-import { Button } from '@/components/ui/Button.tsx'
-import { useToast } from '@/components/ui/use-toast.ts'
+} from '@/components/demo/eat-n-split/FormSplitBill'
+import { lazy, Suspense, useState } from 'react'
+import { Button } from '@/components/ui/Button'
+import { useToast } from '@/components/ui/use-toast'
 import {
   type Friend,
   initialFriends
-} from '@/components/demo/eat-n-split/friend-data.ts'
-import { FriendList } from '@/components/demo/eat-n-split/FriendList.tsx'
-import { FormAddFriend } from '@/components/demo/eat-n-split/FormAddFriend.tsx'
+} from '@/components/demo/eat-n-split/friend-data'
+import { FriendList } from '@/components/demo/eat-n-split/FriendList'
+
+// ----- Start: 测试懒加载 (React Split Code 技术) -----
+const FormAddFriend = lazy(() =>
+  wait(1).then(() =>
+    import('@/components/demo/eat-n-split/FormAddFriend').then((module) => ({
+      default: module.FormAddFriend
+    }))
+  )
+)
+
+function wait(seconds: number) {
+  return new Promise((resolve) => setTimeout(resolve, seconds * 1000))
+}
+
+// ----- End: 测试懒加载 (React Split Code 技术) -----
 
 function EatAndSplit() {
   const [friends, setFriends] = useState(initialFriends)
@@ -94,7 +108,9 @@ function EatAndSplit() {
       </div>
 
       <div className="flex flex-col gap-6 self-start md:col-span-1 md:row-start-2 md:row-end-3 md:justify-self-end">
-        {showAddFriend && <FormAddFriend onAddFriend={handleAddFriend} />}
+        <Suspense fallback={<div>Loading...</div>}>
+          {showAddFriend && <FormAddFriend onAddFriend={handleAddFriend} />}
+        </Suspense>
 
         <div className="self-end">
           <Button onClick={handleToggleForm}>

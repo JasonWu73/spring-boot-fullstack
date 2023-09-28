@@ -9,12 +9,12 @@ import {
   FormProvider
 } from 'react-hook-form'
 import { cn } from '@/lib/utils'
-import { Label } from '@/components/ui/Label.tsx'
+import { Label } from '@/components/ui/Label'
 import {
   FormFieldContext,
   FormItemContext,
   useFormField
-} from '@/components/ui/form.ts'
+} from '@/components/ui/form-utils'
 
 /**
  * {@link https://ui.shadcn.com/docs/components/form|React Hook Form - shadcn/ui}

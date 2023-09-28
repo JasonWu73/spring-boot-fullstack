@@ -1,11 +1,11 @@
-import { Separator } from '@/components/ui/Separator.tsx'
-import { ScrollArea } from '@/components/ui/ScrollArea.tsx'
+import { Separator } from '@/components/ui/Separator'
+import { ScrollArea } from '@/components/ui/ScrollArea'
 import React from 'react'
-import { Card } from '@/components/ui/Card.tsx'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/Alert.tsx'
+import { Card } from '@/components/ui/Card'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/Alert'
 import { RocketIcon } from '@radix-ui/react-icons'
-import { Friend } from '@/components/demo/eat-n-split/friend-data.ts'
-import { FriendItem } from '@/components/demo/eat-n-split/FriendItem.tsx'
+import { Friend } from '@/components/demo/eat-n-split/friend-data'
+import { FriendItem } from '@/components/demo/eat-n-split/FriendItem'
 
 type FriendListProps = {
   friends: Friend[]

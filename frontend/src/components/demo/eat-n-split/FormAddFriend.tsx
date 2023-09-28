@@ -1,16 +1,11 @@
-import { Button } from '@/components/ui/Button.tsx'
+import { Button } from '@/components/ui/Button'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Form } from '@/components/ui/Form.tsx'
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/Card.tsx'
-import { type Friend } from '@/components/demo/eat-n-split/friend-data.ts'
-import { FormInput } from '@/components/ui/CustomFormField.tsx'
+import { Form } from '@/components/ui/Form'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
+import { type Friend } from '@/components/demo/eat-n-split/friend-data'
+import { FormInput } from '@/components/ui/CustomFormField'
 
 const formSchema = z.object({
   name: z.string().trim().nonempty('Must enter a name'),

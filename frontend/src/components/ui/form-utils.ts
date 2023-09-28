@@ -51,9 +51,9 @@ function useFormField() {
  * 自定义的错误边框样式.
  *
  * @param isError - 是否为错误状态
- * @returns {Record<string, boolean>} - 错误边框样式类对象, 用于 `cn` 函数
+ * @returns - 错误边框样式类对象, 用于 `cn` 函数
  */
-function inputErrorClasses(isError: boolean): Record<string, boolean> {
+function inputErrorClasses(isError: boolean) {
   return {
     'border-slate-200 dark:border-slate-800 focus-visible:ring-slate-950 dark:focus-visible:ring-slate-300':
       !isError,

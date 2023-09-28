@@ -1,13 +1,13 @@
-import { Friend } from '@/components/demo/eat-n-split/friend-data.ts'
-import { cn, truncate } from '@/lib/utils.ts'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar.tsx'
+import { Friend } from '@/components/demo/eat-n-split/friend-data'
+import { cn, truncate } from '@/lib/utils'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar'
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger
-} from '@/components/ui/tooltip.tsx'
-import { Button } from '@/components/ui/Button.tsx'
+} from '@/components/ui/tooltip'
+import { Button } from '@/components/ui/Button'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -18,7 +18,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger
-} from '@/components/ui/AlertDialog.tsx'
+} from '@/components/ui/AlertDialog'
 
 type FriendItemProps = {
   friend: Friend

@@ -1,7 +1,7 @@
 import React, { forwardRef } from 'react'
 import * as AlertDialogPrimitive from '@radix-ui/react-alert-dialog'
 import { cn } from '@/lib/utils'
-import { buttonVariants } from '@/components/ui/Button'
+import { buttonVariants } from '@/components/ui/button-utils'
 
 /**
  * {@link https://ui.shadcn.com/docs/components/alert-dialog|Alert Dialog - shadcn/ui}

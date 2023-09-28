@@ -1,8 +1,8 @@
-import { getRandomProduct, type Product } from '@/api/dummyjson/product.ts'
+import { getRandomProduct, type Product } from '@/api/dummyjson/product'
 import { useEffect, useReducer } from 'react'
 import { ReloadIcon } from '@radix-ui/react-icons'
-import { Button } from '@/components/ui/Button.tsx'
-import { cn } from '@/lib/utils.ts'
+import { Button } from '@/components/ui/Button'
+import { cn } from '@/lib/utils'
 
 function ProductShowcase() {
   const { isLoading, error, product, count, getProduct } = useProduct()

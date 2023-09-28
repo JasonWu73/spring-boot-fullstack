@@ -5,8 +5,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage
-} from '@/components/ui/Form.tsx'
-import { Input } from '@/components/ui/Input.tsx'
+} from '@/components/ui/Form'
+import { Input } from '@/components/ui/Input'
 import { HTMLInputTypeAttribute } from 'react'
 import {
   Select,
@@ -14,7 +14,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue
-} from '@/components/ui/Select.tsx'
+} from '@/components/ui/Select'
 
 type FormInputProps<T extends FieldValues> = {
   control: Control<T>

@@ -2,7 +2,7 @@ import React, { forwardRef } from 'react'
 import { Slot } from '@radix-ui/react-slot'
 import { type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
-import { buttonVariants } from '@/components/ui/button.ts'
+import { buttonVariants } from '@/components/ui/button-utils'
 
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> &
   VariantProps<typeof buttonVariants> & {

@@ -1,14 +1,14 @@
-import { ThemeProvider } from '@/components/ui/ThemeProvider.tsx'
-import { Toaster } from '@/components/ui/Toaster.tsx'
-import { NavBar } from '@/NavBar.tsx'
-import Draft from '@/components/demo/draft/Draft.tsx'
+import { ThemeProvider } from '@/components/ui/ThemeProvider'
+import { Toaster } from '@/components/ui/Toaster'
+import { NavBar } from '@/components/NavBar.tsx'
+import { EatAndSplit } from '@/components/demo/eat-n-split/EatAndSplit'
 
 export default function App() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <NavBar />
 
-      <Draft />
+      <EatAndSplit />
 
       <Toaster />
     </ThemeProvider>

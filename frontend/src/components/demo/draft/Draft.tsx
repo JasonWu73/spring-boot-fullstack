@@ -1,16 +1,6 @@
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger
-} from '@/components/ui/Tabs.tsx'
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardTitle
-} from '@/components/ui/Card.tsx'
-import { Button } from '@/components/ui/Button.tsx'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs'
+import { Card, CardContent, CardFooter, CardTitle } from '@/components/ui/Card'
+import { Button } from '@/components/ui/Button'
 import { useState } from 'react'
 
 const list = [

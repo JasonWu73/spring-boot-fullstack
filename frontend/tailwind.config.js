@@ -1,6 +1,6 @@
-/** @type {import('tailwindcss').Config} */
 import animatePlugin from 'tailwindcss-animate'
 
+/** @type {import('tailwindcss').Config} */
 export default {
   darkMode: ['class'], // 启用暗色模式
   content: [

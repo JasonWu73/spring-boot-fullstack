@@ -1,8 +1,8 @@
-import { Button } from '@/components/ui/Button.tsx'
+import { Button } from '@/components/ui/Button'
 import { z } from 'zod'
 import { useForm, type UseFormReturn } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Form } from '@/components/ui/Form.tsx'
+import { Form } from '@/components/ui/Form'
 import { useEffect } from 'react'
 import {
   Card,
@@ -10,16 +10,16 @@ import {
   CardDescription,
   CardHeader,
   CardTitle
-} from '@/components/ui/Card.tsx'
+} from '@/components/ui/Card'
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger
-} from '@/components/ui/tooltip.tsx'
-import { Friend } from '@/components/demo/eat-n-split/friend-data.ts'
-import { FormInput, FormSelect } from '@/components/ui/CustomFormField.tsx'
-import { StarRating } from '@/components/ui/StarRating.tsx'
+} from '@/components/ui/tooltip'
+import { Friend } from '@/components/demo/eat-n-split/friend-data'
+import { FormInput, FormSelect } from '@/components/ui/CustomFormField'
+import { StarRating } from '@/components/ui/StarRating'
 
 const whoIsPayingOptions = [
   { value: 'user', label: 'You' },
