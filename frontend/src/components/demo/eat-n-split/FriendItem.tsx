@@ -76,7 +76,7 @@ function FriendItem({
       </div>
 
       <Button onClick={() => onSelectFriend(friend)}>
-        {isSelected ? 'Deselect' : 'Select'}
+        {isSelected ? 'Close' : 'Select'}
       </Button>
     </li>
   )
