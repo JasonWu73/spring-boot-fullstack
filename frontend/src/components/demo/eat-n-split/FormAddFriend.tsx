@@ -44,7 +44,7 @@ function FormAddFriend({ onAddFriend }: FormAddFriendProps) {
   }
 
   return (
-    <Card className="bg-amber-100 text-slate-700 dark:bg-amber-100 dark:text-slate-700 md:w-[22rem] lg:w-[30rem]">
+    <Card className="w-96 bg-amber-100 text-slate-700 dark:bg-amber-100 dark:text-slate-700 md:w-[22rem] lg:w-[30rem]">
       <CardHeader>
         <CardTitle>Add a friend</CardTitle>
       </CardHeader>
