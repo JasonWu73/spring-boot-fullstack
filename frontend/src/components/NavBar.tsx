@@ -1,5 +1,5 @@
 import reactLogo from '@/assets/react.svg'
-import { ModeToggle } from '@/components/ui/ModeToggle.tsx'
+import { ModeToggle } from '@/components/ui/ModeToggle'
 
 function NavBar() {
   return (

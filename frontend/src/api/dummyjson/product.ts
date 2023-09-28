@@ -1,4 +1,4 @@
-import { sendRequest } from '@/lib/http.ts'
+import { sendRequest } from '@/lib/http'
 
 type ApiError = {
   message: string

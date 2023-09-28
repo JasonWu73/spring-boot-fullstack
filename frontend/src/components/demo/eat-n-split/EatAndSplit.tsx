@@ -10,10 +10,11 @@ import {
   initialFriends
 } from '@/components/demo/eat-n-split/friend-data'
 import { FriendList } from '@/components/demo/eat-n-split/FriendList'
+import { Loading } from '@/components/ui/Loading'
 
 // ----- Start: 测试懒加载 (React Split Code 技术) -----
 const FormAddFriend = lazy(() =>
-  wait(1).then(() =>
+  wait(5).then(() =>
     import('@/components/demo/eat-n-split/FormAddFriend').then((module) => ({
       default: module.FormAddFriend
     }))
@@ -108,7 +109,7 @@ function EatAndSplit() {
       </div>
 
       <div className="flex flex-col gap-6 self-start md:col-span-1 md:row-start-2 md:row-end-3 md:justify-self-end">
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<Loading />}>
           {showAddFriend && <FormAddFriend onAddFriend={handleAddFriend} />}
         </Suspense>
 
