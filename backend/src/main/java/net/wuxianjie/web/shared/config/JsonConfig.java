@@ -51,8 +51,10 @@ public class JsonConfig {
       @Override
       public LocalDateTime deserialize(JsonParser p, DeserializationContext ctxt)
           throws IOException {
-        return LocalDateTime.parse(p.getValueAsString(),
-            DateTimeFormatter.ofPattern(DATE_TIME_PATTERN));
+        return LocalDateTime.parse(
+            p.getValueAsString(),
+            DateTimeFormatter.ofPattern(DATE_TIME_PATTERN)
+        );
       }
     });
 

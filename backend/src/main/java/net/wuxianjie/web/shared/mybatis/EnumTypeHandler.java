@@ -23,8 +23,11 @@ public class EnumTypeHandler<E extends Enum<?> & EnumType> extends BaseTypeHandl
   private Class<E> enumType;
 
   @Override
-  public void setNonNullParameter(PreparedStatement ps, int i, EnumType parameter,
-      JdbcType jdbcType) throws SQLException {
+  public void setNonNullParameter(
+      PreparedStatement ps,
+      int i, EnumType parameter,
+      JdbcType jdbcType
+  ) throws SQLException {
     ps.setInt(i, parameter.getCode());
   }
 
