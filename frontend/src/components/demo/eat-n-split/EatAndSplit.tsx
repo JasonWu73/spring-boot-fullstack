@@ -2,7 +2,7 @@ import {
   type Bill,
   FormSplitBill
 } from '@/components/demo/eat-n-split/FormSplitBill'
-import { lazy, Suspense, useState } from 'react'
+import React, { lazy, Suspense, useEffect, useState } from 'react'
 import { Button } from '@/components/ui/Button'
 import { useToast } from '@/components/ui/use-toast'
 import {
@@ -35,6 +35,8 @@ function EatAndSplit() {
   const [showAddFriend, setShowAddFriend] = useState(false)
   const [selectedFriend, setSelectedFriend] = useState<Friend | null>(null)
   const { toast } = useToast()
+
+  useExit(setShowAddFriend, setSelectedFriend)
 
   function handleAddFriend(friend: Friend) {
     setFriends((prev) => [...prev, friend])
@@ -133,6 +135,26 @@ function EatAndSplit() {
       </div>
     </div>
   )
+}
+
+function useExit(
+  setShowAddFriend: React.Dispatch<React.SetStateAction<boolean>>,
+  setSelectedFriend: React.Dispatch<React.SetStateAction<Friend | null>>
+) {
+  useEffect(() => {
+    function handleExit(event: KeyboardEvent) {
+      if (event.key === 'Escape') {
+        setShowAddFriend(false)
+        setSelectedFriend(null)
+      }
+    }
+
+    document.addEventListener('keydown', handleExit)
+
+    return () => {
+      document.removeEventListener('keydown', handleExit)
+    }
+  }, [setShowAddFriend, setSelectedFriend])
 }
 
 export { EatAndSplit }
