@@ -11,6 +11,7 @@ import {
 } from '@/components/demo/eat-n-split/friend-data'
 import { FriendList } from '@/components/demo/eat-n-split/FriendList'
 import { Loading } from '@/components/ui/Loading'
+import { useTitle } from '@/lib/hooks'
 
 // ----- Start: 测试懒加载 (React Split Code 技术) -----
 const FormAddFriend = lazy(() =>
@@ -28,12 +29,12 @@ function wait(seconds: number) {
 // ----- End: 测试懒加载 (React Split Code 技术) -----
 
 function EatAndSplit() {
+  useTitle('Eat & Split')
+
   const [friends, setFriends] = useState(initialFriends)
   const [showAddFriend, setShowAddFriend] = useState(false)
   const [selectedFriend, setSelectedFriend] = useState<Friend | null>(null)
   const { toast } = useToast()
-
-  document.title = 'Eat & Split'
 
   function handleAddFriend(friend: Friend) {
     setFriends((prev) => [...prev, friend])

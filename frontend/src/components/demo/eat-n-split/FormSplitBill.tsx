@@ -20,6 +20,7 @@ import {
 import { Friend } from '@/components/demo/eat-n-split/friend-data'
 import { FormInput, FormSelect } from '@/components/ui/CustomFormField'
 import { StarRating } from '@/components/ui/StarRating'
+import { useTitle } from '@/lib/hooks'
 
 const whoIsPayingOptions = [
   { value: 'user', label: 'You' },
@@ -90,6 +91,8 @@ function FormSplitBill({
   onSplitBill,
   onCreditRating
 }: FormSplitBillProps) {
+  useTitle(`Split bill | ${friend.name}`)
+
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {

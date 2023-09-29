@@ -6,6 +6,7 @@ import { Form } from '@/components/ui/Form'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { type Friend } from '@/components/demo/eat-n-split/friend-data'
 import { FormInput } from '@/components/ui/CustomFormField'
+import { useTitle } from '@/lib/hooks'
 
 const formSchema = z.object({
   name: z.string().trim().nonempty('Must enter a name'),
@@ -19,6 +20,8 @@ type FormAddFriendProps = {
 }
 
 function FormAddFriend({ onAddFriend }: FormAddFriendProps) {
+  useTitle('Add a friend')
+
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
