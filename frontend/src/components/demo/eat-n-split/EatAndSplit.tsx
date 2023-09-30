@@ -31,12 +31,14 @@ function wait(seconds: number) {
 function EatAndSplit() {
   useTitle('Eat & Split')
 
-  const [friends, setFriends] = useState(initialFriends)
+  const [friends, setFriends] = useState<Friend[]>(initFriends)
   const [showAddFriend, setShowAddFriend] = useState(false)
   const [selectedFriend, setSelectedFriend] = useState<Friend | null>(null)
   const { toast } = useToast()
 
   useExit(setShowAddFriend, setSelectedFriend)
+
+  useStorage(friends)
 
   function handleAddFriend(friend: Friend) {
     setFriends((prev) => [...prev, friend])
@@ -155,6 +157,23 @@ function useExit(
       document.removeEventListener('keydown', handleExit)
     }
   }, [setShowAddFriend, setSelectedFriend])
+}
+
+function initFriends() {
+  const val = localStorage.getItem('friends')
+
+  if (!val) {
+    localStorage.setItem('friends', JSON.stringify(initialFriends))
+    return initialFriends
+  }
+
+  return JSON.parse(val)
+}
+
+function useStorage(friends: Friend[]) {
+  useEffect(() => {
+    localStorage.setItem('friends', JSON.stringify(friends))
+  }, [friends])
 }
 
 export { EatAndSplit }
