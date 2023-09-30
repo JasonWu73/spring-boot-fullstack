@@ -7,7 +7,7 @@ import {
   FormMessage
 } from '@/components/ui/Form'
 import { Input } from '@/components/ui/Input'
-import { HTMLInputTypeAttribute } from 'react'
+import React, { HTMLInputTypeAttribute } from 'react'
 import {
   Select,
   SelectContent,
@@ -25,6 +25,7 @@ type FormInputProps<T extends FieldValues> = {
   placeholder?: string
   disabled?: boolean
   isError?: boolean
+  inputRef?: React.MutableRefObject<HTMLInputElement | null>
 }
 
 function FormInput<T extends FieldValues>({
@@ -35,7 +36,8 @@ function FormInput<T extends FieldValues>({
   type = 'text',
   placeholder,
   disabled,
-  isError
+  isError,
+  inputRef
 }: FormInputProps<T>) {
   return (
     <FormField
@@ -57,6 +59,10 @@ function FormInput<T extends FieldValues>({
               {...field}
               disabled={disabled}
               isError={isError}
+              ref={(ref) => {
+                field.ref(ref)
+                inputRef && (inputRef.current = ref)
+              }}
             />
           </FormControl>
 

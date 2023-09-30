@@ -2,7 +2,7 @@ import {
   type Bill,
   FormSplitBill
 } from '@/components/demo/eat-n-split/FormSplitBill'
-import React, { lazy, Suspense, useEffect, useState } from 'react'
+import React, { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import { Button } from '@/components/ui/Button'
 import { useToast } from '@/components/ui/use-toast'
 import {
@@ -12,10 +12,11 @@ import {
 import { FriendList } from '@/components/demo/eat-n-split/FriendList'
 import { Loading } from '@/components/ui/Loading'
 import { useTitle } from '@/lib/hooks'
+import { Input } from '@/components/ui/Input'
 
 // ----- Start: 测试懒加载 (React Split Code 技术) -----
 const FormAddFriend = lazy(() =>
-  wait(5).then(() =>
+  wait(3).then(() =>
     import('@/components/demo/eat-n-split/FormAddFriend').then((module) => ({
       default: module.FormAddFriend
     }))
@@ -34,11 +35,14 @@ function EatAndSplit() {
   const [friends, setFriends] = useState<Friend[]>(initFriends)
   const [showAddFriend, setShowAddFriend] = useState(false)
   const [selectedFriend, setSelectedFriend] = useState<Friend | null>(null)
+  const [search, setSearch] = useState('')
   const { toast } = useToast()
 
   useExit(setShowAddFriend, setSelectedFriend)
 
   useStorage(friends)
+
+  const searchRef = useSearchEnter(setSearch)
 
   function handleAddFriend(friend: Friend) {
     setFriends((prev) => [...prev, friend])
@@ -102,11 +106,27 @@ function EatAndSplit() {
     setSelectedFriend(null)
   }
 
+  function handleSearch(event: React.ChangeEvent<HTMLInputElement>) {
+    setSearch(event.target.value)
+    setShowAddFriend(false)
+    setSelectedFriend(null)
+  }
+
   return (
     <div className="grid grid-flow-row items-center justify-center gap-6 p-4 md:mt-6 md:grid-cols-2 md:grid-rows-2">
       <div className="md:col-span-1 md:row-span-1 md:justify-self-end">
+        <Input
+          value={search}
+          onChange={handleSearch}
+          ref={searchRef}
+          placeholder="Search friend"
+          className="mb-4 dark:border-amber-500"
+        />
+
         <FriendList
-          friends={friends}
+          friends={friends.filter((friend) =>
+            friend.name.toLowerCase().includes(search.toLowerCase())
+          )}
           selectedFriend={selectedFriend}
           onSelectFriend={handleSelectFriend}
           onDeleteFriend={handleDeleteFriend}
@@ -174,6 +194,35 @@ function useStorage(friends: Friend[]) {
   useEffect(() => {
     localStorage.setItem('friends', JSON.stringify(friends))
   }, [friends])
+}
+
+function useSearchEnter(
+  setSearch: React.Dispatch<React.SetStateAction<string>>
+) {
+  const inputRef = useRef<HTMLInputElement | null>(null)
+
+  useEffect(() => {
+    function handleEnter(event: KeyboardEvent) {
+      if (document.activeElement === inputRef.current) {
+        return
+      }
+
+      if (event.code !== 'Enter') {
+        return
+      }
+
+      inputRef.current && inputRef.current.focus()
+      setSearch('')
+    }
+
+    document.addEventListener('keydown', handleEnter)
+
+    return () => {
+      document.removeEventListener('keydown', handleEnter)
+    }
+  }, [setSearch])
+
+  return inputRef
 }
 
 export { EatAndSplit }
