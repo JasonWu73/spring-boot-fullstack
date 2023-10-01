@@ -42,7 +42,11 @@ function EatAndSplit() {
 
   useStorage(friends)
 
-  const searchRef = useSearchEnter(setSearch)
+  const searchRef = useSearchEnter(
+    setSearch,
+    setShowAddFriend,
+    setSelectedFriend
+  )
 
   function handleAddFriend(friend: Friend) {
     setFriends((prev) => [...prev, friend])
@@ -108,8 +112,6 @@ function EatAndSplit() {
 
   function handleSearch(event: React.ChangeEvent<HTMLInputElement>) {
     setSearch(event.target.value)
-    setShowAddFriend(false)
-    setSelectedFriend(null)
   }
 
   return (
@@ -197,7 +199,9 @@ function useStorage(friends: Friend[]) {
 }
 
 function useSearchEnter(
-  setSearch: React.Dispatch<React.SetStateAction<string>>
+  setSearch: React.Dispatch<React.SetStateAction<string>>,
+  setShowAddFriend: React.Dispatch<React.SetStateAction<boolean>>,
+  setSelectedFriend: React.Dispatch<React.SetStateAction<Friend | null>>
 ) {
   const inputRef = useRef<HTMLInputElement | null>(null)
 
@@ -213,6 +217,8 @@ function useSearchEnter(
 
       inputRef.current && inputRef.current.focus()
       setSearch('')
+      setShowAddFriend(false)
+      setSelectedFriend(null)
     }
 
     document.addEventListener('keydown', handleEnter)
@@ -220,7 +226,7 @@ function useSearchEnter(
     return () => {
       document.removeEventListener('keydown', handleEnter)
     }
-  }, [setSearch])
+  }, [setSearch, setShowAddFriend, setSelectedFriend])
 
   return inputRef
 }
