@@ -1,14 +1,14 @@
 import { ThemeProvider } from '@/components/ui/ThemeProvider'
 import { Toaster } from '@/components/ui/Toaster'
 import { NavBar } from '@/components/NavBar'
-import { ProductShowcase } from '@/components/demo/ProductShowcase'
+import { EatAndSplit } from '@/components/demo/eat-n-split/EatAndSplit'
 
 export default function App() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <NavBar />
 
-      <ProductShowcase />
+      <EatAndSplit />
 
       <Toaster />
     </ThemeProvider>

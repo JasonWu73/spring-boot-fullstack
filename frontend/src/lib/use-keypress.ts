@@ -11,7 +11,6 @@ function useKeypress({ key, modifiers = [] }: Keypress, callback: () => void) {
   useEffect(
     () => {
       function handleKeydown(event: KeyboardEvent) {
-        console.log(event.key)
         if (
           event.key?.toLowerCase() === key.toLowerCase() &&
           modifiers.every((modifier) => event[modifier])
@@ -27,7 +26,7 @@ function useKeypress({ key, modifiers = [] }: Keypress, callback: () => void) {
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [key, JSON.stringify(modifiers), callback]
+    []
   )
 }
 
