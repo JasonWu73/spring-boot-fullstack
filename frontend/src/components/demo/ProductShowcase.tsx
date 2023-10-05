@@ -1,5 +1,5 @@
 import { getRandomProduct, type Product } from '@/api/dummyjson/product'
-import { useCallback, useState } from 'react'
+import { useState } from 'react'
 import { ReloadIcon } from '@radix-ui/react-icons'
 import { Button } from '@/components/ui/Button'
 import { cn } from '@/lib/utils'
@@ -13,17 +13,15 @@ function ProductShowcase() {
     error,
     loading,
     fetchData: getProduct
-  } = useFetch<Product>(
-    useCallback(async (signal?: AbortSignal) => {
-      const response = await getRandomProduct(signal)
+  } = useFetch<Product>(async (signal?: AbortSignal) => {
+    const response = await getRandomProduct(signal)
 
-      if (!response.error && response.data) {
-        setCount((prev) => prev + 1)
-      }
+    if (!response.error && response.data) {
+      setCount((prev) => prev + 1)
+    }
 
-      return response
-    }, [])
-  )
+    return response
+  })
 
   function getProductContent() {
     if (loading) {

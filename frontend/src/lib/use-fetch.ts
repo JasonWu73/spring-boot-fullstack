@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 type ApiResponse<T> = {
   data: T | null
@@ -20,36 +20,37 @@ function useFetch<T>(
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
-  const fetchData = useCallback(
-    async (controller?: AbortController) => {
-      setError('')
-      setLoading(true)
+  useEffect(
+    () => {
+      const controller = new AbortController()
 
-      const { data: responseData, error: responseError } = await callback(
-        controller?.signal
-      )
+      fetchData(controller).then()
 
-      setLoading(false)
-
-      if (responseError) {
-        setError(responseError)
-        return
+      return () => {
+        controller.abort()
       }
-
-      setData(responseData)
     },
-    [callback]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
   )
 
-  useEffect(() => {
-    const controller = new AbortController()
+  async function fetchData(controller?: AbortController) {
+    setError('')
+    setLoading(true)
 
-    fetchData(controller).then()
+    const { data: responseData, error: responseError } = await callback(
+      controller?.signal
+    )
 
-    return () => {
-      controller.abort()
+    setLoading(false)
+
+    if (responseError) {
+      setError(responseError)
+      return
     }
-  }, [fetchData])
+
+    setData(responseData)
+  }
 
   return { data, error, loading, fetchData }
 }
