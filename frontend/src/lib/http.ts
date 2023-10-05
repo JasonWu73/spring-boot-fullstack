@@ -1,13 +1,14 @@
 type ContentType = 'JSON' | 'FORM' | 'FILE'
 
 type UrlData = Record<string, string | number | boolean>
+type BodyData = Record<string, unknown> | FormData
 
 type Request = {
   url: string
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE'
   contentType?: ContentType
   urlData?: UrlData
-  bodyData?: Record<string, unknown> | UrlData | FormData
+  bodyData?: BodyData
   signal?: AbortSignal
 }
 
@@ -61,18 +62,17 @@ async function sendRequest<T, E>({
     // 以 JSON 数据格式解析请求
     const responseData = await response.json()
 
-    // 请求失败时，返回异常响应数据
+    // 请求失败时, 返回异常响应数据
     if (!response.ok) {
       return { data: null, error: responseData }
     }
 
-    // 请求成功时，返回正常响应数据
+    // 请求成功时, 返回正常响应数据
     return { data: responseData, error: null }
   } catch (error) {
-    // 处理因主动取消请求而产生的非程序异常
+    // 忽略因主动取消请求而产生的非程序异常
     if (error instanceof Error && error.name === 'AbortError') {
-      // 忽略已经取消的请求, 直接返回空值
-      console.log(`${error.message} [${method.toUpperCase()} ${url}]`)
+      console.log(`${error.message} [${method} ${url}]`)
       return { data: null, error: null }
     }
 

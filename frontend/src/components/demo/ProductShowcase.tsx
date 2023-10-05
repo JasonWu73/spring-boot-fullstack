@@ -1,14 +1,32 @@
 import { getRandomProduct, type Product } from '@/api/dummyjson/product'
-import { useEffect, useReducer } from 'react'
+import { useCallback, useState } from 'react'
 import { ReloadIcon } from '@radix-ui/react-icons'
 import { Button } from '@/components/ui/Button'
 import { cn } from '@/lib/utils'
+import { useFetch } from '@/lib/use-fetch'
 
 function ProductShowcase() {
-  const { isLoading, error, product, count, getProduct } = useProduct()
+  const [count, setCount] = useState(0)
+
+  const {
+    data: product,
+    error,
+    loading,
+    fetchData: getProduct
+  } = useFetch<Product>(
+    useCallback(async (signal?: AbortSignal) => {
+      const response = await getRandomProduct(signal)
+
+      if (!response.error && response.data) {
+        setCount((prev) => prev + 1)
+      }
+
+      return response
+    }, [])
+  )
 
   function getProductContent() {
-    if (isLoading) {
+    if (loading) {
       return <Title label="加载中..." />
     }
 
@@ -32,14 +50,10 @@ function ProductShowcase() {
 
   return (
     <div className="mx-8 mt-8 rounded border p-4 shadow-sm">
-      {getProductContent()}
+      <div className="h-36 w-full">{getProductContent()}</div>
 
-      <Button
-        onClick={() => getProduct()}
-        className="my-4"
-        disabled={isLoading}
-      >
-        {isLoading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
+      <Button onClick={() => getProduct()} className="my-4" disabled={loading}>
+        {loading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
         获取商品
       </Button>
 
@@ -62,7 +76,7 @@ function Title({ label, isError = false }: TitleProps) {
 }
 
 type MessageProps = {
-  count: State['count']
+  count: number
 }
 
 function Message({ count }: MessageProps) {
@@ -71,77 +85,6 @@ function Message({ count }: MessageProps) {
       已加载 <strong>{count}</strong> 个商品
     </p>
   )
-}
-
-type State = {
-  isLoading: boolean
-  error: string
-  product: Product | null
-  count: number
-}
-
-type Action =
-  | { type: 'startLoading' }
-  | { type: 'endLoading' }
-  | { type: 'setError'; payload: string }
-  | { type: 'setProduct'; payload: Product }
-
-function reducer(state: State, action: Action) {
-  switch (action.type) {
-    case 'startLoading':
-      return { ...state, isLoading: true, error: '' }
-    case 'endLoading':
-      return { ...state, isLoading: false }
-    case 'setError':
-      return { ...state, isLoading: false, error: action.payload }
-    case 'setProduct':
-      return {
-        ...state,
-        isLoading: false,
-        error: '',
-        product: action.payload,
-        count: state.count + 1
-      }
-    default:
-      return state
-  }
-}
-
-function useProduct() {
-  const [state, dispatch] = useReducer(reducer, {
-    isLoading: false,
-    error: '',
-    product: null,
-    count: 0 // 商品获取计数
-  })
-
-  useEffect(() => {
-    const controller = new AbortController()
-    getProduct(controller.signal).then()
-
-    return () => {
-      controller.abort()
-    }
-  }, [])
-
-  async function getProduct(signal?: AbortSignal) {
-    dispatch({ type: 'startLoading' })
-
-    const { data, error } = await getRandomProduct(signal)
-
-    dispatch({ type: 'endLoading' })
-
-    if (error) {
-      dispatch({ type: 'setError', payload: error.message })
-      return
-    }
-
-    if (data) {
-      dispatch({ type: 'setProduct', payload: data })
-    }
-  }
-
-  return { ...state, getProduct }
 }
 
 export { ProductShowcase }

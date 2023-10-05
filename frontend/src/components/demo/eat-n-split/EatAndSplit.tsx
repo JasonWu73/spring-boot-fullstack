@@ -11,7 +11,7 @@ import {
 } from '@/components/demo/eat-n-split/friend-data'
 import { FriendList } from '@/components/demo/eat-n-split/FriendList'
 import { Loading } from '@/components/ui/Loading'
-import { useTitle } from '@/lib/hooks'
+import { useTitle } from '@/lib/use-title'
 import { Input } from '@/components/ui/Input'
 
 // ----- Start: 测试懒加载 (React Split Code 技术) -----

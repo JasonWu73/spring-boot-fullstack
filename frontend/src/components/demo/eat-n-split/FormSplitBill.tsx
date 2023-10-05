@@ -20,7 +20,7 @@ import {
 import { Friend } from '@/components/demo/eat-n-split/friend-data'
 import { FormInput, FormSelect } from '@/components/ui/CustomFormField'
 import { StarRating } from '@/components/ui/StarRating'
-import { useTitle } from '@/lib/hooks'
+import { useTitle } from '@/lib/use-title'
 
 const whoIsPayingOptions = [
   { value: 'user', label: 'You' },

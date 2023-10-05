@@ -1,12 +1,8 @@
 import { sendRequest } from '@/lib/http'
+import { ApiResponse } from '@/lib/use-fetch'
 
 type ApiError = {
   message: string
-}
-
-type ApiResponse<T> = {
-  data: T | null
-  error: ApiError | null
 }
 
 type Product = {
@@ -32,12 +28,15 @@ async function getRandomProduct(
     signal: signal
   })
 
-  // 统一处理错误
-  if (typeof error === 'string') {
-    return { data, error: { message: error } }
+  if (error) {
+    if (typeof error === 'string') {
+      return { data: null, error }
+    }
+
+    return { data: null, error: error.message }
   }
 
-  return { data, error }
+  return { data, error: '' }
 }
 
 export { getRandomProduct, type Product }
