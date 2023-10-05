@@ -14,6 +14,7 @@ import { Loading } from '@/components/ui/Loading'
 import { useTitle } from '@/lib/use-title'
 import { Input } from '@/components/ui/Input'
 import { wait } from '@/lib/utils'
+import { useLocalStorageState } from '@/lib/use-storage'
 
 // ----- Start: 测试懒加载 (React Split Code 技术) -----
 const FormAddFriend = lazy(() =>
@@ -29,15 +30,13 @@ const FormAddFriend = lazy(() =>
 function EatAndSplit() {
   useTitle('Eat & Split')
 
-  const [friends, setFriends] = useState<Friend[]>(initFriends)
+  const [friends, setFriends] = useLocalStorageState('friends', initialFriends)
   const [showAddFriend, setShowAddFriend] = useState(false)
   const [selectedFriend, setSelectedFriend] = useState<Friend | null>(null)
   const [search, setSearch] = useState('')
   const { toast } = useToast()
 
   useExit(setShowAddFriend, setSelectedFriend)
-
-  useStorage(friends)
 
   const searchRef = useSearchEnter(
     setSearch,
@@ -176,23 +175,6 @@ function useExit(
       document.removeEventListener('keydown', handleExit)
     }
   }, [setShowAddFriend, setSelectedFriend])
-}
-
-function initFriends() {
-  const val = localStorage.getItem('friends')
-
-  if (!val) {
-    localStorage.setItem('friends', JSON.stringify(initialFriends))
-    return initialFriends
-  }
-
-  return JSON.parse(val)
-}
-
-function useStorage(friends: Friend[]) {
-  useEffect(() => {
-    localStorage.setItem('friends', JSON.stringify(friends))
-  }, [friends])
 }
 
 function useSearchEnter(

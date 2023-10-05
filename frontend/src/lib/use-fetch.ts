@@ -8,6 +8,8 @@ type ApiResponse<T> = {
 /**
  * 获取数据的自定义 Hook.
  *
+ * @template T - 数据类型
+ *
  * @param callback - 获取数据的回调函数
  * @returns - 数据, 错误信息, 加载状态和获取数据的回调函数
  */

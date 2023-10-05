@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 
 /**
- * 设置页面标题.
+ * 设置页面标题的自定义 hook.
  *
  * @param title - 页面标题
  */
