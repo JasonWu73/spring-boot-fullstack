@@ -28,4 +28,13 @@ function truncate(str: string, maxlength: number) {
   return str.slice(0, maxlength - 1) + '…'
 }
 
-export { cn, truncate }
+/**
+ * 等待指定秒数.
+ *
+ * @param seconds - 等待的秒数
+ */
+function wait(seconds: number) {
+  return new Promise((resolve) => setTimeout(resolve, seconds * 1000))
+}
+
+export { cn, truncate, wait }

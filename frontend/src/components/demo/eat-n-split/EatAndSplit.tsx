@@ -13,6 +13,7 @@ import { FriendList } from '@/components/demo/eat-n-split/FriendList'
 import { Loading } from '@/components/ui/Loading'
 import { useTitle } from '@/lib/use-title'
 import { Input } from '@/components/ui/Input'
+import { wait } from '@/lib/utils'
 
 // ----- Start: 测试懒加载 (React Split Code 技术) -----
 const FormAddFriend = lazy(() =>
@@ -22,10 +23,6 @@ const FormAddFriend = lazy(() =>
     }))
   )
 )
-
-function wait(seconds: number) {
-  return new Promise((resolve) => setTimeout(resolve, seconds * 1000))
-}
 
 // ----- End: 测试懒加载 (React Split Code 技术) -----
 
