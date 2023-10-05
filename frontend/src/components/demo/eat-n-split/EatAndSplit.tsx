@@ -2,7 +2,7 @@ import {
   type Bill,
   FormSplitBill
 } from '@/components/demo/eat-n-split/FormSplitBill'
-import React, { lazy, Suspense, useEffect, useRef, useState } from 'react'
+import React, { lazy, Suspense, useRef, useState } from 'react'
 import { Button } from '@/components/ui/Button'
 import { useToast } from '@/components/ui/use-toast'
 import {
@@ -15,6 +15,7 @@ import { useTitle } from '@/lib/use-title'
 import { Input } from '@/components/ui/Input'
 import { wait } from '@/lib/utils'
 import { useLocalStorageState } from '@/lib/use-storage'
+import { useKeypress } from '@/lib/use-keypress'
 
 // ----- Start: 测试懒加载 (React Split Code 技术) -----
 const FormAddFriend = lazy(() =>
@@ -36,13 +37,23 @@ function EatAndSplit() {
   const [search, setSearch] = useState('')
   const { toast } = useToast()
 
-  useExit(setShowAddFriend, setSelectedFriend)
+  useKeypress({ key: 'Escape' }, () => {
+    setShowAddFriend(false)
+    setSelectedFriend(null)
+  })
 
-  const searchRef = useSearchEnter(
-    setSearch,
-    setShowAddFriend,
-    setSelectedFriend
-  )
+  const searchInputRef = useRef<HTMLInputElement | null>(null)
+
+  useKeypress({ key: '\\', modifiers: ['ctrlKey'] }, () => {
+    if (document.activeElement === searchInputRef.current) {
+      return
+    }
+
+    searchInputRef.current?.focus()
+    setSearch('')
+    setShowAddFriend(false)
+    setSelectedFriend(null)
+  })
 
   function handleAddFriend(friend: Friend) {
     setFriends((prev) => [...prev, friend])
@@ -116,7 +127,7 @@ function EatAndSplit() {
         <Input
           value={search}
           onChange={handleSearch}
-          ref={searchRef}
+          ref={searchInputRef}
           placeholder="Search friend"
           className="mb-4 dark:border-amber-500"
         />
@@ -155,59 +166,6 @@ function EatAndSplit() {
       </div>
     </div>
   )
-}
-
-function useExit(
-  setShowAddFriend: React.Dispatch<React.SetStateAction<boolean>>,
-  setSelectedFriend: React.Dispatch<React.SetStateAction<Friend | null>>
-) {
-  useEffect(() => {
-    function handleExit(event: KeyboardEvent) {
-      if (event.key === 'Escape') {
-        setShowAddFriend(false)
-        setSelectedFriend(null)
-      }
-    }
-
-    document.addEventListener('keydown', handleExit)
-
-    return () => {
-      document.removeEventListener('keydown', handleExit)
-    }
-  }, [setShowAddFriend, setSelectedFriend])
-}
-
-function useSearchEnter(
-  setSearch: React.Dispatch<React.SetStateAction<string>>,
-  setShowAddFriend: React.Dispatch<React.SetStateAction<boolean>>,
-  setSelectedFriend: React.Dispatch<React.SetStateAction<Friend | null>>
-) {
-  const inputRef = useRef<HTMLInputElement | null>(null)
-
-  useEffect(() => {
-    function handleEnter(event: KeyboardEvent) {
-      if (document.activeElement === inputRef.current) {
-        return
-      }
-
-      if (event.code !== 'Enter') {
-        return
-      }
-
-      inputRef.current && inputRef.current.focus()
-      setSearch('')
-      setShowAddFriend(false)
-      setSelectedFriend(null)
-    }
-
-    document.addEventListener('keydown', handleEnter)
-
-    return () => {
-      document.removeEventListener('keydown', handleEnter)
-    }
-  }, [setSearch, setShowAddFriend, setSelectedFriend])
-
-  return inputRef
 }
 
 export { EatAndSplit }
