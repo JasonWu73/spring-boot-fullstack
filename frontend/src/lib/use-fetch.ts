@@ -65,15 +65,19 @@ function useFetch<T>(
     initialState as State<T>
   )
 
-  useEffect(() => {
-    const controller = new AbortController()
+  useEffect(
+    () => {
+      const controller = new AbortController()
 
-    fetchData(controller)
+      fetchData(controller).then()
 
-    return () => {
-      controller.abort()
-    }
-  }, [])
+      return () => {
+        controller.abort()
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  )
 
   async function fetchData(controller?: AbortController) {
     dispatch({ type: 'FETCH_INIT' })
