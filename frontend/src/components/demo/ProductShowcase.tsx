@@ -1,4 +1,4 @@
-import { getRandomProduct, type Product } from '@/api/dummyjson/product'
+import { getRandomProduct, type Product } from '@/api/dummyjson/product-api'
 import { useState } from 'react'
 import { ReloadIcon } from '@radix-ui/react-icons'
 import { Button } from '@/components/ui/Button'

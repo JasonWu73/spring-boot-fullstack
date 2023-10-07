@@ -1,8 +1,52 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useReducer } from 'react'
 
 type ApiResponse<T> = {
   data: T | null
   error: string
+}
+
+type State<T> = {
+  data: T | null
+  error: string
+  loading: boolean
+}
+
+const initialState: State<unknown> = {
+  data: null,
+  error: '',
+  loading: false
+}
+
+type Action<T> =
+  | { type: 'FETCH_INIT' }
+  | { type: 'FETCH_SUCCESS'; payload: T }
+  | { type: 'FETCH_FAILURE'; payload: string }
+
+function reducer<T>(state: State<T>, action: Action<T>): State<T> {
+  switch (action.type) {
+    case 'FETCH_INIT':
+      return {
+        ...state,
+        error: '',
+        loading: true
+      }
+    case 'FETCH_SUCCESS':
+      return {
+        ...state,
+        data: action.payload,
+        error: '',
+        loading: false
+      }
+    case 'FETCH_FAILURE':
+      return {
+        ...state,
+        error: action.payload,
+        loading: false
+      }
+    default: {
+      return state
+    }
+  }
 }
 
 /**
@@ -16,41 +60,39 @@ type ApiResponse<T> = {
 function useFetch<T>(
   callback: (signal?: AbortSignal) => Promise<ApiResponse<T>>
 ) {
-  const [data, setData] = useState<T | null>(null)
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
-
-  useEffect(
-    () => {
-      const controller = new AbortController()
-
-      fetchData(controller).then()
-
-      return () => {
-        controller.abort()
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+  const [state, dispatch] = useReducer(
+    reducer as React.Reducer<State<T>, Action<T>>,
+    initialState as State<T>
   )
 
+  useEffect(() => {
+    const controller = new AbortController()
+
+    fetchData(controller)
+
+    return () => {
+      controller.abort()
+    }
+  }, [])
+
   async function fetchData(controller?: AbortController) {
-    setError('')
-    setLoading(true)
+    dispatch({ type: 'FETCH_INIT' })
 
     const { data: responseData, error: responseError } = await callback(
       controller?.signal
     )
 
-    setLoading(false)
-
     if (responseError) {
-      setError(responseError)
+      dispatch({ type: 'FETCH_FAILURE', payload: responseError })
       return
     }
 
-    setData(responseData)
+    if (responseData) {
+      dispatch({ type: 'FETCH_SUCCESS', payload: responseData })
+    }
   }
+
+  const { data, error, loading } = state
 
   return { data, error, loading, fetchData }
 }
