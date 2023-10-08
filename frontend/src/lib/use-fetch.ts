@@ -44,7 +44,7 @@ function reducer<T>(state: State<T>, action: Action<T>): State<T> {
         loading: false
       }
     default: {
-      return state
+      throw new Error('Action type is not supported')
     }
   }
 }
