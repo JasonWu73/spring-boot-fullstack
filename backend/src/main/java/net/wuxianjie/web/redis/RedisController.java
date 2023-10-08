@@ -32,7 +32,7 @@ public class RedisController {
 
   private void executeSync() {
     // 生成锁的唯一值
-    String identifier = UUID.randomUUID().toString();
+    final String identifier = UUID.randomUUID().toString();
 
     // 直到获取到锁才能执行
     untilGetLock(identifier);
@@ -41,8 +41,8 @@ public class RedisController {
     doBiz(identifier);
   }
 
-  private void doBiz(String identifier) {
-    String threadName = Thread.currentThread().getName();
+  private void doBiz(final String identifier) {
+    final String threadName = Thread.currentThread().getName();
 
     System.out.printf("🔐[%s] 获取锁成功%n", threadName);
 
@@ -56,7 +56,7 @@ public class RedisController {
     }
   }
 
-  private void untilGetLock(String identifier) {
+  private void untilGetLock(final String identifier) {
     while (!redisLock.lock(LOCK_KEY, identifier)) {
       // 休眠以等待下一次获取锁
       try {

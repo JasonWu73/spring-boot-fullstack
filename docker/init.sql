@@ -4,8 +4,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 -- Table structure for mybatis
 -- ----------------------------
-DROP TABLE IF EXISTS `mybatis`;
-CREATE TABLE `mybatis`
+CREATE TABLE IF NOT EXISTS `mybatis`
 (
     `id`              int unsigned NOT NULL AUTO_INCREMENT,
     `name`            varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,

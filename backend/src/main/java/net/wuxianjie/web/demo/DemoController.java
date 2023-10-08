@@ -33,32 +33,39 @@ public class DemoController {
 
   @GetMapping("/demo")
   public DemoData getData(
-      @RequestParam String name,
-      @NotNull(message = "num 不能为 null") Integer num,
-      @EnumValidator(value = Type.class, message = "type 值不合法") Integer type,
-      @DateTimeFormat(pattern = JsonConfig.DATE_TIME_PATTERN) LocalDateTime dateTime
+      @RequestParam final String name,
+      @NotNull(message = "num 不能为 null") final Integer num,
+      @EnumValidator(value = Type.class, message = "type 值不合法") final Integer type,
+      @DateTimeFormat(pattern = JsonConfig.DATE_TIME_PATTERN) final LocalDateTime dateTime
   ) {
     System.out.println(name + "---" + num + "---" + type + "---" + dateTime);
+
     return new DemoData(
         100L,
         "测试数据",
-        new DemoInnerData(Date.from(dateTime.toInstant(ZoneOffset.ofHours(8))),
-            dateTime.toLocalDate(), dateTime)
+        new DemoInnerData(
+            Date.from(dateTime.toInstant(ZoneOffset.ofHours(8))),
+            dateTime.toLocalDate(),
+            dateTime
+        )
     );
   }
 
   @PostMapping("/demo/json")
-  public DemoData postJsonData(@RequestBody @Valid DemoData data) {
+  public DemoData postJsonData(@RequestBody @Valid final DemoData data) {
     return data;
   }
 
   @PostMapping("/demo/form")
-  public DemoData postFormData(@Valid DemoData data) {
+  public DemoData postFormData(@Valid final DemoData data) {
     return data;
   }
 
   @PostMapping("/demo/upload")
-  public UploadResult uploadFile(@NotBlank String message, @RequestParam MultipartFile file) {
+  public UploadResult uploadFile(
+      @NotBlank final String message,
+      @RequestParam final MultipartFile file
+  ) {
     if (file == null || file.isEmpty()) {
       return new UploadResult(false, null, message);
     }

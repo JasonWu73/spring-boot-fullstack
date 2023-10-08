@@ -80,9 +80,9 @@ public class NotFoundController {
    *
    * <p>约定 SPA 的页面入口：{@value #SPA_INDEX_PAGE}.
    *
-   * <h2>扩展说明</h2>
+   * <p><h2>扩展说明
    *
-   * <p>Spring Boot Web 静态资源查找目录，由优先级高到低排序:
+   * <p>Spring Boot Web 静态资源查找目录, 由优先级高到低排序:
    *
    * <ol>
    *   <li>{@code src/main/resources/META-INF/resources/}</li>
@@ -94,21 +94,26 @@ public class NotFoundController {
    * @return JSON 数据或 SPA 首页
    */
   @RequestMapping(URI_NOT_FOUND)
-  public ResponseEntity<?> handleNotFoundRequest(HttpServletRequest req) {
+  public ResponseEntity<?> handleNotFoundRequest(final HttpServletRequest req) {
     // 若 API 或 JSON 数据请求, 则返回 JSON 数据
-    String oriUri = Optional.ofNullable(req.getAttribute(RequestDispatcher.FORWARD_SERVLET_PATH))
+    final String oriUri = Optional.ofNullable(
+            req.getAttribute(RequestDispatcher.FORWARD_SERVLET_PATH)
+        )
         .map(Object::toString)
         .orElse("");
 
     if (isJsonRequest(req, oriUri)) {
+      final HttpStatus notFound = HttpStatus.NOT_FOUND;
+
       return ResponseEntity
-          .status(HttpStatus.NOT_FOUND)
+          .status(notFound)
           .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-          .body(new ApiError(HttpStatus.NOT_FOUND, "未找到请求的资源", oriUri));
+          .body(new ApiError(notFound, "未找到请求的资源", oriUri));
     }
 
     // 返回 SPA 首页, 由前端处理 404
-    String spaIndexHtml = getSpaIndexHtml();
+    final String spaIndexHtml = getSpaIndexHtml();
+
     if (spaIndexHtml == null) {
       log.warn("未找到 SPA 首页文件 [{}]", SPA_INDEX_PAGE);
       return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -120,27 +125,32 @@ public class NotFoundController {
         .body(spaIndexHtml);
   }
 
-  private String getSpaIndexHtml() {
-    Resource resource = resourceLoader.getResource(SPA_INDEX_PAGE);
-    if (!resource.exists()) {
-      return null;
-    }
-
-    try (InputStreamReader reader = new InputStreamReader(resource.getInputStream(),
-        StandardCharsets.UTF_8)) {
-      return FileCopyUtils.copyToString(reader);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  private boolean isJsonRequest(HttpServletRequest req, String oriUri) {
-    String accept = Optional.ofNullable(req.getHeader(HttpHeaders.ACCEPT)).orElse("");
+  private boolean isJsonRequest(final HttpServletRequest req, final String oriUri) {
+    final String accept = Optional.ofNullable(req.getHeader(HttpHeaders.ACCEPT)).orElse("");
 
     if (accept.contains(MediaType.APPLICATION_JSON_VALUE)) {
       return true;
     }
 
     return oriUri.startsWith(URI_PREFIX_API);
+  }
+
+  private String getSpaIndexHtml() {
+    final Resource resource = resourceLoader.getResource(SPA_INDEX_PAGE);
+
+    if (!resource.exists()) {
+      return null;
+    }
+
+    try (
+        final InputStreamReader reader = new InputStreamReader(
+            resource.getInputStream(),
+            StandardCharsets.UTF_8
+        )
+    ) {
+      return FileCopyUtils.copyToString(reader);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 }

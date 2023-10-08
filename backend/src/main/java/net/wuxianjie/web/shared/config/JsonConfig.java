@@ -25,7 +25,7 @@ public class JsonConfig {
   @Bean
   public ObjectMapper objectMapper() {
     // 配置 Java 8 `LocalDateTime` 与 `LocalDate` 的 JSON 序列化与反序列化
-    JavaTimeModule timeModule = configureDateTimeModule();
+    final JavaTimeModule timeModule = configureDateTimeModule();
 
     return JsonMapper.builder()
         .addModule(timeModule)
@@ -37,20 +37,25 @@ public class JsonConfig {
   }
 
   private JavaTimeModule configureDateTimeModule() {
-    JavaTimeModule timeModule = new JavaTimeModule();
+    final JavaTimeModule timeModule = new JavaTimeModule();
 
     timeModule.addSerializer(LocalDateTime.class, new JsonSerializer<>() {
       @Override
-      public void serialize(LocalDateTime value, JsonGenerator gen, SerializerProvider serializers)
-          throws IOException {
+      public void serialize(
+          final LocalDateTime value,
+          final JsonGenerator gen,
+          final SerializerProvider serializers
+      ) throws IOException {
         gen.writeString(value.format(DateTimeFormatter.ofPattern(DATE_TIME_PATTERN)));
       }
     });
 
     timeModule.addDeserializer(LocalDateTime.class, new JsonDeserializer<>() {
       @Override
-      public LocalDateTime deserialize(JsonParser p, DeserializationContext ctxt)
-          throws IOException {
+      public LocalDateTime deserialize(
+          final JsonParser p,
+          final DeserializationContext ctxt
+      ) throws IOException {
         return LocalDateTime.parse(
             p.getValueAsString(),
             DateTimeFormatter.ofPattern(DATE_TIME_PATTERN)

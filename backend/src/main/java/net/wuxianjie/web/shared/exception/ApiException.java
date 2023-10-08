@@ -20,7 +20,7 @@ public class ApiException extends RuntimeException {
   private final HttpStatus status;
 
   /**
-   * 返回给客户端的错误信息。
+   * 返回给客户端的错误信息.
    */
   private final String reason;
 
@@ -30,7 +30,7 @@ public class ApiException extends RuntimeException {
    * @param status HTTP 状态码
    * @param reason 返回给客户端的错误信息
    */
-  public ApiException(HttpStatus status, String reason) {
+  public ApiException(final HttpStatus status, final String reason) {
     super(reason);
     this.status = status;
     this.reason = reason;
@@ -41,9 +41,9 @@ public class ApiException extends RuntimeException {
    *
    * @param status HTTP 状态码
    * @param reason 返回给客户端的错误信息
-   * @param cause  导致该异常产生的异常
+   * @param cause 导致该异常产生的异常
    */
-  public ApiException(HttpStatus status, String reason, Throwable cause) {
+  public ApiException(final HttpStatus status, final String reason, final Throwable cause) {
     super(reason, cause);
     this.status = status;
     this.reason = reason;
@@ -51,9 +51,10 @@ public class ApiException extends RuntimeException {
 
   @Override
   public String getMessage() {
-    String message = String.format("%s \"%s\"", status, reason);
+    final String message = String.format("%s \"%s\"", status, reason);
 
-    StringBuilder nestedMessage = getNestedMessage(getCause());
+    final StringBuilder nestedMessage = getNestedMessage(getCause());
+
     if (nestedMessage == null) {
       return message;
     }
@@ -61,19 +62,21 @@ public class ApiException extends RuntimeException {
     return message + MESSAGE_SEPARATOR + nestedMessage;
   }
 
-  private StringBuilder getNestedMessage(Throwable cause) {
+  private StringBuilder getNestedMessage(final Throwable cause) {
     if (cause == null) {
       return null;
     }
 
-    StringBuilder sb = new StringBuilder();
+    final StringBuilder sb = new StringBuilder();
+
     sb.append("嵌套异常 [")
         .append(cause.getClass().getName())
         .append(": ")
         .append(cause.getMessage())
         .append("]");
 
-    StringBuilder nestedMessage = getNestedMessage(cause.getCause());
+    final StringBuilder nestedMessage = getNestedMessage(cause.getCause());
+
     if (nestedMessage == null) {
       return sb;
     }

@@ -24,29 +24,36 @@ public class EnumTypeHandler<E extends Enum<?> & EnumType> extends BaseTypeHandl
 
   @Override
   public void setNonNullParameter(
-      PreparedStatement ps,
-      int i, EnumType parameter,
-      JdbcType jdbcType
+      final PreparedStatement ps,
+      final int i,
+      final EnumType parameter,
+      final JdbcType jdbcType
   ) throws SQLException {
     ps.setInt(i, parameter.getCode());
   }
 
   @Override
-  public EnumType getNullableResult(ResultSet rs, String columnName) throws SQLException {
+  public EnumType getNullableResult(
+      final ResultSet rs,
+      final String columnName
+  ) throws SQLException {
     return toEnum(enumType, rs.getInt(columnName));
   }
 
   @Override
-  public EnumType getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
+  public EnumType getNullableResult(final ResultSet rs, final int columnIndex) throws SQLException {
     return toEnum(enumType, rs.getInt(columnIndex));
   }
 
   @Override
-  public EnumType getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
+  public EnumType getNullableResult(
+      final CallableStatement cs,
+      final int columnIndex
+  ) throws SQLException {
     return toEnum(enumType, cs.getInt(columnIndex));
   }
 
-  private E toEnum(Class<E> enumClass, int value) {
+  private E toEnum(final Class<E> enumClass, final int value) {
     return Optional.ofNullable(enumClass.getEnumConstants())
         .flatMap(enums -> Arrays.stream(enums)
             .filter(e -> e.getCode() == value)

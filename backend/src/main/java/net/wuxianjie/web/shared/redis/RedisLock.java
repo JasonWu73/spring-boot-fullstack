@@ -27,17 +27,18 @@ public class RedisLock {
   /**
    * 上锁.
    *
-   * <p>当一个方法获取了 Lock 但执行时间超过了 Lock 的超时时间（Timeout）, 这种情况下,
-   * Lock 会自动释放, 这可能会导致其他线程或实例获取该 Lock, 从而引发数据不一致的问题, 故该方法支持对 Lock 自动续期.
+   * <p>支持 Lock 自动续期以解决当一个方法获取了 Lock 但执行时间超过了 Lock 的超时时间 (Timeout) 时,
+   * Lock 会自动释放, 这可能会导致其他线程或实例获取该 Lock, 从而引发数据不一致的问题.
    *
-   * @param key   锁的键
+   * @param key 锁的键
    * @param value 锁的值
    * @return 是否上锁成功
    */
-  public boolean lock(String key, String value) {
+  public boolean lock(final String key, final String value) {
     // 上锁
-    Boolean isLocked = stringRedisTemplate.opsForValue()
+    final Boolean isLocked = stringRedisTemplate.opsForValue()
         .setIfAbsent(key, value, LOCK_TIMEOUT_SECS, TimeUnit.SECONDS);
+
     if (isLocked == null || !isLocked) {
       return false;
     }
@@ -51,12 +52,13 @@ public class RedisLock {
   /**
    * 解锁.
    *
-   * @param key   锁的键
+   * @param key 锁的键
    * @param value 锁的值
    */
-  public void unlock(String key, String value) {
+  public void unlock(final String key, final String value) {
     // 解锁
-    String currentValue = stringRedisTemplate.opsForValue().get(key);
+    final String currentValue = stringRedisTemplate.opsForValue().get(key);
+
     if (currentValue == null || !currentValue.equals(value)) {
       return;
     }
@@ -67,22 +69,26 @@ public class RedisLock {
     stopRenewLockThread(key);
   }
 
-  private void startRenewLockThread(String key, String value) {
+  private void startRenewLockThread(final String key, final String value) {
     renewFlags.put(key, new AtomicBoolean(true)); // 初始化 renewFlag
+
     renewLock(key, value);
   }
 
-  private void stopRenewLockThread(String key) {
-    AtomicBoolean flag = renewFlags.get(key);
+  private void stopRenewLockThread(final String key) {
+    final AtomicBoolean flag = renewFlags.get(key);
+
     if (flag != null) {
       flag.set(false); // 停止 renewThread 线程
     }
+
     renewFlags.remove(key); // 移除 renewFlag
   }
 
-  public void renewLock(String key, String value) {
+  public void renewLock(final String key, final String value) {
     // 获取 renewFlag
-    AtomicBoolean renewFlag = renewFlags.get(key);
+    final AtomicBoolean renewFlag = renewFlags.get(key);
+
     if (renewFlag == null) {
       return;
     }
@@ -92,7 +98,8 @@ public class RedisLock {
       // 使用标志变量控制线程
       while (renewFlag.get()) {
         // 若非当前锁的持有者，则直接退出线程
-        String currentValue = stringRedisTemplate.opsForValue().get(key);
+        final String currentValue = stringRedisTemplate.opsForValue().get(key);
+
         if (currentValue == null || !currentValue.equals(value)) {
           break;
         }
@@ -107,6 +114,7 @@ public class RedisLock {
           log.warn("Lock 自动续期休眠异常");
         }
       }
-    }).start();
+    })
+        .start();
   }
 }

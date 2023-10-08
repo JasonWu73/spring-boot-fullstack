@@ -2,10 +2,10 @@
 spring:
   datasource:
     url: jdbc:mysql://demo-db:3306/demo
-    username: ENC(ANOf5l6jbyPQN8dk9dHy9C8sd0ZhowraFYXInEcG8am+ybTJhQwxR+MKN/bl54Z4)
-    password: ENC(H0yLbj9m4Y9UpTSt4spGMqmOR/pvL0yDFCKp04gGBJCa+C+vgj27kXST+nCzP72z)
   data:
     redis:
       host: demo-redis
       port: 6379
-      password: ENC(/hSZu9OFtlFU1xHCzThMmTYbu+e8JD8G9wF+9d1ygtf7hD/tyFEvjcZU92xgvGgp)
+mybatis:
+  configuration:
+    log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl

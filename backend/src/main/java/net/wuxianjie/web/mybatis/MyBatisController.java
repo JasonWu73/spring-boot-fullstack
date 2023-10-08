@@ -26,7 +26,7 @@ public class MyBatisController {
   }
 
   @PostMapping("/mybatis")
-  public MyBatisData addData(@RequestBody @Valid MyBatisData data) {
+  public MyBatisData addData(@RequestBody @Valid final MyBatisData data) {
     data.setType(MyBatisType.TYPE_2);
 
     myBatisMapper.insertData(data);
