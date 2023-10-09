@@ -30,13 +30,13 @@ function FormAddFriend({ onAddFriend }: FormAddFriendProps) {
     }
   })
 
-  function onSubmit({ name, image }: FormSchema) {
+  function onSubmit(values: FormSchema) {
     const newFriendId = Date.now()
 
     const newFriend: Friend = {
       id: newFriendId,
-      name: name,
-      image: `${image}?u=${newFriendId}`,
+      name: values.name,
+      image: `${values.image}?u=${newFriendId}`,
       balance: 0,
       creditRating: 0
     }

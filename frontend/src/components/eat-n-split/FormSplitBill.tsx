@@ -105,10 +105,13 @@ function FormSplitBill({
 
   useWatchExpense(form)
 
-  function onSubmit({ userExpense, friendExpense, whoIsPaying }: FormSchema) {
+  function onSubmit(values: FormSchema) {
     const bill = {
       friendId: friend.id,
-      expense: whoIsPaying === 'user' ? -friendExpense : userExpense
+      expense:
+        values.whoIsPaying === 'user'
+          ? -values.friendExpense
+          : values.userExpense
     }
 
     onSplitBill(bill)
