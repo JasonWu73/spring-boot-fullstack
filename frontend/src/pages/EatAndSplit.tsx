@@ -122,7 +122,7 @@ function EatAndSplit() {
   }
 
   return (
-    <div className="grid grid-flow-row items-center justify-center gap-6 p-4 md:mt-6 md:grid-cols-2 md:grid-rows-2">
+    <div className="grid grid-flow-row items-center justify-center gap-6 p-4 md:mt-6 md:grid-cols-2">
       <div className="md:col-span-1 md:row-span-1 md:justify-self-end">
         <Input
           value={search}
