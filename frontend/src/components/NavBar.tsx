@@ -1,5 +1,6 @@
 import reactLogo from '@/assets/react.svg'
 import { ModeToggle } from '@/components/ui/ModeToggle'
+import { Link } from 'react-router-dom'
 
 function NavBar() {
   return (
@@ -12,10 +13,12 @@ function NavBar() {
 
 function Logo() {
   return (
-    <div className="flex items-center gap-2">
-      <img src={reactLogo} alt="React Logo" />
-      <h1 className="text-2xl font-bold">TS + React + Tailwind CSS</h1>
-    </div>
+    <Link to="/">
+      <div className="flex items-center gap-2">
+        <img src={reactLogo} alt="React Logo" />
+        <h1 className="text-2xl font-bold">TS + React + Tailwind CSS</h1>
+      </div>
+    </Link>
   )
 }
 
