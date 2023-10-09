@@ -56,10 +56,10 @@ function NavItem({ link, children }: NavItemProps) {
 function Logo() {
   return (
     <Link to="/">
-      <div className="flex items-center gap-2">
+      <span className="flex items-center gap-2">
         <img src={reactLogo} alt="React Logo" />
         <h2 className="text-2xl font-bold">TS + React + Tailwind CSS</h2>
-      </div>
+      </span>
     </Link>
   )
 }
