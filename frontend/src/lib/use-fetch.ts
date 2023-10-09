@@ -60,7 +60,7 @@ function reducer<T>(state: State<T>, action: Action<T>): State<T> {
 function useFetch<T>(
   callback: (signal?: AbortSignal) => Promise<ApiResponse<T>>
 ) {
-  const [state, dispatch] = useReducer(
+  const [{ data, error, loading }, dispatch] = useReducer(
     reducer as React.Reducer<State<T>, Action<T>>,
     initialState as State<T>
   )
@@ -91,8 +91,6 @@ function useFetch<T>(
       dispatch({ type: 'FETCH_SUCCESS', payload: responseData })
     }
   }
-
-  const { data, error, loading } = state
 
   return { data, error, loading, fetchData }
 }
