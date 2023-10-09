@@ -58,7 +58,7 @@ function Logo() {
     <Link to="/">
       <div className="flex items-center gap-2">
         <img src={reactLogo} alt="React Logo" />
-        <h1 className="text-2xl font-bold">TS + React + Tailwind CSS</h1>
+        <h2 className="text-2xl font-bold">TS + React + Tailwind CSS</h2>
       </div>
     </Link>
   )
