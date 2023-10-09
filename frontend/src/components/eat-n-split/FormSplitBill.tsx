@@ -17,7 +17,7 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from '@/components/ui/tooltip'
-import { Friend } from '@/components/demo/eat-n-split/friend-data'
+import { Friend } from '@/components/eat-n-split/friend-data'
 import { FormInput, FormSelect } from '@/components/ui/CustomFormField'
 import { StarRating } from '@/components/ui/StarRating'
 import { useTitle } from '@/lib/use-title'

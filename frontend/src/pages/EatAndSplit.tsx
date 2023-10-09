@@ -1,15 +1,15 @@
 import {
   type Bill,
   FormSplitBill
-} from '@/components/demo/eat-n-split/FormSplitBill'
+} from '@/components/eat-n-split/FormSplitBill'
 import React, { lazy, Suspense, useRef, useState } from 'react'
 import { Button } from '@/components/ui/Button'
 import { useToast } from '@/components/ui/use-toast'
 import {
   type Friend,
   initialFriends
-} from '@/components/demo/eat-n-split/friend-data'
-import { FriendList } from '@/components/demo/eat-n-split/FriendList'
+} from '@/components/eat-n-split/friend-data'
+import { FriendList } from '@/components/eat-n-split/FriendList'
 import { Loading } from '@/components/ui/Loading'
 import { useTitle } from '@/lib/use-title'
 import { Input } from '@/components/ui/Input'
@@ -20,7 +20,7 @@ import { useKeypress } from '@/lib/use-keypress'
 // ----- Start: 测试懒加载 (React Split Code 技术) -----
 const FormAddFriend = lazy(() =>
   wait(3).then(() =>
-    import('@/components/demo/eat-n-split/FormAddFriend').then((module) => ({
+    import('@/components/eat-n-split/FormAddFriend').then((module) => ({
       default: module.FormAddFriend
     }))
   )

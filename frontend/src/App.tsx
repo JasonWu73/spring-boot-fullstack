@@ -1,10 +1,11 @@
 import { ThemeProvider } from '@/components/ui/ThemeProvider'
 import { Toaster } from '@/components/ui/Toaster'
 import { NavBar } from '@/components/NavBar'
-import { ProductShowcase } from '@/components/demo/ProductShowcase'
+import { ProductShowcase } from '@/pages/ProductShowcase'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { Home } from '@/components/Home'
-import { EatAndSplit } from '@/components/demo/eat-n-split/EatAndSplit'
+import { EatAndSplit } from '@/pages/EatAndSplit'
+import { PageNotFound } from '@/pages/PageNotFound'
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/fetch" element={<ProductShowcase />} />
           <Route path="/eat-and-split" element={<EatAndSplit />} />
+          <Route path="*" element={<PageNotFound />} />
         </Routes>
 
         <Toaster />

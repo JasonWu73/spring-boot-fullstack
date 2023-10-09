@@ -1,4 +1,4 @@
-import { Friend } from '@/components/demo/eat-n-split/friend-data'
+import { Friend } from '@/components/eat-n-split/friend-data'
 import { cn, truncate } from '@/lib/utils'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar'
 import {
