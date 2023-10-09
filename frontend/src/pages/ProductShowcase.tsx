@@ -4,8 +4,11 @@ import { ReloadIcon } from '@radix-ui/react-icons'
 import { Button } from '@/components/ui/Button'
 import { cn } from '@/lib/utils'
 import { useFetch } from '@/lib/use-fetch'
+import { useTitle } from '@/lib/use-title'
 
 function ProductShowcase() {
+  useTitle('Product Showcase')
+
   const [count, setCount] = useState(0)
 
   const {
@@ -47,8 +50,8 @@ function ProductShowcase() {
   }
 
   return (
-    <div className="mx-8 mt-8 rounded border p-4 shadow-sm">
-      <div className="h-36 w-full">{getProductContent()}</div>
+    <div className="mx-auto mt-8 flex w-[400px] flex-col items-center rounded border p-4 shadow-sm">
+      {getProductContent()}
 
       <Button onClick={() => getProduct()} className="my-4" disabled={loading}>
         {loading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
