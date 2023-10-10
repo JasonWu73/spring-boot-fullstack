@@ -5,6 +5,7 @@ import { ProductShowcase } from '@/pages/ProductShowcase'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { EatAndSplit } from '@/pages/EatAndSplit'
 import { PageNotFound } from '@/pages/PageNotFound'
+import { Login } from '@/pages/Login'
 
 export default function App() {
   return (
@@ -14,6 +15,7 @@ export default function App() {
 
         <Routes>
           <Route path="/" element={<ProductShowcase />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/fetch" element={<ProductShowcase />} />
           <Route path="/eat-and-split" element={<EatAndSplit />} />
           <Route path="*" element={<PageNotFound />} />

@@ -40,7 +40,7 @@ function inputErrorClasses(isError: boolean) {
   return {
     'border-slate-200 dark:border-slate-800 focus-visible:ring-slate-950 dark:focus-visible:ring-slate-300':
       !isError,
-    'border-red-500 dark:border-red-900 focus-visible:ring-red-500 dark:focus-visible:ring-red-600':
+    'border-red-500 dark:border-red-600 focus-visible:ring-red-500 dark:focus-visible:ring-red-700':
       isError
   }
 }

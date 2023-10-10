@@ -67,7 +67,7 @@ function FriendItem({
         )}
 
         {friend.balance < 0 && (
-          <p className="text-red-500">
+          <p className="text-red-500 dark:text-red-600">
             You owe {name} ${Math.abs(friend.balance)}
           </p>
         )}

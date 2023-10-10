@@ -52,7 +52,7 @@ function FormInput<T extends FieldValues>({
             {label}
           </FormLabel>
 
-          <FormControl className="bg-slate-100">
+          <FormControl className="bg-slate-100 text-slate-700">
             <Input
               type={type}
               placeholder={placeholder}

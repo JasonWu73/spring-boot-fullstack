@@ -1,4 +1,7 @@
-import { getRandomProduct, type Product } from '@/api/dummyjson/product-api'
+import {
+  getRandomProduct,
+  type ProductResult
+} from '@/api/dummyjson/product-api'
 import { useState } from 'react'
 import { ReloadIcon } from '@radix-ui/react-icons'
 import { Button } from '@/components/ui/Button'
@@ -16,7 +19,7 @@ function ProductShowcase() {
     error,
     loading,
     fetchData: getProduct
-  } = useFetch<Product>(async (signal?: AbortSignal) => {
+  } = useFetch<ProductResult, null>(async (_, signal?: AbortSignal) => {
     const response = await getRandomProduct(signal)
 
     if (!response.error && response.data) {
@@ -70,7 +73,11 @@ type TitleProps = {
 
 function Title({ label, isError = false }: TitleProps) {
   return (
-    <h1 className={cn('font-bold tracking-wider', { 'text-red-500': isError })}>
+    <h1
+      className={cn('font-bold tracking-wider', {
+        'text-red-500 dark:text-red-600': isError
+      })}
+    >
       {label}
     </h1>
   )

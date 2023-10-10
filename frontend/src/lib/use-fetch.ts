@@ -53,12 +53,18 @@ function reducer<T>(state: State<T>, action: Action<T>): State<T> {
  * 获取数据的自定义 Hook.
  *
  * @template T - 数据类型
+ * @template E - 请求参数类型
  *
  * @param callback - 获取数据的回调函数
+ * @param firstTimeAutoRunCallback - 是否在第一次渲染时自动执行回调函数
  * @returns - 数据, 错误信息, 加载状态和获取数据的回调函数
  */
-function useFetch<T>(
-  callback: (signal?: AbortSignal) => Promise<ApiResponse<T>>
+function useFetch<T, E>(
+  callback: (
+    values?: E | null,
+    signal?: AbortSignal
+  ) => Promise<ApiResponse<T>>,
+  firstTimeAutoRunCallback: boolean = true
 ) {
   const [{ data, error, loading }, dispatch] = useReducer(
     reducer as React.Reducer<State<T>, Action<T>>,
@@ -66,19 +72,24 @@ function useFetch<T>(
   )
 
   useEffect(() => {
+    if (!firstTimeAutoRunCallback) {
+      return
+    }
+
     const controller = new AbortController()
 
-    fetchData(controller).then()
+    fetchData(null, controller).then()
 
     return () => {
       controller.abort()
     }
   }, [])
 
-  async function fetchData(controller?: AbortController) {
+  async function fetchData(values?: E | null, controller?: AbortController) {
     dispatch({ type: 'FETCH_INIT' })
 
     const { data: responseData, error: responseError } = await callback(
+      values,
       controller?.signal
     )
 

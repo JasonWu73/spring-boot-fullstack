@@ -5,7 +5,7 @@ type ApiError = {
   message: string
 }
 
-type Product = {
+type ProductResult = {
   id: number
   title: string
   description: string
@@ -21,9 +21,9 @@ type Product = {
 
 async function getRandomProduct(
   signal?: AbortSignal
-): Promise<ApiResponse<Product>> {
+): Promise<ApiResponse<ProductResult>> {
   const randomId = Math.floor(Math.random() * 110)
-  const { data, error } = await sendRequest<Product, ApiError>({
+  const { data, error } = await sendRequest<ProductResult, ApiError>({
     url: `https://dummyjson.com/products/${randomId}`,
     signal: signal
   })
@@ -39,4 +39,4 @@ async function getRandomProduct(
   return { data, error: '' }
 }
 
-export { getRandomProduct, type Product }
+export { getRandomProduct, type ProductResult }
