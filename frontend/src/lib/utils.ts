@@ -14,6 +14,18 @@ function cn(...inputs: ClassValue[]) {
 }
 
 /**
+ * 带标签的模板字符串, 用于在模板字符串中使用 prettier-plugin-tailwindcss 插件.
+ *
+ * {@link https://github.com/tailwindlabs/prettier-plugin-tailwindcss#sorting-classes-in-template-literals|Sorting classes in template literals - prettier-plugin-tailwindcss}
+ *
+ * @param strings - 字符串数组
+ * @param values - 模板字符串中的变量
+ */
+function tw(strings: TemplateStringsArray, ...values: unknown[]) {
+  return String.raw({ raw: strings }, ...values)
+}
+
+/**
  * 截断字符串.
  *
  * @param str - 需要截断的字符串
@@ -37,4 +49,4 @@ function wait(seconds: number) {
   return new Promise((resolve) => setTimeout(resolve, seconds * 1000))
 }
 
-export { cn, truncate, wait }
+export { cn, tw, truncate, wait }

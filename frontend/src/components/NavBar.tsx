@@ -1,37 +1,75 @@
 import reactLogo from '@/assets/react.svg'
 import { ModeToggle } from '@/components/ui/ModeToggle'
 import { Link, NavLink } from 'react-router-dom'
-import React from 'react'
+import React, { useState } from 'react'
 import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuList
 } from '@/components/ui/NavigationMenu'
+import { cn, tw } from '@/lib/utils'
 
 function NavBar() {
+  const [isHamburgerOpen, setIsHamburgerOpen] = useState(false)
+
+  function handleClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    // 当点击页面链接后, 自动关闭中小屏幕下才显示的汉堡包导航菜单
+    if (e.target instanceof HTMLAnchorElement) {
+      setIsHamburgerOpen(false)
+    }
+  }
+
   return (
-    <nav className="flex h-16 items-center justify-between gap-4 bg-slate-950 p-4 text-snow-1 dark:bg-slate-700">
-      <PageNav />
-      <ModeToggle />
+    <nav
+      onClick={handleClick}
+      className="flex h-16 items-center justify-between gap-4 bg-slate-950 p-4 text-snow-1 dark:bg-slate-700"
+    >
+      <Logo />
+      <PageNav isHamburgerOpen={isHamburgerOpen} />
+      <div className="flex gap-4">
+        <ModeToggle />
+        <HamburgerIcon isOpen={isHamburgerOpen} onToggle={setIsHamburgerOpen} />
+      </div>
     </nav>
   )
 }
 
-function PageNav() {
+type PageNavProps = {
+  isHamburgerOpen: boolean
+}
+
+function PageNav({ isHamburgerOpen }: PageNavProps) {
   return (
-    <div className="flex flex-1 items-center gap-4">
-      <Logo />
-
-      <NavigationMenu>
-        <NavigationMenuList className="gap-2">
-          <NavItem link="/fetch">
-            Custom Hook: <code>useFetch</code>
-          </NavItem>
-
-          <NavItem link="/eat-and-split">Comprehensive form</NavItem>
+    <>
+      <NavigationMenu className="hidden max-w-full justify-start lg:flex">
+        <NavigationMenuList className="gap-4">
+          <NavItemList />
         </NavigationMenuList>
       </NavigationMenu>
-    </div>
+
+      <NavigationMenu
+        className={cn(
+          'absolute left-0 top-16 h-[calc(100%-4rem)] w-full max-w-full -translate-x-full transform items-start bg-slate-950 transition duration-500 dark:bg-slate-700 lg:hidden',
+          {
+            'translate-x-0': isHamburgerOpen
+          }
+        )}
+      >
+        <NavigationMenuList className="flex-col gap-4">
+          <NavItemList />
+        </NavigationMenuList>
+      </NavigationMenu>
+    </>
+  )
+}
+
+function NavItemList() {
+  return (
+    <>
+      <NavItem link="/fetch">Custom Hook: useFetch</NavItem>
+
+      <NavItem link="/eat-and-split">Comprehensive form</NavItem>
+    </>
   )
 }
 
@@ -61,6 +99,45 @@ function Logo() {
         <h2 className="text-2xl font-bold">TS + React + Tailwind CSS</h2>
       </span>
     </Link>
+  )
+}
+
+type HamburgerIconProps = {
+  isOpen: boolean
+  onToggle: (isOpen: boolean) => void
+}
+
+function HamburgerIcon({ isOpen, onToggle }: HamburgerIconProps) {
+  const genericHamburgerLine = tw`ease my-1 h-1 w-9 transform rounded-full bg-white transition duration-300 dark:bg-slate-950`
+
+  return (
+    <div className="flex items-center lg:hidden">
+      <button
+        className="group flex h-9 w-9 flex-col items-center justify-center"
+        onClick={() => onToggle(!isOpen)}
+      >
+        <div
+          className={cn(genericHamburgerLine, {
+            'translate-y-3 rotate-45 opacity-50 group-hover:opacity-100':
+              isOpen,
+            'opacity-50 group-hover:opacity-100': !isOpen
+          })}
+        />
+        <div
+          className={cn(genericHamburgerLine, {
+            'opacity-0': isOpen,
+            'opacity-50 group-hover:opacity-100': !isOpen
+          })}
+        />
+        <div
+          className={cn(genericHamburgerLine, {
+            '-translate-y-3 -rotate-45 opacity-50 group-hover:opacity-100':
+              isOpen,
+            'opacity-50 group-hover:opacity-100': !isOpen
+          })}
+        />
+      </button>
+    </div>
   )
 }
 
