@@ -49,7 +49,7 @@ const CardDescription = forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, ...props }, ref) => (
-  <p
+  <div
     ref={ref}
     className={cn('text-sm text-slate-500 dark:text-slate-400', className)}
     {...props}
