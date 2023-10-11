@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/Card'
 import { FormInput, FormSelect } from '@/components/ui/CustomFormField'
 import { Form } from '@/components/ui/Form'
+import { Skeleton } from '@/components/ui/Skeleton'
 import { StarRating } from '@/components/ui/StarRating'
 import {
   Tooltip,
@@ -26,7 +27,6 @@ import { useTitle } from '@/lib/use-title'
 
 import { type Friend, getFriend } from '@/api/fake/friend-api'
 import { useFetch } from '@/lib/use-fetch'
-import { Loading } from '@/components/ui/Loading'
 import { ExclamationTriangleIcon } from '@radix-ui/react-icons'
 
 const whoIsPayingOptions = [
@@ -132,19 +132,11 @@ function FormSplitBill({
 
   return (
     <Card className="w-96 bg-amber-100 text-slate-700 dark:bg-amber-100 dark:text-slate-700 md:w-[22rem] lg:w-[30rem]">
-      {loading && <Loading />}
+      {loading && <SkeletonForm />}
 
-      {error && (
-        <CardHeader>
-          <CardTitle className="flex items-center gap-1 text-red-500">
-            <ExclamationTriangleIcon className="h-4 w-4" />
-            <span className="h-5">Oops, something went wrong</span>
-          </CardTitle>
-          <CardDescription>{error}</CardDescription>
-        </CardHeader>
-      )}
+      {!loading && error && <Error message={error} />}
 
-      {data && (
+      {!loading && data && (
         <>
           <CardHeader>
             <CardTitle>Split bill, my friend</CardTitle>
@@ -225,6 +217,49 @@ function FormSplitBill({
         </>
       )}
     </Card>
+  )
+}
+
+function SkeletonForm() {
+  return (
+    <>
+      <CardHeader>
+        <CardTitle>
+          <Skeleton className="h-6 w-[300px]" />
+        </CardTitle>
+        <CardDescription className="space-y-2">
+          <Skeleton className="h-5 w-[300px]" />
+          <Skeleton className="h-6 w-[200px]" />
+        </CardDescription>
+      </CardHeader>
+
+      <CardContent className="flex flex-col gap-4">
+        {Array.from({ length: 4 }).map((_, index) => (
+          <div key={index} className="flex gap-4">
+            <Skeleton className="h-8 w-32" />
+            <Skeleton className="h-8 w-full" />
+          </div>
+        ))}
+
+        <Skeleton className="h-8 w-20 self-end" />
+      </CardContent>
+    </>
+  )
+}
+
+type ErrorProps = {
+  message: string
+}
+
+function Error({ message }: ErrorProps) {
+  return (
+    <CardHeader>
+      <CardTitle className="flex items-center gap-1 text-red-500">
+        <ExclamationTriangleIcon className="h-4 w-4" />
+        <span className="h-5">Oops, something went wrong</span>
+      </CardTitle>
+      <CardDescription>{message}</CardDescription>
+    </CardHeader>
   )
 }
 
