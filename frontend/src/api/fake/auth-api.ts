@@ -1,5 +1,6 @@
 import { ApiResponse } from '@/lib/use-fetch'
 import { wait } from '@/lib/utils'
+import { sendRequest } from '@/lib/http'
 
 type LoginParams = {
   username: string
@@ -11,14 +12,24 @@ type Token = {
   accessToken: string
 }
 
-async function getAccessToken(data: LoginParams): Promise<ApiResponse<Token>> {
+async function getAccessToken(
+  params: LoginParams
+): Promise<ApiResponse<Token>> {
   await wait(2)
 
-  if (data.username !== 'admin' || data.password !== 'admin') {
+  if (params.username !== 'admin' || params.password !== 'admin') {
     return { data: null, error: 'Invalid username or password' }
   }
 
-  return { data: { accessToken: 'fake-token-123' }, error: '' }
+  const { data, error } = await sendRequest<Token, string>({
+    url: 'http://localhost:5173/data/token.json'
+  })
+
+  if (error) {
+    return { data: null, error }
+  }
+
+  return { data, error: '' }
 }
 
 export { getAccessToken, type Token }

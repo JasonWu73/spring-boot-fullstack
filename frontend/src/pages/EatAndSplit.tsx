@@ -12,7 +12,7 @@ import { Input } from '@/components/ui/Input'
 import { wait } from '@/lib/utils'
 import { useLocalStorageState } from '@/lib/use-storage'
 import { useKeypress } from '@/lib/use-keypress'
-import { Friend, getFriends } from '@/api/fake/friend-api'
+import { type Friend, getFriends } from '@/api/fake/friend-api'
 import { useFetch } from '@/lib/use-fetch'
 
 // ----- Start: 测试懒加载 (React Split Code 技术) -----
@@ -34,11 +34,11 @@ function EatAndSplit() {
     const { data, error } = await getFriends()
 
     if (data) {
-      setFriends((prev) => (!prev ? data.friends : prev))
+      setFriends(data)
     }
 
     return { data, error }
-  })
+  }, friends.length === 0)
 
   const [showAddFriend, setShowAddFriend] = useState(false)
   const [selectedFriend, setSelectedFriend] = useState<Friend | null>(null)

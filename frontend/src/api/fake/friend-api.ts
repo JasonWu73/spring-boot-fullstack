@@ -1,72 +1,26 @@
 import { ApiResponse } from '@/lib/use-fetch'
 import { wait } from '@/lib/utils'
+import { sendRequest } from '@/lib/http'
 
-const initialFriends = [
-  {
-    id: 1,
-    name: 'Lisa',
-    image: 'https://i.pravatar.cc/150?img=40',
-    balance: -10.5,
-    creditRating: 5
-  },
-  {
-    id: 2,
-    name: 'Lucy',
-    image: 'https://i.pravatar.cc/400?img=29',
-    balance: 8.8,
-    creditRating: 3.5
-  },
-  {
-    id: 3,
-    name: 'Lily',
-    image: 'https://i.pravatar.cc/400?img=24',
-    balance: 0,
-    creditRating: 0
-  },
-  {
-    id: 4,
-    name: 'Super long long long long longlong long long long long  long long long long long long long long long long long long name',
-    image: 'https://i.pravatar.cc/400?img=23',
-    balance: 0,
-    creditRating: 0
-  },
-  {
-    id: 5,
-    name: 'Bartholomew',
-    image: 'https://i.pravatar.cc/400?img=22',
-    balance: 0,
-    creditRating: 0
-  },
-  {
-    id: 6,
-    name: 'Lola',
-    image: 'https://i.pravatar.cc/400?img=21',
-    balance: 0,
-    creditRating: 0
-  },
-  {
-    id: 7,
-    name: 'Lara',
-    image: 'https://i.pravatar.cc/400?img=20',
-    balance: 0,
-    creditRating: 0
-  }
-]
-
-type Friend = (typeof initialFriends)[number]
-
-type Friends = {
-  friends: Friend[]
+type Friend = {
+  id: number
+  name: string
+  image: string
+  balance: number
+  creditRating: number
 }
 
-async function getFriends(): Promise<ApiResponse<Friends>> {
+async function getFriends(): Promise<ApiResponse<Friend[]>> {
   await wait(2)
 
-  return {
-    data: {
-      friends: initialFriends
-    },
-    error: ''
+  const { data, error } = await sendRequest<Friend[], string>({
+    url: 'http://localhost:5173/data/friends.json'
+  })
+
+  if (error) {
+    return { data: null, error }
   }
+
+  return { data, error: '' }
 }
-export { getFriends, type Friend, type Friends }
+export { getFriends, type Friend }

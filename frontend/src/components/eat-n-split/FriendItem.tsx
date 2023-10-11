@@ -6,7 +6,6 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from '@/components/ui/tooltip'
-import { Button } from '@/components/ui/Button'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,6 +18,8 @@ import {
   AlertDialogTrigger
 } from '@/components/ui/AlertDialog'
 import { type Friend } from '@/api/fake/friend-api'
+import { Link } from 'react-router-dom'
+import { buttonVariants } from '@/components/ui/Button'
 
 type FriendItemProps = {
   friend: Friend
@@ -75,9 +76,13 @@ function FriendItem({
         {friend.balance === 0 && <p>You and {name} are even</p>}
       </div>
 
-      <Button onClick={() => onSelectFriend(friend)}>
+      <Link
+        to="split"
+        onClick={() => onSelectFriend(friend)}
+        className={buttonVariants({ variant: 'default' })}
+      >
         {isSelected ? 'Close' : 'Select'}
-      </Button>
+      </Link>
     </li>
   )
 }
