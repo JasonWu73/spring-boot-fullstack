@@ -1,20 +1,23 @@
-import React, { lazy, Suspense, useRef, useState } from 'react'
+import React, { Suspense, lazy, useRef, useState } from 'react'
+
+import { Button } from '@/components/ui/Button'
+import { Input } from '@/components/ui/Input'
+import { Loading } from '@/components/ui/Loading'
+import { useToast } from '@/components/ui/use-toast'
+
+import { useFetch } from '@/lib/use-fetch'
+import { useKeypress } from '@/lib/use-keypress'
+import { useLocalStorageState } from '@/lib/use-storage'
+import { useTitle } from '@/lib/use-title'
+import { wait } from '@/lib/utils'
 
 import {
   type Bill,
   FormSplitBill
 } from '@/components/eat-n-split/FormSplitBill'
-import { Button } from '@/components/ui/Button'
-import { useToast } from '@/components/ui/use-toast'
 import { FriendList } from '@/components/eat-n-split/FriendList'
-import { Loading } from '@/components/ui/Loading'
-import { Input } from '@/components/ui/Input'
-import { useTitle } from '@/lib/use-title'
-import { wait } from '@/lib/utils'
-import { useLocalStorageState } from '@/lib/use-storage'
-import { useKeypress } from '@/lib/use-keypress'
+
 import { type Friend, getFriends } from '@/api/fake/friend-api'
-import { useFetch } from '@/lib/use-fetch'
 
 // ----- Start: 测试懒加载 (React Split Code 技术) -----
 const FormAddFriend = lazy(() =>
@@ -31,8 +34,8 @@ function EatAndSplit() {
 
   const [friends, setFriends] = useLocalStorageState<Friend[]>('friends', [])
 
-  const { error, loading } = useFetch(async () => {
-    const { data, error } = await getFriends()
+  const { error, loading } = useFetch(async (_, signal) => {
+    const { data, error } = await getFriends(signal)
 
     if (data) {
       setFriends(data)
@@ -42,9 +45,13 @@ function EatAndSplit() {
   }, friends.length === 0)
 
   const [showAddFriend, setShowAddFriend] = useState(false)
-  const [selectedFriend, setSelectedFriend] = useState<Friend | null>(null)
-  const [search, setSearch] = useState('')
   const { toast } = useToast()
+
+  // TODO: selectedId 放入 URL 中
+  const [selectedFriend, setSelectedFriend] = useState<Friend | null>(null)
+
+  // TODO: search 放入 URL 参数中
+  const [search, setSearch] = useState('')
 
   const filteredFriends = friends.filter((friend) =>
     friend.name.toLowerCase().includes(search.toLowerCase())
@@ -171,7 +178,7 @@ function EatAndSplit() {
         {selectedFriend && (
           <FormSplitBill
             key={selectedFriend.id}
-            friend={selectedFriend}
+            friendId={selectedFriend.id}
             onSplitBill={handleSplitBill}
             onCreditRating={handleCreditRating}
           />

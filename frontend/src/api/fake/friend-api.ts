@@ -1,6 +1,6 @@
+import { sendRequest } from '@/lib/http'
 import { ApiResponse } from '@/lib/use-fetch'
 import { wait } from '@/lib/utils'
-import { sendRequest } from '@/lib/http'
 
 type Friend = {
   id: number
@@ -10,11 +10,14 @@ type Friend = {
   creditRating: number
 }
 
-async function getFriends(): Promise<ApiResponse<Friend[]>> {
+async function getFriends(
+  signal?: AbortSignal
+): Promise<ApiResponse<Friend[]>> {
   await wait(2)
 
   const { data, error } = await sendRequest<Friend[], string>({
-    url: 'http://localhost:5173/data/friends.json'
+    url: 'http://localhost:5173/data/friends.json',
+    signal
   })
 
   if (error) {
@@ -23,4 +26,24 @@ async function getFriends(): Promise<ApiResponse<Friend[]>> {
 
   return { data, error: '' }
 }
-export { getFriends, type Friend }
+
+async function getFriend(
+  id: number,
+  signal?: AbortSignal
+): Promise<ApiResponse<Friend>> {
+  const { data, error } = await getFriends(signal)
+
+  if (error) {
+    return { data: null, error }
+  }
+
+  const friend = data?.find((friend) => friend.id === id)
+
+  if (friend) {
+    return { data: friend, error: '' }
+  }
+
+  return { data: null, error: 'Friend not found' }
+}
+
+export { type Friend, getFriend, getFriends }

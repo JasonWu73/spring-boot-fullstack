@@ -1,10 +1,10 @@
-import { z } from 'zod'
-import { useForm, type UseFormReturn } from 'react-hook-form'
 import { useEffect } from 'react'
+import { useForm, type UseFormReturn } from 'react-hook-form'
+
+import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 import { Button } from '@/components/ui/Button'
-import { Form } from '@/components/ui/Form'
 import {
   Card,
   CardContent,
@@ -12,16 +12,22 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/Card'
+import { FormInput, FormSelect } from '@/components/ui/CustomFormField'
+import { Form } from '@/components/ui/Form'
+import { StarRating } from '@/components/ui/StarRating'
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger
-} from '@/components/ui/tooltip'
-import { FormInput, FormSelect } from '@/components/ui/CustomFormField'
-import { StarRating } from '@/components/ui/StarRating'
+} from '@/components/ui/Tooltip'
+
 import { useTitle } from '@/lib/use-title'
-import { type Friend } from '@/api/fake/friend-api'
+
+import { type Friend, getFriend } from '@/api/fake/friend-api'
+import { useFetch } from '@/lib/use-fetch'
+import { Loading } from '@/components/ui/Loading'
+import { ExclamationTriangleIcon } from '@radix-ui/react-icons'
 
 const whoIsPayingOptions = [
   { value: 'user', label: 'You' },
@@ -82,19 +88,21 @@ type Bill = {
 }
 
 type FormSplitBillProps = {
-  friend: Friend
+  friendId: number
   onSplitBill: (bill: Bill) => void
   onCreditRating: (rating: number) => void
 }
 
 function FormSplitBill({
-  friend,
+  friendId,
   onSplitBill,
   onCreditRating
 }: FormSplitBillProps) {
-  const { id, name, creditRating } = friend
+  useTitle(`Split bill with friend ${friendId}`)
 
-  useTitle(`Split bill | ${name}`)
+  const { data, error, loading } = useFetch(
+    async (_, signal) => await getFriend(friendId, signal)
+  )
 
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
@@ -110,7 +118,7 @@ function FormSplitBill({
 
   function onSubmit(values: FormSchema) {
     const bill = {
-      friendId: id,
+      friendId: friendId,
       expense:
         values.whoIsPaying === 'user'
           ? -values.friendExpense
@@ -124,81 +132,98 @@ function FormSplitBill({
 
   return (
     <Card className="w-96 bg-amber-100 text-slate-700 dark:bg-amber-100 dark:text-slate-700 md:w-[22rem] lg:w-[30rem]">
-      <CardHeader>
-        <CardTitle>Split bill, my friend</CardTitle>
+      {loading && <Loading />}
 
-        <CardDescription className="max-w-xs overflow-hidden text-ellipsis whitespace-nowrap">
-          Split a bill with{' '}
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <span className="font-semibold text-cyan-500">{name}</span>
-              </TooltipTrigger>
+      {error && (
+        <CardHeader>
+          <CardTitle className="flex items-center gap-1 text-red-500">
+            <ExclamationTriangleIcon className="h-4 w-4" />
+            <span className="h-5">Oops, something went wrong</span>
+          </CardTitle>
+          <CardDescription>{error}</CardDescription>
+        </CardHeader>
+      )}
 
-              <TooltipContent>{name}</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        </CardDescription>
+      {data && (
+        <>
+          <CardHeader>
+            <CardTitle>Split bill, my friend</CardTitle>
 
-        <StarRating
-          key={id} // 为了避免共用组件 (在未关闭表单组件前)
-          defaultRating={creditRating}
-          onRate={(rating) => onCreditRating(rating)}
-          size="lg"
-        />
-      </CardHeader>
+            <CardDescription className="max-w-xs overflow-hidden text-ellipsis whitespace-nowrap">
+              Split a bill with{' '}
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span className="font-semibold text-cyan-500">
+                      {data.name}
+                    </span>
+                  </TooltipTrigger>
 
-      <CardContent>
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="flex flex-col gap-4"
-          >
-            <FormInput
-              control={form.control}
-              name="bill"
-              type="number"
-              label="💰 Bill value"
-              labelWidth={160}
-              placeholder="Bill value"
-              isError={form.getFieldState('bill')?.invalid}
+                  <TooltipContent>{data.name}</TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </CardDescription>
+
+            <StarRating
+              defaultRating={data.creditRating}
+              onRate={(rating) => onCreditRating(rating)}
+              size="lg"
             />
+          </CardHeader>
 
-            <FormInput
-              control={form.control}
-              name="userExpense"
-              type="number"
-              label="💸 Your expense"
-              labelWidth={160}
-              placeholder="Your expense"
-              isError={form.getFieldState('userExpense')?.invalid}
-            />
+          <CardContent>
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="flex flex-col gap-4"
+              >
+                <FormInput
+                  control={form.control}
+                  name="bill"
+                  type="number"
+                  label="💰 Bill value"
+                  labelWidth={160}
+                  placeholder="Bill value"
+                  isError={form.getFieldState('bill')?.invalid}
+                />
 
-            <FormInput
-              control={form.control}
-              name="friendExpense"
-              type="number"
-              label={`👫 ${name}'s expense`}
-              labelWidth={160}
-              placeholder={`${name}'s expense`}
-              disabled
-            />
+                <FormInput
+                  control={form.control}
+                  name="userExpense"
+                  type="number"
+                  label="💸 Your expense"
+                  labelWidth={160}
+                  placeholder="Your expense"
+                  isError={form.getFieldState('userExpense')?.invalid}
+                />
 
-            <FormSelect
-              control={form.control}
-              name="whoIsPaying"
-              label="🤑 Who is paying the bill"
-              labelWidth={160}
-              options={getSelections(name)}
-              isError={form.getFieldState('whoIsPaying')?.invalid}
-            />
+                <FormInput
+                  control={form.control}
+                  name="friendExpense"
+                  type="number"
+                  label={`👫 ${data.name}'s expense`}
+                  labelWidth={160}
+                  placeholder={`${data.name}'s expense`}
+                  disabled
+                />
 
-            <Button type="submit" className="self-end">
-              Split bill
-            </Button>
-          </form>
-        </Form>
-      </CardContent>
+                <FormSelect
+                  control={form.control}
+                  name="whoIsPaying"
+                  label="🤑 Who is paying the bill"
+                  labelWidth={160}
+                  options={getSelections(data.name)}
+                  isError={form.getFieldState('whoIsPaying')?.invalid}
+                />
+
+                <Button type="submit" className="self-end">
+                  Split bill
+                </Button>
+              </form>
+            </Form>
+          </CardContent>
+        </>
+      )}
     </Card>
   )
 }
