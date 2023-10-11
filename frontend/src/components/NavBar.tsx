@@ -77,8 +77,6 @@ function NavItemList() {
   return (
     <>
       <NavItem link="/fetch">Custom Hook: useFetch</NavItem>
-
-      <NavItem link="/eat-and-split">Comprehensive form</NavItem>
     </>
   )
 }

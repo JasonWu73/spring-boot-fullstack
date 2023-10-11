@@ -4,9 +4,9 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Form } from '@/components/ui/Form'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
-import { type Friend } from '@/components/eat-n-split/friend-data'
 import { FormInput } from '@/components/ui/CustomFormField'
 import { useTitle } from '@/lib/use-title'
+import { type Friend } from '@/api/fake/friend-api'
 
 const formSchema = z.object({
   name: z.string().trim().nonempty('Must enter a name'),

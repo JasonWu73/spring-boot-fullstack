@@ -1,4 +1,3 @@
-import { Friend } from '@/components/eat-n-split/friend-data'
 import { cn, truncate } from '@/lib/utils'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar'
 import {
@@ -19,6 +18,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger
 } from '@/components/ui/AlertDialog'
+import { type Friend } from '@/api/fake/friend-api'
 
 type FriendItemProps = {
   friend: Friend

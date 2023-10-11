@@ -2,7 +2,7 @@ import { ThemeProvider } from '@/components/ui/ThemeProvider'
 import { Toaster } from '@/components/ui/Toaster'
 import { NavBar } from '@/components/NavBar'
 import { ProductShowcase } from '@/pages/ProductShowcase'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { EatAndSplit } from '@/pages/EatAndSplit'
 import { PageNotFound } from '@/pages/PageNotFound'
 import { Login } from '@/pages/Login'
@@ -14,10 +14,12 @@ export default function App() {
         <NavBar />
 
         <Routes>
-          <Route path="/" element={<ProductShowcase />} />
+          <Route path="/" element={<Navigate to="/eat-split" replace />} />
           <Route path="/login" element={<Login />} />
           <Route path="/fetch" element={<ProductShowcase />} />
-          <Route path="/eat-and-split" element={<EatAndSplit />} />
+          <Route path="/eat-split" element={<EatAndSplit />}>
+            <Route path="split" element={<div>split</div>} />
+          </Route>
           <Route path="*" element={<PageNotFound />} />
         </Routes>
 

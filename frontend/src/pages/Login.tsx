@@ -12,7 +12,7 @@ import { useTitle } from '@/lib/use-title'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { getAccessToken, TokenResult } from '@/api/fake/fake-api'
+import { getAccessToken, Token } from '@/api/fake/auth-api'
 import { useFetch } from '@/lib/use-fetch'
 import { useLocalStorageState } from '@/lib/use-storage'
 import { ReloadIcon } from '@radix-ui/react-icons'
@@ -44,7 +44,7 @@ function Login() {
     error,
     loading,
     fetchData: login
-  } = useFetch<TokenResult, FormSchema>(async (values, signal) => {
+  } = useFetch<Token, FormSchema>(async (values, signal) => {
     const { data, error } = await getAccessToken({
       ...values!,
       signal

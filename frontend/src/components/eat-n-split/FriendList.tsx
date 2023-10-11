@@ -3,11 +3,17 @@ import { ScrollArea } from '@/components/ui/ScrollArea'
 import React from 'react'
 import { Card } from '@/components/ui/Card'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/Alert'
-import { RocketIcon } from '@radix-ui/react-icons'
-import { Friend } from '@/components/eat-n-split/friend-data'
+import {
+  ExclamationTriangleIcon,
+  ReloadIcon,
+  RocketIcon
+} from '@radix-ui/react-icons'
 import { FriendItem } from '@/components/eat-n-split/FriendItem'
+import { type Friend } from '@/api/fake/friend-api'
 
 type FriendListProps = {
+  error: string
+  loading: boolean
   friends: Friend[]
   selectedFriend: Friend | null
   onSelectFriend: (friend: Friend) => void
@@ -15,6 +21,8 @@ type FriendListProps = {
 }
 
 function FriendList({
+  error,
+  loading,
   friends,
   selectedFriend,
   onSelectFriend,
@@ -23,8 +31,24 @@ function FriendList({
   return (
     <Card>
       <ScrollArea className="h-96 w-96 md:h-[30rem] md:w-[22rem] lg:h-[24rem] lg:w-[30rem]">
-        <div className="p-4">
-          {friends.length === 0 && (
+        <div className="space-y-4 p-4">
+          {loading && (
+            <Alert>
+              <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+              <AlertTitle>Loading...</AlertTitle>
+              <AlertDescription>Fetching friends from server.</AlertDescription>
+            </Alert>
+          )}
+
+          {!loading && error && (
+            <Alert variant="destructive">
+              <ExclamationTriangleIcon className="h-4 w-4" />
+              <AlertTitle>Error</AlertTitle>
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+
+          {!loading && friends.length === 0 && (
             <Alert>
               <RocketIcon className="h-4 w-4" />
               <AlertTitle>Heads up!</AlertTitle>
@@ -34,7 +58,7 @@ function FriendList({
             </Alert>
           )}
 
-          {friends.length > 0 && (
+          {!loading && friends.length > 0 && (
             <ul>
               {friends.map((value, index, array) => (
                 <React.Fragment key={value.id}>

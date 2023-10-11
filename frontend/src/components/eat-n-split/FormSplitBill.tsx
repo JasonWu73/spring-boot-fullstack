@@ -17,10 +17,10 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from '@/components/ui/tooltip'
-import { Friend } from '@/components/eat-n-split/friend-data'
 import { FormInput, FormSelect } from '@/components/ui/CustomFormField'
 import { StarRating } from '@/components/ui/StarRating'
 import { useTitle } from '@/lib/use-title'
+import { type Friend } from '@/api/fake/friend-api'
 
 const whoIsPayingOptions = [
   { value: 'user', label: 'You' },

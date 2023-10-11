@@ -7,13 +7,11 @@ type LoginParams = {
   signal?: AbortSignal
 }
 
-type TokenResult = {
+type Token = {
   accessToken: string
 }
 
-async function getAccessToken(
-  data: LoginParams
-): Promise<ApiResponse<TokenResult>> {
+async function getAccessToken(data: LoginParams): Promise<ApiResponse<Token>> {
   await wait(2)
 
   if (data.username !== 'admin' || data.password !== 'admin') {
@@ -23,4 +21,4 @@ async function getAccessToken(
   return { data: { accessToken: 'fake-token-123' }, error: '' }
 }
 
-export { getAccessToken, type TokenResult }
+export { getAccessToken, type Token }

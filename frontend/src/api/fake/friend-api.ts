@@ -1,3 +1,6 @@
+import { ApiResponse } from '@/lib/use-fetch'
+import { wait } from '@/lib/utils'
+
 const initialFriends = [
   {
     id: 1,
@@ -50,6 +53,20 @@ const initialFriends = [
   }
 ]
 
-type Friend = (typeof initialFriends)[0]
+type Friend = (typeof initialFriends)[number]
 
-export { initialFriends, type Friend }
+type Friends = {
+  friends: Friend[]
+}
+
+async function getFriends(): Promise<ApiResponse<Friends>> {
+  await wait(2)
+
+  return {
+    data: {
+      friends: initialFriends
+    },
+    error: ''
+  }
+}
+export { getFriends, type Friend, type Friends }

@@ -5,10 +5,6 @@ import {
 import React, { lazy, Suspense, useRef, useState } from 'react'
 import { Button } from '@/components/ui/Button'
 import { useToast } from '@/components/ui/use-toast'
-import {
-  type Friend,
-  initialFriends
-} from '@/components/eat-n-split/friend-data'
 import { FriendList } from '@/components/eat-n-split/FriendList'
 import { Loading } from '@/components/ui/Loading'
 import { useTitle } from '@/lib/use-title'
@@ -16,6 +12,8 @@ import { Input } from '@/components/ui/Input'
 import { wait } from '@/lib/utils'
 import { useLocalStorageState } from '@/lib/use-storage'
 import { useKeypress } from '@/lib/use-keypress'
+import { Friend, getFriends } from '@/api/fake/friend-api'
+import { useFetch } from '@/lib/use-fetch'
 
 // ----- Start: 测试懒加载 (React Split Code 技术) -----
 const FormAddFriend = lazy(() =>
@@ -25,13 +23,23 @@ const FormAddFriend = lazy(() =>
     }))
   )
 )
-
 // ----- End: 测试懒加载 (React Split Code 技术) -----
 
 function EatAndSplit() {
   useTitle('Eat & Split')
 
-  const [friends, setFriends] = useLocalStorageState('friends', initialFriends)
+  const [friends, setFriends] = useLocalStorageState<Friend[]>('friends', [])
+
+  const { error, loading } = useFetch(async () => {
+    const { data, error } = await getFriends()
+
+    if (data) {
+      setFriends((prev) => (!prev ? data.friends : prev))
+    }
+
+    return { data, error }
+  })
+
   const [showAddFriend, setShowAddFriend] = useState(false)
   const [selectedFriend, setSelectedFriend] = useState<Friend | null>(null)
   const [search, setSearch] = useState('')
@@ -133,6 +141,8 @@ function EatAndSplit() {
         />
 
         <FriendList
+          loading={loading}
+          error={error}
           friends={friends.filter((friend) =>
             friend.name.toLowerCase().includes(search.toLowerCase())
           )}
