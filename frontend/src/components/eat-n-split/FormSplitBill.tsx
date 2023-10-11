@@ -92,7 +92,9 @@ function FormSplitBill({
   onSplitBill,
   onCreditRating
 }: FormSplitBillProps) {
-  useTitle(`Split bill | ${friend.name}`)
+  const { id, name, creditRating } = friend
+
+  useTitle(`Split bill | ${name}`)
 
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
@@ -108,7 +110,7 @@ function FormSplitBill({
 
   function onSubmit(values: FormSchema) {
     const bill = {
-      friendId: friend.id,
+      friendId: id,
       expense:
         values.whoIsPaying === 'user'
           ? -values.friendExpense
@@ -130,19 +132,17 @@ function FormSplitBill({
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <span className="font-semibold text-cyan-500">
-                  {friend.name}
-                </span>
+                <span className="font-semibold text-cyan-500">{name}</span>
               </TooltipTrigger>
 
-              <TooltipContent>{friend.name}</TooltipContent>
+              <TooltipContent>{name}</TooltipContent>
             </Tooltip>
           </TooltipProvider>
         </CardDescription>
 
         <StarRating
-          key={friend.id} // 为了避免共用组件 (在未关闭表单组件前)
-          defaultRating={friend.creditRating}
+          key={id} // 为了避免共用组件 (在未关闭表单组件前)
+          defaultRating={creditRating}
           onRate={(rating) => onCreditRating(rating)}
           size="lg"
         />
@@ -178,9 +178,9 @@ function FormSplitBill({
               control={form.control}
               name="friendExpense"
               type="number"
-              label={`👫 ${friend.name}'s expense`}
+              label={`👫 ${name}'s expense`}
               labelWidth={160}
-              placeholder={`${friend.name}'s expense`}
+              placeholder={`${name}'s expense`}
               disabled
             />
 
@@ -189,7 +189,7 @@ function FormSplitBill({
               name="whoIsPaying"
               label="🤑 Who is paying the bill"
               labelWidth={160}
-              options={getSelections(friend.name)}
+              options={getSelections(name)}
               isError={form.getFieldState('whoIsPaying')?.invalid}
             />
 
