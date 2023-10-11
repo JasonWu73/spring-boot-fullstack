@@ -1,3 +1,9 @@
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
+import { ReloadIcon } from '@radix-ui/react-icons'
+
 import {
   Card,
   CardContent,
@@ -8,16 +14,11 @@ import {
 import { Form } from '@/components/ui/Form'
 import { FormInput } from '@/components/ui/CustomFormField'
 import { Button } from '@/components/ui/Button'
+import { useToast } from '@/components/ui/use-toast'
 import { useTitle } from '@/lib/use-title'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
-import { getAccessToken, Token } from '@/api/fake/auth-api'
 import { useFetch } from '@/lib/use-fetch'
 import { useLocalStorageState } from '@/lib/use-storage'
-import { ReloadIcon } from '@radix-ui/react-icons'
-import { useToast } from '@/components/ui/use-toast'
-import { useNavigate } from 'react-router-dom'
+import { getAccessToken, Token } from '@/api/fake/auth-api'
 
 const formSchema = z.object({
   username: z.string().trim().nonempty('Must enter a username'),

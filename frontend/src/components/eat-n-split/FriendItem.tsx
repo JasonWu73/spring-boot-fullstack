@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 import { cn, truncate } from '@/lib/utils'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar'
 import {
@@ -18,7 +20,6 @@ import {
   AlertDialogTrigger
 } from '@/components/ui/AlertDialog'
 import { type Friend } from '@/api/fake/friend-api'
-import { Link } from 'react-router-dom'
 import { buttonVariants } from '@/components/ui/Button'
 
 type FriendItemProps = {

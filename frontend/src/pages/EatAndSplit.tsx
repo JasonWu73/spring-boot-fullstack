@@ -1,14 +1,15 @@
+import React, { lazy, Suspense, useRef, useState } from 'react'
+
 import {
   type Bill,
   FormSplitBill
 } from '@/components/eat-n-split/FormSplitBill'
-import React, { lazy, Suspense, useRef, useState } from 'react'
 import { Button } from '@/components/ui/Button'
 import { useToast } from '@/components/ui/use-toast'
 import { FriendList } from '@/components/eat-n-split/FriendList'
 import { Loading } from '@/components/ui/Loading'
-import { useTitle } from '@/lib/use-title'
 import { Input } from '@/components/ui/Input'
+import { useTitle } from '@/lib/use-title'
 import { wait } from '@/lib/utils'
 import { useLocalStorageState } from '@/lib/use-storage'
 import { useKeypress } from '@/lib/use-keypress'
@@ -44,6 +45,10 @@ function EatAndSplit() {
   const [selectedFriend, setSelectedFriend] = useState<Friend | null>(null)
   const [search, setSearch] = useState('')
   const { toast } = useToast()
+
+  const filteredFriends = friends.filter((friend) =>
+    friend.name.toLowerCase().includes(search.toLowerCase())
+  )
 
   useKeypress({ key: 'Escape' }, () => {
     setShowAddFriend(false)
@@ -143,9 +148,7 @@ function EatAndSplit() {
         <FriendList
           loading={loading}
           error={error}
-          friends={friends.filter((friend) =>
-            friend.name.toLowerCase().includes(search.toLowerCase())
-          )}
+          friends={filteredFriends}
           selectedFriend={selectedFriend}
           onSelectFriend={handleSelectFriend}
           onDeleteFriend={handleDeleteFriend}

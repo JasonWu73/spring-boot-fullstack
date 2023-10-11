@@ -1,4 +1,6 @@
+import React, { HTMLInputTypeAttribute } from 'react'
 import { type Control, type FieldValues, type Path } from 'react-hook-form'
+
 import {
   FormControl,
   FormField,
@@ -7,7 +9,6 @@ import {
   FormMessage
 } from '@/components/ui/Form'
 import { Input } from '@/components/ui/Input'
-import React, { HTMLInputTypeAttribute } from 'react'
 import {
   Select,
   SelectContent,

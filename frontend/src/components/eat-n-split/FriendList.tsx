@@ -1,13 +1,14 @@
-import { Separator } from '@/components/ui/Separator'
-import { ScrollArea } from '@/components/ui/ScrollArea'
 import React from 'react'
-import { Card } from '@/components/ui/Card'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/Alert'
 import {
   ExclamationTriangleIcon,
   ReloadIcon,
   RocketIcon
 } from '@radix-ui/react-icons'
+
+import { Separator } from '@/components/ui/Separator'
+import { ScrollArea } from '@/components/ui/ScrollArea'
+import { Card } from '@/components/ui/Card'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/Alert'
 import { FriendItem } from '@/components/eat-n-split/FriendItem'
 import { type Friend } from '@/api/fake/friend-api'
 

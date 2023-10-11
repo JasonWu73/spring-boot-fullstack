@@ -1,7 +1,8 @@
+import React, { useState } from 'react'
+import { Link, NavLink } from 'react-router-dom'
+
 import reactLogo from '@/assets/react.svg'
 import { ModeToggle } from '@/components/ui/ModeToggle'
-import { Link, NavLink } from 'react-router-dom'
-import React, { useState } from 'react'
 import {
   NavigationMenu,
   NavigationMenuItem,

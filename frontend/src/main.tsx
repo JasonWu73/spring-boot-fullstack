@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client' // REACT 18
 // import ReactDOM from 'react-dom' // REACT 17
+
 import App from '@/App'
 import '@/index.css'
 
