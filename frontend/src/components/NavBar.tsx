@@ -8,6 +8,7 @@ import {
   NavigationMenuList
 } from '@/components/ui/NavigationMenu'
 import { cn, tw } from '@/lib/utils'
+import { Button } from '@/components/ui/Button'
 
 function NavBar() {
   const [isHamburgerOpen, setIsHamburgerOpen] = useState(false)
@@ -27,10 +28,19 @@ function NavBar() {
       <Logo />
       <PageNav isHamburgerOpen={isHamburgerOpen} />
       <div className="flex gap-4">
+        <LoginButton />
         <ModeToggle />
         <HamburgerIcon isOpen={isHamburgerOpen} onToggle={setIsHamburgerOpen} />
       </div>
     </nav>
+  )
+}
+
+function LoginButton() {
+  return (
+    <Link to="/login">
+      <Button>Login</Button>
+    </Link>
   )
 }
 
@@ -96,7 +106,7 @@ function Logo() {
     <Link to="/">
       <span className="flex items-center gap-2">
         <img src={reactLogo} alt="React Logo" />
-        <h2 className="text-2xl font-bold">TS + React + Tailwind CSS</h2>
+        <h2 className="text-xl font-bold">TS + React + Tailwind</h2>
       </span>
     </Link>
   )
