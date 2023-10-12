@@ -1,4 +1,4 @@
-import { useSearchParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -55,7 +55,7 @@ function FormAddFriend() {
     return { data: null, error: '' }
   }, false)
 
-  const [, setSearchParams] = useSearchParams()
+  const navigate = useNavigate()
 
   async function onSubmit(values: FormSchema) {
     const newFriendId = Date.now()
@@ -72,7 +72,7 @@ function FormAddFriend() {
 
     form.reset()
 
-    setSearchParams({ c: '1' })
+    navigate('/eat-split?c=1')
   }
 
   return (

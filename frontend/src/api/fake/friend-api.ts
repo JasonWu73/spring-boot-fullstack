@@ -43,7 +43,7 @@ async function getFriendApi(
     return { data: friend, error: '' }
   }
 
-  return { data: null, error: 'Friend not found' }
+  return { data: null, error: '' }
 }
 
 async function addFriendApi(
@@ -63,4 +63,27 @@ async function addFriendApi(
   return { data: null, error: '' }
 }
 
-export { type Friend, getFriendApi, getFriendsApi, addFriendApi }
+async function updateFriendApi(
+  friend: Friend,
+  signal?: AbortSignal
+): Promise<ApiResponse<Friend>> {
+  const { error } = await getFriendsApi(signal)
+
+  if (error) {
+    return { data: null, error }
+  }
+
+  if (!friend) {
+    return { data: null, error: 'Update friend data must be exits' }
+  }
+
+  return { data: null, error: '' }
+}
+
+export {
+  type Friend,
+  getFriendApi,
+  getFriendsApi,
+  addFriendApi,
+  updateFriendApi
+}

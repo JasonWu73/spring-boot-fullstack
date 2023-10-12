@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useForm, type UseFormReturn } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ExclamationTriangleIcon } from '@radix-ui/react-icons'
+import { ExclamationTriangleIcon, ReloadIcon } from '@radix-ui/react-icons'
 
 import { Button } from '@/components/ui/Button'
 import {
@@ -26,7 +26,11 @@ import {
 import { useTitle } from '@/lib/use-title'
 import { useFetch } from '@/lib/use-fetch'
 import { useLocalStorageState } from '@/lib/use-storage'
-import { type Friend, getFriendApi } from '@/api/fake/friend-api'
+import {
+  type Friend,
+  getFriendApi,
+  updateFriendApi
+} from '@/api/fake/friend-api'
 
 const whoIsPayingOptions = [
   { value: 'user', label: 'You' },
@@ -98,6 +102,12 @@ function FormSplitBill() {
     async (id, signal) => {
       const idToFetch = id ?? friendId
 
+      const { data, error } = await getFriendApi(idToFetch, signal)
+
+      if (error) {
+        return { data: null, error }
+      }
+
       if (friends.length !== 0) {
         const friend = friends.find((friend) => friend.id === idToFetch)
 
@@ -108,7 +118,7 @@ function FormSplitBill() {
         return { data: friend, error: '' }
       }
 
-      return await getFriendApi(idToFetch, signal)
+      return { data, error }
     }
   )
 
@@ -141,11 +151,33 @@ function FormSplitBill() {
     )
   }
 
-  const [finished, setFinished] = useState(false)
+  const navigate = useNavigate()
 
-  useRedirectIfSplitBill(finished)
+  const {
+    error: splitError,
+    loading: splitLoading,
+    fetchData: updateFriend
+  } = useFetch<null, Friend>(async (friend, signal) => {
+    const { error } = await updateFriendApi(friend!, signal)
 
-  function splitBill(bill: Bill) {
+    if (error) {
+      return { data: null, error }
+    }
+
+    if (friends.length !== 0) {
+      const selectedFriend = friends.find(({ id }) => id === friend?.id)
+
+      if (!selectedFriend) {
+        return { data: null, error: 'Friend not found' }
+      }
+
+      return { data: null, error: '' }
+    }
+
+    return { data: null, error }
+  }, false)
+
+  async function splitBill(bill: Bill) {
     setFriends((prev) =>
       prev.map((prev) => {
         if (prev.id === bill.friendId) {
@@ -158,9 +190,13 @@ function FormSplitBill() {
         return prev
       })
     )
+
+    const newFriend = friends.find((friend) => friend.id === bill.friendId)
+    await updateFriend(newFriend)
+    navigate('/eat-split?c=1')
   }
 
-  function onSubmit(values: FormSchema) {
+  async function onSubmit(values: FormSchema) {
     const bill = {
       friendId: friendId,
       expense:
@@ -169,11 +205,9 @@ function FormSplitBill() {
           : values.userExpense
     }
 
-    splitBill(bill)
+    await splitBill(bill)
 
     form.reset()
-
-    setFinished(true)
   }
 
   return (
@@ -207,6 +241,10 @@ function FormSplitBill() {
               onRate={(rating) => handleCreditRating(rating)}
               size="lg"
             />
+
+            {splitError && (
+              <p className="text-red-500 dark:text-red-600">{splitError}</p>
+            )}
           </CardHeader>
 
           <CardContent>
@@ -254,7 +292,14 @@ function FormSplitBill() {
                   isError={form.getFieldState('whoIsPaying')?.invalid}
                 />
 
-                <Button type="submit" className="self-end">
+                <Button
+                  disabled={splitLoading}
+                  type="submit"
+                  className="self-end"
+                >
+                  {splitLoading && (
+                    <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+                  )}
                   Split bill
                 </Button>
               </form>
@@ -339,16 +384,6 @@ function getSelections(friend: string) {
   options.push({ value: 'anonymous', label: 'Anonymous' })
 
   return options
-}
-
-function useRedirectIfSplitBill(finished: boolean) {
-  const navigate = useNavigate()
-
-  useEffect(() => {
-    if (finished) {
-      navigate('/', { replace: true })
-    }
-  }, [finished, navigate])
 }
 
 function useRefreshFriend(
