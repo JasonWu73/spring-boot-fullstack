@@ -52,7 +52,7 @@ function reducer<T>(state: State<T>, action: Action<T>): State<T> {
 /**
  * 获取数据的自定义 Hook.
  *
- * @template T - 数据类型
+ * @template T - 返回的数据类型
  * @template E - 请求参数类型
  *
  * @param callback - 获取数据的回调函数
@@ -67,7 +67,7 @@ function useFetch<T, E>(
   firstTimeAutoRunCallback: boolean = true
 ) {
   const [{ data, error, loading }, dispatch] = useReducer(
-    reducer as React.Reducer<State<T>, Action<T>>,
+    reducer as React.Reducer<State<T | null>, Action<T | null>>,
     initialState as State<T>
   )
 
@@ -101,9 +101,7 @@ function useFetch<T, E>(
       return
     }
 
-    if (responseData) {
-      dispatch({ type: 'FETCH_SUCCESS', payload: responseData })
-    }
+    dispatch({ type: 'FETCH_SUCCESS', payload: responseData })
   }, [])
 
   return { data, error, loading, fetchData }

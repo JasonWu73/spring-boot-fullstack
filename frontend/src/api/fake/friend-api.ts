@@ -10,7 +10,7 @@ type Friend = {
   creditRating: number
 }
 
-async function getFriends(
+async function getFriendsApi(
   signal?: AbortSignal
 ): Promise<ApiResponse<Friend[]>> {
   await wait(2)
@@ -27,11 +27,11 @@ async function getFriends(
   return { data, error: '' }
 }
 
-async function getFriend(
+async function getFriendApi(
   id: number,
   signal?: AbortSignal
 ): Promise<ApiResponse<Friend>> {
-  const { data, error } = await getFriends(signal)
+  const { data, error } = await getFriendsApi(signal)
 
   if (error) {
     return { data: null, error }
@@ -46,4 +46,21 @@ async function getFriend(
   return { data: null, error: 'Friend not found' }
 }
 
-export { type Friend, getFriend, getFriends }
+async function addFriendApi(
+  friend: Friend,
+  signal?: AbortSignal
+): Promise<ApiResponse<Friend>> {
+  const { error } = await getFriendsApi(signal)
+
+  if (error) {
+    return { data: null, error }
+  }
+
+  if (!friend) {
+    return { data: null, error: 'New friend data must be exits' }
+  }
+
+  return { data: null, error: '' }
+}
+
+export { type Friend, getFriendApi, getFriendsApi, addFriendApi }

@@ -26,7 +26,7 @@ import {
 import { useTitle } from '@/lib/use-title'
 import { useFetch } from '@/lib/use-fetch'
 import { useLocalStorageState } from '@/lib/use-storage'
-import { type Friend, getFriend } from '@/api/fake/friend-api'
+import { type Friend, getFriendApi } from '@/api/fake/friend-api'
 
 const whoIsPayingOptions = [
   { value: 'user', label: 'You' },
@@ -108,7 +108,7 @@ function FormSplitBill() {
         return { data: friend, error: '' }
       }
 
-      return await getFriend(idToFetch, signal)
+      return await getFriendApi(idToFetch, signal)
     }
   )
 
@@ -363,4 +363,4 @@ function useRefreshFriend(
   }, [friendId, fetchData, resetForm])
 }
 
-export { FormSplitBill, type Bill }
+export { type Bill, FormSplitBill }

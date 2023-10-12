@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/Button'
 import { cn } from '@/lib/utils'
 import { useFetch } from '@/lib/use-fetch'
 import { useTitle } from '@/lib/use-title'
-import { getRandomProduct } from '@/api/dummyjson/product-api'
+import { getRandomProductApi } from '@/api/dummyjson/product-api'
 
 function ProductShowcase() {
   useTitle('Product Showcase')
@@ -18,7 +18,7 @@ function ProductShowcase() {
     loading,
     fetchData: getProduct
   } = useFetch(async (_, signal?: AbortSignal) => {
-    const response = await getRandomProduct(signal)
+    const response = await getRandomProductApi(signal)
 
     if (!response.error && response.data) {
       setCount((prev) => prev + 1)

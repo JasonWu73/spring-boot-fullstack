@@ -19,7 +19,7 @@ import { useToast } from '@/components/ui/use-toast'
 import { useTitle } from '@/lib/use-title'
 import { useFetch } from '@/lib/use-fetch'
 import { useLocalStorageState } from '@/lib/use-storage'
-import { getAccessToken, Token } from '@/api/fake/auth-api'
+import { getAccessTokenApi, Token } from '@/api/fake/auth-api'
 
 const formSchema = z.object({
   username: z.string().trim().nonempty('Must enter a username'),
@@ -46,7 +46,7 @@ function Login() {
     loading,
     fetchData: login
   } = useFetch<Token, FormSchema>(async (values, signal) => {
-    const { data, error } = await getAccessToken({
+    const { data, error } = await getAccessTokenApi({
       ...values!,
       signal
     })

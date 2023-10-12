@@ -19,7 +19,7 @@ type Product = {
   images: string[]
 }
 
-async function getRandomProduct(
+async function getRandomProductApi(
   signal?: AbortSignal
 ): Promise<ApiResponse<Product>> {
   const randomId = Math.floor(Math.random() * 110)
@@ -39,4 +39,4 @@ async function getRandomProduct(
   return { data, error: '' }
 }
 
-export { getRandomProduct, type Product }
+export { type Product, getRandomProductApi }

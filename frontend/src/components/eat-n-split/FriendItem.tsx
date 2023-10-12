@@ -1,6 +1,5 @@
 import { Link, useParams } from 'react-router-dom'
 
-import { cn, truncate } from '@/lib/utils'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar'
 import {
   Tooltip,
@@ -8,18 +7,9 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from '@/components/ui/Tooltip'
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger
-} from '@/components/ui/AlertDialog'
 import { buttonVariants } from '@/components/ui/Button'
+import { ButtonDeleteFriend } from '@/components/eat-n-split/ButtonDeleteFriend'
+import { cn, truncate } from '@/lib/utils'
 import { type Friend } from '@/api/fake/friend-api'
 
 type FriendItemProps = {
@@ -41,7 +31,7 @@ function FriendItem({ friend, onDeleteFriend }: FriendItemProps) {
         { 'bg-amber-100 dark:text-night-1': isSelected }
       )}
     >
-      <DeleteFriendButton onDelete={() => onDeleteFriend(friend)} />
+      <ButtonDeleteFriend onDelete={() => onDeleteFriend(friend)} />
 
       <Avatar>
         <AvatarImage src={friend.image} alt={name} />
@@ -81,35 +71,6 @@ function FriendItem({ friend, onDeleteFriend }: FriendItemProps) {
         {isSelected ? 'Close' : 'Select'}
       </Link>
     </li>
-  )
-}
-
-type DeleteFriendButtonProps = {
-  onDelete: () => void
-}
-
-function DeleteFriendButton({ onDelete }: DeleteFriendButtonProps) {
-  return (
-    <AlertDialog>
-      <AlertDialogTrigger className="absolute left-2 top-1 hidden text-xs group-hover:block">
-        ❌
-      </AlertDialogTrigger>
-
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-          <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete your
-            friend and remove the data from our servers.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={onDelete}>Continue</AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
   )
 }
 

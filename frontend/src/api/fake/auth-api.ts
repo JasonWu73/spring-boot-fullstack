@@ -12,7 +12,7 @@ type Token = {
   accessToken: string
 }
 
-async function getAccessToken(
+async function getAccessTokenApi(
   params: LoginParams
 ): Promise<ApiResponse<Token>> {
   await wait(2)
@@ -32,4 +32,4 @@ async function getAccessToken(
   return { data, error: '' }
 }
 
-export { getAccessToken, type Token }
+export { getAccessTokenApi, type Token }
