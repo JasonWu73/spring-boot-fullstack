@@ -14,8 +14,8 @@ function useLocalStorageState<T>(
   initialValue: T
 ): [T, React.Dispatch<React.SetStateAction<T>>] {
   const [value, setValue] = useState<T>(() => {
-    const stickyValue = localStorage.getItem(key)
-    return stickyValue ? JSON.parse(stickyValue) : initialValue
+    const storedValue = localStorage.getItem(key)
+    return storedValue ? JSON.parse(storedValue) : initialValue
   })
 
   useEffect(() => {

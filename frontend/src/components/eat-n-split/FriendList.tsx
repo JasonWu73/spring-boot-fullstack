@@ -27,13 +27,13 @@ function FriendList() {
   } = useFetch(async (_, signal) => {
     const { data, error } = await getFriendsApi(signal)
 
-    const storedFriends = localStorage.getItem('friends')
+    const storedFriendsValue = localStorage.getItem('friends')
 
-    if (storedFriends) {
-      setFriends(JSON.parse(storedFriends))
+    if (storedFriendsValue) {
+      setFriends(JSON.parse(storedFriendsValue))
     }
 
-    if (!storedFriends && data) {
+    if (!storedFriendsValue && data) {
       setFriends(data)
     }
 

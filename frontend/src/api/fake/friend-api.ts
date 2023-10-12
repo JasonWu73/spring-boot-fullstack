@@ -1,4 +1,4 @@
-import { ApiResponse } from '@/lib/use-fetch'
+import { type ApiResponse } from '@/lib/use-fetch'
 import { sendRequest } from '@/lib/http'
 import { wait } from '@/lib/utils'
 
