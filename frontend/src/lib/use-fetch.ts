@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer } from 'react'
+import React, { useCallback, useEffect, useReducer } from 'react'
 
 type ApiResponse<T> = {
   data: T | null
@@ -85,7 +85,10 @@ function useFetch<T, E>(
     }
   }, [])
 
-  async function fetchData(values?: E | null, controller?: AbortController) {
+  const fetchData = useCallback(async function fetchData(
+    values?: E | null,
+    controller?: AbortController
+  ) {
     dispatch({ type: 'FETCH_INIT' })
 
     const { data: responseData, error: responseError } = await callback(
@@ -101,9 +104,9 @@ function useFetch<T, E>(
     if (responseData) {
       dispatch({ type: 'FETCH_SUCCESS', payload: responseData })
     }
-  }
+  }, [])
 
   return { data, error, loading, fetchData }
 }
 
-export { useFetch, type ApiResponse }
+export { type ApiResponse, useFetch }

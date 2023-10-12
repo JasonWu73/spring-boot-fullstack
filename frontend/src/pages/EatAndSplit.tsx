@@ -1,21 +1,16 @@
 import React, { Suspense, lazy, useRef, useState } from 'react'
+import { Outlet } from 'react-router-dom'
 
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Loading } from '@/components/ui/Loading'
 import { useToast } from '@/components/ui/use-toast'
+import { FriendList } from '@/components/eat-n-split/FriendList'
 import { useFetch } from '@/lib/use-fetch'
 import { useKeypress } from '@/lib/use-keypress'
 import { useLocalStorageState } from '@/lib/use-storage'
 import { useTitle } from '@/lib/use-title'
 import { wait } from '@/lib/utils'
-
-import {
-  type Bill,
-  FormSplitBill
-} from '@/components/eat-n-split/FormSplitBill'
-import { FriendList } from '@/components/eat-n-split/FriendList'
-
 import { type Friend, getFriends } from '@/api/fake/friend-api'
 
 // ----- Start: 测试懒加载 (React Split Code 技术) -----
@@ -82,11 +77,6 @@ function EatAndSplit() {
     setShowAddFriend((prev) => !prev)
   }
 
-  function handleSelectFriend(friend: Friend) {
-    setShowAddFriend(false)
-    setSelectedFriend((prev) => (prev?.id === friend.id ? null : friend))
-  }
-
   function handleDeleteFriend(friend: Friend) {
     setFriends((prev) => prev.filter((prev) => prev.id !== friend.id))
 
@@ -98,42 +88,6 @@ function EatAndSplit() {
       title: 'Friend deleted',
       description: `${friend.name} was deleted`
     })
-  }
-
-  function handleCreditRating(creditRating: number) {
-    setFriends((prev) => {
-      if (selectedFriend) {
-        return prev.map((prev) => {
-          if (prev.id === selectedFriend.id) {
-            return {
-              ...prev,
-              creditRating
-            }
-          }
-
-          return prev
-        })
-      }
-
-      return prev
-    })
-  }
-
-  function handleSplitBill(bill: Bill) {
-    setFriends((prev) =>
-      prev.map((prev) => {
-        if (prev.id === bill.friendId) {
-          return {
-            ...prev,
-            balance: Number((prev.balance - bill.expense).toFixed(2))
-          }
-        }
-
-        return prev
-      })
-    )
-
-    setSelectedFriend(null)
   }
 
   function handleSearch(event: React.ChangeEvent<HTMLInputElement>) {
@@ -155,8 +109,6 @@ function EatAndSplit() {
           loading={loading}
           error={error}
           friends={filteredFriends}
-          selectedFriend={selectedFriend}
-          onSelectFriend={handleSelectFriend}
           onDeleteFriend={handleDeleteFriend}
         />
       </div>
@@ -174,14 +126,7 @@ function EatAndSplit() {
       </div>
 
       <div className="md:col-start-2 md:col-end-3 md:row-span-1">
-        {selectedFriend && (
-          <FormSplitBill
-            key={selectedFriend.id}
-            friendId={selectedFriend.id}
-            onSplitBill={handleSplitBill}
-            onCreditRating={handleCreditRating}
-          />
-        )}
+        <Outlet />
       </div>
     </div>
   )

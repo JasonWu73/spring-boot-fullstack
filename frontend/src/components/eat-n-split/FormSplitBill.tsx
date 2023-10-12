@@ -1,7 +1,9 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useForm, type UseFormReturn } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { ExclamationTriangleIcon } from '@radix-ui/react-icons'
 
 import { Button } from '@/components/ui/Button'
 import {
@@ -22,9 +24,9 @@ import {
   TooltipTrigger
 } from '@/components/ui/Tooltip'
 import { useTitle } from '@/lib/use-title'
-import { type Friend, getFriend } from '@/api/fake/friend-api'
 import { useFetch } from '@/lib/use-fetch'
-import { ExclamationTriangleIcon } from '@radix-ui/react-icons'
+import { useLocalStorageState } from '@/lib/use-storage'
+import { type Friend, getFriend } from '@/api/fake/friend-api'
 
 const whoIsPayingOptions = [
   { value: 'user', label: 'You' },
@@ -84,21 +86,30 @@ type Bill = {
   expense: number
 }
 
-type FormSplitBillProps = {
-  friendId: number
-  onSplitBill: (bill: Bill) => void
-  onCreditRating: (rating: number) => void
-}
+function FormSplitBill() {
+  useTitle('Split bill')
 
-function FormSplitBill({
-  friendId,
-  onSplitBill,
-  onCreditRating
-}: FormSplitBillProps) {
-  useTitle(`Split bill with friend ${friendId}`)
+  const params = useParams()
+  const friendId = Number(params.friendId)
 
-  const { data, error, loading } = useFetch(
-    async (_, signal) => await getFriend(friendId, signal)
+  const [friends, setFriends] = useLocalStorageState<Friend[]>('friends', [])
+
+  const { data, error, loading, fetchData } = useFetch<Friend, number>(
+    async (id, signal) => {
+      const idToFetch = id ?? friendId
+
+      if (friends.length !== 0) {
+        const friend = friends.find((friend) => friend.id === idToFetch)
+
+        if (!friend) {
+          return { data: null, error: 'Friend not found' }
+        }
+
+        return { data: friend, error: '' }
+      }
+
+      return await getFriend(idToFetch, signal)
+    }
   )
 
   const form = useForm<FormSchema>({
@@ -113,6 +124,42 @@ function FormSplitBill({
 
   useWatchExpense(form)
 
+  useRefreshFriend(friendId, fetchData, form.reset)
+
+  function handleCreditRating(creditRating: number) {
+    setFriends((prev) =>
+      prev.map((prev) => {
+        if (prev.id === friendId) {
+          return {
+            ...prev,
+            creditRating
+          }
+        }
+
+        return prev
+      })
+    )
+  }
+
+  const [finished, setFinished] = useState(false)
+
+  useRedirectIfSplitBill(finished)
+
+  function splitBill(bill: Bill) {
+    setFriends((prev) =>
+      prev.map((prev) => {
+        if (prev.id === bill.friendId) {
+          return {
+            ...prev,
+            balance: Number((prev.balance - bill.expense).toFixed(2))
+          }
+        }
+
+        return prev
+      })
+    )
+  }
+
   function onSubmit(values: FormSchema) {
     const bill = {
       friendId: friendId,
@@ -122,9 +169,11 @@ function FormSplitBill({
           : values.userExpense
     }
 
-    onSplitBill(bill)
+    splitBill(bill)
 
     form.reset()
+
+    setFinished(true)
   }
 
   return (
@@ -155,7 +204,7 @@ function FormSplitBill({
 
             <StarRating
               defaultRating={data.creditRating}
-              onRate={(rating) => onCreditRating(rating)}
+              onRate={(rating) => handleCreditRating(rating)}
               size="lg"
             />
           </CardHeader>
@@ -290,6 +339,28 @@ function getSelections(friend: string) {
   options.push({ value: 'anonymous', label: 'Anonymous' })
 
   return options
+}
+
+function useRedirectIfSplitBill(finished: boolean) {
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (finished) {
+      navigate('/', { replace: true })
+    }
+  }, [finished, navigate])
+}
+
+function useRefreshFriend(
+  friendId: number,
+  fetchData: (id: number) => void,
+  resetForm: () => void
+) {
+  useEffect(() => {
+    resetForm()
+
+    fetchData(friendId)
+  }, [friendId, fetchData, resetForm])
 }
 
 export { FormSplitBill, type Bill }

@@ -16,8 +16,6 @@ type FriendListProps = {
   error: string
   loading: boolean
   friends: Friend[]
-  selectedFriend: Friend | null
-  onSelectFriend: (friend: Friend) => void
   onDeleteFriend: (friend: Friend) => void
 }
 
@@ -25,8 +23,6 @@ function FriendList({
   error,
   loading,
   friends,
-  selectedFriend,
-  onSelectFriend,
   onDeleteFriend
 }: FriendListProps) {
   return (
@@ -63,12 +59,7 @@ function FriendList({
             <ul>
               {friends.map((value, index, array) => (
                 <React.Fragment key={value.id}>
-                  <FriendItem
-                    friend={value}
-                    isSelected={value.id === selectedFriend?.id}
-                    onSelectFriend={onSelectFriend}
-                    onDeleteFriend={onDeleteFriend}
-                  />
+                  <FriendItem friend={value} onDeleteFriend={onDeleteFriend} />
 
                   {index < array.length - 1 && <Separator className="my-2" />}
                 </React.Fragment>

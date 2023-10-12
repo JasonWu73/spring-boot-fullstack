@@ -1,7 +1,8 @@
+import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import { useNavigate } from 'react-router-dom'
 import { ReloadIcon } from '@radix-ui/react-icons'
 
 import {
@@ -38,9 +39,8 @@ function Login() {
     }
   })
 
-  const navigate = useNavigate()
   const { toast } = useToast()
-  const [, setToken] = useLocalStorageState('demo-token', '')
+  const [token, setToken] = useLocalStorageState('demo-token', '')
   const {
     error,
     loading,
@@ -61,11 +61,12 @@ function Login() {
 
     if (data) {
       setToken(data.accessToken)
-      navigate('/')
     }
 
     return { data, error }
   }, false)
+
+  useRedirectIfLoggedIn(token)
 
   async function onSubmit(values: FormSchema) {
     await login(values)
@@ -117,6 +118,16 @@ function Login() {
       </CardContent>
     </Card>
   )
+}
+
+function useRedirectIfLoggedIn(token: string) {
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (token) {
+      navigate('/', { replace: true })
+    }
+  }, [token, navigate])
 }
 
 export { Login }

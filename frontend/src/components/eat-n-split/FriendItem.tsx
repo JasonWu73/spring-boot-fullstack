@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 
 import { cn, truncate } from '@/lib/utils'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar'
@@ -19,22 +19,19 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger
 } from '@/components/ui/AlertDialog'
-import { type Friend } from '@/api/fake/friend-api'
 import { buttonVariants } from '@/components/ui/Button'
+import { type Friend } from '@/api/fake/friend-api'
 
 type FriendItemProps = {
   friend: Friend
-  isSelected: boolean
-  onSelectFriend: (friend: Friend) => void
   onDeleteFriend: (friend: Friend) => void
 }
 
-function FriendItem({
-  friend,
-  isSelected,
-  onSelectFriend,
-  onDeleteFriend
-}: FriendItemProps) {
+function FriendItem({ friend, onDeleteFriend }: FriendItemProps) {
+  const params = useParams()
+  const selectedFriendId = Number(params.friendId)
+  const isSelected = friend.id === selectedFriendId
+
   const name = truncate(friend.name, 5)
 
   return (
@@ -78,8 +75,7 @@ function FriendItem({
       </div>
 
       <Link
-        to="split"
-        onClick={() => onSelectFriend(friend)}
+        to={isSelected ? '/eat-split' : `/eat-split/${friend.id}`}
         className={buttonVariants({ variant: 'default' })}
       >
         {isSelected ? 'Close' : 'Select'}

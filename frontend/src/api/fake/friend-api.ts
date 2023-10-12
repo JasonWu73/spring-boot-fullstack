@@ -1,5 +1,5 @@
-import { sendRequest } from '@/lib/http'
 import { ApiResponse } from '@/lib/use-fetch'
+import { sendRequest } from '@/lib/http'
 import { wait } from '@/lib/utils'
 
 type Friend = {

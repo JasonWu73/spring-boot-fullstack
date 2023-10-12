@@ -3,6 +3,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { ThemeProvider } from '@/components/ui/ThemeProvider'
 import { Toaster } from '@/components/ui/Toaster'
 import { NavBar } from '@/components/NavBar'
+import { FormSplitBill } from '@/components/eat-n-split/FormSplitBill'
 import { Login } from '@/pages/Login'
 import { ProductShowcase } from '@/pages/ProductShowcase'
 import { EatAndSplit } from '@/pages/EatAndSplit'
@@ -19,7 +20,7 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/fetch" element={<ProductShowcase />} />
           <Route path="/eat-split" element={<EatAndSplit />}>
-            <Route path="split" element={<div>split</div>} />
+            <Route path=":friendId" element={<FormSplitBill />} />
           </Route>
           <Route path="*" element={<PageNotFound />} />
         </Routes>

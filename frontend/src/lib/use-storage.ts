@@ -19,6 +19,11 @@ function useLocalStorageState<T>(
   })
 
   useEffect(() => {
+    if (!value) {
+      localStorage.removeItem(key)
+      return
+    }
+
     localStorage.setItem(key, JSON.stringify(value))
   }, [key, value])
 
