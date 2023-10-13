@@ -1,9 +1,9 @@
 import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { useForm, type UseFormReturn } from 'react-hook-form'
+import { type UseFormReturn, useForm, UseFormReset } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ExclamationTriangleIcon, ReloadIcon } from '@radix-ui/react-icons'
+import { ReloadIcon } from '@radix-ui/react-icons'
 
 import { Button } from '@/components/ui/Button'
 import {
@@ -15,8 +15,9 @@ import {
 } from '@/components/ui/Card'
 import { FormInput, FormSelect } from '@/components/ui/CustomFormField'
 import { Form } from '@/components/ui/Form'
-import { Skeleton } from '@/components/ui/Skeleton'
 import { StarRating } from '@/components/ui/StarRating'
+import { FormSplitBillSkeleton } from '@/components/eat-n-split/FormSplitBillSkeleton'
+import { FormSplitBillError } from '@/components/eat-n-split/FormSplitBillError'
 import {
   Tooltip,
   TooltipContent,
@@ -25,48 +26,48 @@ import {
 } from '@/components/ui/Tooltip'
 import { useTitle } from '@/lib/use-title'
 import { useFetch } from '@/lib/use-fetch'
-import { useLocalStorageState } from '@/lib/use-storage'
 import {
   type Friend,
   getFriendApi,
   updateFriendApi
 } from '@/api/fake/friend-api'
+import { useFriends } from '@/components/eat-n-split/FriendProvider'
 
 const whoIsPayingOptions = [
-  { value: 'user', label: 'You' },
-  { value: 'friend', label: 'friend' }
+  { value: 'user', label: '您' },
+  { value: 'friend', label: '好友' }
 ]
 
 const formSchema = z
   .object({
     bill: z.coerce
-      .number({ invalid_type_error: 'Bill must be a number' })
-      .min(0, 'Bill must be greater than or equal to 0'),
+      .number({ invalid_type_error: '账单金额必须是数字' })
+      .min(0, '账单金额必须大于或等于 0'),
 
     userExpense: z.coerce
-      .number({ invalid_type_error: 'Expense must be a number' })
-      .min(0, 'Expense must be greater than or equal to 0'),
+      .number({ invalid_type_error: '费用必须是数字' })
+      .min(0, '费用必须大于或等于 0'),
 
     friendExpense: z.coerce
-      .number({ invalid_type_error: 'Expense must be a number' })
-      .min(0, 'Expense must be greater than or equal to 0'),
+      .number({ invalid_type_error: '费用必须是数字' })
+      .min(0, '费用必须大于或等于 0'),
 
     whoIsPaying: z
-      .string({ required_error: 'Must select who is paying the bill' })
+      .string({ required_error: '必须选择谁支付账单' })
       .trim()
       .refine(
         (value) => {
           return whoIsPayingOptions.map(({ value }) => value).includes(value)
         },
         {
-          message: `Must be a valid option: ${whoIsPayingOptions
+          message: `必须是有效的选项：${whoIsPayingOptions
             .map(({ value }) => `"${value}"`)
             .join(', ')}`
         }
       )
   })
   .refine(({ userExpense, bill }) => userExpense <= bill, {
-    message: 'Your expense must be less than or equal to the bill',
+    message: '您的费用必须小于或等于帐单',
     path: ['userExpense']
   })
   .refine(
@@ -78,7 +79,7 @@ const formSchema = z
       return whoIsPaying === 'friend' && friendExpense > 0
     },
     {
-      message: 'Must enter a valid expense',
+      message: '必须输入有效的费用',
       path: ['userExpense']
     }
   )
@@ -91,36 +92,7 @@ type Bill = {
 }
 
 function FormSplitBill() {
-  useTitle('Split bill')
-
-  const params = useParams()
-  const friendId = Number(params.friendId)
-
-  const [friends, setFriends] = useLocalStorageState<Friend[]>('friends', [])
-
-  const { data, error, loading, fetchData } = useFetch<Friend, number>(
-    async (id, signal) => {
-      const idToFetch = id ?? friendId
-
-      const { data, error } = await getFriendApi(idToFetch, signal)
-
-      if (error) {
-        return { data: null, error }
-      }
-
-      if (friends.length !== 0) {
-        const friend = friends.find((friend) => friend.id === idToFetch)
-
-        if (!friend) {
-          return { data: null, error: 'Friend not found' }
-        }
-
-        return { data: friend, error: '' }
-      }
-
-      return { data, error }
-    }
-  )
+  useTitle('分摊账单')
 
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
@@ -134,110 +106,101 @@ function FormSplitBill() {
 
   useWatchExpense(form)
 
-  useRefreshFriend(friendId, fetchData, form.reset)
+  const { friends, setFriends } = useFriends()
 
-  function handleCreditRating(creditRating: number) {
-    setFriends((prev) =>
-      prev.map((prev) => {
-        if (prev.id === friendId) {
-          return {
-            ...prev,
-            creditRating
-          }
-        }
+  const params = useParams()
+  const idInQueryString = Number(params.friendId)
 
-        return prev
-      })
-    )
-  }
-
-  const navigate = useNavigate()
+  const { friend, error, loading, getFriend } = useFriendApi(
+    friends,
+    idInQueryString
+  )
 
   const {
     error: splitError,
     loading: splitLoading,
-    fetchData: updateFriend
-  } = useFetch<null, Friend>(async (friend, signal) => {
-    const { error } = await updateFriendApi(friend!, signal)
+    updateFriend
+  } = useSplitBill(friends)
 
-    if (error) {
-      return { data: null, error }
-    }
+  useRefresh(friends, idInQueryString, getFriend, form.reset)
 
-    if (friends.length !== 0) {
-      const selectedFriend = friends.find(({ id }) => id === friend?.id)
-
-      if (!selectedFriend) {
-        return { data: null, error: 'Friend not found' }
-      }
-
-      return { data: null, error: '' }
-    }
-
-    return { data: null, error }
-  }, false)
-
-  async function splitBill(bill: Bill) {
-    setFriends((prev) =>
-      prev.map((prev) => {
-        if (prev.id === bill.friendId) {
-          return {
-            ...prev,
-            balance: Number((prev.balance - bill.expense).toFixed(2))
-          }
-        }
-
-        return prev
-      })
-    )
-
-    const newFriend = friends.find((friend) => friend.id === bill.friendId)
-    await updateFriend(newFriend)
-    navigate('/eat-split?c=1')
-  }
+  const navigate = useNavigate()
 
   async function onSubmit(values: FormSchema) {
     const bill = {
-      friendId: friendId,
+      friendId: friend!.id,
       expense:
         values.whoIsPaying === 'user'
           ? -values.friendExpense
           : values.userExpense
     }
 
-    await splitBill(bill)
+    const newFriend = friends.find((f) => f.id === bill.friendId)
+    await updateFriend(newFriend)
 
-    form.reset()
+    splitBill(bill)
+    navigate('/eat-split?c=1')
+  }
+
+  function splitBill(bill: Bill) {
+    setFriends(
+      friends.map((f) => {
+        if (f.id === bill.friendId) {
+          return {
+            ...f,
+            balance: Number((f.balance - bill.expense).toFixed(2))
+          }
+        }
+
+        return f
+      })
+    )
+  }
+
+  function handleCreditRating(creditRating: number) {
+    setFriends(
+      friends.map((f) => {
+        if (f.id === friend!.id) {
+          return {
+            ...f,
+            creditRating
+          }
+        }
+
+        return f
+      })
+    )
   }
 
   return (
     <Card className="w-96 bg-amber-100 text-slate-700 dark:bg-amber-100 dark:text-slate-700 md:w-[22rem] lg:w-[30rem]">
-      {loading && <SkeletonForm />}
+      {loading && <FormSplitBillSkeleton />}
 
-      {!loading && error && <Error message={error} />}
+      {!loading && error && <FormSplitBillError message={error} />}
 
-      {!loading && data && (
+      {!loading && friend && (
         <>
           <CardHeader>
-            <CardTitle>Split bill, my friend</CardTitle>
+            <CardTitle>分摊账单，我的朋友</CardTitle>
 
             <CardDescription className="max-w-xs overflow-hidden text-ellipsis whitespace-nowrap">
-              Split a bill with{' '}
+              与
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <span className="font-semibold text-cyan-500">
-                      {data.name}
+                      {' ' + friend.name + ' '}
                     </span>
                   </TooltipTrigger>
 
-                  <TooltipContent>{data.name}</TooltipContent>
+                  <TooltipContent>{friend.name}</TooltipContent>
                 </Tooltip>
               </TooltipProvider>
+              分摊账单
             </CardDescription>
 
             <StarRating
-              defaultRating={data.creditRating}
+              defaultRating={friend.creditRating}
               onRate={(rating) => handleCreditRating(rating)}
               size="lg"
             />
@@ -257,9 +220,9 @@ function FormSplitBill() {
                   control={form.control}
                   name="bill"
                   type="number"
-                  label="💰 Bill value"
+                  label="💰 账单金额"
                   labelWidth={160}
-                  placeholder="Bill value"
+                  placeholder="账单金额"
                   isError={form.getFieldState('bill')?.invalid}
                 />
 
@@ -267,9 +230,9 @@ function FormSplitBill() {
                   control={form.control}
                   name="userExpense"
                   type="number"
-                  label="💸 Your expense"
+                  label="💸 您的费用"
                   labelWidth={160}
-                  placeholder="Your expense"
+                  placeholder="您的费用"
                   isError={form.getFieldState('userExpense')?.invalid}
                 />
 
@@ -277,18 +240,18 @@ function FormSplitBill() {
                   control={form.control}
                   name="friendExpense"
                   type="number"
-                  label={`👫 ${data.name}'s expense`}
+                  label={`👫 ${friend.name} 的费用`}
                   labelWidth={160}
-                  placeholder={`${data.name}'s expense`}
+                  placeholder={`${friend.name} 的费用`}
                   disabled
                 />
 
                 <FormSelect
                   control={form.control}
                   name="whoIsPaying"
-                  label="🤑 Who is paying the bill"
+                  label="🤑 谁付帐单"
                   labelWidth={160}
-                  options={getSelections(data.name)}
+                  options={getWhoIsPayingOptions(friend.name)}
                   isError={form.getFieldState('whoIsPaying')?.invalid}
                 />
 
@@ -300,7 +263,7 @@ function FormSplitBill() {
                   {splitLoading && (
                     <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
                   )}
-                  Split bill
+                  分摊账单
                 </Button>
               </form>
             </Form>
@@ -311,47 +274,16 @@ function FormSplitBill() {
   )
 }
 
-function SkeletonForm() {
-  return (
-    <>
-      <CardHeader>
-        <CardTitle>
-          <Skeleton className="h-6 w-[300px]" />
-        </CardTitle>
-        <CardDescription className="space-y-2">
-          <Skeleton className="h-5 w-[300px]" />
-          <Skeleton className="h-6 w-[200px]" />
-        </CardDescription>
-      </CardHeader>
+// 为测试校验, 添加一个不在 options 中的值
+function getWhoIsPayingOptions(friend: string) {
+  const options = whoIsPayingOptions.map(({ value, label }) => ({
+    value,
+    label: value === 'friend' ? friend : label
+  }))
 
-      <CardContent className="flex flex-col gap-4">
-        {Array.from({ length: 4 }).map((_, index) => (
-          <div key={index} className="flex gap-4">
-            <Skeleton className="h-8 w-32" />
-            <Skeleton className="h-8 w-full" />
-          </div>
-        ))}
+  options.push({ value: 'anonymous', label: '匿名' })
 
-        <Skeleton className="h-8 w-20 self-end" />
-      </CardContent>
-    </>
-  )
-}
-
-type ErrorProps = {
-  message: string
-}
-
-function Error({ message }: ErrorProps) {
-  return (
-    <CardHeader>
-      <CardTitle className="flex items-center gap-1 text-red-500">
-        <ExclamationTriangleIcon className="h-4 w-4" />
-        <span className="h-5">Oops, something went wrong</span>
-      </CardTitle>
-      <CardDescription>{message}</CardDescription>
-    </CardHeader>
-  )
+  return options
 }
 
 function useWatchExpense(form: UseFormReturn<FormSchema>) {
@@ -374,28 +306,82 @@ function useWatchExpense(form: UseFormReturn<FormSchema>) {
   }, [bill, userExpense, setValue])
 }
 
-// 为测试校验, 添加一个不在 options 中的值
-function getSelections(friend: string) {
-  const options = whoIsPayingOptions.map(({ value, label }) => ({
-    value,
-    label: value === 'friend' ? friend : label
-  }))
+type getFriendParams = { id: number; friends: Friend[] }
 
-  options.push({ value: 'anonymous', label: 'Anonymous' })
+function useFriendApi(initialFriends: Friend[], idInQueryString: number) {
+  const {
+    data: friend,
+    error,
+    loading,
+    fetchData: getFriend
+  } = useFetch<Friend, getFriendParams>(async (params, signal) => {
+    const id = params?.id ?? idInQueryString
 
-  return options
+    const { data, error } = await getFriendApi(id, signal)
+
+    if (error) {
+      return { data: null, error }
+    }
+
+    const friends = params?.friends ?? initialFriends
+    if (friends.length !== 0) {
+      const selectedFriend = params?.friends.find((f) => f.id === id)
+
+      if (!selectedFriend) {
+        return { data: null, error: '未找到好友' }
+      }
+
+      return { data: selectedFriend, error: '' }
+    }
+
+    if (!data) {
+      return { data: null, error: '未找到好友' }
+    }
+
+    return { data, error }
+  })
+
+  return { friend, error, loading, getFriend }
 }
 
-function useRefreshFriend(
-  friendId: number,
-  fetchData: (id: number) => void,
-  resetForm: () => void
+function useSplitBill(friends: Friend[]) {
+  const {
+    error,
+    loading,
+    fetchData: updateFriend
+  } = useFetch<null, Friend>(async (friend, signal) => {
+    const { error } = await updateFriendApi(friend!, signal)
+
+    if (error) {
+      return { data: null, error }
+    }
+
+    if (friends.length !== 0) {
+      const selectedFriend = friends.find(({ id }) => id === friend!.id)
+
+      if (!selectedFriend) {
+        return { data: null, error: '未找到好友' }
+      }
+
+      return { data: null, error: '' }
+    }
+
+    return { data: null, error }
+  }, false)
+
+  return { error, loading, updateFriend }
+}
+
+function useRefresh(
+  friends: Friend[],
+  idInQueryString: number,
+  getFriend: (params: getFriendParams) => void,
+  resetForm: UseFormReset<FormSchema>
 ) {
   useEffect(() => {
+    getFriend({ friends, id: idInQueryString })
     resetForm()
-
-    fetchData(friendId)
-  }, [friendId, fetchData, resetForm])
+  }, [JSON.stringify(friends), idInQueryString, getFriend, resetForm])
 }
 
-export { type Bill, FormSplitBill }
+export { FormSplitBill }

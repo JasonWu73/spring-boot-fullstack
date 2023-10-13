@@ -18,7 +18,7 @@ async function getAccessTokenApi(
   await wait(2)
 
   if (params.username !== 'admin' || params.password !== 'admin') {
-    return { data: null, error: 'Invalid username or password' }
+    return { data: null, error: '用户名或密码错误' }
   }
 
   const { data, error } = await sendRequest<Token, string>({

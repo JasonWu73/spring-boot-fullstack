@@ -1,6 +1,5 @@
 import { type ApiResponse } from '@/lib/use-fetch'
 import { sendRequest } from '@/lib/http'
-import { wait } from '@/lib/utils'
 
 type Friend = {
   id: number
@@ -13,8 +12,6 @@ type Friend = {
 async function getFriendsApi(
   signal?: AbortSignal
 ): Promise<ApiResponse<Friend[]>> {
-  await wait(2)
-
   const { data, error } = await sendRequest<Friend[], string>({
     url: 'http://localhost:5173/data/friends.json',
     signal
@@ -57,7 +54,7 @@ async function addFriendApi(
   }
 
   if (!friend) {
-    return { data: null, error: 'New friend data must be exits' }
+    return { data: null, error: '好友数据不存在' }
   }
 
   return { data: null, error: '' }
@@ -74,16 +71,16 @@ async function updateFriendApi(
   }
 
   if (!friend) {
-    return { data: null, error: 'Update friend data must be exits' }
+    return { data: null, error: '好友数据不存在' }
   }
 
   return { data: null, error: '' }
 }
 
 export {
-  type Friend,
   getFriendApi,
   getFriendsApi,
   addFriendApi,
-  updateFriendApi
+  updateFriendApi,
+  type Friend
 }

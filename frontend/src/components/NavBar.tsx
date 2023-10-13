@@ -40,7 +40,7 @@ function NavBar() {
 function LoginButton() {
   return (
     <Link to="/login">
-      <Button>Login</Button>
+      <Button>登录</Button>
     </Link>
   )
 }

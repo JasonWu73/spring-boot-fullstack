@@ -15,9 +15,9 @@ import {
 } from '@/components/ui/Card'
 import { FormInput } from '@/components/ui/CustomFormField'
 import { useTitle } from '@/lib/use-title'
-import { useLocalStorageState } from '@/lib/use-storage'
 import { useFetch } from '@/lib/use-fetch'
-import { type Friend, addFriendApi } from '@/api/fake/friend-api'
+import { addFriendApi, type Friend } from '@/api/fake/friend-api'
+import { useFriends } from '@/components/eat-n-split/FriendProvider'
 
 const formSchema = z.object({
   name: z.string().trim().nonempty('Must enter a name'),
@@ -27,7 +27,7 @@ const formSchema = z.object({
 type FormSchema = z.infer<typeof formSchema>
 
 function FormAddFriend() {
-  useTitle('Add a friend')
+  useTitle('添加好友')
 
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
@@ -37,23 +37,9 @@ function FormAddFriend() {
     }
   })
 
-  const [, setFriends] = useLocalStorageState<Friend[]>('friends', [])
+  const { friends, setFriends } = useFriends()
 
-  const {
-    error,
-    loading,
-    fetchData: addFriend
-  } = useFetch<null, Friend>(async (values, signal) => {
-    const { error } = await addFriendApi(values!, signal)
-
-    if (error) {
-      return { data: null, error }
-    }
-
-    setFriends((prev) => [...prev, values!])
-
-    return { data: null, error: '' }
-  }, false)
+  const { error, loading, addFriend } = useAddFriendApi(friends, setFriends)
 
   const navigate = useNavigate()
 
@@ -70,15 +56,13 @@ function FormAddFriend() {
 
     await addFriend(newFriend)
 
-    form.reset()
-
     navigate('/eat-split?c=1')
   }
 
   return (
     <Card className="w-96 bg-amber-100 text-slate-700 dark:bg-amber-100 dark:text-slate-700 md:w-[22rem] lg:w-[30rem]">
       <CardHeader>
-        <CardTitle>Add a friend</CardTitle>
+        <CardTitle>添加好友</CardTitle>
         {error && (
           <CardDescription className="text-red-500 dark:text-red-600">
             {error}
@@ -96,9 +80,9 @@ function FormAddFriend() {
               control={form.control}
               name="name"
               type="text"
-              label="👫 Friend name"
+              label="👫 朋友名字"
               labelWidth={100}
-              placeholder="Friend name"
+              placeholder="好友名字"
               isError={form.getFieldState('name')?.invalid}
             />
 
@@ -106,21 +90,48 @@ function FormAddFriend() {
               control={form.control}
               name="image"
               type="text"
-              label="🌄 Image URL"
+              label="🌄 图片网址"
               labelWidth={100}
-              placeholder="Image URL"
+              placeholder="图片网址"
               isError={form.getFieldState('image')?.invalid}
             />
 
             <Button disabled={loading} type="submit" className="self-end">
               {loading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
-              Add
+              添加
             </Button>
           </form>
         </Form>
       </CardContent>
     </Card>
   )
+}
+
+function useAddFriendApi(
+  friends: Friend[],
+  setFriends: (friends: Friend[]) => void
+) {
+  const {
+    error,
+    loading,
+    fetchData: addFriend
+  } = useFetch<null, Friend>(async (newFriend, signal) => {
+    if (!newFriend) {
+      return { data: null, error: '好友数据不存在' }
+    }
+
+    const { error } = await addFriendApi(newFriend, signal)
+
+    if (error) {
+      return { data: null, error }
+    }
+
+    setFriends([...friends, newFriend])
+
+    return { data: null, error: '' }
+  }, false)
+
+  return { error, loading, addFriend }
 }
 
 export { FormAddFriend }

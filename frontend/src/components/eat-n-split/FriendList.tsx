@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import React from 'react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import {
   ExclamationTriangleIcon,
   ReloadIcon,
@@ -12,59 +12,41 @@ import { Card } from '@/components/ui/Card'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/Alert'
 import { useToast } from '@/components/ui/use-toast'
 import { FriendItem } from '@/components/eat-n-split/FriendItem'
-import { useLocalStorageState } from '@/lib/use-storage'
+import { FriendSearch } from '@/components/eat-n-split/FriendSearch'
 import { useFetch } from '@/lib/use-fetch'
 import { type Friend, getFriendsApi } from '@/api/fake/friend-api'
-import { InputSearchFriend } from '@/components/eat-n-split/InputSearchFriend'
+import { useFriends } from '@/components/eat-n-split/FriendProvider'
 
 function FriendList() {
-  const [friends, setFriends] = useLocalStorageState<Friend[]>('friends', [])
+  const { friends, setFriends } = useFriends()
 
-  const {
-    error,
-    loading,
-    fetchData: getFriends
-  } = useFetch(async (_, signal) => {
-    const { data, error } = await getFriendsApi(signal)
-
-    const storedFriendsValue = localStorage.getItem('friends')
-
-    if (storedFriendsValue) {
-      setFriends(JSON.parse(storedFriendsValue))
-    }
-
-    if (!storedFriendsValue && data) {
-      setFriends(data)
-    }
-
-    return { data, error }
-  }, friends.length === 0)
-
-  useRefreshFriends(getFriends)
+  const { error, loading } = useFriendsApi(friends, setFriends)
 
   const [searchParams] = useSearchParams()
   const name = searchParams.get('s') || ''
 
   const filteredFriends = name
-    ? friends.filter((friend) =>
-        friend.name.toLowerCase().includes(name.toLowerCase())
-      )
+    ? friends.filter((f) => f.name.toLowerCase().includes(name.toLowerCase()))
     : friends
 
   const { toast } = useToast()
 
+  const navigate = useNavigate()
+
   function handleDeleteFriend(friend: Friend) {
-    setFriends((prev) => prev.filter((prev) => prev.id !== friend.id))
+    setFriends(friends.filter((f) => f.id !== friend.id))
 
     toast({
-      title: 'Friend deleted',
-      description: `${friend.name} was deleted`
+      title: '删除好友',
+      description: `成功删除好友：${friend.name}`
     })
+
+    navigate('/eat-split?c=1')
   }
 
   return (
     <>
-      <InputSearchFriend />
+      <FriendSearch />
 
       <Card>
         <ScrollArea className="h-96 w-96 md:h-[30rem] md:w-[22rem] lg:h-[24rem] lg:w-[30rem]">
@@ -72,17 +54,15 @@ function FriendList() {
             {loading && (
               <Alert>
                 <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
-                <AlertTitle>Loading...</AlertTitle>
-                <AlertDescription>
-                  Fetching friends from server.
-                </AlertDescription>
+                <AlertTitle>加载中...</AlertTitle>
+                <AlertDescription>好友列表加载中</AlertDescription>
               </Alert>
             )}
 
             {!loading && error && (
               <Alert variant="destructive">
                 <ExclamationTriangleIcon className="h-4 w-4" />
-                <AlertTitle>Error</AlertTitle>
+                <AlertTitle>错误</AlertTitle>
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
@@ -90,23 +70,23 @@ function FriendList() {
             {!loading && filteredFriends.length === 0 && (
               <Alert>
                 <RocketIcon className="h-4 w-4" />
-                <AlertTitle>Heads up!</AlertTitle>
+                <AlertTitle>温馨提示！</AlertTitle>
                 <AlertDescription>
-                  No friends yet. Add a friend to split a bill.
+                  还没有好友，添加好友即可分摊账单
                 </AlertDescription>
               </Alert>
             )}
 
             {!loading && filteredFriends.length > 0 && (
               <ul>
-                {filteredFriends.map((value, index, array) => (
-                  <React.Fragment key={value.id}>
+                {filteredFriends.map((f, i, arr) => (
+                  <React.Fragment key={f.id}>
                     <FriendItem
-                      friend={value}
+                      friend={f}
                       onDeleteFriend={handleDeleteFriend}
                     />
 
-                    {index < array.length - 1 && <Separator className="my-2" />}
+                    {i < arr.length - 1 && <Separator className="my-2" />}
                   </React.Fragment>
                 ))}
               </ul>
@@ -118,21 +98,25 @@ function FriendList() {
   )
 }
 
-function useRefreshFriends(
-  getFriends: (
-    values?: unknown,
-    controller?: AbortController | undefined
-  ) => Promise<void>
+function useFriendsApi(
+  friends: Friend[],
+  setFriends: (friends: Friend[]) => void
 ) {
-  const [searchParams] = useSearchParams()
+  const { error, loading } = useFetch(async (_, signal) => {
+    const { data, error } = await getFriendsApi(signal)
 
-  useEffect(() => {
-    const closeAddFriend = searchParams.get('c') === '1'
-
-    if (closeAddFriend) {
-      getFriends().then()
+    if (error) {
+      return { data: null, error }
     }
-  }, [searchParams, getFriends])
+
+    if (!friends && data) {
+      setFriends(data)
+    }
+
+    return { data, error }
+  })
+
+  return { error, loading }
 }
 
 export { FriendList }

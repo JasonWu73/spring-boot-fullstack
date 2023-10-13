@@ -51,24 +51,24 @@ function FriendItem({ friend, onDeleteFriend }: FriendItemProps) {
 
         {friend.balance > 0 && (
           <p className="text-green-500">
-            {name} owes you ${friend.balance}
+            {name} 欠您 ${friend.balance}
           </p>
         )}
 
         {friend.balance < 0 && (
           <p className="text-red-500 dark:text-red-600">
-            You owe {name} ${Math.abs(friend.balance)}
+            您欠 {name} ${Math.abs(friend.balance)}
           </p>
         )}
 
-        {friend.balance === 0 && <p>You and {name} are even</p>}
+        {friend.balance === 0 && <p>你和 {name} 互不相欠</p>}
       </div>
 
       <Link
         to={isSelected ? '/eat-split' : `/eat-split/${friend.id}`}
         className={buttonVariants({ variant: 'default' })}
       >
-        {isSelected ? 'Close' : 'Select'}
+        {isSelected ? '关闭' : '选择'}
       </Link>
     </li>
   )

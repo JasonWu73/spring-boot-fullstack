@@ -56,7 +56,7 @@ function reducer<T>(state: State<T>, action: Action<T>): State<T> {
  * @template E - 请求参数类型
  *
  * @param callback - 获取数据的回调函数
- * @param firstTimeAutoRunCallback - 是否在第一次渲染时自动执行回调函数, 默认为 true
+ * @param initialCall - 是否在第一次渲染时自动执行获取数据的回调函数, 默认为 true
  * @returns - 数据, 错误信息, 加载状态和获取数据的回调函数
  */
 function useFetch<T, E>(
@@ -64,7 +64,7 @@ function useFetch<T, E>(
     values?: E | null,
     signal?: AbortSignal
   ) => Promise<ApiResponse<T>>,
-  firstTimeAutoRunCallback: boolean = true
+  initialCall: boolean = true
 ) {
   const [{ data, error, loading }, dispatch] = useReducer(
     reducer as React.Reducer<State<T | null>, Action<T | null>>,
@@ -72,7 +72,7 @@ function useFetch<T, E>(
   )
 
   useEffect(() => {
-    if (!firstTimeAutoRunCallback) {
+    if (!initialCall) {
       return
     }
 
@@ -107,4 +107,4 @@ function useFetch<T, E>(
   return { data, error, loading, fetchData }
 }
 
-export { type ApiResponse, useFetch }
+export { useFetch, type ApiResponse }

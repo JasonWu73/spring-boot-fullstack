@@ -53,7 +53,7 @@ function Login() {
 
     if (error) {
       toast({
-        title: 'Error',
+        title: '登录失败',
         description: error,
         variant: 'destructive'
       })
@@ -75,7 +75,7 @@ function Login() {
   return (
     <Card className="mx-auto mt-8 w-96 md:w-[22rem] lg:w-[30rem]">
       <CardHeader>
-        <CardTitle>Login</CardTitle>
+        <CardTitle>登录</CardTitle>
         {error && (
           <CardDescription className="text-red-500 dark:text-red-600">
             {error}
@@ -93,9 +93,9 @@ function Login() {
               control={form.control}
               name="username"
               type="text"
-              label="Username"
+              label="用户名"
               labelWidth={100}
-              placeholder="Username"
+              placeholder="用户名"
               isError={form.getFieldState('username')?.invalid}
             />
 
@@ -103,15 +103,15 @@ function Login() {
               control={form.control}
               name="password"
               type="password"
-              label="Password"
+              label="密码"
               labelWidth={100}
-              placeholder="Password"
+              placeholder="密码"
               isError={form.getFieldState('password')?.invalid}
             />
 
             <Button type="submit" disabled={loading}>
               {loading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
-              Login
+              登录
             </Button>
           </form>
         </Form>

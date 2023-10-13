@@ -5,27 +5,34 @@ import React, { useEffect, useState } from 'react'
  *
  * @template T - 值的类型
  *
- * @param key - LocalStorage 的键
- * @param initialValue - 初始值
+ * @param storageKey - LocalStorage 的键
+ * @param defaultValue - LocalStorage 键的默认值
+ * @param isJsonParse - 是否 JSON 解析 LocalStorage 的值
  * @returns {[value, setValue]} - 值和设置值的函数
  */
 function useLocalStorageState<T>(
-  key: string,
-  initialValue: T
+  storageKey: string,
+  defaultValue: T,
+  isJsonParse: boolean = true
 ): [T, React.Dispatch<React.SetStateAction<T>>] {
   const [value, setValue] = useState<T>(() => {
-    const storedValue = localStorage.getItem(key)
-    return storedValue ? JSON.parse(storedValue) : initialValue
+    const storageValue = localStorage.getItem(storageKey)
+
+    if (isJsonParse && storageValue) {
+      return JSON.parse(storageValue)
+    }
+
+    return storageValue || defaultValue
   })
 
   useEffect(() => {
-    if (!value) {
-      localStorage.removeItem(key)
+    if (value === '' || value === null || value === undefined) {
+      localStorage.removeItem(storageKey)
       return
     }
 
-    localStorage.setItem(key, JSON.stringify(value))
-  }, [key, value])
+    localStorage.setItem(storageKey, JSON.stringify(value))
+  }, [storageKey, value])
 
   return [value, setValue]
 }

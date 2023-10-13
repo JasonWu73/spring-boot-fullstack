@@ -7,10 +7,11 @@ import { FriendList } from '@/components/eat-n-split/FriendList'
 import { useKeypress } from '@/lib/use-keypress'
 import { useTitle } from '@/lib/use-title'
 import { wait } from '@/lib/utils'
+import { FriendProvider } from '@/components/eat-n-split/FriendProvider'
 
 // ----- Start: 测试懒加载 (React Split Code 技术) -----
 const FormAddFriend = lazy(() =>
-  wait(3).then(() =>
+  wait(1).then(() =>
     import('@/components/eat-n-split/FormAddFriend').then((module) => ({
       default: module.FormAddFriend
     }))
@@ -30,38 +31,40 @@ function EatAndSplit() {
     navigate('/eat-split')
   })
 
-  useAutoCloseForm(setShowAddFriend)
+  useCloseForm(setShowAddFriend)
 
   function handleToggleAddFriend() {
     setShowAddFriend((prev) => !prev)
   }
 
   return (
-    <div className="grid grid-flow-row items-center justify-center gap-6 p-4 md:mt-6 md:grid-cols-2">
-      <div className="md:col-span-1 md:row-span-1 md:justify-self-end">
-        <FriendList />
-      </div>
+    <FriendProvider>
+      <div className="grid grid-flow-row items-center justify-center gap-6 p-4 md:mt-6 md:grid-cols-2">
+        <div className="md:col-span-1 md:row-span-1 md:justify-self-end">
+          <FriendList />
+        </div>
 
-      <div className="flex flex-col gap-6 self-start md:col-span-1 md:row-start-2 md:row-end-3 md:justify-self-end">
-        <Suspense fallback={<Loading />}>
-          {showAddFriend && <FormAddFriend />}
-        </Suspense>
+        <div className="flex flex-col gap-6 self-start md:col-span-1 md:row-start-2 md:row-end-3 md:justify-self-end">
+          <Suspense fallback={<Loading />}>
+            {showAddFriend && <FormAddFriend />}
+          </Suspense>
 
-        <div className="self-end">
-          <Button onClick={handleToggleAddFriend}>
-            {showAddFriend ? 'Close' : 'Add friend'}
-          </Button>
+          <div className="self-end">
+            <Button onClick={handleToggleAddFriend}>
+              {showAddFriend ? '关闭' : '添加好友'}
+            </Button>
+          </div>
+        </div>
+
+        <div className="md:col-start-2 md:col-end-3 md:row-span-1">
+          <Outlet />
         </div>
       </div>
-
-      <div className="md:col-start-2 md:col-end-3 md:row-span-1">
-        <Outlet />
-      </div>
-    </div>
+    </FriendProvider>
   )
 }
 
-function useAutoCloseForm(
+function useCloseForm(
   setShowAddFriend: React.Dispatch<React.SetStateAction<boolean>>
 ) {
   const [searchParams, setSearchParams] = useSearchParams()
