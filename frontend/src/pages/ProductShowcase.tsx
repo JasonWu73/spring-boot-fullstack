@@ -8,7 +8,7 @@ import { useTitle } from '@/lib/use-title'
 import { getRandomProductApi } from '@/api/dummyjson/product-api'
 
 function ProductShowcase() {
-  useTitle('Product Showcase')
+  useTitle('产品展示')
 
   const [count, setCount] = useState(0)
 

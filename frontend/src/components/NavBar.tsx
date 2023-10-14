@@ -77,7 +77,8 @@ function PageNav({ isHamburgerOpen }: PageNavProps) {
 function NavItemList() {
   return (
     <>
-      <NavItem link="/fetch">Custom Hook: useFetch</NavItem>
+      <NavItem link="/eat-split">全面的表单</NavItem>
+      <NavItem link="/fetch">自定义 useFetch</NavItem>
     </>
   )
 }

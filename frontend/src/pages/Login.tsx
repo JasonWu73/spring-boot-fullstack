@@ -29,7 +29,7 @@ const formSchema = z.object({
 type FormSchema = z.infer<typeof formSchema>
 
 function Login() {
-  useTitle('Login')
+  useTitle('登录')
 
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
