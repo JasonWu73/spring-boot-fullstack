@@ -12,7 +12,7 @@ import { Card } from '@/components/ui/Card'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/Alert'
 import { useToast } from '@/components/ui/use-toast'
 import { FriendItem } from '@/components/eat-n-split/FriendItem'
-import { FriendSearch } from '@/components/eat-n-split/FriendSearch'
+import { FriendSearch, SEARCH_KEY } from '@/components/eat-n-split/FriendSearch'
 import { useFetch } from '@/lib/use-fetch'
 import { type Friend, getFriendsApi } from '@/api/fake/friend-api'
 import { useFriends } from '@/components/eat-n-split/FriendProvider'
@@ -23,15 +23,15 @@ function FriendList() {
   const { error, loading } = useFriendsApi(friends, setFriends)
 
   const [searchParams] = useSearchParams()
-  const name = searchParams.get('s') || ''
+  const name = searchParams.get(SEARCH_KEY) || ''
 
   const filteredFriends = name
     ? friends.filter((f) => f.name.toLowerCase().includes(name.toLowerCase()))
     : friends
 
-  const { toast } = useToast()
-
   const navigate = useNavigate()
+
+  const { toast } = useToast()
 
   function handleDeleteFriend(friend: Friend) {
     setFriends(friends.filter((f) => f.id !== friend.id))
@@ -41,7 +41,7 @@ function FriendList() {
       description: `成功删除好友：${friend.name}`
     })
 
-    navigate('/eat-split?c=1')
+    navigate('/eat-split')
   }
 
   return (
@@ -109,7 +109,7 @@ function useFriendsApi(
       return { data: null, error }
     }
 
-    if (!friends && data) {
+    if (friends.length === 0 && data) {
       setFriends(data)
     }
 

@@ -5,7 +5,7 @@ import type { ToastActionElement, ToastProps } from '@/components/ui/Toast'
 
 // To display multiple toasts at the same time, you can update the TOAST_LIMIT
 const TOAST_LIMIT = 1
-const TOAST_REMOVE_DELAY = 1000000
+const TOAST_REMOVE_DELAY = 1_000_000
 
 type ToasterToast = ToastProps & {
   id: string

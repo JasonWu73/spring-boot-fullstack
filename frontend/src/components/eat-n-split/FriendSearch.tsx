@@ -4,11 +4,13 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Input } from '@/components/ui/Input'
 import { useKeypress } from '@/lib/use-keypress'
 
+const SEARCH_KEY = 's'
+
 function FriendSearch() {
   const inputRef = useRef<HTMLInputElement | null>(null)
 
   const [searchParams, setSearchParams] = useSearchParams()
-  const name = searchParams.get('s') || ''
+  const name = searchParams.get(SEARCH_KEY) || ''
 
   const navigate = useNavigate()
 
@@ -18,11 +20,11 @@ function FriendSearch() {
     }
 
     inputRef.current?.focus()
-    navigate('/eat-split?c=1')
+    navigate('/eat-split')
   })
 
   function handleSearch(event: React.ChangeEvent<HTMLInputElement>) {
-    return setSearchParams({ s: event.target.value.trim() })
+    return setSearchParams({ s: event.target.value.trim() }, { replace: true })
   }
 
   return (
@@ -36,4 +38,4 @@ function FriendSearch() {
   )
 }
 
-export { FriendSearch }
+export { FriendSearch, SEARCH_KEY }

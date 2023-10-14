@@ -21,28 +21,37 @@ type Action<T> =
   | { type: 'FETCH_INIT' }
   | { type: 'FETCH_SUCCESS'; payload: T }
   | { type: 'FETCH_FAILURE'; payload: string }
+  | { type: 'RESET' }
 
 function reducer<T>(state: State<T>, action: Action<T>): State<T> {
   switch (action.type) {
-    case 'FETCH_INIT':
+    case 'FETCH_INIT': {
       return {
         ...state,
         error: '',
         loading: true
       }
-    case 'FETCH_SUCCESS':
+    }
+    case 'FETCH_SUCCESS': {
       return {
         ...state,
         data: action.payload,
         error: '',
         loading: false
       }
-    case 'FETCH_FAILURE':
+    }
+    case 'FETCH_FAILURE': {
       return {
         ...state,
         error: action.payload,
         loading: false
       }
+    }
+    case 'RESET': {
+      return {
+        ...initialState
+      } as State<T>
+    }
     default: {
       throw new Error('Action type is not supported')
     }
@@ -57,7 +66,7 @@ function reducer<T>(state: State<T>, action: Action<T>): State<T> {
  *
  * @param callback - 获取数据的回调函数
  * @param initialCall - 是否在第一次渲染时自动执行获取数据的回调函数, 默认为 true
- * @returns - 数据, 错误信息, 加载状态和获取数据的回调函数
+ * @returns - 数据, 错误信息, 加载状态, 获取数据的回调函数以前加载状态重置函数
  */
 function useFetch<T, E>(
   callback: (
@@ -104,7 +113,11 @@ function useFetch<T, E>(
     dispatch({ type: 'FETCH_SUCCESS', payload: responseData })
   }, [])
 
-  return { data, error, loading, fetchData }
+  const reset = useCallback(function reset() {
+    dispatch({ type: 'RESET' })
+  }, [])
+
+  return { data, error, loading, fetchData, reset }
 }
 
 export { useFetch, type ApiResponse }

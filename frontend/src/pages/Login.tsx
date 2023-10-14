@@ -1,8 +1,8 @@
-import { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { useEffect } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
+import { useForm, type UseFormReset } from 'react-hook-form'
 import { ReloadIcon } from '@radix-ui/react-icons'
 
 import {
@@ -39,33 +39,11 @@ function Login() {
     }
   })
 
-  const { toast } = useToast()
   const [token, setToken] = useLocalStorageState('demo-token', '')
 
-  const {
-    error,
-    loading,
-    fetchData: login
-  } = useFetch<Token, FormSchema>(async (values, signal) => {
-    const { data, error } = await getAccessTokenApi({
-      ...values!,
-      signal
-    })
+  const { error, loading, login, reset } = useLoginAPi(setToken)
 
-    if (error) {
-      toast({
-        title: '登录失败',
-        description: error,
-        variant: 'destructive'
-      })
-    }
-
-    if (data) {
-      setToken(data.accessToken)
-    }
-
-    return { data, error }
-  }, false)
+  useRefresh(form.reset, reset)
 
   useRedirectIfLoggedIn(token)
 
@@ -119,6 +97,47 @@ function Login() {
       </CardContent>
     </Card>
   )
+}
+
+function useLoginAPi(setToken: React.Dispatch<React.SetStateAction<string>>) {
+  const { toast } = useToast()
+
+  const {
+    error,
+    loading,
+    fetchData: login,
+    reset
+  } = useFetch<Token, FormSchema>(async (values, signal) => {
+    const { data, error } = await getAccessTokenApi({
+      ...values!,
+      signal
+    })
+
+    if (error) {
+      toast({
+        title: '登录失败',
+        description: error,
+        variant: 'destructive'
+      })
+    }
+
+    if (data) {
+      setToken(data.accessToken)
+    }
+
+    return { data, error }
+  }, false)
+
+  return { error, loading, login, reset }
+}
+
+function useRefresh(resetForm: UseFormReset<FormSchema>, reset: () => void) {
+  const location = useLocation()
+
+  useEffect(() => {
+    resetForm()
+    reset()
+  }, [location.key, resetForm, reset])
 }
 
 function useRedirectIfLoggedIn(token: string) {

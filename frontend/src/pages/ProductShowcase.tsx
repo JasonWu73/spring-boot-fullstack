@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ReloadIcon } from '@radix-ui/react-icons'
 
 import { Button } from '@/components/ui/Button'
@@ -6,26 +6,14 @@ import { cn } from '@/lib/utils'
 import { useFetch } from '@/lib/use-fetch'
 import { useTitle } from '@/lib/use-title'
 import { getRandomProductApi } from '@/api/dummyjson/product-api'
+import { useLocation } from 'react-router-dom'
 
 function ProductShowcase() {
   useTitle('产品展示')
 
-  const [count, setCount] = useState(0)
+  const { product, count, error, loading, getProduct } = useProduct()
 
-  const {
-    data: product,
-    error,
-    loading,
-    fetchData: getProduct
-  } = useFetch(async (_, signal?: AbortSignal) => {
-    const response = await getRandomProductApi(signal)
-
-    if (!response.error && response.data) {
-      setCount((prev) => prev + 1)
-    }
-
-    return response
-  })
+  useRefresh(getProduct)
 
   return (
     <div className="mx-auto mt-8 flex w-[400px] flex-col items-center rounded border p-4 shadow-sm">
@@ -81,6 +69,35 @@ function Message({ count }: MessageProps) {
       已加载 <strong>{count}</strong> 个商品
     </p>
   )
+}
+
+function useProduct() {
+  const [count, setCount] = useState(0)
+
+  const {
+    data: product,
+    error,
+    loading,
+    fetchData: getProduct
+  } = useFetch(async (_, signal?: AbortSignal) => {
+    const response = await getRandomProductApi(signal)
+
+    if (!response.error && response.data) {
+      setCount((prev) => prev + 1)
+    }
+
+    return response
+  })
+
+  return { product, count, error, loading, getProduct }
+}
+
+function useRefresh(getProduct: () => void) {
+  const location = useLocation()
+
+  useEffect(() => {
+    getProduct()
+  }, [location.key, getProduct])
 }
 
 export { ProductShowcase }

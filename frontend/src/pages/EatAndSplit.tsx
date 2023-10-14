@@ -1,5 +1,5 @@
 import React, { Suspense, lazy, useState, useEffect } from 'react'
-import { Outlet, useNavigate, useSearchParams } from 'react-router-dom'
+import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 
 import { Button } from '@/components/ui/Button'
 import { Loading } from '@/components/ui/Loading'
@@ -31,7 +31,7 @@ function EatAndSplit() {
     navigate('/eat-split')
   })
 
-  useCloseForm(setShowAddFriend)
+  useRefresh(setShowAddFriend)
 
   function handleToggleAddFriend() {
     setShowAddFriend((prev) => !prev)
@@ -64,21 +64,14 @@ function EatAndSplit() {
   )
 }
 
-function useCloseForm(
+function useRefresh(
   setShowAddFriend: React.Dispatch<React.SetStateAction<boolean>>
 ) {
-  const [searchParams, setSearchParams] = useSearchParams()
+  const location = useLocation()
 
   useEffect(() => {
-    const closeAddFriend = searchParams.get('c') === '1'
-
-    if (closeAddFriend) {
-      setShowAddFriend(false)
-
-      searchParams.delete('c')
-      setSearchParams(searchParams)
-    }
-  }, [setShowAddFriend, searchParams, setSearchParams])
+    setShowAddFriend(false)
+  }, [location.key, setShowAddFriend])
 }
 
 export { EatAndSplit }
