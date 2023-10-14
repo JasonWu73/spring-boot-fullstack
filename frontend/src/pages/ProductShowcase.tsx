@@ -27,17 +27,13 @@ function ProductShowcase() {
     return response
   })
 
-  function getProductContent() {
-    if (loading) {
-      return <Title label="加载中..." />
-    }
+  return (
+    <div className="mx-auto mt-8 flex w-[400px] flex-col items-center rounded border p-4 shadow-sm">
+      {loading && <Title label="加载中..." />}
 
-    if (error) {
-      return <Title label={error} isError />
-    }
+      {!loading && error && <Title label={error} isError />}
 
-    if (product) {
-      return (
+      {!loading && product && (
         <>
           <Title label={product.title} />
           <img
@@ -46,13 +42,7 @@ function ProductShowcase() {
             className="h-32 w-32 rounded-full border border-gray-300 object-cover shadow-sm"
           />
         </>
-      )
-    }
-  }
-
-  return (
-    <div className="mx-auto mt-8 flex w-[400px] flex-col items-center rounded border p-4 shadow-sm">
-      {getProductContent()}
+      )}
 
       <Button onClick={() => getProduct()} className="my-4" disabled={loading}>
         {loading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}

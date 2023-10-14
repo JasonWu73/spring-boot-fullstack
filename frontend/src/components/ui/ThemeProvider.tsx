@@ -76,11 +76,11 @@ function useApplyTheme(theme: Theme) {
 }
 
 function resetTheme() {
-  window.document.documentElement.classList.remove('light', 'dark')
+  document.documentElement.classList.remove('light', 'dark')
 }
 
 function applyTheme(theme: Theme) {
-  window.document.documentElement.classList.add(theme)
+  document.documentElement.classList.add(theme)
 }
 
 function handleToggleTheme(event: MediaQueryListEvent) {

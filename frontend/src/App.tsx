@@ -8,7 +8,6 @@ import { Login } from '@/pages/Login'
 import { ProductShowcase } from '@/pages/ProductShowcase'
 import { EatAndSplit } from '@/pages/EatAndSplit'
 import { PageNotFound } from '@/pages/PageNotFound'
-import { Page } from '@/components/Page'
 
 export default function App() {
   return (
@@ -18,30 +17,9 @@ export default function App() {
 
         <Routes>
           <Route path="/" element={<Navigate to="/eat-split" replace />} />
-          <Route
-            path="/login"
-            element={
-              <Page>
-                <Login />
-              </Page>
-            }
-          />
-          <Route
-            path="/fetch"
-            element={
-              <Page>
-                <ProductShowcase />
-              </Page>
-            }
-          />
-          <Route
-            path="/eat-split"
-            element={
-              <Page>
-                <EatAndSplit />
-              </Page>
-            }
-          >
+          <Route path="/login" element={<Login />} />
+          <Route path="/fetch" element={<ProductShowcase />} />
+          <Route path="/eat-split" element={<EatAndSplit />}>
             <Route path=":friendId" element={<FormSplitBill />} />
           </Route>
           <Route path="*" element={<PageNotFound />} />

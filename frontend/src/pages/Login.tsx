@@ -41,6 +41,7 @@ function Login() {
 
   const { toast } = useToast()
   const [token, setToken] = useLocalStorageState('demo-token', '')
+
   const {
     error,
     loading,
