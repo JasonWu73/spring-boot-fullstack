@@ -183,20 +183,22 @@ function FormSplitBill() {
           <CardHeader>
             <CardTitle>分摊账单，我的朋友</CardTitle>
 
-            <CardDescription className="max-w-xs overflow-hidden text-ellipsis whitespace-nowrap">
-              与
+            <CardDescription className="flex gap-1">
+              好友：
               <TooltipProvider>
                 <Tooltip>
-                  <TooltipTrigger asChild>
-                    <span className="font-semibold text-cyan-500">
-                      {' ' + friend.name + ' '}
-                    </span>
+                  <TooltipTrigger
+                    asChild
+                    className="max-w-xs overflow-hidden text-ellipsis whitespace-nowrap"
+                  >
+                    <div className="font-semibold text-cyan-500">
+                      {friend.name}
+                    </div>
                   </TooltipTrigger>
 
                   <TooltipContent>{friend.name}</TooltipContent>
                 </Tooltip>
               </TooltipProvider>
-              分摊账单
             </CardDescription>
 
             <StarRating
