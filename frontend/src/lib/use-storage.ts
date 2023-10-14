@@ -37,7 +37,7 @@ function useLocalStorageState<T>(
     }
 
     localStorage.setItem(storageKey, String(value))
-  }, [storageKey, value])
+  }, [storageKey, value, isJsonParse])
 
   return [value, setValue]
 }

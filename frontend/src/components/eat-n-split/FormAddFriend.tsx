@@ -20,8 +20,8 @@ import { addFriendApi, type Friend } from '@/api/fake/friend-api'
 import { useFriends } from '@/components/eat-n-split/FriendProvider'
 
 const formSchema = z.object({
-  name: z.string().trim().nonempty('Must enter a name'),
-  image: z.string().trim().url({ message: 'Image must be a valid URL' })
+  name: z.string().trim().nonempty('必须输入姓名'),
+  image: z.string().trim().url({ message: '图片必须是有效的 URL' })
 })
 
 type FormSchema = z.infer<typeof formSchema>
