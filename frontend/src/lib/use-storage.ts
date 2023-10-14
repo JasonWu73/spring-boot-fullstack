@@ -31,7 +31,12 @@ function useLocalStorageState<T>(
       return
     }
 
-    localStorage.setItem(storageKey, JSON.stringify(value))
+    if (isJsonParse) {
+      localStorage.setItem(storageKey, JSON.stringify(value))
+      return
+    }
+
+    localStorage.setItem(storageKey, String(value))
   }, [storageKey, value])
 
   return [value, setValue]
