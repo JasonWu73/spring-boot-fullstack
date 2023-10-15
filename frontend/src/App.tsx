@@ -3,7 +3,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 
 import { ThemeProvider } from '@/components/ui/ThemeProvider'
 import { Toaster } from '@/components/ui/Toaster'
-import { NavBar } from '@/components/NavBar'
+import { NavBar } from '@/components/navbar/NavBar'
 import { Login } from '@/pages/Login'
 import { ProductShowcase } from '@/pages/ProductShowcase'
 import { EatAndSplit } from '@/pages/EatAndSplit'
