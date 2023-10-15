@@ -1,3 +1,5 @@
+import NProgress from 'nprogress'
+
 type ContentType = 'JSON' | 'FORM' | 'FILE'
 
 type UrlData = Record<string, string | number | boolean>
@@ -50,6 +52,9 @@ async function sendRequest<T, E>({
   signal
 }: Request): Promise<Response<T, E>> {
   try {
+    // 开始加载动画
+    NProgress.start()
+
     // 追加 URL 参数
     const splicedUrl = appendParamsToUrl({ url, urlData })
 
@@ -78,6 +83,9 @@ async function sendRequest<T, E>({
 
     // 处理程序异常
     return { data: null, error: String(error) }
+  } finally {
+    // 结束加载动画
+    NProgress.done()
   }
 }
 

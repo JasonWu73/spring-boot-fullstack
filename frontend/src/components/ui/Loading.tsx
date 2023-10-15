@@ -1,4 +1,9 @@
+import { useEffect } from 'react'
+import NProgress from 'nprogress'
+
 function Loading() {
+  useLoading()
+
   return (
     <div role="status">
       <svg
@@ -20,6 +25,18 @@ function Loading() {
       <span className="sr-only">Loading...</span>
     </div>
   )
+}
+
+function useLoading() {
+  useEffect(() => {
+    // 开始加载动画
+    NProgress.start()
+
+    return () => {
+      // 结束加载动画
+      NProgress.done()
+    }
+  }, [])
 }
 
 export { Loading }

@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useReducer } from 'react'
+import NProgress from 'nprogress'
 
 type ApiResponse<T> = {
   data: T | null
@@ -94,6 +95,8 @@ function useFetch<T, E>(
     }
   }, [])
 
+  useLoading(loading)
+
   const fetchData = useCallback(async function fetchData(
     values?: E | null,
     controller?: AbortController
@@ -118,6 +121,16 @@ function useFetch<T, E>(
   }, [])
 
   return { data, error, loading, fetchData, reset }
+}
+
+function useLoading(loading: boolean) {
+  useEffect(() => {
+    // 开始加载动画
+    loading && NProgress.start()
+
+    // 结束加载动画
+    !loading && NProgress.done()
+  }, [loading])
 }
 
 export { useFetch, type ApiResponse }

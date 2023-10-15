@@ -4,6 +4,9 @@ import ReactDOM from 'react-dom/client' // REACT 18
 
 import App from '@/App'
 import '@/index.css'
+import { nprogressConfig } from '@/lib/nprogress-config'
+
+nprogressConfig()
 
 // REACT 18
 ReactDOM.createRoot(document.getElementById('root')!).render(
