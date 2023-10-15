@@ -118,35 +118,33 @@ type HamburgerIconProps = {
 }
 
 function HamburgerIcon({ isOpen, onToggle }: HamburgerIconProps) {
-  const genericHamburgerLine = tw`ease my-1 h-1 w-9 transform rounded-full bg-white transition duration-300 dark:bg-slate-950`
+  const line = tw`ease my-1 h-[2px] w-[1.2rem] transform rounded-full bg-white transition duration-300 group-hover:bg-slate-800 group-hover:dark:bg-white`
 
   return (
     <div className="flex items-center lg:hidden">
-      <button
-        className="group flex h-9 w-9 flex-col items-center justify-center"
+      <Button
         onClick={() => onToggle(!isOpen)}
+        variant="outline"
+        size="icon"
+        className="group flex-col"
       >
         <div
-          className={cn(genericHamburgerLine, {
-            'translate-y-3 rotate-45 opacity-50 group-hover:opacity-100':
-              isOpen,
-            'opacity-50 group-hover:opacity-100': !isOpen
+          className={cn(line, {
+            'translate-y-[0.625rem] rotate-45': isOpen
           })}
         />
         <div
-          className={cn(genericHamburgerLine, {
+          className={cn(line, {
             'opacity-0': isOpen,
-            'opacity-50 group-hover:opacity-100': !isOpen
+            'my-0': !isOpen
           })}
         />
         <div
-          className={cn(genericHamburgerLine, {
-            '-translate-y-3 -rotate-45 opacity-50 group-hover:opacity-100':
-              isOpen,
-            'opacity-50 group-hover:opacity-100': !isOpen
+          className={cn(line, {
+            '-translate-y-[0.625rem] -rotate-45': isOpen
           })}
         />
-      </button>
+      </Button>
     </div>
   )
 }
