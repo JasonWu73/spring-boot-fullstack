@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm, type UseFormReset } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { ReloadIcon } from '@radix-ui/react-icons'
 
 import {
@@ -20,6 +20,7 @@ import { useTitle } from '@/lib/use-title'
 import { useFetch } from '@/lib/use-fetch'
 import { useLocalStorageState } from '@/lib/use-storage'
 import { getAccessTokenApi, Token } from '@/api/fake/auth-api'
+import { useRefresh } from '@/lib/use-refresh'
 
 const formSchema = z.object({
   username: z.string().trim().nonempty('Must enter a username'),
@@ -41,9 +42,12 @@ function Login() {
 
   const [token, setToken] = useLocalStorageState('demo-token', '')
 
-  const { error, loading, login, reset } = useLoginAPi(setToken)
+  const { error, loading, login, resetLoginState } = useLoginAPi(setToken)
 
-  useRefresh(form.reset, reset)
+  useRefresh(() => {
+    form.reset()
+    resetLoginState()
+  })
 
   useRedirectIfLoggedIn(token)
 
@@ -106,7 +110,7 @@ function useLoginAPi(setToken: React.Dispatch<React.SetStateAction<string>>) {
     error,
     loading,
     fetchData: login,
-    reset
+    reset: resetLoginState
   } = useFetch<Token, FormSchema>(async (values, signal) => {
     const { data, error } = await getAccessTokenApi({
       ...values!,
@@ -128,16 +132,7 @@ function useLoginAPi(setToken: React.Dispatch<React.SetStateAction<string>>) {
     return { data, error }
   }, false)
 
-  return { error, loading, login, reset }
-}
-
-function useRefresh(resetForm: UseFormReset<FormSchema>, reset: () => void) {
-  const location = useLocation()
-
-  useEffect(() => {
-    resetForm()
-    reset()
-  }, [location.key, resetForm, reset])
+  return { error, loading, login, resetLoginState }
 }
 
 function useRedirectIfLoggedIn(token: string) {

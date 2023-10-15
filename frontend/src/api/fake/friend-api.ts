@@ -1,5 +1,6 @@
 import { type ApiResponse } from '@/lib/use-fetch'
 import { sendRequest } from '@/lib/http'
+import { wait } from '@/lib/utils'
 
 type Friend = {
   id: number
@@ -12,6 +13,8 @@ type Friend = {
 async function getFriendsApi(
   signal?: AbortSignal
 ): Promise<ApiResponse<Friend[]>> {
+  await wait(1)
+
   const { data, error } = await sendRequest<Friend[], string>({
     url: 'http://localhost:5173/data/friends.json',
     signal

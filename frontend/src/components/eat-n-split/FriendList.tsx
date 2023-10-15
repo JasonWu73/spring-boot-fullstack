@@ -16,11 +16,12 @@ import { FriendSearch, SEARCH_KEY } from '@/components/eat-n-split/FriendSearch'
 import { useFetch } from '@/lib/use-fetch'
 import { type Friend, getFriendsApi } from '@/api/fake/friend-api'
 import { useFriends } from '@/components/eat-n-split/FriendProvider'
+import { useRefresh } from '@/lib/use-refresh'
 
 function FriendList() {
   const { friends, setFriends } = useFriends()
 
-  const { error, loading } = useFriendsApi(friends, setFriends)
+  const { error, loading, getFriends } = useFriendsApi(friends, setFriends)
 
   const [searchParams] = useSearchParams()
   const name = searchParams.get(SEARCH_KEY) || ''
@@ -32,6 +33,10 @@ function FriendList() {
   const navigate = useNavigate()
 
   const { toast } = useToast()
+
+  useRefresh(() => {
+    getFriends({ friends }).then()
+  })
 
   function handleDeleteFriend(friend: Friend) {
     setFriends(friends.filter((f) => f.id !== friend.id))
@@ -98,16 +103,26 @@ function FriendList() {
   )
 }
 
+type GetFriendsParams = {
+  friends?: Friend[]
+}
+
 function useFriendsApi(
-  friends: Friend[],
+  initialFriends: Friend[],
   setFriends: (friends: Friend[]) => void
 ) {
-  const { error, loading } = useFetch(async (_, signal) => {
+  const {
+    error,
+    loading,
+    fetchData: getFriends
+  } = useFetch<Friend[], GetFriendsParams>(async (params, signal) => {
     const { data, error } = await getFriendsApi(signal)
 
     if (error) {
       return { data: null, error }
     }
+
+    const friends = params?.friends ?? initialFriends
 
     if (friends.length === 0 && data) {
       setFriends(data)
@@ -116,7 +131,7 @@ function useFriendsApi(
     return { data, error }
   })
 
-  return { error, loading }
+  return { error, loading, getFriends }
 }
 
 export { FriendList }

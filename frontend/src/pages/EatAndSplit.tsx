@@ -1,5 +1,5 @@
-import React, { Suspense, lazy, useState, useEffect } from 'react'
-import { Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { Suspense, lazy, useState } from 'react'
+import { Outlet, useNavigate } from 'react-router-dom'
 
 import { Button } from '@/components/ui/Button'
 import { Loading } from '@/components/ui/Loading'
@@ -8,6 +8,7 @@ import { useKeypress } from '@/lib/use-keypress'
 import { useTitle } from '@/lib/use-title'
 import { wait } from '@/lib/utils'
 import { FriendProvider } from '@/components/eat-n-split/FriendProvider'
+import { useRefresh } from '@/lib/use-refresh'
 
 // ----- Start: 测试懒加载 (React Split Code 技术) -----
 const FormAddFriend = lazy(() =>
@@ -31,7 +32,9 @@ function EatAndSplit() {
     navigate('/eat-split')
   })
 
-  useRefresh(setShowAddFriend)
+  useRefresh(() => {
+    setShowAddFriend(false)
+  })
 
   function handleToggleAddFriend() {
     setShowAddFriend((prev) => !prev)
@@ -62,16 +65,6 @@ function EatAndSplit() {
       </div>
     </FriendProvider>
   )
-}
-
-function useRefresh(
-  setShowAddFriend: React.Dispatch<React.SetStateAction<boolean>>
-) {
-  const location = useLocation()
-
-  useEffect(() => {
-    setShowAddFriend(false)
-  }, [location.key, setShowAddFriend])
 }
 
 export { EatAndSplit }

@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { type UseFormReturn, useForm, UseFormReset } from 'react-hook-form'
+import { type UseFormReturn, useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ReloadIcon } from '@radix-ui/react-icons'
@@ -32,6 +32,7 @@ import {
   updateFriendApi
 } from '@/api/fake/friend-api'
 import { useFriends } from '@/components/eat-n-split/FriendProvider'
+import { useRefresh } from '@/lib/use-refresh'
 
 const whoIsPayingOptions = [
   { value: 'user', label: '您' },
@@ -122,7 +123,10 @@ function FormSplitBill() {
     updateFriend
   } = useSplitBill(friends)
 
-  useRefresh(friends, idInQueryString, getFriend, form.reset)
+  useRefresh(() => {
+    getFriend({ friends, id: idInQueryString }).then()
+    form.reset()
+  })
 
   const navigate = useNavigate()
 
@@ -372,18 +376,6 @@ function useSplitBill(friends: Friend[]) {
   }, false)
 
   return { error, loading, updateFriend }
-}
-
-function useRefresh(
-  friends: Friend[],
-  idInQueryString: number,
-  getFriend: (params: getFriendParams) => void,
-  resetForm: UseFormReset<FormSchema>
-) {
-  useEffect(() => {
-    getFriend({ friends, id: idInQueryString })
-    resetForm()
-  }, [JSON.stringify(friends), idInQueryString, getFriend, resetForm])
 }
 
 export { FormSplitBill }

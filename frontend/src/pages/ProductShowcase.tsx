@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { ReloadIcon } from '@radix-ui/react-icons'
 
 import { Button } from '@/components/ui/Button'
@@ -6,14 +6,16 @@ import { cn } from '@/lib/utils'
 import { useFetch } from '@/lib/use-fetch'
 import { useTitle } from '@/lib/use-title'
 import { getRandomProductApi } from '@/api/dummyjson/product-api'
-import { useLocation } from 'react-router-dom'
+import { useRefresh } from '@/lib/use-refresh'
 
 function ProductShowcase() {
   useTitle('产品展示')
 
   const { product, count, error, loading, getProduct } = useProduct()
 
-  useRefresh(getProduct)
+  useRefresh(() => {
+    getProduct().then()
+  })
 
   return (
     <div className="mx-auto mt-8 flex w-[400px] flex-col items-center rounded border p-4 shadow-sm">
@@ -90,14 +92,6 @@ function useProduct() {
   })
 
   return { product, count, error, loading, getProduct }
-}
-
-function useRefresh(getProduct: () => void) {
-  const location = useLocation()
-
-  useEffect(() => {
-    getProduct()
-  }, [location.key, getProduct])
 }
 
 export { ProductShowcase }
