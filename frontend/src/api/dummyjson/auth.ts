@@ -85,51 +85,51 @@ async function sendAuthDummyJsonApi<T>({
     signal
   })
 
-  if (error) {
-    if (typeof error === 'string') {
-      return { data: null, error }
-    }
+  if (!error) {
+    return { data, error: '' }
+  }
 
-    if (
-      error.name === 'TokenExpiredError' ||
-      error.name === 'JsonWebTokenError'
-    ) {
-      localStorage.removeItem(STORAGE_KEY)
-    }
+  if (typeof error === 'string') {
+    return { data: null, error }
+  }
 
-    if (!initialCall) {
-      return { data: null, error: error.message }
-    }
+  if (
+    error.name === 'TokenExpiredError' ||
+    error.name === 'JsonWebTokenError'
+  ) {
+    localStorage.removeItem(STORAGE_KEY)
+  }
 
-    if (error.name === 'TokenExpiredError') {
-      const { data, error } = await loginApi({
-        username: USERNAME,
-        password: PASSWORD
-      })
-
-      if (error) {
-        return { data: null, error }
-      }
-
-      if (data) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
-
-        return sendAuthDummyJsonApi({
-          url,
-          method,
-          contentType,
-          urlData,
-          bodyData,
-          signal,
-          initialCall: false
-        })
-      }
-    }
-
+  if (!initialCall) {
     return { data: null, error: error.message }
   }
 
-  return { data, error: '' }
+  if (error.name === 'TokenExpiredError') {
+    const { data, error } = await loginApi({
+      username: USERNAME,
+      password: PASSWORD
+    })
+
+    if (error) {
+      return { data: null, error }
+    }
+
+    if (data) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
+
+      return sendAuthDummyJsonApi({
+        url,
+        method,
+        contentType,
+        urlData,
+        bodyData,
+        signal,
+        initialCall: false
+      })
+    }
+  }
+
+  return { data: null, error: error.message }
 }
 
 function getAuthHeaders(): Record<string, string> {
