@@ -1,4 +1,3 @@
-import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -20,7 +19,7 @@ import { useTitle } from '@/lib/use-title'
 import { useFetch } from '@/lib/use-fetch'
 import { useLocalStorageState } from '@/lib/use-storage'
 import { useRefresh } from '@/lib/use-refresh'
-import { type Auth, loginApi } from '@/api/dummyjson/auth'
+import { type Auth, loginApi, STORAGE_KEY } from '@/api/dummyjson/auth'
 
 const formSchema = z.object({
   username: z.string().trim().nonempty('Must enter a username'),
@@ -40,11 +39,11 @@ function Login() {
     }
   })
 
-  const [token, setToken] = useLocalStorageState('demo-token', '')
+  const [, setAuth] = useLocalStorageState<Auth | null>(STORAGE_KEY, null)
 
   const { toast, dismiss } = useToast()
 
-  const { error, loading, login, resetLogin } = useLoginAPi(setToken, toast)
+  const { error, loading, login, resetLogin } = useLoginAPi()
 
   useRefresh(() => {
     form.reset()
@@ -52,10 +51,26 @@ function Login() {
     dismiss()
   })
 
-  useRedirectIfLoggedIn(token)
+  const navigate = useNavigate()
 
   async function onSubmit(values: FormSchema) {
-    await login(values)
+    const { data, error } = await login(values)
+
+    if (error) {
+      toast({
+        title: '登录失败',
+        description: error,
+        variant: 'destructive'
+      })
+      return
+    }
+
+    if (data) {
+      setAuth(data)
+
+      // 登录成功后，跳转到前一个历史页面
+      navigate(-1)
+    }
   }
 
   return (
@@ -106,49 +121,22 @@ function Login() {
   )
 }
 
-function useLoginAPi(
-  setToken: React.Dispatch<React.SetStateAction<string>>,
-  toast: ReturnType<typeof useToast>['toast']
-) {
+function useLoginAPi() {
   const {
     error,
     loading,
     fetchData: login,
     reset: resetLogin
   } = useFetch<Auth, FormSchema>(async (values, signal) => {
-    const { data, error } = await loginApi(
+    return await loginApi(
       {
         ...values!
       },
       signal
     )
-
-    if (error) {
-      toast({
-        title: '登录失败',
-        description: error,
-        variant: 'destructive'
-      })
-    }
-
-    if (data) {
-      setToken(data.token)
-    }
-
-    return { data, error }
   }, false)
 
   return { error, loading, login, resetLogin }
-}
-
-function useRedirectIfLoggedIn(token: string) {
-  const navigate = useNavigate()
-
-  useEffect(() => {
-    if (token) {
-      navigate('/', { replace: true })
-    }
-  }, [token, navigate])
 }
 
 export { Login }

@@ -19,7 +19,7 @@ type FriendProviderProps = {
   children: React.ReactNode
 }
 
-const STORAGE_KEY = 'friends'
+const STORAGE_KEY = 'demo-friends'
 
 function FriendProvider({ children }: FriendProviderProps) {
   const [friends, setFriends] = useLocalStorageState(

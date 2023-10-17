@@ -74,6 +74,11 @@ function reducer<T>(state: State<T>, action: Action<T>): State<T> {
   }
 }
 
+type FetchData<T> = {
+  data: T | null
+  error: string
+}
+
 /**
  * 获取数据的自定义 Hook。
  *
@@ -112,25 +117,24 @@ function useFetch<T, E>(
   const fetchData = useCallback(async function fetchData(
     values: E | null = null,
     controller = new AbortController()
-  ) {
+  ): Promise<FetchData<T>> {
     dispatch({ type: 'FETCH_INIT', payload: controller })
 
-    const { data: responseData, error: responseError } = await callback(
-      values,
-      controller.signal
-    )
+    const response = await callback(values, controller.signal)
 
     if (controller.signal.aborted) {
       dispatch({ type: 'FETCH_ABORTED' })
-      return
+      return response
     }
 
-    if (responseError) {
-      dispatch({ type: 'FETCH_FAILURE', payload: responseError })
-      return
+    if (response.error) {
+      dispatch({ type: 'FETCH_FAILURE', payload: response.error })
+      return response
     }
 
-    dispatch({ type: 'FETCH_SUCCESS', payload: responseData })
+    dispatch({ type: 'FETCH_SUCCESS', payload: response.data })
+
+    return response
   }, [])
 
   const reset = useCallback(function reset() {

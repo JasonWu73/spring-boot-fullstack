@@ -24,7 +24,7 @@ const FormSplitBill = lazy(() =>
 export default function App() {
   return (
     <BrowserRouter>
-      <ThemeProvider defaultTheme="system" storageKey="react-ui-theme">
+      <ThemeProvider defaultTheme="system" storageKey="demo-ui-theme">
         <NavBar />
 
         <Routes>

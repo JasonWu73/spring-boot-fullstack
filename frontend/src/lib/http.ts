@@ -7,6 +7,7 @@ type Request = {
   url: string
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE'
   contentType?: ContentType
+  headers?: Record<string, string>
   urlData?: UrlData
   bodyData?: BodyData
   signal?: AbortSignal
@@ -16,7 +17,7 @@ type UrlInfo = Pick<Request, 'url' | 'urlData'>
 
 type RequestConfig = Pick<
   Request,
-  'method' | 'contentType' | 'bodyData' | 'signal'
+  'method' | 'contentType' | 'headers' | 'bodyData' | 'signal'
 >
 
 type RequestBody = Pick<Request, 'contentType' | 'bodyData'>
@@ -36,6 +37,7 @@ type Response<T, E> = {
  * @param Request.url - URL 地址
  * @param Request.method - 请求方法，默认为 `GET`
  * @param Request.contentType - 请求体的内容类型，默认为 `JSON`
+ * @param Request.headers - HTTP 请求头
  * @param Request.urlData - URL 参数
  * @param Request.bodyData - 请求体数据
  * @param Request.signal - `AbortController` 实例的 `signal` 属性，用于主动取消请求
@@ -45,6 +47,7 @@ async function sendRequest<T, E>({
   url,
   method = 'GET',
   contentType = 'JSON',
+  headers = {},
   urlData,
   bodyData,
   signal
@@ -56,7 +59,7 @@ async function sendRequest<T, E>({
     // 发送 HTTP 请求
     const response = await fetch(
       splicedUrl,
-      getRequestOptions({ method, contentType, bodyData, signal })
+      getRequestOptions({ method, contentType, headers, bodyData, signal })
     )
 
     // 以 JSON 数据格式解析请求
@@ -94,31 +97,35 @@ function appendParamsToUrl({ url, urlData }: UrlInfo) {
 function getRequestOptions({
   method,
   contentType = 'JSON',
+  headers = {},
   bodyData,
   signal
 }: RequestConfig) {
-  if (method === 'GET') {
-    return { signal }
-  }
+  const mergedHeaders = getHeaders(contentType, headers)
 
-  const headers = getHeaders(contentType)
+  if (method === 'GET') {
+    return { headers: mergedHeaders, signal }
+  }
 
   return {
     method,
-    headers,
+    headers: mergedHeaders,
     body: getBody({ contentType, bodyData }),
     signal
   }
 }
 
-function getHeaders(type: ContentType): Record<string, string> {
+function getHeaders(
+  type: ContentType,
+  headers: Record<string, string>
+): Record<string, string> {
   switch (type) {
     case 'FILE':
-      return {}
+      return { ...headers }
     case 'FORM':
-      return { 'Content-Type': 'application/x-www-form-urlencoded' }
+      return { ...headers, 'Content-Type': 'application/x-www-form-urlencoded' }
     default:
-      return { 'Content-Type': 'application/json' }
+      return { ...headers, 'Content-Type': 'application/json' }
   }
 }
 
@@ -141,4 +148,4 @@ function getUrlEncodedData(bodyData: UrlData) {
     .join('&')
 }
 
-export { sendRequest }
+export { sendRequest, type Request, type Response }
