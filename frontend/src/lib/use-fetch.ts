@@ -10,16 +10,18 @@ type State<T> = {
   data: T | null
   error: string
   loading: boolean
+  controller: AbortController | null
 }
 
 const initialState: State<unknown> = {
   data: null,
   error: '',
-  loading: false
+  loading: false,
+  controller: null
 }
 
 type Action<T> =
-  | { type: 'FETCH_INIT' }
+  | { type: 'FETCH_INIT'; payload: AbortController | null }
   | { type: 'FETCH_SUCCESS'; payload: T }
   | { type: 'FETCH_FAILURE'; payload: string }
   | { type: 'RESET' }
@@ -30,7 +32,8 @@ function reducer<T>(state: State<T>, action: Action<T>): State<T> {
       return {
         ...state,
         error: '',
-        loading: true
+        loading: true,
+        controller: action.payload
       }
     }
     case 'FETCH_SUCCESS': {
@@ -38,17 +41,23 @@ function reducer<T>(state: State<T>, action: Action<T>): State<T> {
         ...state,
         data: action.payload,
         error: '',
-        loading: false
+        loading: false,
+        controller: null
       }
     }
     case 'FETCH_FAILURE': {
       return {
         ...state,
         error: action.payload,
-        loading: false
+        loading: false,
+        controller: null
       }
     }
     case 'RESET': {
+      if (state.controller) {
+        state.controller.abort()
+      }
+
       return {
         ...initialState
       } as State<T>
@@ -70,10 +79,7 @@ function reducer<T>(state: State<T>, action: Action<T>): State<T> {
  * @returns - 数据, 错误信息, 加载状态, 获取数据的回调函数以前加载状态重置函数
  */
 function useFetch<T, E>(
-  callback: (
-    values?: E | null,
-    signal?: AbortSignal
-  ) => Promise<ApiResponse<T>>,
+  callback: (values: E | null, signal: AbortSignal) => Promise<ApiResponse<T>>,
   initialCall: boolean = true
 ) {
   const [{ data, error, loading }, dispatch] = useReducer(
@@ -98,14 +104,14 @@ function useFetch<T, E>(
   useLoading(loading)
 
   const fetchData = useCallback(async function fetchData(
-    values?: E | null,
-    controller?: AbortController
+    values: E | null = null,
+    controller = new AbortController()
   ) {
-    dispatch({ type: 'FETCH_INIT' })
+    dispatch({ type: 'FETCH_INIT', payload: controller })
 
     const { data: responseData, error: responseError } = await callback(
       values,
-      controller?.signal
+      controller.signal
     )
 
     if (responseError) {

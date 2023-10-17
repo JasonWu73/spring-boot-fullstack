@@ -19,8 +19,8 @@ import { useToast } from '@/components/ui/use-toast'
 import { useTitle } from '@/lib/use-title'
 import { useFetch } from '@/lib/use-fetch'
 import { useLocalStorageState } from '@/lib/use-storage'
-import { getAccessTokenApi, Token } from '@/api/fake/auth-api'
 import { useRefresh } from '@/lib/use-refresh'
+import { type Auth, loginApi } from '@/api/dummyjson/auth'
 
 const formSchema = z.object({
   username: z.string().trim().nonempty('Must enter a username'),
@@ -42,11 +42,14 @@ function Login() {
 
   const [token, setToken] = useLocalStorageState('demo-token', '')
 
-  const { error, loading, login, resetLoginState } = useLoginAPi(setToken)
+  const { toast, dismiss } = useToast()
+
+  const { error, loading, login, resetLogin } = useLoginAPi(setToken, toast)
 
   useRefresh(() => {
     form.reset()
-    resetLoginState()
+    resetLogin()
+    dismiss()
   })
 
   useRedirectIfLoggedIn(token)
@@ -103,19 +106,22 @@ function Login() {
   )
 }
 
-function useLoginAPi(setToken: React.Dispatch<React.SetStateAction<string>>) {
-  const { toast } = useToast()
-
+function useLoginAPi(
+  setToken: React.Dispatch<React.SetStateAction<string>>,
+  toast: ReturnType<typeof useToast>['toast']
+) {
   const {
     error,
     loading,
     fetchData: login,
-    reset: resetLoginState
-  } = useFetch<Token, FormSchema>(async (values, signal) => {
-    const { data, error } = await getAccessTokenApi({
-      ...values!,
+    reset: resetLogin
+  } = useFetch<Auth, FormSchema>(async (values, signal) => {
+    const { data, error } = await loginApi(
+      {
+        ...values!
+      },
       signal
-    })
+    )
 
     if (error) {
       toast({
@@ -126,13 +132,13 @@ function useLoginAPi(setToken: React.Dispatch<React.SetStateAction<string>>) {
     }
 
     if (data) {
-      setToken(data.accessToken)
+      setToken(data.token)
     }
 
     return { data, error }
   }, false)
 
-  return { error, loading, login, resetLoginState }
+  return { error, loading, login, resetLogin }
 }
 
 function useRedirectIfLoggedIn(token: string) {

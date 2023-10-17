@@ -1,9 +1,6 @@
 import { sendRequest } from '@/lib/http'
-import { ApiResponse } from '@/lib/use-fetch'
-
-type ApiError = {
-  message: string
-}
+import { type ApiResponse } from '@/lib/use-fetch'
+import { type ApiError, BASE_URL } from '@/api/dummyjson/dummyjson-constants'
 
 type Product = {
   id: number
@@ -24,7 +21,7 @@ async function getRandomProductApi(
 ): Promise<ApiResponse<Product>> {
   const randomId = Math.floor(Math.random() * 110)
   const { data, error } = await sendRequest<Product, ApiError>({
-    url: `https://dummyjson.com/products/${randomId}`,
+    url: `${BASE_URL}/products/${randomId}`,
     signal: signal
   })
 
@@ -39,4 +36,4 @@ async function getRandomProductApi(
   return { data, error: '' }
 }
 
-export { type Product, getRandomProductApi }
+export { getRandomProductApi, type Product }

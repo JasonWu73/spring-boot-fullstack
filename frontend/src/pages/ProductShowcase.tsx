@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/Button'
 import { cn } from '@/lib/utils'
 import { useFetch } from '@/lib/use-fetch'
 import { useTitle } from '@/lib/use-title'
-import { getRandomProductApi } from '@/api/dummyjson/product-api'
+import { getRandomProductApi } from '@/api/dummyjson/product'
 import { useRefresh } from '@/lib/use-refresh'
 
 function ProductShowcase() {
