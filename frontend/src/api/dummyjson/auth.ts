@@ -152,4 +152,4 @@ function getAuthFromLocalStorage(): Auth | null {
   return JSON.parse(storageValue)
 }
 
-export { loginApi, STORAGE_KEY, sendAuthDummyJsonApi, type Auth }
+export { loginApi, STORAGE_KEY, sendAuthDummyJsonApi, getAuthFromLocalStorage, type Auth }

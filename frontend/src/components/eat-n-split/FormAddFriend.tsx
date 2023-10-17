@@ -56,7 +56,7 @@ function FormAddFriend() {
 
     await addFriend(newFriend)
 
-    navigate('/eat-split')
+    navigate('/eat-split', { replace: true })
   }
 
   return (

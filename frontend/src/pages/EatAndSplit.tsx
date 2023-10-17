@@ -28,7 +28,7 @@ function EatAndSplit() {
 
   useKeypress({ key: 'Escape' }, () => {
     setShowAddFriend(false)
-    navigate('/eat-split')
+    navigate('/eat-split', { replace: true })
   })
 
   function handleLoadFriendList() {

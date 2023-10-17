@@ -44,11 +44,11 @@ function truncate(str: string, maxlength: number) {
 /**
  * 等待指定秒数。
  *
- * @param seconds - 等待的秒数
+ * @param secs - 等待的秒数
  * @returns - 等待指定秒数后执行的 `Promise`
  */
-function wait(seconds: number) {
-  return new Promise((resolve) => setTimeout(resolve, seconds * 1000))
+function wait(secs: number) {
+  return new Promise((resolve) => setTimeout(resolve, secs * 1000))
 }
 
 /**

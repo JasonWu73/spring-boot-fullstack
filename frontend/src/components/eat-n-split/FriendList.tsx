@@ -51,7 +51,7 @@ function FriendList({ onLoadData }: FriendListProps) {
       description: `成功删除好友：${friend.name}`
     })
 
-    navigate('/eat-split')
+    navigate('/eat-split', { replace: true })
   }
 
   return (

@@ -135,7 +135,7 @@ function FormSplitBill() {
     await updateFriend(newFriend)
 
     splitBill(bill)
-    navigate('/eat-split')
+    navigate('/eat-split', { replace: true })
   }
 
   function splitBill(bill: Bill) {

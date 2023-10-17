@@ -5,13 +5,13 @@ import { debounce } from '@/lib/utils'
 
 let initialLoadPage = true
 
-const setNotInitialLoadPage = debounce(() => {
+const initialFinish = debounce(() => {
   initialLoadPage = false
 }, 200)
 
 let needsReload = true
 
-const setNeedsReload = debounce(() => {
+const resetNeedsReload = debounce(() => {
   needsReload = true
 }, 1000)
 
@@ -25,7 +25,7 @@ function useRefresh(callback: () => void) {
 
   useEffect(() => {
     if (initialLoadPage) {
-      setNotInitialLoadPage()
+      initialFinish()
       return
     }
 
@@ -34,7 +34,7 @@ function useRefresh(callback: () => void) {
 
       callback()
 
-      setNeedsReload()
+      resetNeedsReload()
     }
   }, [location.key])
 }

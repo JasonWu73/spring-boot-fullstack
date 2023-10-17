@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom'
+import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
@@ -20,6 +20,7 @@ import { useFetch } from '@/lib/use-fetch'
 import { useLocalStorageState } from '@/lib/use-storage'
 import { useRefresh } from '@/lib/use-refresh'
 import { type Auth, loginApi, STORAGE_KEY } from '@/api/dummyjson/auth'
+import { wait } from '@/lib/utils'
 
 const formSchema = z.object({
   username: z.string().trim().nonempty('Must enter a username'),
@@ -39,7 +40,7 @@ function Login() {
     }
   })
 
-  const [, setAuth] = useLocalStorageState<Auth | null>(STORAGE_KEY, null)
+  const [auth, setAuth] = useLocalStorageState<Auth | null>(STORAGE_KEY, null)
 
   const { toast, dismiss } = useToast()
 
@@ -52,6 +53,13 @@ function Login() {
   })
 
   const navigate = useNavigate()
+
+  const location = useLocation()
+  const originUrl = location.state?.from || '/'
+
+  if (auth && auth.token) {
+    return <Navigate to={originUrl} replace />
+  }
 
   async function onSubmit(values: FormSchema) {
     const { data, error } = await login(values)
@@ -68,8 +76,9 @@ function Login() {
     if (data) {
       setAuth(data)
 
-      // 登录成功后，跳转到前一个历史页面
-      navigate(-1)
+      // 这里添加延迟，保证在设置 Token 后再执行页面跳转
+      await wait(0.2)
+      navigate(originUrl, { replace: true })
     }
   }
 

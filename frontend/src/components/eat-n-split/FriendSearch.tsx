@@ -20,7 +20,7 @@ function FriendSearch() {
     }
 
     inputRef.current?.focus()
-    navigate('/eat-split')
+    navigate('/eat-split', { replace: true })
   })
 
   function handleSearch(event: React.ChangeEvent<HTMLInputElement>) {
