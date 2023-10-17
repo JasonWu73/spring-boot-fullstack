@@ -11,8 +11,8 @@ type ApiError = {
   expiredAt?: string
 }
 
-const USERNAME = 'jissetts'
-const PASSWORD = 'ePawWgrnZR8L'
+const USERNAME = 'admin'
+const PASSWORD = 'admin'
 const EXPIRES_IN_MINS = 1
 
 type Auth = {
@@ -40,14 +40,14 @@ async function loginApi(
     url: `${BASE_URL}/login`,
     method: 'POST',
     bodyData: {
-      username: USERNAME,
-      password: PASSWORD,
+      username: 'jissetts',
+      password: 'ePawWgrnZR8L',
       expiresInMins: EXPIRES_IN_MINS
     },
     signal: signal
   })
 
-  if (username !== 'admin' || password !== 'admin') {
+  if (username !== USERNAME || password !== PASSWORD) {
     return { data: null, error: '用户名或密码错误' }
   }
 
@@ -68,8 +68,9 @@ async function sendAuthDummyJsonApi<T>({
   contentType = 'JSON',
   urlData,
   bodyData,
-  signal
-}: Request): Promise<ApiResponse<T>> {
+  signal,
+  initialCall = true
+}: Request & { initialCall: boolean }): Promise<ApiResponse<T>> {
   const headers = getAuthHeaders()
 
   const { data, error } = await sendRequest<T, ApiError>({
@@ -92,6 +93,35 @@ async function sendAuthDummyJsonApi<T>({
       error.name === 'JsonWebTokenError'
     ) {
       localStorage.removeItem(STORAGE_KEY)
+    }
+
+    if (!initialCall) {
+      return { data: null, error: error.message }
+    }
+
+    if (error.name === 'TokenExpiredError') {
+      const { data, error } = await loginApi({
+        username: USERNAME,
+        password: PASSWORD
+      })
+
+      if (error) {
+        return { data: null, error }
+      }
+
+      if (data) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
+
+        return sendAuthDummyJsonApi({
+          url,
+          method,
+          contentType,
+          urlData,
+          bodyData,
+          signal,
+          initialCall: false
+        })
+      }
     }
 
     return { data: null, error: error.message }
