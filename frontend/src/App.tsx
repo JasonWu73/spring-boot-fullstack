@@ -10,6 +10,7 @@ import { EatAndSplit } from '@/pages/EatAndSplit'
 import { PageNotFound } from '@/pages/PageNotFound'
 import { wait } from '@/lib/utils'
 import { Loading } from '@/components/ui/Loading'
+import { Home } from '@/pages/Home'
 
 // ----- Start: 测试 React Router 懒加载 (React Split Code 技术) -----
 const FormSplitBill = lazy(() =>
@@ -25,10 +26,11 @@ export default function App() {
   return (
     <BrowserRouter>
       <ThemeProvider defaultTheme="system" storageKey="react-ui-theme">
-        <NavBar />
+        {/* <NavBar /> */}
 
         <Routes>
-          <Route path="/" element={<Navigate to="/eat-split" replace />} />
+          <Route path="/" element={<Home />} />
+          {/* <Route path="/" element={<Navigate to="/eat-split" replace />} /> */}
           <Route path="/login" element={<Login />} />
           <Route path="/fetch" element={<ProductShowcase />} />
           <Route path="/eat-split" element={<EatAndSplit />}>
