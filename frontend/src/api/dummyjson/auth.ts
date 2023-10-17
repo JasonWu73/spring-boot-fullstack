@@ -62,6 +62,8 @@ async function loginApi(
   return { data, error: '' }
 }
 
+type SendRequestWrapper = Request & { initialCall?: boolean }
+
 async function sendAuthDummyJsonApi<T>({
   url,
   method = 'GET',
@@ -70,7 +72,7 @@ async function sendAuthDummyJsonApi<T>({
   bodyData,
   signal,
   initialCall = true
-}: Request & { initialCall: boolean }): Promise<ApiResponse<T>> {
+}: SendRequestWrapper): Promise<ApiResponse<T>> {
   const headers = getAuthHeaders()
 
   const { data, error } = await sendRequest<T, ApiError>({
