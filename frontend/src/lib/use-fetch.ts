@@ -24,14 +24,14 @@ type Action<T> =
   | { type: 'FETCH_INIT'; payload: AbortController | null }
   | { type: 'FETCH_SUCCESS'; payload: T }
   | { type: 'FETCH_FAILURE'; payload: string }
+  | { type: 'FETCH_ABORTED' }
   | { type: 'RESET' }
 
 function reducer<T>(state: State<T>, action: Action<T>): State<T> {
   switch (action.type) {
     case 'FETCH_INIT': {
       return {
-        ...state,
-        error: '',
+        ...(initialState as State<T>),
         loading: true,
         controller: action.payload
       }
@@ -53,30 +53,36 @@ function reducer<T>(state: State<T>, action: Action<T>): State<T> {
         controller: null
       }
     }
+    case 'FETCH_ABORTED': {
+      return {
+        ...state,
+        controller: null
+      }
+    }
     case 'RESET': {
       if (state.controller) {
         state.controller.abort()
       }
 
       return {
-        ...initialState
-      } as State<T>
+        ...(initialState as State<T>)
+      }
     }
     default: {
-      throw new Error('Action type is not supported')
+      throw new Error('Action Type 不支持')
     }
   }
 }
 
 /**
- * 获取数据的自定义 Hook.
+ * 获取数据的自定义 Hook。
  *
  * @template T - 返回的数据类型
  * @template E - 请求参数类型
  *
  * @param callback - 获取数据的回调函数
- * @param initialCall - 是否在第一次渲染时自动执行获取数据的回调函数, 默认为 true
- * @returns - 数据, 错误信息, 加载状态, 获取数据的回调函数以前加载状态重置函数
+ * @param initialCall - 是否在第一次渲染时自动执行获取数据的回调函数，默认为 true
+ * @returns - 数据、错误信息、加载状态、获取数据和重置加载的回调函数
  */
 function useFetch<T, E>(
   callback: (values: E | null, signal: AbortSignal) => Promise<ApiResponse<T>>,
@@ -113,6 +119,11 @@ function useFetch<T, E>(
       values,
       controller.signal
     )
+
+    if (controller.signal.aborted) {
+      dispatch({ type: 'FETCH_ABORTED' })
+      return
+    }
 
     if (responseError) {
       dispatch({ type: 'FETCH_FAILURE', payload: responseError })

@@ -11,9 +11,11 @@ import { useRefresh } from '@/lib/use-refresh'
 function ProductShowcase() {
   useTitle('产品展示')
 
-  const { product, count, error, loading, getProduct } = useProduct()
+  const { product, count, error, loading, getProduct, resetGetProduct } =
+    useProduct()
 
   useRefresh(() => {
+    resetGetProduct()
     getProduct().then()
   })
 
@@ -80,7 +82,8 @@ function useProduct() {
     data: product,
     error,
     loading,
-    fetchData: getProduct
+    fetchData: getProduct,
+    reset: resetGetProduct
   } = useFetch(async (_, signal?: AbortSignal) => {
     const response = await getRandomProductApi(signal)
 
@@ -91,7 +94,7 @@ function useProduct() {
     return response
   })
 
-  return { product, count, error, loading, getProduct }
+  return { product, count, error, loading, getProduct, resetGetProduct }
 }
 
 export { ProductShowcase }

@@ -1,5 +1,3 @@
-import NProgress from 'nprogress'
-
 type ContentType = 'JSON' | 'FORM' | 'FILE'
 
 type UrlData = Record<string, string | number | boolean>
@@ -29,18 +27,18 @@ type Response<T, E> = {
 }
 
 /**
- * 发送 HTTP 请求, 并以 JSON 数据格式解析响应数据.
+ * 发送 HTTP 请求，并以 JSON 数据格式解析响应数据。
  *
  * @template T - 成功响应时的数据类型
  * @template E - 错误响应时的数据类型
  *
  * @param Request - 请求的配置属性
  * @param Request.url - URL 地址
- * @param Request.method - 请求方法, 默认为 `GET`
- * @param Request.contentType - 请求体的内容类型, 默认为 `JSON`
+ * @param Request.method - 请求方法，默认为 `GET`
+ * @param Request.contentType - 请求体的内容类型，默认为 `JSON`
  * @param Request.urlData - URL 参数
  * @param Request.bodyData - 请求体数据
- * @param Request.signal - `AbortController` 实例的 `signal` 属性, 用于主动取消请求
+ * @param Request.signal - `AbortController` 实例的 `signal` 属性，用于主动取消请求
  * @returns {Promise<Response<T, E>>} - 以 JSON 数据格式解析后的正常或异常响应数据
  */
 async function sendRequest<T, E>({
@@ -52,9 +50,6 @@ async function sendRequest<T, E>({
   signal
 }: Request): Promise<Response<T, E>> {
   try {
-    // 开始加载动画
-    NProgress.start()
-
     // 追加 URL 参数
     const splicedUrl = appendParamsToUrl({ url, urlData })
 
@@ -67,15 +62,16 @@ async function sendRequest<T, E>({
     // 以 JSON 数据格式解析请求
     const responseData = await response.json()
 
-    // 请求失败时, 返回异常响应数据
+    // 请求失败时，返回异常响应数据
     if (!response.ok) {
       return { data: null, error: responseData }
     }
 
-    // 请求成功时, 返回正常响应数据
+    // 请求成功时，返回正常响应数据
     return { data: responseData, error: null }
   } catch (error) {
     // 忽略因主动取消请求而产生的非程序异常
+    // 此时无需结束加载画面
     if (error instanceof Error && error.name === 'AbortError') {
       console.log(`${error.message} [${method} ${url}]`)
       return { data: null, error: null }
@@ -83,9 +79,6 @@ async function sendRequest<T, E>({
 
     // 处理程序异常
     return { data: null, error: String(error) }
-  } finally {
-    // 结束加载动画
-    NProgress.done()
   }
 }
 
