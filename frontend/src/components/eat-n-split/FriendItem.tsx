@@ -10,7 +10,7 @@ import {
 import { buttonVariants } from '@/components/ui/Button'
 import { ButtonDeleteFriend } from '@/components/eat-n-split/ButtonDeleteFriend'
 import { cn, truncate } from '@/lib/utils'
-import { type Friend } from '@/api/fake/friend-api'
+import { type Friend } from '@/api/fake/friend'
 
 type FriendItemProps = {
   friend: Friend

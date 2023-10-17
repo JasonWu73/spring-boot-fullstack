@@ -26,13 +26,8 @@ import {
 } from '@/components/ui/Tooltip'
 import { useTitle } from '@/lib/use-title'
 import { useFetch } from '@/lib/use-fetch'
-import {
-  type Friend,
-  getFriendApi,
-  updateFriendApi
-} from '@/api/fake/friend-api'
+import { type Friend, getFriendApi, updateFriendApi } from '@/api/fake/friend'
 import { useFriends } from '@/components/eat-n-split/FriendProvider'
-import { useRefresh } from '@/lib/use-refresh'
 
 const whoIsPayingOptions = [
   { value: 'user', label: '您' },
@@ -123,10 +118,7 @@ function FormSplitBill() {
     updateFriend
   } = useSplitBill(friends)
 
-  useRefresh(() => {
-    getFriend({ friends, id: idInQueryString }).then()
-    form.reset()
-  })
+  useChangeId(idInQueryString, form.reset, getFriend, friends)
 
   const navigate = useNavigate()
 
@@ -143,7 +135,7 @@ function FormSplitBill() {
     await updateFriend(newFriend)
 
     splitBill(bill)
-    navigate('/eat-split?c=1')
+    navigate('/eat-split')
   }
 
   function splitBill(bill: Bill) {
@@ -376,6 +368,19 @@ function useSplitBill(friends: Friend[]) {
   }, false)
 
   return { error, loading, updateFriend }
+}
+
+function useChangeId(
+  idInQueryString: number,
+  resetForm: (values?: Partial<FormSchema>) => void,
+  getFriend: (params?: getFriendParams) => void,
+  friends: Friend[]
+) {
+  useEffect(() => {
+    resetForm()
+
+    getFriend({ id: idInQueryString, friends })
+  }, [idInQueryString])
 }
 
 export { FormSplitBill }

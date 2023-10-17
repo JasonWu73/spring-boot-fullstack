@@ -16,7 +16,7 @@ import {
 import { FormInput } from '@/components/ui/CustomFormField'
 import { useTitle } from '@/lib/use-title'
 import { useFetch } from '@/lib/use-fetch'
-import { addFriendApi, type Friend } from '@/api/fake/friend-api'
+import { addFriendApi, type Friend } from '@/api/fake/friend'
 import { useFriends } from '@/components/eat-n-split/FriendProvider'
 
 const formSchema = z.object({
@@ -56,7 +56,7 @@ function FormAddFriend() {
 
     await addFriend(newFriend)
 
-    navigate('/eat-split?c=1')
+    navigate('/eat-split')
   }
 
   return (

@@ -8,9 +8,8 @@ import { useKeypress } from '@/lib/use-keypress'
 import { useTitle } from '@/lib/use-title'
 import { wait } from '@/lib/utils'
 import { FriendProvider } from '@/components/eat-n-split/FriendProvider'
-import { useRefresh } from '@/lib/use-refresh'
 
-// ----- Start: 测试懒加载 (React Split Code 技术) -----
+// ----- 开始：测试懒加载（React Split Code 技术）-----
 const FormAddFriend = lazy(() =>
   wait(1).then(() =>
     import('@/components/eat-n-split/FormAddFriend').then((module) => ({
@@ -18,7 +17,7 @@ const FormAddFriend = lazy(() =>
     }))
   )
 )
-// ----- End: 测试懒加载 (React Split Code 技术) -----
+// ----- 结束：测试懒加载（React Split Code 技术）-----
 
 function EatAndSplit() {
   useTitle('Eat & Split')
@@ -32,9 +31,9 @@ function EatAndSplit() {
     navigate('/eat-split')
   })
 
-  useRefresh(() => {
+  function handleLoadFriendList() {
     setShowAddFriend(false)
-  })
+  }
 
   function handleToggleAddFriend() {
     setShowAddFriend((prev) => !prev)
@@ -44,7 +43,7 @@ function EatAndSplit() {
     <FriendProvider>
       <div className="grid grid-flow-row items-center justify-center gap-6 p-4 md:mt-6 md:grid-cols-2">
         <div className="md:col-span-1 md:row-span-1 md:justify-self-end">
-          <FriendList />
+          <FriendList onLoadData={handleLoadFriendList} />
         </div>
 
         <div className="flex flex-col gap-6 self-start md:col-span-1 md:row-start-2 md:row-end-3 md:justify-self-end">

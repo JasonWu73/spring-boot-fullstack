@@ -1,6 +1,6 @@
 import React, { createContext, useContext } from 'react'
 
-import { type Friend } from '@/api/fake/friend-api'
+import { type Friend } from '@/api/fake/friend'
 import { useLocalStorageState } from '@/lib/use-storage'
 
 type FriendProviderState = {

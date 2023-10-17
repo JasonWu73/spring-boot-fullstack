@@ -14,11 +14,15 @@ import { useToast } from '@/components/ui/use-toast'
 import { FriendItem } from '@/components/eat-n-split/FriendItem'
 import { FriendSearch, SEARCH_KEY } from '@/components/eat-n-split/FriendSearch'
 import { useFetch } from '@/lib/use-fetch'
-import { type Friend, getFriendsApi } from '@/api/fake/friend-api'
+import { type Friend, getFriendsApi } from '@/api/fake/friend'
 import { useFriends } from '@/components/eat-n-split/FriendProvider'
 import { useRefresh } from '@/lib/use-refresh'
 
-function FriendList() {
+type FriendListProps = {
+  onLoadData: () => void
+}
+
+function FriendList({ onLoadData }: FriendListProps) {
   const { friends, setFriends } = useFriends()
 
   const { error, loading, getFriends } = useFriendsApi(friends, setFriends)
@@ -35,6 +39,7 @@ function FriendList() {
   const { toast } = useToast()
 
   useRefresh(() => {
+    onLoadData()
     getFriends({ friends }).then()
   })
 

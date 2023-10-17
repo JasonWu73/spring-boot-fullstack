@@ -11,7 +11,7 @@ import { PageNotFound } from '@/pages/PageNotFound'
 import { wait } from '@/lib/utils'
 import { Loading } from '@/components/ui/Loading'
 
-// ----- Start: 测试 React Router 懒加载 (React Split Code 技术) -----
+// ----- 开始：测试 React Router 懒加载（React Split Code 技术）-----
 const FormSplitBill = lazy(() =>
   wait(1).then(() =>
     import('@/components/eat-n-split/FormSplitBill').then((module) => ({
@@ -19,7 +19,7 @@ const FormSplitBill = lazy(() =>
     }))
   )
 )
-// ----- End: 测试 React Router 懒加载 (React Split Code 技术) -----
+// ----- 结束：测试 React Router 懒加载（React Split Code 技术）-----
 
 export default function App() {
   return (

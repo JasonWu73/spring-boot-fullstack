@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 基于 Redis 实现的分布式锁.
+ * 基于 Redis 实现的分布式锁。
  */
 @Slf4j
 @Component
@@ -26,10 +26,10 @@ public class RedisLock {
   private final Map<String, AtomicBoolean> renewFlags = new ConcurrentHashMap<>();
 
   /**
-   * 上锁.
+   * 上锁。
    *
-   * <p>支持 Lock 自动续期以解决当一个方法获取了 Lock 但执行时间超过了 Lock 的超时时间 (Timeout) 时,
-   * Lock 会自动释放, 这可能会导致其他线程或实例获取该 Lock, 从而引发数据不一致的问题.
+   * <p>支持 Lock 自动续期以解决当一个方法获取了 Lock 但执行时间超过了 Lock 的超时时间 (Timeout) 时，
+   * Lock 会自动释放，这可能会导致其他线程或实例获取该 Lock，从而引发数据不一致的问题。
    *
    * @param key 锁的键
    * @param value 锁的值
@@ -44,14 +44,14 @@ public class RedisLock {
       return false;
     }
 
-    // 上锁成功, 开启 Lock 自动续期线程
+    // 上锁成功，开启 Lock 自动续期线程
     startRenewLockThread(key, value);
 
     return true;
   }
 
   /**
-   * 解锁.
+   * 解锁。
    *
    * @param key 锁的键
    * @param value 锁的值
@@ -94,7 +94,7 @@ public class RedisLock {
       return;
     }
 
-    // 启动一个单独的线程或定时任务来负责 Lock 的续期. 这个线程会在 Lock 快到期时, 对 Lock 进行续期
+    // 启动一个单独的线程或定时任务来负责 Lock 的续期。这个线程会在 Lock 快到期时，对 Lock 进行续期
     new Thread(() -> {
       // 使用标志变量控制线程
       while (renewFlag.get()) {
