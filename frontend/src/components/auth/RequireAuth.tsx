@@ -15,12 +15,9 @@ const initialFinish = debounce(() => {
 }, 200)
 
 function RequireAuth({ children }: RequireAuthProps) {
-  const location = useLocation()
-  const [isAuth, setIsAuth] = useState(isLoggedIn)
+  const { loggedIn } = useRefreshLogin()
 
-  useReloadRoute(location.key, setIsAuth)
-
-  if (!isAuth) {
+  if (!loggedIn) {
     return <Navigate to="/login" replace state={{ from: location.pathname }} />
   }
 
@@ -32,18 +29,20 @@ function isLoggedIn() {
   return !!auth && !!auth.token
 }
 
-function useReloadRoute(
-  key: string,
-  setIsAuth: React.Dispatch<React.SetStateAction<boolean>>
-) {
+function useRefreshLogin() {
+  const location = useLocation()
+  const [loggedIn, setLoggedIn] = useState(isLoggedIn)
+
   useEffect(() => {
     if (initialLoadPage) {
       initialFinish()
       return
     }
 
-    setIsAuth(isLoggedIn())
-  }, [key])
+    setLoggedIn(isLoggedIn())
+  }, [location.key])
+
+  return { loggedIn }
 }
 
-export { RequireAuth }
+export { RequireAuth, useRefreshLogin }

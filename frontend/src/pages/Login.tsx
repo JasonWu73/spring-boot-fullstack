@@ -1,4 +1,4 @@
-import { Navigate, useLocation, useNavigate } from 'react-router-dom'
+import { Navigate, useLocation } from 'react-router-dom'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
@@ -20,7 +20,6 @@ import { useFetch } from '@/lib/use-fetch'
 import { useLocalStorageState } from '@/lib/use-storage'
 import { useRefresh } from '@/lib/use-refresh'
 import { type Auth, loginApi, STORAGE_KEY } from '@/api/dummyjson/auth'
-import { wait } from '@/lib/utils'
 
 const formSchema = z.object({
   username: z.string().trim().nonempty('Must enter a username'),
@@ -52,8 +51,6 @@ function Login() {
     dismiss()
   })
 
-  const navigate = useNavigate()
-
   const location = useLocation()
   const originUrl = location.state?.from || '/'
 
@@ -75,10 +72,6 @@ function Login() {
 
     if (data) {
       setAuth(data)
-
-      // 这里添加延迟，保证在设置 Token 后再执行页面跳转
-      await wait(0.2)
-      navigate(originUrl, { replace: true })
     }
   }
 
