@@ -13,7 +13,7 @@ type Friend = {
 async function getFriendsApi(
   signal?: AbortSignal
 ): Promise<ApiResponse<Friend[]>> {
-  await wait(1)
+  await wait(0.5)
 
   const { data, error } = await sendRequest<Friend[], string>({
     url: 'http://localhost:5173/data/friends.json',
@@ -27,63 +27,4 @@ async function getFriendsApi(
   return { data, error: '' }
 }
 
-async function getFriendApi(
-  id: number,
-  signal?: AbortSignal
-): Promise<ApiResponse<Friend>> {
-  const { data, error } = await getFriendsApi(signal)
-
-  if (error) {
-    return { data: null, error }
-  }
-
-  const friend = data?.find((friend) => friend.id === id)
-
-  if (friend) {
-    return { data: friend, error: '' }
-  }
-
-  return { data: null, error: '' }
-}
-
-async function addFriendApi(
-  friend: Friend,
-  signal?: AbortSignal
-): Promise<ApiResponse<Friend>> {
-  const { error } = await getFriendsApi(signal)
-
-  if (error) {
-    return { data: null, error }
-  }
-
-  if (!friend) {
-    return { data: null, error: '好友数据不存在' }
-  }
-
-  return { data: null, error: '' }
-}
-
-async function updateFriendApi(
-  friend: Friend,
-  signal?: AbortSignal
-): Promise<ApiResponse<Friend>> {
-  const { error } = await getFriendsApi(signal)
-
-  if (error) {
-    return { data: null, error }
-  }
-
-  if (!friend) {
-    return { data: null, error: '好友数据不存在' }
-  }
-
-  return { data: null, error: '' }
-}
-
-export {
-  getFriendApi,
-  getFriendsApi,
-  addFriendApi,
-  updateFriendApi,
-  type Friend
-}
+export { getFriendsApi, type Friend }

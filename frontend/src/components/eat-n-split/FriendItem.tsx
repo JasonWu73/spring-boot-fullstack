@@ -11,6 +11,7 @@ import { buttonVariants } from '@/components/ui/Button'
 import { ButtonDeleteFriend } from '@/components/eat-n-split/ButtonDeleteFriend'
 import { cn, truncate } from '@/lib/utils'
 import { type Friend } from '@/api/fake/friend'
+import { useFriends } from '@/components/eat-n-split/FriendProvider'
 
 type FriendItemProps = {
   friend: Friend
@@ -23,6 +24,14 @@ function FriendItem({ friend, onDeleteFriend }: FriendItemProps) {
   const isSelected = friend.id === selectedFriendId
 
   const name = truncate(friend.name, 5)
+
+  const { setShowAddFriend } = useFriends()
+
+  const queryString = window.location.search
+
+  function handleToggleSelect() {
+    setShowAddFriend(false)
+  }
 
   return (
     <li
@@ -65,7 +74,12 @@ function FriendItem({ friend, onDeleteFriend }: FriendItemProps) {
       </div>
 
       <Link
-        to={isSelected ? '/eat-split' : `/eat-split/${friend.id}`}
+        to={
+          isSelected
+            ? `/eat-split${queryString}`
+            : `/eat-split/${friend.id}${queryString}`
+        }
+        onClick={handleToggleSelect}
         className={buttonVariants({ variant: 'default' })}
       >
         {isSelected ? '关闭' : '选择'}

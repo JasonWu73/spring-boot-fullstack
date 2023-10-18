@@ -1,4 +1,4 @@
-import { Suspense, lazy, useState } from 'react'
+import { Suspense, lazy } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
 
 import { Button } from '@/components/ui/Button'
@@ -7,7 +7,7 @@ import { FriendList } from '@/components/eat-n-split/FriendList'
 import { useKeypress } from '@/lib/use-keypress'
 import { useTitle } from '@/lib/use-title'
 import { wait } from '@/lib/utils'
-import { FriendProvider } from '@/components/eat-n-split/FriendProvider'
+import { useFriends } from '@/components/eat-n-split/FriendProvider'
 
 // ----- 开始：测试懒加载（React Split Code 技术）-----
 const FormAddFriend = lazy(() =>
@@ -22,7 +22,7 @@ const FormAddFriend = lazy(() =>
 function EatAndSplit() {
   useTitle('Eat & Split')
 
-  const [showAddFriend, setShowAddFriend] = useState(false)
+  const { showAddFriend, setShowAddFriend } = useFriends()
 
   const navigate = useNavigate()
 
@@ -31,38 +31,32 @@ function EatAndSplit() {
     navigate('/eat-split', { replace: true })
   })
 
-  function handleLoadFriendList() {
-    setShowAddFriend(false)
-  }
-
   function handleToggleAddFriend() {
-    setShowAddFriend((prev) => !prev)
+    setShowAddFriend(!showAddFriend)
   }
 
   return (
-    <FriendProvider>
-      <div className="grid grid-flow-row items-center justify-center gap-6 p-4 md:mt-6 md:grid-cols-2">
-        <div className="md:col-span-1 md:row-span-1 md:justify-self-end">
-          <FriendList onLoadData={handleLoadFriendList} />
-        </div>
+    <div className="grid grid-flow-row items-center justify-center gap-6 p-4 md:mt-6 md:grid-cols-2">
+      <div className="md:col-span-1 md:row-span-1 md:justify-self-end">
+        <FriendList />
+      </div>
 
-        <div className="flex flex-col gap-6 self-start md:col-span-1 md:row-start-2 md:row-end-3 md:justify-self-end">
-          <Suspense fallback={<Loading />}>
-            {showAddFriend && <FormAddFriend />}
-          </Suspense>
+      <div className="flex flex-col gap-6 self-start md:col-span-1 md:row-start-2 md:row-end-3 md:justify-self-end">
+        <Suspense fallback={<Loading />}>
+          {showAddFriend && <FormAddFriend />}
+        </Suspense>
 
-          <div className="self-end">
-            <Button onClick={handleToggleAddFriend}>
-              {showAddFriend ? '关闭' : '添加好友'}
-            </Button>
-          </div>
-        </div>
-
-        <div className="md:col-start-2 md:col-end-3 md:row-span-1">
-          <Outlet />
+        <div className="self-end">
+          <Button onClick={handleToggleAddFriend}>
+            {showAddFriend ? '关闭' : '添加好友'}
+          </Button>
         </div>
       </div>
-    </FriendProvider>
+
+      <div className="md:col-start-2 md:col-end-3 md:row-span-1">
+        <Outlet />
+      </div>
+    </div>
   )
 }
 

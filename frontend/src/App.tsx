@@ -11,6 +11,7 @@ import { PageNotFound } from '@/pages/PageNotFound'
 import { wait } from '@/lib/utils'
 import { Loading } from '@/components/ui/Loading'
 import { RequireAuth } from '@/components/auth/RequireAuth'
+import { FriendProvider } from '@/components/eat-n-split/FriendProvider'
 
 // ----- 开始：测试 React Router 懒加载（React Split Code 技术）-----
 const FormSplitBill = lazy(() =>
@@ -39,7 +40,15 @@ export default function App() {
               </RequireAuth>
             }
           />
-          <Route path="/eat-split" element={<EatAndSplit />}>
+
+          <Route
+            path="/eat-split"
+            element={
+              <FriendProvider>
+                <EatAndSplit />
+              </FriendProvider>
+            }
+          >
             <Route
               path=":friendId"
               element={
@@ -49,6 +58,7 @@ export default function App() {
               }
             />
           </Route>
+
           <Route path="*" element={<PageNotFound />} />
         </Routes>
 

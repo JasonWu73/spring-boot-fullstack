@@ -23,22 +23,22 @@ const initialState: State<unknown> = {
 }
 
 type Action<T> =
-  | { type: 'FETCH_INIT'; payload: AbortController | null }
-  | { type: 'FETCH_SUCCESS'; payload: T }
-  | { type: 'FETCH_FAILURE'; payload: string }
-  | { type: 'FETCH_ABORTED' }
-  | { type: 'RESET' }
+  | { type: 'fetchInit'; payload: AbortController | null }
+  | { type: 'fetchSuccess'; payload: T }
+  | { type: 'fetchFailure'; payload: string }
+  | { type: 'fetchAborted' }
+  | { type: 'reset' }
 
 function reducer<T>(state: State<T>, action: Action<T>): State<T> {
   switch (action.type) {
-    case 'FETCH_INIT': {
+    case 'fetchInit': {
       return {
         ...(initialState as State<T>),
         loading: true,
         controller: action.payload
       }
     }
-    case 'FETCH_SUCCESS': {
+    case 'fetchSuccess': {
       return {
         ...state,
         data: action.payload,
@@ -47,7 +47,7 @@ function reducer<T>(state: State<T>, action: Action<T>): State<T> {
         controller: null
       }
     }
-    case 'FETCH_FAILURE': {
+    case 'fetchFailure': {
       return {
         ...state,
         error: action.payload,
@@ -55,13 +55,13 @@ function reducer<T>(state: State<T>, action: Action<T>): State<T> {
         controller: null
       }
     }
-    case 'FETCH_ABORTED': {
+    case 'fetchAborted': {
       return {
         ...state,
         controller: null
       }
     }
-    case 'RESET': {
+    case 'reset': {
       if (state.controller) {
         state.controller.abort()
       }
@@ -71,7 +71,7 @@ function reducer<T>(state: State<T>, action: Action<T>): State<T> {
       }
     }
     default: {
-      throw new Error('Action Type 不支持')
+      throw new Error(`未知的 action 类型：${action}`)
     }
   }
 }
@@ -123,17 +123,17 @@ function useFetch<T, E>(
     values: E | null = null,
     controller = new AbortController()
   ): Promise<FetchData<T>> {
-    dispatch({ type: 'FETCH_INIT', payload: controller })
+    dispatch({ type: 'fetchInit', payload: controller })
 
     const response = await callback(values, controller.signal)
 
     if (controller.signal.aborted) {
-      dispatch({ type: 'FETCH_ABORTED' })
+      dispatch({ type: 'fetchAborted' })
       return response
     }
 
     if (response.error) {
-      dispatch({ type: 'FETCH_FAILURE', payload: response.error })
+      dispatch({ type: 'fetchFailure', payload: response.error })
 
       if (response.authFailed) {
         navigate('/login', {
@@ -145,13 +145,13 @@ function useFetch<T, E>(
       return response
     }
 
-    dispatch({ type: 'FETCH_SUCCESS', payload: response.data })
+    dispatch({ type: 'fetchSuccess', payload: response.data })
 
     return response
   }, [])
 
   const reset = useCallback(function reset() {
-    dispatch({ type: 'RESET' })
+    dispatch({ type: 'reset' })
   }, [])
 
   return { data, error, loading, fetchData, reset }

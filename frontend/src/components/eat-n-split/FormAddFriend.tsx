@@ -1,27 +1,19 @@
-import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ReloadIcon } from '@radix-ui/react-icons'
 
 import { Button } from '@/components/ui/Button'
 import { Form } from '@/components/ui/Form'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/Card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { FormInput } from '@/components/ui/CustomFormField'
 import { useTitle } from '@/lib/use-title'
-import { useFetch } from '@/lib/use-fetch'
-import { addFriendApi, type Friend } from '@/api/fake/friend'
+import { type Friend } from '@/api/fake/friend'
 import { useFriends } from '@/components/eat-n-split/FriendProvider'
+import { useNavigate } from 'react-router-dom'
 
 const formSchema = z.object({
-  name: z.string().trim().nonempty('必须输入姓名'),
-  image: z.string().trim().url({ message: '图片必须是有效的 URL' })
+  name: z.string().nonempty('必须输入姓名'),
+  image: z.string().url({ message: '图片必须是有效的 URL' })
 })
 
 type FormSchema = z.infer<typeof formSchema>
@@ -37,13 +29,10 @@ function FormAddFriend() {
     }
   })
 
-  const { friends, setFriends } = useFriends()
-
-  const { error, loading, addFriend } = useAddFriendApi(friends, setFriends)
-
+  const { addFriend } = useFriends()
   const navigate = useNavigate()
 
-  async function onSubmit(values: FormSchema) {
+  function onSubmit(values: FormSchema) {
     const newFriendId = Date.now()
 
     const newFriend: Friend = {
@@ -54,7 +43,7 @@ function FormAddFriend() {
       creditRating: 0
     }
 
-    await addFriend(newFriend)
+    addFriend(newFriend)
 
     navigate('/eat-split', { replace: true })
   }
@@ -63,11 +52,6 @@ function FormAddFriend() {
     <Card className="w-96 bg-amber-100 text-slate-700 dark:bg-amber-100 dark:text-slate-700 md:w-[22rem] lg:w-[30rem]">
       <CardHeader>
         <CardTitle>添加好友</CardTitle>
-        {error && (
-          <CardDescription className="text-red-500 dark:text-red-600">
-            {error}
-          </CardDescription>
-        )}
       </CardHeader>
 
       <CardContent>
@@ -96,8 +80,7 @@ function FormAddFriend() {
               isError={form.getFieldState('image')?.invalid}
             />
 
-            <Button disabled={loading} type="submit" className="self-end">
-              {loading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
+            <Button type="submit" className="self-end">
               添加
             </Button>
           </form>
@@ -105,33 +88,6 @@ function FormAddFriend() {
       </CardContent>
     </Card>
   )
-}
-
-function useAddFriendApi(
-  friends: Friend[],
-  setFriends: (friends: Friend[]) => void
-) {
-  const {
-    error,
-    loading,
-    fetchData: addFriend
-  } = useFetch<null, Friend>(async (newFriend, signal) => {
-    if (!newFriend) {
-      return { data: null, error: '好友数据不存在' }
-    }
-
-    const { error } = await addFriendApi(newFriend, signal)
-
-    if (error) {
-      return { data: null, error }
-    }
-
-    setFriends([...friends, newFriend])
-
-    return { data: null, error: '' }
-  }, false)
-
-  return { error, loading, addFriend }
 }
 
 export { FormAddFriend }

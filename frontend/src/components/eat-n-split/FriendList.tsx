@@ -1,5 +1,5 @@
 import React from 'react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useLocation, useSearchParams } from 'react-router-dom'
 import {
   ExclamationTriangleIcon,
   ReloadIcon,
@@ -18,14 +18,10 @@ import { type Friend, getFriendsApi } from '@/api/fake/friend'
 import { useFriends } from '@/components/eat-n-split/FriendProvider'
 import { useRefresh } from '@/lib/use-refresh'
 
-type FriendListProps = {
-  onLoadData: () => void
-}
+function FriendList() {
+  const { friends, setFriends, deleteFriend } = useFriends()
 
-function FriendList({ onLoadData }: FriendListProps) {
-  const { friends, setFriends } = useFriends()
-
-  const { error, loading, getFriends } = useFriendsApi(friends, setFriends)
+  const { error, loading, getFriends } = useFriendsApi(setFriends)
 
   const [searchParams] = useSearchParams()
   const name = searchParams.get(SEARCH_KEY) || ''
@@ -34,24 +30,25 @@ function FriendList({ onLoadData }: FriendListProps) {
     ? friends.filter((f) => f.name.toLowerCase().includes(name.toLowerCase()))
     : friends
 
-  const navigate = useNavigate()
-
   const { toast } = useToast()
 
+  const location = useLocation()
+
   useRefresh(() => {
-    onLoadData()
-    getFriends({ friends }).then()
+    if (location.pathname !== '/eat-split' || name) {
+      return
+    }
+
+    getFriends().then()
   })
 
   function handleDeleteFriend(friend: Friend) {
-    setFriends(friends.filter((f) => f.id !== friend.id))
+    deleteFriend(friend)
 
     toast({
       title: '删除好友',
       description: `成功删除好友：${friend.name}`
     })
-
-    navigate('/eat-split', { replace: true })
   }
 
   return (
@@ -108,28 +105,19 @@ function FriendList({ onLoadData }: FriendListProps) {
   )
 }
 
-type GetFriendsParams = {
-  friends?: Friend[]
-}
-
-function useFriendsApi(
-  initialFriends: Friend[],
-  setFriends: (friends: Friend[]) => void
-) {
+function useFriendsApi(setFriends: (friends: Friend[]) => void) {
   const {
     error,
     loading,
     fetchData: getFriends
-  } = useFetch<Friend[], GetFriendsParams>(async (params, signal) => {
+  } = useFetch(async (_, signal) => {
     const { data, error } = await getFriendsApi(signal)
 
     if (error) {
       return { data: null, error }
     }
 
-    const friends = params?.friends ?? initialFriends
-
-    if (friends.length === 0 && data) {
+    if (data) {
       setFriends(data)
     }
 

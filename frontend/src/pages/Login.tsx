@@ -29,8 +29,8 @@ const USERNAME = 'jissetts'
 const PASSWORD = 'ePawWgrnZR8L'
 
 const formSchema = z.object({
-  username: z.string().trim().nonempty('Must enter a username'),
-  password: z.string().trim().nonempty('Must enter a password')
+  username: z.string().nonempty('Must enter a username'),
+  password: z.string().nonempty('Must enter a password')
 })
 
 type FormSchema = z.infer<typeof formSchema>

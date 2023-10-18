@@ -1,6 +1,4 @@
-import React, { createContext, useContext, useEffect } from 'react'
-
-import { useLocalStorageState } from '@/lib/use-storage'
+import React, { createContext, useContext, useEffect, useState } from 'react'
 
 type Theme = 'dark' | 'light' | 'system'
 
@@ -31,10 +29,8 @@ function ThemeProvider({
   storageKey = 'app-ui-theme',
   ...props
 }: ThemeProviderProps) {
-  const [theme, setTheme] = useLocalStorageState(
-    storageKey,
-    defaultTheme,
-    false
+  const [theme, setTheme] = useState<Theme>(
+    () => (localStorage.getItem(storageKey) as Theme) || defaultTheme
   )
 
   useApplyTheme(theme)
@@ -42,6 +38,7 @@ function ThemeProvider({
   const value = {
     theme,
     setTheme: (theme: Theme) => {
+      localStorage.setItem(storageKey, theme)
       setTheme(theme)
     }
   }
