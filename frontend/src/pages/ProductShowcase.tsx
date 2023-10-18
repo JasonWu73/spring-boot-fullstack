@@ -3,10 +3,10 @@ import { ReloadIcon } from '@radix-ui/react-icons'
 
 import { Button } from '@/components/ui/Button'
 import { cn } from '@/lib/utils'
-import { useFetch } from '@/lib/use-fetch'
-import { useTitle } from '@/lib/use-title'
+import { useFetch } from '@/hooks/use-fetch'
+import { useTitle } from '@/hooks/use-title'
 import { getRandomProductApi } from '@/api/dummyjson/product'
-import { useRefresh } from '@/lib/use-refresh'
+import { useRefresh } from '@/hooks/use-refresh'
 
 function ProductShowcase() {
   useTitle('产品展示')

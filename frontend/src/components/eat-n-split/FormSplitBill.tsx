@@ -22,7 +22,7 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from '@/components/ui/Tooltip'
-import { useTitle } from '@/lib/use-title'
+import { useTitle } from '@/hooks/use-title'
 import { type Friend } from '@/api/fake/friend'
 import { useFriends } from '@/components/eat-n-split/FriendProvider'
 import { FormSplitBillError } from '@/components/eat-n-split/FormSplitBillError'

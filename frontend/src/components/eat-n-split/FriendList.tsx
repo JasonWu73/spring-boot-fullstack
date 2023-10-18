@@ -13,10 +13,10 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/Alert'
 import { useToast } from '@/components/ui/use-toast'
 import { FriendItem } from '@/components/eat-n-split/FriendItem'
 import { FriendSearch, SEARCH_KEY } from '@/components/eat-n-split/FriendSearch'
-import { useFetch } from '@/lib/use-fetch'
+import { useFetch } from '@/hooks/use-fetch'
 import { type Friend, getFriendsApi } from '@/api/fake/friend'
 import { useFriends } from '@/components/eat-n-split/FriendProvider'
-import { useRefresh } from '@/lib/use-refresh'
+import { useRefresh } from '@/hooks/use-refresh'
 
 function FriendList() {
   const { friends, setFriends, deleteFriend } = useFriends()

@@ -2,7 +2,7 @@ import React, { useRef } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
 import { Input } from '@/components/ui/Input'
-import { useKeypress } from '@/lib/use-keypress'
+import { useKeypress } from '@/hooks/use-keypress'
 
 const SEARCH_KEY = 's'
 

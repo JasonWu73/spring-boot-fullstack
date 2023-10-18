@@ -1,4 +1,4 @@
-import { type ApiResponse } from '@/lib/use-fetch'
+import { type ApiResponse } from '@/hooks/use-fetch'
 import { sendRequest, type Request } from '@/lib/http'
 import { JSEncrypt } from 'jsencrypt'
 

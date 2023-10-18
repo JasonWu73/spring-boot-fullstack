@@ -15,9 +15,9 @@ import { Form } from '@/components/ui/Form'
 import { FormInput } from '@/components/ui/CustomFormField'
 import { Button } from '@/components/ui/Button'
 import { useToast } from '@/components/ui/use-toast'
-import { useTitle } from '@/lib/use-title'
-import { useFetch } from '@/lib/use-fetch'
-import { useRefresh } from '@/lib/use-refresh'
+import { useTitle } from '@/hooks/use-title'
+import { useFetch } from '@/hooks/use-fetch'
+import { useRefresh } from '@/hooks/use-refresh'
 import {
   type Auth,
   getAuthFromLocalStorage,

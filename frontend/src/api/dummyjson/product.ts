@@ -1,4 +1,4 @@
-import { type ApiResponse } from '@/lib/use-fetch'
+import { type ApiResponse } from '@/hooks/use-fetch'
 import { sendAuthDummyJsonApi } from '@/api/dummyjson/auth'
 
 type Product = {
