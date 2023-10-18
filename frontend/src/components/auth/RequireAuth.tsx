@@ -15,7 +15,7 @@ const initialFinish = debounce(() => {
 }, 200)
 
 function RequireAuth({ children }: RequireAuthProps) {
-  const { loggedIn } = useRefreshLogin()
+  const { loggedIn, location } = useRefreshLoginStatus()
 
   if (!loggedIn) {
     return <Navigate to="/login" replace state={{ from: location.pathname }} />
@@ -26,10 +26,10 @@ function RequireAuth({ children }: RequireAuthProps) {
 
 function isLoggedIn() {
   const auth = getAuthFromLocalStorage()
-  return !!auth && !!auth.token
+  return auth && auth.token
 }
 
-function useRefreshLogin() {
+function useRefreshLoginStatus() {
   const location = useLocation()
   const [loggedIn, setLoggedIn] = useState(isLoggedIn)
 
@@ -42,7 +42,7 @@ function useRefreshLogin() {
     setLoggedIn(isLoggedIn())
   }, [location.key])
 
-  return { loggedIn }
+  return { loggedIn, location }
 }
 
-export { RequireAuth, useRefreshLogin }
+export { RequireAuth, useRefreshLoginStatus }

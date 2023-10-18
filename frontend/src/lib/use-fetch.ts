@@ -1,9 +1,11 @@
 import React, { useCallback, useEffect, useReducer } from 'react'
 import NProgress from 'nprogress'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 type ApiResponse<T> = {
   data: T | null
   error: string
+  authFailed?: boolean
 }
 
 type State<T> = {
@@ -114,6 +116,9 @@ function useFetch<T, E>(
 
   useLoading(loading)
 
+  const navigate = useNavigate()
+  const location = useLocation()
+
   const fetchData = useCallback(async function fetchData(
     values: E | null = null,
     controller = new AbortController()
@@ -129,6 +134,14 @@ function useFetch<T, E>(
 
     if (response.error) {
       dispatch({ type: 'FETCH_FAILURE', payload: response.error })
+
+      if (response.authFailed) {
+        navigate('/login', {
+          replace: true,
+          state: { from: location.pathname }
+        })
+      }
+
       return response
     }
 

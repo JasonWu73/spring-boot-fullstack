@@ -73,7 +73,11 @@ async function sendAuthDummyJsonApi<T>({
   signal,
   initialCall = true
 }: SendRequestWrapper): Promise<ApiResponse<T>> {
-  const headers = getAuthHeaders()
+  const headers = getAuthHeader()
+
+  if (!headers || !headers.Authorization) {
+    return { data: null, error: '未登录', authFailed: true }
+  }
 
   const { data, error } = await sendRequest<T, ApiError>({
     url: `${BASE_URL}/${url}`,
@@ -93,25 +97,25 @@ async function sendAuthDummyJsonApi<T>({
     return { data: null, error }
   }
 
-  if (
-    error.name === 'TokenExpiredError' ||
-    error.name === 'JsonWebTokenError'
-  ) {
-    localStorage.removeItem(STORAGE_KEY)
+  const authFailed =
+    error.name === 'TokenExpiredError' || error.name === 'JsonWebTokenError'
+
+  if (authFailed) {
+    removeAuthFromLocalStorage()
   }
 
   if (!initialCall) {
-    return { data: null, error: error.message }
+    return { data: null, error: error.message, authFailed }
   }
 
-  if (error.name === 'TokenExpiredError') {
+  if (authFailed) {
     const { data, error } = await loginApi({
       username: USERNAME,
       password: PASSWORD
     })
 
     if (error) {
-      return { data: null, error }
+      return { data: null, error, authFailed: true }
     }
 
     if (data) {
@@ -132,11 +136,13 @@ async function sendAuthDummyJsonApi<T>({
   return { data: null, error: error.message }
 }
 
-function getAuthHeaders(): Record<string, string> {
+type AuthHeader = { Authorization: string } | null
+
+function getAuthHeader(): AuthHeader {
   const auth = getAuthFromLocalStorage()
 
   if (!auth || !auth.token) {
-    return {}
+    return null
   }
 
   return { Authorization: `Bearer ${auth.token}` }
@@ -152,4 +158,15 @@ function getAuthFromLocalStorage(): Auth | null {
   return JSON.parse(storageValue)
 }
 
-export { loginApi, STORAGE_KEY, sendAuthDummyJsonApi, getAuthFromLocalStorage, type Auth }
+function removeAuthFromLocalStorage() {
+  localStorage.removeItem(STORAGE_KEY)
+}
+
+export {
+  loginApi,
+  STORAGE_KEY,
+  sendAuthDummyJsonApi,
+  getAuthFromLocalStorage,
+  removeAuthFromLocalStorage,
+  type Auth
+}

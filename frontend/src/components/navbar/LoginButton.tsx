@@ -2,16 +2,17 @@ import { Link, useNavigate } from 'react-router-dom'
 import { LogIn, LogOut } from 'lucide-react'
 
 import { Button } from '@/components/ui/Button'
-import { useRefreshLogin } from '@/components/auth/RequireAuth'
-import { STORAGE_KEY } from '@/api/dummyjson/auth'
+import { useRefreshLoginStatus } from '@/components/auth/RequireAuth'
+import { removeAuthFromLocalStorage } from '@/api/dummyjson/auth'
 
 function LoginButton() {
-  const { loggedIn } = useRefreshLogin()
+  const { loggedIn, location } = useRefreshLoginStatus()
   const navigate = useNavigate()
 
   function handleLogout() {
-    localStorage.removeItem(STORAGE_KEY)
-    navigate('/login')
+    removeAuthFromLocalStorage()
+
+    navigate('/login', { replace: true, state: { from: location.pathname } })
   }
 
   return (
