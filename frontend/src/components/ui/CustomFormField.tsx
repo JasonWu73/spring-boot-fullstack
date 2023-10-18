@@ -45,7 +45,7 @@ function FormInput<T extends FieldValues>({
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className="grid grid-flow-row items-center gap-1 lg:grid-cols-[auto_1fr]">
+        <FormItem className="grid grid-flow-row items-center gap-2 lg:grid-cols-[auto_1fr]">
           <FormLabel
             style={{ width: labelWidth }}
             className="overflow-hidden text-ellipsis whitespace-nowrap"
