@@ -17,9 +17,16 @@ import { Button } from '@/components/ui/Button'
 import { useToast } from '@/components/ui/use-toast'
 import { useTitle } from '@/lib/use-title'
 import { useFetch } from '@/lib/use-fetch'
-import { useLocalStorageState } from '@/lib/use-storage'
 import { useRefresh } from '@/lib/use-refresh'
-import { type Auth, loginApi, STORAGE_KEY } from '@/api/dummyjson/auth'
+import {
+  type Auth,
+  getAuthFromLocalStorage,
+  loginApi,
+  setAuthToLocalStorage
+} from '@/api/dummyjson/auth'
+
+const USERNAME = 'jissetts'
+const PASSWORD = 'ePawWgrnZR8L'
 
 const formSchema = z.object({
   username: z.string().trim().nonempty('Must enter a username'),
@@ -34,12 +41,12 @@ function Login() {
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: '',
-      password: ''
+      username: USERNAME,
+      password: PASSWORD
     }
   })
 
-  const [auth, setAuth] = useLocalStorageState<Auth | null>(STORAGE_KEY, null)
+  const auth = getAuthFromLocalStorage()
 
   const { toast, dismiss } = useToast()
 
@@ -71,7 +78,7 @@ function Login() {
     }
 
     if (data) {
-      setAuth(data)
+      setAuthToLocalStorage(data)
     }
   }
 

@@ -1,5 +1,13 @@
 import { type ApiResponse } from '@/lib/use-fetch'
 import { sendRequest, type Request } from '@/lib/http'
+import { JSEncrypt } from 'jsencrypt'
+
+const PUBLIC_KEY =
+  'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDIMy5tyS5o94hMLYCofIBKMD0GSREDz07hJk+uJ7CRg9IsIFBpkuuxvGfHBVMMHQZe6JRfpTLW/eSEzx5A3I6vmMs5ZfdjH+QIDvCFko7SWSYh34Vr+AR7fBHli1qwHornRdvH115NKoSm3c+RLjqZb+/RXI/9D4uVrZs7c7eV+wIDAQAB'
+
+// 实际项目中，私钥只存在于服务器端，且传输的是加密数据
+const PRIVATE_KEY =
+  'MIICeAIBADANBgkqhkiG9w0BAQEFAASCAmIwggJeAgEAAoGBAMgzLm3JLmj3iEwtgKh8gEowPQZJEQPPTuEmT64nsJGD0iwgUGmS67G8Z8cFUwwdBl7olF+lMtb95ITPHkDcjq+Yyzll92Mf5AgO8IWSjtJZJiHfhWv4BHt8EeWLWrAeiudF28fXXk0qhKbdz5EuOplv79Fcj/0Pi5Wtmztzt5X7AgMBAAECgYBxFlg3s9j/ejQHs/xlME7XmYAfOM7ftA7+p8GCwvC+ghQK0QYbXN6+u4pzpdJPmWWr3v1ROeQKBck8LDMOuIfwMN4dHnmT529grJW3Q2OVUiJKxm1lEdAJVMJADOZLgYwVCRoCArFv9sRooPH807byVOBEYJOwiSfx6j4hQyShAQJBAO8Yi645WHeh+qjAcdOR5gNu9qOPmsAeCfdpeHdoCttIaNYF1D7w60lZGUku1P1ZeQP3viiCQEYYe47hpcVXOdsCQQDWWqX/D4qUwx3UdF9c4iSHkBP3cYT9qqyt0eldCfXzPXgtZrvhwnncKTTArF43NxwUiw4w30mS+3nPnW3zmR5hAkEAw3HJHI375y8dezx0z4GACGZ4bpNA6LKlav1oYBNIbJ/wMqNpMFo3uyl+JfiGWuL8rWWip/JxH9t7hPynSX1X6QJBAKmqgq3K/WQWtOvPWRRKI6Px1PwNLLkkeR30gwSTt8vaod897AUcTByJuSmwxbpqsp1IG+lvM+tVhethrwAb+MECQQCDQzRTuVZjkOgJ95Zo5bbTgXxWbFXNR1HcwSVC6fMnSckbzDL+GP5XNxuNn2tDLQPRKV9C9tR+IGlqK+QTbNN9'
 
 const STORAGE_KEY = 'demo-auth'
 
@@ -11,11 +19,9 @@ type ApiError = {
   expiredAt?: string
 }
 
-const USERNAME = 'admin'
-const PASSWORD = 'admin'
 const EXPIRES_IN_MINS = 1
 
-type Auth = {
+type AuthResponse = {
   id: number
   username: string
   email: string
@@ -25,6 +31,8 @@ type Auth = {
   image: string
   token: string
 }
+
+type Auth = AuthResponse & { password: string }
 
 type LoginParams = {
   username: string
@@ -36,20 +44,16 @@ async function loginApi(
   { username, password }: LoginParams,
   signal?: AbortSignal
 ): Promise<ApiResponse<Auth>> {
-  const { data, error } = await sendRequest<Auth, ApiError>({
+  const { data, error } = await sendRequest<AuthResponse, ApiError>({
     url: `${BASE_URL}/login`,
     method: 'POST',
     bodyData: {
-      username: 'jissetts',
-      password: 'ePawWgrnZR8L',
+      username: username,
+      password: password,
       expiresInMins: EXPIRES_IN_MINS
     },
     signal: signal
   })
-
-  if (username !== USERNAME || password !== PASSWORD) {
-    return { data: null, error: '用户名或密码错误' }
-  }
 
   if (error) {
     if (typeof error === 'string') {
@@ -59,7 +63,9 @@ async function loginApi(
     return { data: null, error: error.message }
   }
 
-  return { data, error: '' }
+  const auth = { ...data, password: password } as Auth
+
+  return { data: auth, error: '' }
 }
 
 type SendRequestWrapper = Request & { initialCall?: boolean }
@@ -73,9 +79,9 @@ async function sendAuthDummyJsonApi<T>({
   signal,
   initialCall = true
 }: SendRequestWrapper): Promise<ApiResponse<T>> {
-  const headers = getAuthHeader()
+  const auth = getAuthFromLocalStorage()
 
-  if (!headers || !headers.Authorization) {
+  if (!auth || !auth.token || !auth.username || !auth.password) {
     return { data: null, error: '未登录', authFailed: true }
   }
 
@@ -83,7 +89,7 @@ async function sendAuthDummyJsonApi<T>({
     url: `${BASE_URL}/${url}`,
     method,
     contentType,
-    headers,
+    headers: { Authorization: `Bearer ${auth.token}` },
     urlData,
     bodyData,
     signal
@@ -100,27 +106,14 @@ async function sendAuthDummyJsonApi<T>({
   const authFailed =
     error.name === 'TokenExpiredError' || error.name === 'JsonWebTokenError'
 
-  if (authFailed) {
-    removeAuthFromLocalStorage()
-  }
-
-  if (!initialCall) {
-    return { data: null, error: error.message, authFailed }
-  }
-
-  if (authFailed) {
-    const { data, error } = await loginApi({
-      username: USERNAME,
-      password: PASSWORD
-    })
+  if (initialCall && authFailed) {
+    const { data, error } = await tryReLogin(auth.username, auth.password)
 
     if (error) {
       return { data: null, error, authFailed: true }
     }
 
     if (data) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
-
       return sendAuthDummyJsonApi({
         url,
         method,
@@ -136,16 +129,52 @@ async function sendAuthDummyJsonApi<T>({
   return { data: null, error: error.message }
 }
 
-type AuthHeader = { Authorization: string } | null
+async function tryReLogin(
+  encryptedUsername: string,
+  encryptedPassword: string
+) {
+  const username = decrypt(encryptedUsername)
+  const password = decrypt(encryptedPassword)
 
-function getAuthHeader(): AuthHeader {
-  const auth = getAuthFromLocalStorage()
-
-  if (!auth || !auth.token) {
-    return null
+  if (!username || !password) {
+    removeAuthFromLocalStorage()
+    return { data: null, error: '登录缓存数据格式有误' }
   }
 
-  return { Authorization: `Bearer ${auth.token}` }
+  const { data, error } = await loginApi({ username, password })
+
+  if (error) {
+    removeAuthFromLocalStorage()
+    return { data: null, error }
+  }
+
+  if (data) {
+    setAuthToLocalStorage(data)
+  }
+
+  return { data, error }
+}
+
+function encrypt(raw: string) {
+  const encrypt = new JSEncrypt()
+  encrypt.setPublicKey(PUBLIC_KEY)
+  return encrypt.encrypt(raw)
+}
+
+function decrypt(encrypted: string) {
+  const encrypt = new JSEncrypt()
+  encrypt.setPrivateKey(PRIVATE_KEY)
+  return encrypt.decrypt(encrypted) as string
+}
+
+function setAuthToLocalStorage(auth: Auth) {
+  const encryptedData = {
+    ...auth,
+    username: encrypt(auth.username),
+    password: encrypt(auth.password)
+  }
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(encryptedData))
 }
 
 function getAuthFromLocalStorage(): Auth | null {
@@ -164,9 +193,9 @@ function removeAuthFromLocalStorage() {
 
 export {
   loginApi,
-  STORAGE_KEY,
   sendAuthDummyJsonApi,
   getAuthFromLocalStorage,
   removeAuthFromLocalStorage,
+  setAuthToLocalStorage,
   type Auth
 }
