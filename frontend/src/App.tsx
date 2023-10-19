@@ -1,7 +1,6 @@
 import { lazy, Suspense } from 'react'
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 
-import { ThemeProvider } from '@/components/ui/ThemeProvider'
 import { Toaster } from '@/components/ui/Toaster'
 import { NavBar } from '@/components/navbar/NavBar'
 import { Login } from '@/pages/Login'
@@ -26,48 +25,47 @@ const FormSplitBill = lazy(() =>
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <ThemeProvider defaultTheme="system" storageKey="demo-ui-theme">
-        <div className="flex h-screen flex-col justify-between">
-          <NavBar />
+    <>
+      <div className="flex h-screen flex-col justify-between">
+        <NavBar />
 
-          <Routes>
-            <Route path="/" element={<Navigate to="/eat-split" replace />} />
-            <Route path="/login" element={<Login />} />
+        <Routes>
+          <Route path="/" element={<Navigate to="/eat-split" replace />} />
+          <Route path="/login" element={<Login />} />
+          <Route
+            path="/fetch"
+            element={
+              <RequireAuth>
+                <ProductShowcase />
+              </RequireAuth>
+            }
+          />
+
+          <Route
+            path="/eat-split"
+            element={
+              <FriendProvider>
+                <EatAndSplit />
+              </FriendProvider>
+            }
+          >
             <Route
-              path="/fetch"
+              path=":friendId"
               element={
-                <RequireAuth>
-                  <ProductShowcase />
-                </RequireAuth>
+                <Suspense fallback={<Loading />}>
+                  <FormSplitBill />
+                </Suspense>
               }
             />
+          </Route>
 
-            <Route
-              path="/eat-split"
-              element={
-                <FriendProvider>
-                  <EatAndSplit />
-                </FriendProvider>
-              }
-            >
-              <Route
-                path=":friendId"
-                element={
-                  <Suspense fallback={<Loading />}>
-                    <FormSplitBill />
-                  </Suspense>
-                }
-              />
-            </Route>
+          <Route path="*" element={<PageNotFound />} />
+        </Routes>
 
-            <Route path="*" element={<PageNotFound />} />
-          </Routes>
+        <Footer />
+      </div>
 
-          <Footer />
-          <Toaster />
-        </div>
-      </ThemeProvider>
-    </BrowserRouter>
+      <Toaster />
+    </>
   )
 }

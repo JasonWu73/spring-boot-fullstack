@@ -9,10 +9,47 @@
 
   /* snow-1 */
   --fg-dark-color: #eceff4;
+
+  /* sky-500 */
+  --nprogress-color: #0ea5e9;
+
+  /* red-600 */
+  --nprogress-dark-color: #dc2626;
 }
 
 /* 暗色主题 */
 html.dark {
   background-color: var(--bg-dark-color);
   color: var(--fg-dark-color);
+}
+
+/* nprogress 样式 */
+#nprogress .bar {
+  background-color: var(--nprogress-color);
+}
+
+#nprogress .peg {
+  box-shadow:
+    0 0 10px var(--nprogress-color),
+    0 0 5px var(--nprogress-color);
+}
+
+#nprogress .spinner-icon {
+  border-top-color: var(--nprogress-color);
+  border-left-color: var(--nprogress-color);
+}
+
+html.dark #nprogress .bar {
+  background-color: var(--nprogress-dark-color);
+}
+
+html.dark #nprogress .peg {
+  box-shadow:
+    0 0 10px var(--nprogress-dark-color),
+    0 0 5px var(--nprogress-dark-color);
+}
+
+html.dark #nprogress .spinner-icon {
+  border-top-color: var(--nprogress-dark-color);
+  border-left-color: var(--nprogress-dark-color);
 }
