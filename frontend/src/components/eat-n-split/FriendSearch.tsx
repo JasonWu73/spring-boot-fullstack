@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 
 import { Input } from '@/components/ui/Input'
 import { useKeypress } from '@/hooks/use-keypress'
@@ -11,8 +11,6 @@ function FriendSearch() {
 
   const [searchParams, setSearchParams] = useSearchParams()
   const name = searchParams.get(SEARCH_KEY) || ''
-
-  const navigate = useNavigate()
 
   useKeypress({ key: '\\', modifiers: ['ctrlKey'] }, () => {
     if (document.activeElement === inputRef.current) {
@@ -26,17 +24,10 @@ function FriendSearch() {
     return setSearchParams({ s: event.target.value }, { replace: true })
   }
 
-  function handleFocus() {
-    if (window.location.pathname !== '/eat-split') {
-      navigate('/eat-split', { replace: true })
-    }
-  }
-
   return (
     <Input
       value={name}
       onChange={handleSearch}
-      onFocus={handleFocus}
       ref={inputRef}
       placeholder="Search friend..."
       className="mb-4 dark:border-amber-500"

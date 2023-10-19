@@ -9,7 +9,6 @@ import { FormInput } from '@/components/ui/CustomFormField'
 import { useTitle } from '@/hooks/use-title'
 import { type Friend } from '@/api/fake/friend'
 import { useFriends } from '@/components/eat-n-split/FriendProvider'
-import { useNavigate } from 'react-router-dom'
 
 const formSchema = z.object({
   name: z.string().nonempty('必须输入姓名'),
@@ -29,8 +28,7 @@ function FormAddFriend() {
     }
   })
 
-  const { addFriend } = useFriends()
-  const navigate = useNavigate()
+  const { addFriend, setShowAddFriend } = useFriends()
 
   function onSubmit(values: FormSchema) {
     const newFriendId = Date.now()
@@ -45,7 +43,7 @@ function FormAddFriend() {
 
     addFriend(newFriend)
 
-    navigate('/eat-split', { replace: true })
+    setShowAddFriend(false)
   }
 
   return (

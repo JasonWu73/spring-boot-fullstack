@@ -41,7 +41,7 @@ type Response<T, E> = {
  * @param Request.urlData - URL 参数
  * @param Request.bodyData - 请求体数据
  * @param Request.signal - `AbortController` 实例的 `signal` 属性，用于主动取消请求
- * @returns {Promise<Response<T, E>>} - 以 JSON 数据格式解析后的正常或异常响应数据
+ * @returns - 以 JSON 数据格式解析后的正常或异常响应数据
  */
 async function sendRequest<T, E>({
   url,

@@ -1,5 +1,5 @@
-import React from 'react'
-import { useSearchParams } from 'react-router-dom'
+import React, { useEffect } from 'react'
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import {
   ExclamationTriangleIcon,
   ReloadIcon,
@@ -13,27 +13,36 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/Alert'
 import { useToast } from '@/components/ui/use-toast'
 import { FriendItem } from '@/components/eat-n-split/FriendItem'
 import { FriendSearch, SEARCH_KEY } from '@/components/eat-n-split/FriendSearch'
-import { useFetch } from '@/hooks/use-fetch'
-import { type Friend, getFriendsApi } from '@/api/fake/friend'
+import { type Friend } from '@/api/fake/friend'
 import { useFriends } from '@/components/eat-n-split/FriendProvider'
 import { useRefresh } from '@/hooks/use-refresh'
 
 function FriendList() {
-  const { friends, setFriends, deleteFriend } = useFriends()
-
-  const { error, loading, getFriends } = useFriendsApi(setFriends)
+  const {
+    friends,
+    errorFriends: error,
+    loadingFriends: loading,
+    getFriends,
+    deleteFriend
+  } = useFriends()
 
   const [searchParams] = useSearchParams()
-  const name = searchParams.get(SEARCH_KEY) || ''
+  const nameQuery = searchParams.get(SEARCH_KEY)
 
-  const filteredFriends = name
-    ? friends.filter((f) => f.name.toLowerCase().includes(name.toLowerCase()))
+  const filteredFriends = nameQuery
+    ? friends.filter((f) =>
+        f.name.toLowerCase().includes(nameQuery.toLowerCase())
+      )
     : friends
 
-  useRefresh(() => {
-    const hasQuery = searchParams.get(SEARCH_KEY) !== null
+  const location = useLocation()
 
-    if (hasQuery) {
+  useEffect(() => {
+    getFriends().then()
+  }, [])
+
+  useRefresh(() => {
+    if (nameQuery !== null || location.state?.noRefresh === true) {
       return
     }
 
@@ -42,12 +51,19 @@ function FriendList() {
 
   const { toast } = useToast()
 
+  const navigate = useNavigate()
+
   function handleDeleteFriend(friend: Friend) {
-    deleteFriend(friend)
+    deleteFriend(friend.id)
 
     toast({
       title: '删除好友',
       description: `成功删除好友：${friend.name}`
+    })
+
+    navigate(`/eat-split${window.location.search}`, {
+      replace: true,
+      state: { noRefresh: true }
     })
   }
 
@@ -103,28 +119,6 @@ function FriendList() {
       </Card>
     </>
   )
-}
-
-function useFriendsApi(setFriends: (friends: Friend[]) => void) {
-  const {
-    error,
-    loading,
-    fetchData: getFriends
-  } = useFetch(async (_, signal) => {
-    const { data, error } = await getFriendsApi(signal)
-
-    if (error) {
-      return { data: null, error }
-    }
-
-    if (data) {
-      setFriends(data)
-    }
-
-    return { data, error }
-  })
-
-  return { error, loading, getFriends }
 }
 
 export { FriendList }

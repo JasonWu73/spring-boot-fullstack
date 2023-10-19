@@ -27,7 +27,7 @@ function FriendItem({ friend, onDeleteFriend }: FriendItemProps) {
 
   const { setShowAddFriend } = useFriends()
 
-  const queryString = window.location.search
+  const queryStr = window.location.search
 
   function handleToggleSelect() {
     setShowAddFriend(false)
@@ -76,9 +76,12 @@ function FriendItem({ friend, onDeleteFriend }: FriendItemProps) {
       <Link
         to={
           isSelected
-            ? `/eat-split${queryString}`
-            : `/eat-split/${friend.id}${queryString}`
+            ? `/eat-split${queryStr}`
+            : `/eat-split/${friend.id}${queryStr}`
         }
+        state={{
+          noRefresh: true
+        }}
         onClick={handleToggleSelect}
         className={buttonVariants({ variant: 'default' })}
       >

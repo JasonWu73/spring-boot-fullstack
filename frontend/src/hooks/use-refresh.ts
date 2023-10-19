@@ -10,19 +10,19 @@ let prevKey = ''
  */
 function useRefresh(callback: () => void) {
   const location = useLocation()
-  const initial = useRef(true)
+  const canReload = useRef(false)
 
   useEffect(() => {
     const curKey = location.key
     const keyChanged = !!prevKey && prevKey !== curKey
 
-    if (keyChanged && !initial.current) {
+    if (keyChanged && canReload.current) {
       callback()
     }
 
     return () => {
       prevKey = curKey
-      initial.current = false
+      canReload.current = true
     }
   }, [location.key])
 }

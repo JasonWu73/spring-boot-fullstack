@@ -29,9 +29,7 @@ function EatAndSplit() {
   useKeypress({ key: 'Escape' }, () => {
     setShowAddFriend(false)
 
-    if (window.location.pathname !== '/eat-split') {
-      navigate('/eat-split', { replace: true })
-    }
+    navigate('/eat-split', { state: { noRefresh: true } })
   })
 
   function handleToggleAddFriend() {

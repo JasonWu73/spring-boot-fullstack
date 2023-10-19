@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { type UseFormReturn, useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -23,7 +23,6 @@ import {
   TooltipTrigger
 } from '@/components/ui/Tooltip'
 import { useTitle } from '@/hooks/use-title'
-import { type Friend } from '@/api/fake/friend'
 import { useFriends } from '@/components/eat-n-split/FriendProvider'
 import { FormSplitBillError } from '@/components/eat-n-split/FormSplitBillError'
 
@@ -77,11 +76,6 @@ const formSchema = z
 
 type FormSchema = z.infer<typeof formSchema>
 
-type Bill = {
-  friendId: Friend['id']
-  expense: number
-}
-
 function FormSplitBill() {
   useTitle('分摊账单')
 
@@ -97,57 +91,42 @@ function FormSplitBill() {
 
   useWatchExpense(form)
 
-  const { friends, updateFriend } = useFriends()
+  const {
+    curFriend: friend,
+    errorFriend: error,
+    loadingFriend: loading,
+    getFriend,
+    setCredit,
+    splitBill
+  } = useFriends()
 
   const params = useParams()
-  const friendId = Number(params.friendId)
-  const friend = friends.find((f) => f.id === friendId)
+  const id = Number(params.friendId)
 
-  const { loading } = useChangeId(friendId, form.reset)
+  useIdChanged(id, form.reset, getFriend)
 
   const navigate = useNavigate()
 
   function onSubmit(values: FormSchema) {
-    const bill = {
-      friendId: friend!.id,
-      expense:
-        values.whoIsPaying === 'user'
-          ? -values.friendExpense
-          : values.userExpense
-    }
+    const expense =
+      values.whoIsPaying === 'user' ? -values.friendExpense : values.userExpense
 
-    splitBill(bill)
+    splitBill(id, expense)
 
-    navigate('/eat-split', { replace: true })
-  }
-
-  function splitBill(bill: Bill) {
-    if (!friend) {
-      return
-    }
-
-    updateFriend({
-      ...friend,
-      balance: Number((friend.balance - bill.expense).toFixed(2))
+    navigate(`/eat-split${window.location.search}`, {
+      state: { noRefresh: true }
     })
   }
 
   function handleCreditRating(creditRating: number) {
-    if (!friend) {
-      return
-    }
-
-    updateFriend({
-      ...friend,
-      creditRating
-    })
+    setCredit(id, creditRating)
   }
 
   return (
     <Card className="w-96 bg-amber-100 text-slate-700 dark:bg-amber-100 dark:text-slate-700 md:w-[22rem] lg:w-[30rem]">
       {loading && <FormSplitBillSkeleton />}
 
-      {!loading && !friend && <FormSplitBillError message="未找到好友数据" />}
+      {!loading && error && <FormSplitBillError message={error} />}
 
       {!loading && friend && (
         <>
@@ -268,28 +247,15 @@ function useWatchExpense(form: UseFormReturn<FormSchema>) {
   }, [bill, userExpense, setValue])
 }
 
-function useChangeId(
+function useIdChanged(
   friendId: number,
-  resetForm: (values?: Partial<FormSchema>) => void
+  resetForm: (values?: Partial<FormSchema>) => void,
+  getFriend: (id: number) => Promise<void>
 ) {
-  const [loading, setLoading] = useState(true)
-
   useEffect(() => {
     resetForm()
-
-    // 仅为了模拟查看骨架屏的效果
-    setLoading(true)
-
-    const timeout = setTimeout(() => {
-      setLoading(false)
-    }, 1000)
-
-    return () => {
-      clearTimeout(timeout)
-    }
+    getFriend(friendId).then()
   }, [friendId])
-
-  return { loading }
 }
 
 export { FormSplitBill }

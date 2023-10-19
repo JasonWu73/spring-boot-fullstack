@@ -56,11 +56,9 @@ function AuthProvider({ children }: AuthProviderProps) {
   ): Promise<LoginMessage> {
     const { data, error } = await sendLogin({ username, password })
 
-    if (error || !data) {
-      setAuth(null)
-    }
-
     if (error) {
+      setAuth(null)
+
       return { isOk: false, message: error }
     }
 
