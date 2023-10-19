@@ -20,17 +20,23 @@ function FriendSearch() {
     }
 
     inputRef.current?.focus()
-    navigate('/eat-split', { replace: true })
   })
 
   function handleSearch(event: React.ChangeEvent<HTMLInputElement>) {
     return setSearchParams({ s: event.target.value }, { replace: true })
   }
 
+  function handleFocus() {
+    if (window.location.pathname !== '/eat-split') {
+      navigate('/eat-split', { replace: true })
+    }
+  }
+
   return (
     <Input
       value={name}
       onChange={handleSearch}
+      onFocus={handleFocus}
       ref={inputRef}
       placeholder="Search friend..."
       className="mb-4 dark:border-amber-500"

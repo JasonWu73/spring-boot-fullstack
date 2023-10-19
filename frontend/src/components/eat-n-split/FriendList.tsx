@@ -1,5 +1,5 @@
 import React from 'react'
-import { useLocation, useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 import {
   ExclamationTriangleIcon,
   ReloadIcon,
@@ -30,17 +30,17 @@ function FriendList() {
     ? friends.filter((f) => f.name.toLowerCase().includes(name.toLowerCase()))
     : friends
 
-  const { toast } = useToast()
-
-  const location = useLocation()
-
   useRefresh(() => {
-    if (location.pathname !== '/eat-split' || name) {
+    const hasQuery = searchParams.get(SEARCH_KEY) !== null
+
+    if (hasQuery) {
       return
     }
 
     getFriends().then()
   })
+
+  const { toast } = useToast()
 
   function handleDeleteFriend(friend: Friend) {
     deleteFriend(friend)
