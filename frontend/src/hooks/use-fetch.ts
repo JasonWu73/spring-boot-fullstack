@@ -23,22 +23,22 @@ const initialState: State<unknown> = {
 }
 
 type Action<T> =
-  | { type: 'fetchInit'; payload: AbortController | null }
-  | { type: 'fetchSuccess'; payload: T }
-  | { type: 'fetchFailure'; payload: string }
-  | { type: 'fetchAborted' }
+  | { type: 'init'; payload: AbortController | null }
+  | { type: 'resolved'; payload: T }
+  | { type: 'rejected'; payload: string }
+  | { type: 'aborted' }
   | { type: 'reset' }
 
 function reducer<T>(state: State<T>, action: Action<T>): State<T> {
   switch (action.type) {
-    case 'fetchInit': {
+    case 'init': {
       return {
         ...(initialState as State<T>),
         loading: true,
         controller: action.payload
       }
     }
-    case 'fetchSuccess': {
+    case 'resolved': {
       return {
         ...state,
         data: action.payload,
@@ -47,7 +47,7 @@ function reducer<T>(state: State<T>, action: Action<T>): State<T> {
         controller: null
       }
     }
-    case 'fetchFailure': {
+    case 'rejected': {
       return {
         ...state,
         error: action.payload,
@@ -55,7 +55,7 @@ function reducer<T>(state: State<T>, action: Action<T>): State<T> {
         controller: null
       }
     }
-    case 'fetchAborted': {
+    case 'aborted': {
       return {
         ...state,
         controller: null
@@ -123,17 +123,17 @@ function useFetch<T, E>(
     values: E | null = null,
     controller = new AbortController()
   ): Promise<FetchData<T>> {
-    dispatch({ type: 'fetchInit', payload: controller })
+    dispatch({ type: 'init', payload: controller })
 
     const response = await callback(values, controller.signal)
 
     if (controller.signal.aborted) {
-      dispatch({ type: 'fetchAborted' })
+      dispatch({ type: 'aborted' })
       return response
     }
 
     if (response.error) {
-      dispatch({ type: 'fetchFailure', payload: response.error })
+      dispatch({ type: 'rejected', payload: response.error })
 
       if (response.authFailed) {
         navigate('/login', {
@@ -145,7 +145,7 @@ function useFetch<T, E>(
       return response
     }
 
-    dispatch({ type: 'fetchSuccess', payload: response.data })
+    dispatch({ type: 'resolved', payload: response.data })
 
     return response
   }, [])
