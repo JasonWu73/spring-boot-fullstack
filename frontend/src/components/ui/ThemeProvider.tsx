@@ -7,12 +7,7 @@ type ThemeProviderState = {
   setTheme: (theme: Theme) => void
 }
 
-const initialState: ThemeProviderState = {
-  theme: 'system',
-  setTheme: () => null
-}
-
-const ThemeProviderContext = createContext<ThemeProviderState>(initialState)
+const ThemeProviderContext = createContext({} as ThemeProviderState)
 
 type ThemeProviderProps = {
   children: React.ReactNode
@@ -48,6 +43,16 @@ function ThemeProvider({
       {children}
     </ThemeProviderContext.Provider>
   )
+}
+
+function useTheme() {
+  const context = useContext(ThemeProviderContext)
+
+  if (context === undefined) {
+    throw new Error('useTheme 必须在 ThemeProvider 中使用')
+  }
+
+  return context
 }
 
 function useApplyTheme(theme: Theme) {
@@ -89,16 +94,6 @@ function handleToggleTheme(event: MediaQueryListEvent) {
   }
 
   applyTheme('light')
-}
-
-function useTheme() {
-  const context = useContext(ThemeProviderContext)
-
-  if (context === undefined) {
-    throw new Error('useTheme 必须在 ThemeProvider 中使用')
-  }
-
-  return context
 }
 
 export { ThemeProvider, useTheme }

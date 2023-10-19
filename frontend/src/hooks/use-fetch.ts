@@ -1,11 +1,14 @@
 import React, { useCallback, useEffect, useReducer } from 'react'
 import NProgress from 'nprogress'
-import { useLocation, useNavigate } from 'react-router-dom'
+
+import { useAuth } from '@/components/auth/AuthProvider'
+
+type Auth = { isOk: true; token: string } | { isOk: false }
 
 type ApiResponse<T> = {
   data: T | null
   error: string
-  authFailed?: boolean
+  auth?: Auth
 }
 
 type State<T> = {
@@ -13,6 +16,7 @@ type State<T> = {
   error: string
   loading: boolean
   controller: AbortController | null
+  auth?: Auth
 }
 
 const initialState: State<unknown> = {
@@ -23,22 +27,23 @@ const initialState: State<unknown> = {
 }
 
 type Action<T> =
-  | { type: 'init'; payload: AbortController | null }
-  | { type: 'resolved'; payload: T }
-  | { type: 'rejected'; payload: string }
-  | { type: 'aborted' }
-  | { type: 'reset' }
+  | { type: 'fetch/init'; payload: AbortController | null }
+  | { type: 'fetch/resolved'; payload: T }
+  | { type: 'fetch/rejected'; payload: string }
+  | { type: 'fetch/auth'; payload: Auth }
+  | { type: 'fetch/aborted' }
+  | { type: 'fetch/reset' }
 
 function reducer<T>(state: State<T>, action: Action<T>): State<T> {
   switch (action.type) {
-    case 'init': {
+    case 'fetch/init': {
       return {
         ...(initialState as State<T>),
         loading: true,
         controller: action.payload
       }
     }
-    case 'resolved': {
+    case 'fetch/resolved': {
       return {
         ...state,
         data: action.payload,
@@ -47,7 +52,7 @@ function reducer<T>(state: State<T>, action: Action<T>): State<T> {
         controller: null
       }
     }
-    case 'rejected': {
+    case 'fetch/rejected': {
       return {
         ...state,
         error: action.payload,
@@ -55,13 +60,19 @@ function reducer<T>(state: State<T>, action: Action<T>): State<T> {
         controller: null
       }
     }
-    case 'aborted': {
+    case 'fetch/auth': {
+      return {
+        ...state,
+        auth: action.payload
+      }
+    }
+    case 'fetch/aborted': {
       return {
         ...state,
         controller: null
       }
     }
-    case 'reset': {
+    case 'fetch/reset': {
       if (state.controller) {
         state.controller.abort()
       }
@@ -95,7 +106,7 @@ function useFetch<T, E>(
   callback: (values: E | null, signal: AbortSignal) => Promise<ApiResponse<T>>,
   initialCall: boolean = true
 ) {
-  const [{ data, error, loading }, dispatch] = useReducer(
+  const [{ data, error, loading, auth }, dispatch] = useReducer(
     reducer as React.Reducer<State<T | null>, Action<T | null>>,
     initialState as State<T>
   )
@@ -116,42 +127,37 @@ function useFetch<T, E>(
 
   useLoading(loading)
 
-  const navigate = useNavigate()
-  const location = useLocation()
+  useFetchAuth(auth)
 
   const fetchData = useCallback(async function fetchData(
     values: E | null = null,
     controller = new AbortController()
   ): Promise<FetchData<T>> {
-    dispatch({ type: 'init', payload: controller })
+    dispatch({ type: 'fetch/init', payload: controller })
 
     const response = await callback(values, controller.signal)
 
     if (controller.signal.aborted) {
-      dispatch({ type: 'aborted' })
+      dispatch({ type: 'fetch/aborted' })
       return response
+    }
+
+    if (response.auth) {
+      dispatch({ type: 'fetch/auth', payload: response.auth })
     }
 
     if (response.error) {
-      dispatch({ type: 'rejected', payload: response.error })
-
-      if (response.authFailed) {
-        navigate('/login', {
-          replace: true,
-          state: { from: location.pathname }
-        })
-      }
-
+      dispatch({ type: 'fetch/rejected', payload: response.error })
       return response
     }
 
-    dispatch({ type: 'resolved', payload: response.data })
+    dispatch({ type: 'fetch/resolved', payload: response.data })
 
     return response
   }, [])
 
   const reset = useCallback(function reset() {
-    dispatch({ type: 'reset' })
+    dispatch({ type: 'fetch/reset' })
   }, [])
 
   return { data, error, loading, fetchData, reset }
@@ -165,6 +171,25 @@ function useLoading(loading: boolean) {
     // 结束加载动画
     !loading && NProgress.done()
   }, [loading])
+}
+
+function useFetchAuth(auth: Auth | undefined) {
+  const { logout, updateToken } = useAuth()
+
+  useEffect(() => {
+    if (!auth) {
+      return
+    }
+
+    if (!auth.isOk) {
+      logout()
+      return
+    }
+
+    if (auth.token) {
+      updateToken(auth.token)
+    }
+  }, [auth?.isOk])
 }
 
 export { useFetch, type ApiResponse }

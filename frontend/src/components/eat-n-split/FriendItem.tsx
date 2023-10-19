@@ -1,4 +1,4 @@
-import { Link, useParams } from 'react-router-dom'
+import { Link, useLocation, useParams } from 'react-router-dom'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar'
 import {
@@ -27,7 +27,8 @@ function FriendItem({ friend, onDeleteFriend }: FriendItemProps) {
 
   const { setShowAddFriend } = useFriends()
 
-  const queryString = window.location.search
+  const location = useLocation()
+  const queryString = location.search
 
   function handleToggleSelect() {
     setShowAddFriend(false)

@@ -16,14 +16,8 @@ import { FormInput } from '@/components/ui/CustomFormField'
 import { Button } from '@/components/ui/Button'
 import { useToast } from '@/components/ui/use-toast'
 import { useTitle } from '@/hooks/use-title'
-import { useFetch } from '@/hooks/use-fetch'
 import { useRefresh } from '@/hooks/use-refresh'
-import {
-  type Auth,
-  getAuthFromLocalStorage,
-  loginApi,
-  setAuthToLocalStorage
-} from '@/api/dummyjson/auth'
+import { useAuth } from '@/components/auth/AuthProvider'
 
 const USERNAME = 'jissetts'
 const PASSWORD = 'ePawWgrnZR8L'
@@ -46,11 +40,9 @@ function Login() {
     }
   })
 
-  const auth = getAuthFromLocalStorage()
-
   const { toast, dismiss } = useToast()
 
-  const { error, loading, login, resetLogin } = useLoginAPi()
+  const { auth, error, loading, login, resetLogin } = useAuth()
 
   useRefresh(() => {
     form.reset()
@@ -61,25 +53,22 @@ function Login() {
   const location = useLocation()
   const originUrl = location.state?.from || '/'
 
-  if (auth && auth.token) {
+  if (auth) {
     return <Navigate to={originUrl} replace />
   }
 
   async function onSubmit(values: FormSchema) {
-    const { data, error } = await login(values)
+    const response = await login(values.username, values.password)
 
-    if (error) {
-      toast({
-        title: '登录失败',
-        description: error,
-        variant: 'destructive'
-      })
+    if (response.isOk) {
       return
     }
 
-    if (data) {
-      setAuthToLocalStorage(data)
-    }
+    toast({
+      title: '登录失败',
+      description: response.message,
+      variant: 'destructive'
+    })
   }
 
   return (
@@ -128,24 +117,6 @@ function Login() {
       </CardContent>
     </Card>
   )
-}
-
-function useLoginAPi() {
-  const {
-    error,
-    loading,
-    fetchData: login,
-    reset: resetLogin
-  } = useFetch<Auth, FormSchema>(async (values, signal) => {
-    return await loginApi(
-      {
-        ...values!
-      },
-      signal
-    )
-  }, false)
-
-  return { error, loading, login, resetLogin }
 }
 
 export { Login }

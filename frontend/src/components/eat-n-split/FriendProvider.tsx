@@ -15,30 +15,20 @@ type FriendProviderState = {
   setShowAddFriend: (show: boolean) => void
 }
 
-const initialState: FriendProviderState = {
-  friends: [],
-  setFriends: () => {},
-  addFriend: () => {},
-  updateFriend: () => {},
-  deleteFriend: () => {},
-
-  showAddFriend: false,
-  setShowAddFriend: () => {}
-}
-
-const FriendProviderContext = createContext<FriendProviderState>(initialState)
+const FriendProviderContext = createContext<FriendProviderState>(
+  {} as FriendProviderState
+)
 
 type FriendProviderProps = {
   children: React.ReactNode
 }
 
-function createInitialState(): FriendProviderState {
+function createInitialState() {
   const friends = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]')
 
   return {
-    ...initialState,
     friends
-  }
+  } as FriendProviderState
 }
 
 type Action =

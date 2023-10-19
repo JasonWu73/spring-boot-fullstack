@@ -1,19 +1,7 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useLocation } from 'react-router-dom'
 
-import { debounce } from '@/lib/utils'
-
-let initialLoadPage = true
-
-const initialFinish = debounce(() => {
-  initialLoadPage = false
-}, 200)
-
-let needsReload = true
-
-const resetNeedsReload = debounce(() => {
-  needsReload = true
-}, 1000)
+let prevKey = ''
 
 /**
  * 当 URL 状态改变时刷新页面。
@@ -22,19 +10,19 @@ const resetNeedsReload = debounce(() => {
  */
 function useRefresh(callback: () => void) {
   const location = useLocation()
+  const initial = useRef(true)
 
   useEffect(() => {
-    if (initialLoadPage) {
-      initialFinish()
-      return
+    const curKey = location.key
+    const keyChanged = !!prevKey && prevKey !== curKey
+
+    if (keyChanged && !initial.current) {
+      callback()
     }
 
-    if (needsReload) {
-      needsReload = false
-
-      callback()
-
-      resetNeedsReload()
+    return () => {
+      prevKey = curKey
+      initial.current = false
     }
   }, [location.key])
 }

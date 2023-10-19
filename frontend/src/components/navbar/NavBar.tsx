@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { ModeToggle } from '@/components/ui/ModeToggle'
 import { Logo } from '@/components/navbar/Logo'
 import { PageNav } from '@/components/navbar/PageNav'
-import { LoginButton } from '@/components/navbar/LoginButton'
+import { AuthButton } from '@/components/navbar/AuthButton'
 import { HamburgerMenuIcon } from '@/components/navbar/HamburgerMenuIcon'
 
 function NavBar() {
@@ -24,7 +24,7 @@ function NavBar() {
       <Logo />
       <PageNav isHamburgerOpen={isHamburgerOpen} />
       <div className="flex gap-4">
-        <LoginButton />
+        <AuthButton />
         <ModeToggle />
         <HamburgerMenuIcon
           isOpen={isHamburgerOpen}

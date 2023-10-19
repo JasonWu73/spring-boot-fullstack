@@ -164,6 +164,7 @@ function useToast() {
 
   useEffect(() => {
     listeners.push(setState)
+
     return () => {
       const index = listeners.indexOf(setState)
       if (index > -1) {

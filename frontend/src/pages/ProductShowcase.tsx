@@ -15,6 +15,7 @@ function ProductShowcase() {
     useProduct()
 
   useRefresh(() => {
+    console.log('refresh')
     resetGetProduct()
     getProduct().then()
   })

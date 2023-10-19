@@ -9,11 +9,9 @@ function useTitle(title: string | undefined | null) {
   useEffect(() => {
     const prevTitle = document.title
 
-    if (!title) {
-      return
+    if (title) {
+      document.title = title
     }
-
-    document.title = title
 
     return () => {
       document.title = prevTitle
