@@ -2,7 +2,6 @@ import { lazy, Suspense } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 
 import { Toaster } from '@/components/ui/Toaster'
-import { NavBar } from '@/components/navbar/NavBar'
 import { Login } from '@/pages/Login'
 import { ProductShowcase } from '@/pages/ProductShowcase'
 import { EatAndSplit } from '@/pages/EatAndSplit'
@@ -11,9 +10,11 @@ import { wait } from '@/lib/utils'
 import { Loading } from '@/components/ui/Loading'
 import { RequireAuth } from '@/components/auth/RequireAuth'
 import { FriendProvider } from '@/components/eat-n-split/FriendProvider'
-import { Footer } from '@/components/Footer'
 import { AuthProvider } from '@/components/auth/AuthProvider'
 import { ThemeProvider } from '@/components/ui/ThemeProvider'
+import { MainLayout } from '@/components/layout/MainLayout'
+import { AdminLayout } from '@/components/layout/AdminLayout'
+import { LoginLayout } from '@/components/layout/LoginLayout'
 
 // ----- 开始：测试 React Router 懒加载（React Split Code 技术）-----
 const FormSplitBill = lazy(() =>
@@ -29,12 +30,13 @@ export default function App() {
   return (
     <ThemeProvider defaultTheme="system" storageKey="demo-ui-theme">
       <AuthProvider>
-        <div className="flex h-screen flex-col justify-between">
-          <NavBar />
+        <Routes>
+          <Route path="/login" element={<LoginLayout />}>
+            <Route index element={<Login />} />
+          </Route>
 
-          <Routes>
+          <Route element={<MainLayout />}>
             <Route path="/" element={<Navigate to="/eat-split" replace />} />
-            <Route path="/login" element={<Login />} />
             <Route
               path="/fetch"
               element={
@@ -63,10 +65,13 @@ export default function App() {
             </Route>
 
             <Route path="*" element={<PageNotFound />} />
-          </Routes>
+          </Route>
 
-          <Footer />
-        </div>
+          <Route element={<AdminLayout />}>
+            <Route path="/admin" element={<Navigate to="/users" replace />} />
+            <Route path="/users" element={<h1>Users</h1>} />
+          </Route>
+        </Routes>
 
         <Toaster />
       </AuthProvider>

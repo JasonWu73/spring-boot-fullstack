@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 
 import { ModeToggle } from '@/components/ui/ModeToggle'
-import { Logo } from '@/components/navbar/Logo'
-import { PageNav } from '@/components/navbar/PageNav'
-import { AuthButton } from '@/components/navbar/AuthButton'
-import { HamburgerMenuIcon } from '@/components/navbar/HamburgerMenuIcon'
+import { Logo } from '@/components/layout/top-navbar/Logo'
+import { PageNav } from '@/components/layout/top-navbar/PageNav'
+import { AuthButton } from '@/components/layout/top-navbar/AuthButton'
+import { HamburgerMenuIcon } from '@/components/layout/top-navbar/HamburgerMenuIcon'
 
-function NavBar() {
+function TopNavBar() {
   const [isHamburgerOpen, setIsHamburgerOpen] = useState(false)
 
   function handleClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
@@ -19,7 +19,7 @@ function NavBar() {
   return (
     <nav
       onClick={handleClick}
-      className="flex h-16 items-center justify-between gap-4 bg-slate-950 p-4 text-snow-1 dark:bg-slate-700"
+      className="flex h-16 items-center justify-between gap-4 p-4"
     >
       <Logo />
       <PageNav isHamburgerOpen={isHamburgerOpen} />
@@ -35,4 +35,4 @@ function NavBar() {
   )
 }
 
-export { NavBar }
+export { TopNavBar }

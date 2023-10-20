@@ -51,7 +51,7 @@ function Login() {
   })
 
   const location = useLocation()
-  const originUrl = location.state?.from || '/'
+  const originUrl = location.state?.from || '/admin'
 
   if (auth) {
     return <Navigate to={originUrl} replace />
@@ -72,7 +72,7 @@ function Login() {
   }
 
   return (
-    <Card className="mx-auto mt-8 w-96 md:w-[22rem] lg:w-[30rem]">
+    <Card className="mx-auto mt-8 w-96 border-slate-200 bg-slate-200 md:w-[22rem] lg:w-[30rem]">
       <CardHeader>
         <CardTitle>登录</CardTitle>
         {error && (

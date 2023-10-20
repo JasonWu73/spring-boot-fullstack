@@ -14,10 +14,10 @@ function LogoutButton() {
     <Button
       onClick={handleLogout}
       variant="link"
-      className="flex w-full items-center justify-center"
+      className="grid w-full grid-cols-[auto_1fr] gap-2 text-left"
     >
-      <LogOut className="mr-2 h-4 w-4" />
-      <span>注销</span>
+      <LogOut className="h-4 w-4" />
+      注销
     </Button>
   )
 }
