@@ -21,7 +21,8 @@ export default {
       colors: {
         night: {
           1: 'var(--bg-dark-color)',
-          2: 'var(--bg-dark-color-2)'
+          2: 'var(--bg-dark-color-2)',
+          3: 'var(--bg-dark-color-3)'
         },
         snow: {
           1: 'var(--fg-dark-color)'

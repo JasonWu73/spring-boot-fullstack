@@ -5,10 +5,13 @@
 /* 自定义样式变量 */
 :root {
   /* night-1 */
-  --bg-dark-color: #2e3440;
+  --bg-dark-color: #242933;
 
   /* night-2 */
-  --bg-dark-color-2: #3b4252;
+  --bg-dark-color-2: #2e3440;
+
+  /* night-3 */
+  --bg-dark-color-3: #4c566a;
 
   /* snow-1 */
   --fg-dark-color: #eceff4;
