@@ -70,6 +70,7 @@ export default function App() {
           <Route element={<AdminLayout />}>
             <Route path="/admin" element={<Navigate to="/users" replace />} />
             <Route path="/users" element={<h1>Users</h1>} />
+            <Route path="/menus" element={<h1>Menus</h1>} />
           </Route>
         </Routes>
 

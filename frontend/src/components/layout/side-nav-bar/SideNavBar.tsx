@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link, NavLink } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import { FolderCog, UserCog2 } from 'lucide-react'
 
 import { Separator } from '@/components/ui/Separator'
@@ -18,17 +18,12 @@ function SideNavBar() {
 
       <MenuSeparator />
       <h2 className="font-semibold text-slate-400">前端存储</h2>
-      <ul>
-        <li>
-          <Link
-            to="/menus"
-            className="flex items-center justify-center gap-1 text-sm"
-          >
-            <FolderCog className="h-4 w-4" />
-            菜单权限
-          </Link>
-        </li>
-      </ul>
+      <Menu>
+        <MenuItem link="/menus">
+          <FolderCog className="h-4 w-4" />
+          菜单权限
+        </MenuItem>
+      </Menu>
     </nav>
   )
 }

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { Gauge } from 'lucide-react'
+import { LayoutDashboard } from 'lucide-react'
 
 import { useAuth } from '@/components/auth/AuthProvider'
 import {
@@ -33,7 +33,7 @@ function AuthButton() {
           <NavigationMenuContent>
             <ul className="grid min-w-max grid-flow-row grid-cols-1 gap-1 py-2">
               <LinkItem to="/admin">
-                <Gauge className="h-4 w-4" />
+                <LayoutDashboard className="h-4 w-4" />
                 管理后台
               </LinkItem>
 
