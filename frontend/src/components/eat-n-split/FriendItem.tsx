@@ -51,7 +51,11 @@ function FriendItem({ friend, onDeleteFriend }: FriendItemProps) {
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <span className="text-lg font-bold">{name}</span>
+              <span className="text-lg font-bold">
+                {name}
+                {` 🎂 `}
+                {friend.birthDate}
+              </span>
             </TooltipTrigger>
 
             <TooltipContent>{friend.name}</TooltipContent>
