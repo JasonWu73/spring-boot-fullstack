@@ -8,13 +8,13 @@ import { EatAndSplit } from '@/pages/EatAndSplit'
 import { PageNotFound } from '@/pages/PageNotFound'
 import { wait } from '@/lib/utils'
 import { Loading } from '@/components/ui/Loading'
-import { RequireAuth } from '@/components/auth/RequireAuth'
 import { FriendProvider } from '@/components/eat-n-split/FriendProvider'
 import { AuthProvider } from '@/components/auth/AuthProvider'
 import { ThemeProvider } from '@/components/ui/ThemeProvider'
 import { MainLayout } from '@/components/layout/MainLayout'
 import { AdminLayout } from '@/components/layout/AdminLayout'
 import { LoginLayout } from '@/components/layout/LoginLayout'
+import { SecureRoute } from '@/components/auth/SecureRoute'
 
 // ----- 开始：测试 React Router 懒加载（React Split Code 技术）-----
 const FormSplitBill = lazy(() =>
@@ -37,14 +37,10 @@ export default function App() {
 
           <Route element={<MainLayout />}>
             <Route path="/" element={<Navigate to="/eat-split" replace />} />
-            <Route
-              path="/fetch"
-              element={
-                <RequireAuth>
-                  <ProductShowcase />
-                </RequireAuth>
-              }
-            />
+
+            <Route element={<SecureRoute />}>
+              <Route path="/fetch" element={<ProductShowcase />} />
+            </Route>
 
             <Route
               path="/eat-split"
@@ -68,9 +64,11 @@ export default function App() {
           </Route>
 
           <Route element={<AdminLayout />}>
-            <Route path="/admin" element={<Navigate to="/users" replace />} />
-            <Route path="/users" element={<h1>Users</h1>} />
-            <Route path="/menus" element={<h1>Menus</h1>} />
+            <Route element={<SecureRoute />}>
+              <Route path="/admin" element={<Navigate to="/users" replace />} />
+              <Route path="/users" element={<h1>Users</h1>} />
+              <Route path="/menus" element={<h1>Menus</h1>} />
+            </Route>
           </Route>
         </Routes>
 

@@ -1,13 +1,8 @@
-import React from 'react'
-import { Navigate } from 'react-router-dom'
+import { Navigate, Outlet } from 'react-router-dom'
 
 import { useAuth } from '@/components/auth/AuthProvider'
 
-type RequireAuthProps = {
-  children: React.ReactNode
-}
-
-function RequireAuth({ children }: RequireAuthProps) {
+function SecureRoute() {
   const { auth } = useAuth()
 
   if (!auth) {
@@ -20,7 +15,7 @@ function RequireAuth({ children }: RequireAuthProps) {
     )
   }
 
-  return children
+  return <Outlet />
 }
 
-export { RequireAuth }
+export { SecureRoute }
