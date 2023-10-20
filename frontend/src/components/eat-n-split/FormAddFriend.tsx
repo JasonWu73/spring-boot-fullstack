@@ -28,7 +28,7 @@ function FormAddFriend() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: '',
-      image: '', // https://i.pravatar.cc/150?u=xxx
+      image: 'https://i.pravatar.cc/150',
       birthday: undefined
     }
   })
