@@ -1,11 +1,5 @@
-import { type ApiResponse } from '@/hooks/use-fetch'
+import type { ApiResponse, FetchPayload, ReLogin } from '@/hooks/use-fetch'
 import { sendRequest, type Request } from '@/lib/http'
-import {
-  type Auth,
-  PRIVATE_KEY,
-  STORAGE_KEY
-} from '@/components/auth/AuthProvider'
-import { decrypt } from '@/lib/rsa'
 
 const BASE_URL = 'https://dummyjson.com/auth'
 
@@ -60,37 +54,41 @@ async function loginApi(
   return { data, error: '' }
 }
 
-type SendRequestWrapper<T> = Request & Pick<ApiResponse<T>, 'auth'>
+type SendRequestWrapper = Omit<Request, 'signal'> & {
+  payload: FetchPayload
+  reLogin?: ReLogin
+}
 
 async function sendAuthDummyJsonApi<T>({
+  payload,
   url,
   method = 'GET',
   contentType = 'JSON',
+  headers = {},
   urlData,
   bodyData,
-  signal,
-  auth
-}: SendRequestWrapper<T>): Promise<ApiResponse<T>> {
-  const authCache = getAuthFromLocalStorage()
+  reLogin
+}: SendRequestWrapper): Promise<ApiResponse<T>> {
+  const { signal, auth } = payload
 
-  if (!authCache) {
-    return { data: null, error: '未登录', auth: { isOk: false } }
+  if (!auth) {
+    return { data: null, error: '未登录', reLogin: { isOk: false } }
   }
 
-  const token = auth?.isOk ? auth.token : authCache.token
+  const token = reLogin?.isOk ? reLogin.token : auth.token
 
   const { data, error } = await sendRequest<T, ApiError>({
     url: `${BASE_URL}/${url}`,
     method,
     contentType,
-    headers: { Authorization: `Bearer ${token}` },
+    headers: { ...headers, Authorization: `Bearer ${token}` },
     urlData,
     bodyData,
     signal
   })
 
   if (!error) {
-    return { data, error: '', auth }
+    return { data, error: '', reLogin }
   }
 
   if (typeof error === 'string') {
@@ -100,25 +98,22 @@ async function sendAuthDummyJsonApi<T>({
   const authFailed =
     error.name === 'TokenExpiredError' || error.name === 'JsonWebTokenError'
 
-  if (!auth && authFailed) {
-    const { data, error } = await tryReLogin(
-      authCache.username,
-      authCache.password
-    )
+  if (!reLogin && authFailed) {
+    const { data, error } = await tryReLogin(auth.username, auth.password)
 
     if (error) {
-      return { data: null, error, auth: { isOk: false } }
+      return { data: null, error, reLogin: { isOk: false } }
     }
 
     if (data) {
       return sendAuthDummyJsonApi({
+        payload,
         url,
         method,
         contentType,
         urlData,
         bodyData,
-        signal,
-        auth: { isOk: true, token: data.token }
+        reLogin: { isOk: true, token: data.token }
       })
     }
   }
@@ -126,17 +121,7 @@ async function sendAuthDummyJsonApi<T>({
   return { data: null, error: error.message }
 }
 
-async function tryReLogin(
-  encryptedUsername: string,
-  encryptedPassword: string
-) {
-  const username = decrypt(PRIVATE_KEY, encryptedUsername)
-  const password = decrypt(PRIVATE_KEY, encryptedPassword)
-
-  if (!username || !password) {
-    return { data: null, error: '加密数据有误' }
-  }
-
+async function tryReLogin(username: string, password: string) {
   const { data, error } = await loginApi({ username, password })
 
   if (error) {
@@ -144,16 +129,6 @@ async function tryReLogin(
   }
 
   return { data, error }
-}
-
-function getAuthFromLocalStorage(): Auth | null {
-  const storageValue = localStorage.getItem(STORAGE_KEY)
-
-  if (!storageValue) {
-    return null
-  }
-
-  return JSON.parse(storageValue)
 }
 
 export { loginApi, sendAuthDummyJsonApi, type AuthResponse }

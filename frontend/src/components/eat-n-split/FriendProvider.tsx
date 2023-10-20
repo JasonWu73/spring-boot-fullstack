@@ -241,7 +241,7 @@ function useFriendsApi() {
     error,
     loading,
     fetchData: getFriends
-  } = useFetch(async (_, signal) => {
+  } = useFetch(async (_, { signal }) => {
     return await getFriendsApi(signal)
   }, false)
 

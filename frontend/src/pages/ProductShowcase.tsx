@@ -84,8 +84,8 @@ function useProduct() {
     loading,
     fetchData: getProduct,
     reset: resetGetProduct
-  } = useFetch(async (_, signal?: AbortSignal) => {
-    const response = await getRandomProductApi(signal)
+  } = useFetch(async (_, payload) => {
+    const response = await getRandomProductApi(payload)
 
     if (!response.error && response.data) {
       setCount((prev) => prev + 1)

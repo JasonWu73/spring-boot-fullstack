@@ -1,9 +1,8 @@
-import React, { createContext, useContext } from 'react'
+import React, { createContext, useContext, useState } from 'react'
 
 import { useFetch } from '@/hooks/use-fetch'
 import { type AuthResponse, loginApi } from '@/api/dummyjson/auth'
-import { useLocalStorageState } from '@/hooks/use-storage'
-import { encrypt } from '@/lib/rsa'
+import { decrypt, encrypt } from '@/lib/rsa'
 
 const PUBLIC_KEY =
   'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDIMy5tyS5o94hMLYCofIBKMD0GSREDz07hJk+uJ7CRg9IsIFBpkuuxvGfHBVMMHQZe6JRfpTLW/eSEzx5A3I6vmMs5ZfdjH+QIDvCFko7SWSYh34Vr+AR7fBHli1qwHornRdvH115NKoSm3c+RLjqZb+/RXI/9D4uVrZs7c7eV+wIDAQAB'
@@ -15,7 +14,7 @@ const PRIVATE_KEY =
 const STORAGE_KEY = 'demo-auth'
 
 type Auth = {
-  userId: number
+  id: number
   username: string
   password: string
   token: string
@@ -45,8 +44,23 @@ type AuthProviderProps = {
   children: React.ReactNode
 }
 
+function createInitialAuthState(): Auth | null {
+  const storageAuth = localStorage.getItem(STORAGE_KEY)
+
+  if (!storageAuth) {
+    return null
+  }
+
+  const encryptedAuth = JSON.parse(storageAuth)
+
+  const username = decrypt(PRIVATE_KEY, encryptedAuth.username)
+  const password = decrypt(PRIVATE_KEY, encryptedAuth.password)
+
+  return { ...encryptedAuth, username, password }
+}
+
 function AuthProvider({ children }: AuthProviderProps) {
-  const [auth, setAuth] = useLocalStorageState<Auth | null>(STORAGE_KEY, null)
+  const [auth, setAuth] = useState(createInitialAuthState)
 
   const { error, loading, login: sendLogin, resetLogin } = useLoginAPi()
 
@@ -63,13 +77,24 @@ function AuthProvider({ children }: AuthProviderProps) {
     }
 
     if (data) {
-      setAuth({
-        userId: data.id,
-        username: encrypt(PUBLIC_KEY, username),
-        password: encrypt(PUBLIC_KEY, password),
+      const authData = {
+        id: data.id,
+        username,
+        password,
         token: data.token,
         nickname: data.firstName + ' ' + data.lastName
-      })
+      }
+
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({
+          ...authData,
+          username: encrypt(PUBLIC_KEY, username),
+          password: encrypt(PUBLIC_KEY, password)
+        })
+      )
+
+      setAuth(authData)
 
       return { isOk: true }
     }
@@ -82,9 +107,23 @@ function AuthProvider({ children }: AuthProviderProps) {
   }
 
   function updateToken(token: string) {
-    if (auth) {
-      setAuth({ ...auth, token })
-    }
+    setAuth((prev) => {
+      if (!prev) {
+        return null
+      }
+
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({
+          ...prev,
+          token,
+          username: encrypt(PUBLIC_KEY, prev.username),
+          password: encrypt(PUBLIC_KEY, prev.password)
+        })
+      )
+
+      return { ...prev, token }
+    })
   }
 
   const value = {
@@ -120,18 +159,11 @@ function useLoginAPi() {
     loading,
     fetchData: login,
     reset: resetLogin
-  } = useFetch<AuthResponse, LoginParams>(async (params, signal) => {
+  } = useFetch<AuthResponse, LoginParams>(async (params, { signal }) => {
     return await loginApi(params!, signal)
   }, false)
 
   return { error, loading, login, resetLogin }
 }
 
-export {
-  AuthProvider,
-  useAuth,
-  STORAGE_KEY,
-  PUBLIC_KEY,
-  PRIVATE_KEY,
-  type Auth
-}
+export { AuthProvider, useAuth, type Auth }
