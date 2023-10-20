@@ -50,9 +50,7 @@ const formSchema = z
         return whoIsPayingOptions.map(({ value }) => value).includes(value)
       },
       {
-        message: `必须是有效的选项：${whoIsPayingOptions
-          .map(({ value }) => `"${value}"`)
-          .join(', ')}`
+        message: '必须是有效的选项：您 或 好友'
       }
     )
   })

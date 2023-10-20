@@ -1,5 +1,7 @@
 import React, { HTMLInputTypeAttribute } from 'react'
 import { type Control, type FieldValues, type Path } from 'react-hook-form'
+import { format } from 'date-fns'
+import { CalendarIcon } from '@radix-ui/react-icons'
 
 import {
   FormControl,
@@ -8,7 +10,7 @@ import {
   FormLabel,
   FormMessage
 } from '@/components/ui/Form'
-import { Input } from '@/components/ui/Input'
+import { Input, inputErrorClasses } from '@/components/ui/Input'
 import {
   Select,
   SelectContent,
@@ -16,6 +18,15 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/Select'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger
+} from '@/components/ui/Popover'
+import { Button } from '@/components/ui/Button'
+import { cn } from '@/lib/utils'
+import { Calendar } from '@/components/ui/Calendar'
+import { zhCN } from 'date-fns/locale'
 
 type FormInputProps<T extends FieldValues> = {
   control: Control<T>
@@ -37,7 +48,7 @@ function FormInput<T extends FieldValues>({
   type = 'text',
   placeholder,
   disabled,
-  isError,
+  isError = false,
   inputRef
 }: FormInputProps<T>) {
   return (
@@ -97,7 +108,7 @@ function FormSelect<T extends FieldValues>({
   options,
   placeholder,
   disabled,
-  isError
+  isError = false
 }: FormSelectProps<T>) {
   return (
     <FormField
@@ -135,4 +146,73 @@ function FormSelect<T extends FieldValues>({
   )
 }
 
-export { FormInput, FormSelect }
+type FormCalendarProps<T extends FieldValues> = Omit<
+  FormInputProps<T>,
+  'type'
+> & {
+  disabledWhen: (date: Date) => boolean
+}
+
+function FormCalendar<T extends FieldValues>({
+  control,
+  name,
+  label,
+  labelWidth,
+  placeholder,
+  isError = false,
+  disabledWhen
+}: FormCalendarProps<T>) {
+  return (
+    <FormField
+      control={control}
+      name={name}
+      render={({ field }) => (
+        <FormItem className="grid grid-flow-row items-center gap-2 lg:grid-cols-[auto_1fr]">
+          <FormLabel
+            style={{ width: labelWidth }}
+            className="overflow-hidden text-ellipsis whitespace-nowrap"
+          >
+            {label}
+          </FormLabel>
+
+          <Popover>
+            <PopoverTrigger asChild>
+              <FormControl className="bg-slate-100">
+                <Button
+                  variant="outline"
+                  className={cn(
+                    'pl-3 text-left font-normal',
+                    !field.value && 'text-muted-foreground',
+                    inputErrorClasses(isError)
+                  )}
+                >
+                  {field.value ? (
+                    format(field.value, 'yyyy-MM-dd')
+                  ) : (
+                    <span>{placeholder}</span>
+                  )}
+                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                </Button>
+              </FormControl>
+            </PopoverTrigger>
+
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar
+                locale={zhCN}
+                mode="single"
+                selected={field.value}
+                onSelect={field.onChange}
+                disabled={disabledWhen}
+                initialFocus
+              />
+            </PopoverContent>
+          </Popover>
+
+          <FormMessage className="lg:col-start-2 lg:col-end-3 lg:row-span-1" />
+        </FormItem>
+      )}
+    />
+  )
+}
+
+export { FormInput, FormSelect, FormCalendar }

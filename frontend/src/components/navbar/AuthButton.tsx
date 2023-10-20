@@ -24,7 +24,7 @@ function AuthButton() {
             {auth.nickname}
           </NavigationMenuTrigger>
           <NavigationMenuContent>
-            <ul className="grid w-40 grid-flow-row grid-cols-1 gap-1 px-4 py-2">
+            <ul className="grid w-40 grid-flow-row grid-cols-1 gap-1">
               <li>
                 <LogoutButton />
               </li>

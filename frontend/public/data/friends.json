@@ -5,7 +5,7 @@
     "image": "https://i.pravatar.cc/150?img=40",
     "balance": -10.5,
     "creditRating": 5,
-    "birthDate": "2023-01-20"
+    "birthday": "2023-01-20"
   },
   {
     "id": 2,
@@ -13,7 +13,7 @@
     "image": "https://i.pravatar.cc/400?img=29",
     "balance": 8.8,
     "creditRating": 3.5,
-    "birthDate": "2023-02-20"
+    "birthday": "2023-02-20"
   },
   {
     "id": 3,
@@ -21,6 +21,6 @@
     "image": "https://i.pravatar.cc/400?img=24",
     "balance": 0,
     "creditRating": 0,
-    "birthDate": "2023-03-20"
+    "birthday": "2023-03-20"
   }
 ]

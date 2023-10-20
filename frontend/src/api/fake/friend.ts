@@ -8,7 +8,7 @@ type Friend = {
   image: string
   balance: number
   creditRating: number
-  birthDate: string
+  birthday: string
 }
 
 async function getFriendsApi(

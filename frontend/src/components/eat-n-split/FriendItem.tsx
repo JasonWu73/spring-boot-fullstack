@@ -54,7 +54,7 @@ function FriendItem({ friend, onDeleteFriend }: FriendItemProps) {
               <span className="text-lg font-bold">
                 {name}
                 {` 🎂 `}
-                {friend.birthDate}
+                {friend.birthday}
               </span>
             </TooltipTrigger>
 

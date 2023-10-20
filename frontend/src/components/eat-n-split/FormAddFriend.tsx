@@ -5,14 +5,18 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@/components/ui/Button'
 import { Form } from '@/components/ui/Form'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
-import { FormInput } from '@/components/ui/CustomFormField'
+import { FormCalendar, FormInput } from '@/components/ui/CustomFormField'
 import { useTitle } from '@/hooks/use-title'
 import { type Friend } from '@/api/fake/friend'
 import { useFriends } from '@/components/eat-n-split/FriendProvider'
+import { format } from 'date-fns'
 
 const formSchema = z.object({
   name: z.string().nonempty('必须输入姓名'),
-  image: z.string().url({ message: '图片必须是有效的 URL' })
+  image: z.string().url({ message: '图片必须是有效的 URL' }),
+  birthday: z
+    .date({ required_error: '必须选择好友生日' })
+    .max(new Date(), '生日不能是未来的日期')
 })
 
 type FormSchema = z.infer<typeof formSchema>
@@ -24,19 +28,21 @@ function FormAddFriend() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: '',
-      image: '' // https://i.pravatar.cc/150?u=xxx
+      image: '', // https://i.pravatar.cc/150?u=xxx
+      birthday: undefined
     }
   })
 
   const { addFriend, setShowAddFriend } = useFriends()
 
   function onSubmit(values: FormSchema) {
-    const newFriendId = Date.now()
+    const newId = Date.now()
 
     const newFriend: Friend = {
-      id: newFriendId,
+      id: newId,
       name: values.name,
-      image: `${values.image}?u=${newFriendId}`,
+      image: `${values.image}?u=${newId}`,
+      birthday: format(values.birthday, 'yyyy-MM-dd'),
       balance: 0,
       creditRating: 0
     }
@@ -76,6 +82,18 @@ function FormAddFriend() {
               labelWidth={100}
               placeholder="图片网址"
               isError={form.getFieldState('image')?.invalid}
+            />
+
+            <FormCalendar
+              control={form.control}
+              name="birthday"
+              label="🎂 好友生日"
+              labelWidth={100}
+              placeholder="选择好友生日"
+              disabledWhen={(date) =>
+                date > new Date() || date < new Date('1900-01-01')
+              }
+              isError={form.getFieldState('birthday')?.invalid}
             />
 
             <Button type="submit" className="self-end">
