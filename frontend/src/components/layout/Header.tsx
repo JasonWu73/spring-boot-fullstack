@@ -3,15 +3,21 @@ import React from 'react'
 import { TopNavBar } from '@/components/layout/top-nav-bar/TopNavBar'
 import { cn } from '@/lib/utils'
 
-type HeaderProps = React.ComponentPropsWithoutRef<'header'>
+type HeaderProps = React.ComponentPropsWithoutRef<'header'> & {
+  showPanelFoldIcon?: boolean
+}
 
-function Header({ className, ...props }: HeaderProps) {
+function Header({
+  showPanelFoldIcon = false,
+  className,
+  ...props
+}: HeaderProps) {
   return (
     <header
       className={cn('dark:bg-night-2 bg-slate-800 text-snow-1', className)}
       {...props}
     >
-      <TopNavBar />
+      <TopNavBar showPanelFoldIcon={showPanelFoldIcon} />
     </header>
   )
 }

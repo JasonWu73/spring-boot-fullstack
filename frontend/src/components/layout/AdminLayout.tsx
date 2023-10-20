@@ -11,7 +11,7 @@ function AdminLayout() {
 
   return (
     <div className="grid min-h-screen grid-cols-[auto_1fr] grid-rows-[auto_1fr]">
-      <Header className="col-span-2 row-span-1" />
+      <Header showPanelFoldIcon={true} className="col-span-2 row-span-1" />
 
       <Aside
         className={cn(

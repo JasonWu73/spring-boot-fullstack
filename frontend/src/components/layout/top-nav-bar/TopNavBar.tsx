@@ -7,7 +7,11 @@ import { AuthButton } from '@/components/layout/top-nav-bar/AuthButton'
 import { MenuUnfoldIcon } from '@/components/ui/MenuUnfoldIcon'
 import { PanelFoldIcon } from '@/components/ui/PanelFoldIcon'
 
-function TopNavBar() {
+type TopNavBarProps = {
+  showPanelFoldIcon?: boolean
+}
+
+function TopNavBar({ showPanelFoldIcon = false }: TopNavBarProps) {
   const [isHamburgerOpen, setIsHamburgerOpen] = useState(false)
 
   function handleClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
@@ -23,11 +27,13 @@ function TopNavBar() {
       className="flex h-16 items-center justify-between gap-4 p-4"
     >
       <div className="flex items-center gap-4">
-        <PanelFoldIcon />
+        {showPanelFoldIcon && <PanelFoldIcon />}
+
         <Logo />
       </div>
 
       <PageNav isOpen={isHamburgerOpen} />
+
       <div className="flex gap-4">
         <AuthButton />
         <ModeToggle />
