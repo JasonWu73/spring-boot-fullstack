@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 
 import { ModeToggle } from '@/components/ui/ModeToggle'
-import { Logo } from '@/components/layout/top-navbar/Logo'
-import { PageNav } from '@/components/layout/top-navbar/PageNav'
-import { AuthButton } from '@/components/layout/top-navbar/AuthButton'
-import { HamburgerMenuIcon } from '@/components/layout/top-navbar/HamburgerMenuIcon'
+import { Logo } from '@/components/layout/top-nav-bar/Logo'
+import { PageNav } from '@/components/layout/top-nav-bar/PageNav'
+import { AuthButton } from '@/components/layout/top-nav-bar/AuthButton'
+import { MenuUnfoldIcon } from '@/components/ui/MenuUnfoldIcon'
+import { PanelFoldIcon } from '@/components/ui/PanelFoldIcon'
 
 function TopNavBar() {
   const [isHamburgerOpen, setIsHamburgerOpen] = useState(false)
@@ -21,12 +22,16 @@ function TopNavBar() {
       onClick={handleClick}
       className="flex h-16 items-center justify-between gap-4 p-4"
     >
-      <Logo />
-      <PageNav isHamburgerOpen={isHamburgerOpen} />
+      <div className="flex items-center gap-4">
+        <PanelFoldIcon />
+        <Logo />
+      </div>
+
+      <PageNav isOpen={isHamburgerOpen} />
       <div className="flex gap-4">
         <AuthButton />
         <ModeToggle />
-        <HamburgerMenuIcon
+        <MenuUnfoldIcon
           isOpen={isHamburgerOpen}
           onToggle={setIsHamburgerOpen}
         />

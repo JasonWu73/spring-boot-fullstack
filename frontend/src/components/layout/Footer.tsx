@@ -8,7 +8,7 @@ function Footer({ className, ...props }: FooterProps) {
   return (
     <footer
       className={cn(
-        'sticky top-[100vh] bg-slate-100 dark:bg-slate-700 dark:text-snow-1',
+        'dark:bg-night-2 sticky top-[100vh] bg-slate-100 dark:text-snow-1',
         className
       )}
       {...props}

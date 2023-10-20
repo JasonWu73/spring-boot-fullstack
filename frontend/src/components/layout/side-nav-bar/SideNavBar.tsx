@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils'
 
 function SideNavBar() {
   return (
-    <nav className="hidden md:flex md:w-48 md:flex-col md:items-center md:justify-center md:gap-2">
+    <nav className="flex w-48 flex-col items-center justify-center gap-2">
       <h2 className="font-semibold text-slate-400">后端交互</h2>
       <ul>
         <li>

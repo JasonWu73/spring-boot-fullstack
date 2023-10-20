@@ -8,10 +8,10 @@ import React from 'react'
 import { NavLink } from 'react-router-dom'
 
 type PageNavProps = {
-  isHamburgerOpen: boolean
+  isOpen: boolean
 }
 
-function PageNav({ isHamburgerOpen }: PageNavProps) {
+function PageNav({ isOpen }: PageNavProps) {
   return (
     <>
       <NavigationMenu className="hidden max-w-full justify-start lg:flex">
@@ -22,9 +22,9 @@ function PageNav({ isHamburgerOpen }: PageNavProps) {
 
       <NavigationMenu
         className={cn(
-          'absolute left-0 top-16 z-50 h-[calc(100%-4rem)] w-full max-w-full -translate-x-full transform items-start bg-slate-950 transition duration-500 dark:bg-slate-700 lg:hidden',
+          'dark:bg-night-2 absolute left-0 top-16 z-50 h-[calc(100%-4rem)] w-full max-w-full -translate-x-full transform items-start bg-slate-950 transition duration-500 lg:hidden',
           {
-            'translate-x-0': isHamburgerOpen
+            'translate-x-0': isOpen
           }
         )}
       >

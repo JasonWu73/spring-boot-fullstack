@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { TopNavBar } from '@/components/layout/top-navbar/TopNavBar'
+import { TopNavBar } from '@/components/layout/top-nav-bar/TopNavBar'
 import { cn } from '@/lib/utils'
 
 type HeaderProps = React.ComponentPropsWithoutRef<'header'>
@@ -8,7 +8,7 @@ type HeaderProps = React.ComponentPropsWithoutRef<'header'>
 function Header({ className, ...props }: HeaderProps) {
   return (
     <header
-      className={cn('bg-slate-800 text-snow-1 dark:bg-slate-700', className)}
+      className={cn('dark:bg-night-2 bg-slate-800 text-snow-1', className)}
       {...props}
     >
       <TopNavBar />

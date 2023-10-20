@@ -10,8 +10,8 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger
 } from '@/components/ui/NavigationMenu'
-import { LoginButton } from '@/components/layout/top-navbar/LoginButton'
-import { LogoutButton } from '@/components/layout/top-navbar/LogoutButton'
+import { LoginButton } from '@/components/layout/top-nav-bar/LoginButton'
+import { LogoutButton } from '@/components/layout/top-nav-bar/LogoutButton'
 import { buttonVariants } from '@/components/ui/Button'
 import { cn } from '@/lib/utils'
 

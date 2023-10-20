@@ -5,6 +5,9 @@ type Theme = 'dark' | 'light' | 'system'
 type ThemeProviderState = {
   theme: Theme
   setTheme: (theme: Theme) => void
+
+  folded: boolean
+  setFolded: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const ThemeProviderContext = createContext({} as ThemeProviderState)
@@ -24,18 +27,25 @@ function ThemeProvider({
   storageKey = 'app-ui-theme',
   ...props
 }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(
+  const [theme, setTheme] = useState(
     () => (localStorage.getItem(storageKey) as Theme) || defaultTheme
   )
 
   useApplyTheme(theme)
+
+  const [folded, setFolded] = useState(false)
+
+  useSmallScreen(folded, setFolded)
 
   const value = {
     theme,
     setTheme: (theme: Theme) => {
       localStorage.setItem(storageKey, theme)
       setTheme(theme)
-    }
+    },
+
+    folded,
+    setFolded
   }
 
   return (
@@ -94,6 +104,29 @@ function handleToggleTheme(event: MediaQueryListEvent) {
   }
 
   applyTheme('light')
+}
+
+function useSmallScreen(
+  folded: boolean,
+  setFolded: React.Dispatch<React.SetStateAction<boolean>>
+) {
+  useEffect(() => {
+    const smallScreen = window.matchMedia('(max-width: 640px)')
+
+    if (smallScreen.matches) {
+      setFolded(true)
+    }
+
+    function handleScreenChange(event: MediaQueryListEvent) {
+      setFolded(event.matches)
+    }
+
+    smallScreen.addEventListener('change', handleScreenChange)
+
+    return () => {
+      smallScreen.removeEventListener('change', handleScreenChange)
+    }
+  }, [folded, setFolded])
 }
 
 export { ThemeProvider, useTheme }
