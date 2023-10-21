@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import {
   ExclamationTriangleIcon,
@@ -12,7 +12,7 @@ import { Card } from '@/components/ui/Card'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/Alert'
 import { useToast } from '@/components/ui/use-toast'
 import { FriendItem } from '@/components/eat-n-split/FriendItem'
-import { FriendSearch, SEARCH_KEY } from '@/components/eat-n-split/FriendSearch'
+import { FriendSearch, KEY_SEARCH } from '@/components/eat-n-split/FriendSearch'
 import { type Friend } from '@/api/fake/friend'
 import { useFriends } from '@/components/eat-n-split/FriendProvider'
 import { useRefresh } from '@/hooks/use-refresh'
@@ -22,12 +22,12 @@ function FriendList() {
     friends,
     errorFriends: error,
     loadingFriends: loading,
-    getFriends,
+    fetchFriends,
     deleteFriend
   } = useFriends()
 
   const [searchParams] = useSearchParams()
-  const nameQuery = searchParams.get(SEARCH_KEY)
+  const nameQuery = searchParams.get(KEY_SEARCH)
 
   const filteredFriends = nameQuery
     ? friends.filter((f) =>
@@ -37,16 +37,16 @@ function FriendList() {
 
   const location = useLocation()
 
-  useEffect(() => {
-    getFriends().then()
-  }, [])
-
   useRefresh(() => {
     if (nameQuery !== null || location.state?.noRefresh === true) {
       return
     }
 
-    getFriends().then()
+    const controller = fetchFriends()
+
+    return () => {
+      controller.abort()
+    }
   })
 
   const { toast } = useToast()

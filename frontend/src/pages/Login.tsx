@@ -18,6 +18,7 @@ import { useToast } from '@/components/ui/use-toast'
 import { useTitle } from '@/hooks/use-title'
 import { useRefresh } from '@/hooks/use-refresh'
 import { useAuth } from '@/components/auth/AuthProvider'
+import { useEffect } from 'react'
 
 const USERNAME = 'jissetts'
 const PASSWORD = 'ePawWgrnZR8L'
@@ -42,13 +43,21 @@ function Login() {
 
   const { toast, dismiss } = useToast()
 
-  const { auth, error, loading, login, resetLogin } = useAuth()
+  const { auth, error, loading, login, resetFetchLogin } = useAuth()
 
   useRefresh(() => {
     form.reset()
-    resetLogin()
+    resetFetchLogin()
     dismiss()
   })
+
+  useEffect(() => {
+    toast({
+      title: '登录失败',
+      description: error,
+      variant: 'destructive'
+    })
+  }, [error])
 
   const location = useLocation()
   const originUrl = location.state?.from || '/admin'
@@ -57,18 +66,8 @@ function Login() {
     return <Navigate to={originUrl} replace />
   }
 
-  async function onSubmit(values: FormSchema) {
-    const response = await login(values.username, values.password)
-
-    if (response.isOk) {
-      return
-    }
-
-    toast({
-      title: '登录失败',
-      description: response.message,
-      variant: 'destructive'
-    })
+  function onSubmit(values: FormSchema) {
+    login(values.username, values.password)
   }
 
   return (

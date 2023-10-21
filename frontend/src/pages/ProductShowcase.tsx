@@ -11,12 +11,32 @@ import { useRefresh } from '@/hooks/use-refresh'
 function ProductShowcase() {
   useTitle('产品展示')
 
-  const { product, count, error, loading, getProduct, resetGetProduct } =
-    useProduct()
+  const [count, setCount] = useState(0)
+
+  const {
+    data: fetchedProduct,
+    loading,
+    error,
+    fetchData: fetchProduct,
+    reset: resetFetchProduct
+  } = useFetch(async (payload) => {
+    const response = await getRandomProductApi(payload)
+
+    if (!response.error && response.data) {
+      setCount((prev) => prev + 1)
+    }
+
+    return response
+  })
 
   useRefresh(() => {
-    resetGetProduct()
-    getProduct().then()
+    resetFetchProduct()
+
+    const controller = fetchProduct()
+
+    return () => {
+      controller.abort()
+    }
   })
 
   return (
@@ -25,18 +45,22 @@ function ProductShowcase() {
 
       {!loading && error && <Title label={error} isError />}
 
-      {!loading && product && (
+      {!loading && fetchedProduct && (
         <>
-          <Title label={product.title} />
+          <Title label={fetchedProduct.title} />
           <img
-            src={product.thumbnail}
-            alt={product.title}
+            src={fetchedProduct.thumbnail}
+            alt={fetchedProduct.title}
             className="h-32 w-32 rounded-full border border-gray-300 object-cover shadow-sm"
           />
         </>
       )}
 
-      <Button onClick={() => getProduct()} className="my-4" disabled={loading}>
+      <Button
+        onClick={() => fetchProduct()}
+        className="my-4"
+        disabled={loading}
+      >
         {loading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
         获取商品
       </Button>
@@ -73,28 +97,6 @@ function Message({ count }: MessageProps) {
       已加载 <strong>{count}</strong> 个商品
     </p>
   )
-}
-
-function useProduct() {
-  const [count, setCount] = useState(0)
-
-  const {
-    data: product,
-    error,
-    loading,
-    fetchData: getProduct,
-    reset: resetGetProduct
-  } = useFetch(async (_, payload) => {
-    const response = await getRandomProductApi(payload)
-
-    if (!response.error && response.data) {
-      setCount((prev) => prev + 1)
-    }
-
-    return response
-  })
-
-  return { product, count, error, loading, getProduct, resetGetProduct }
 }
 
 export { ProductShowcase }

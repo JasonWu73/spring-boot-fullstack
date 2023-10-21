@@ -16,32 +16,36 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/Card'
-import { useFetch } from '@/hooks/use-fetch2'
+import { useFetch } from '@/hooks/use-fetch'
 import { getUsersApi } from '@/api/dummyjson/user'
-import { useRefresh } from '@/hooks/use-refresh2'
+import { useRefresh } from '@/hooks/use-refresh'
 import { Loading } from '@/components/ui/Loading'
+
+const KEY_PAGE_NUM = 'p'
+const KEY_PAGE_SIZE = 's'
+const KEY_QUERY = 'q'
 
 const DEFAULT_PAGE_NUM = 1
 const DEFAULT_PAGE_SIZE = 10
 
 function UserList() {
   const [searchParams, setSearchParams] = useSearchParams()
-  const pageNum = Number(searchParams.get('pageNum')) || DEFAULT_PAGE_NUM
-  const pageSize = Number(searchParams.get('pageSize')) || DEFAULT_PAGE_SIZE
-  const query = searchParams.get('q') || ''
+  const pageNum = Number(searchParams.get(KEY_PAGE_NUM)) || DEFAULT_PAGE_NUM
+  const pageSize = Number(searchParams.get(KEY_PAGE_SIZE)) || DEFAULT_PAGE_SIZE
+  const query = searchParams.get(KEY_QUERY) || ''
 
   const {
-    data: usersData,
+    data: fetchedUsers,
     error,
     loading,
-    fetchData: getUsers,
-    reset: resetGetUsers
+    fetchData: fetchUsers,
+    reset: resetFetchUsers
   } = useFetch(getUsersApi)
 
   useRefresh(() => {
-    resetGetUsers()
+    resetFetchUsers()
 
-    const controller = getUsers({ pageNum, pageSize, query })
+    const controller = fetchUsers({ pageNum, pageSize, query })
 
     return () => {
       controller.abort()
@@ -64,7 +68,7 @@ function UserList() {
             <Table>
               {error && <TableCaption>{error}</TableCaption>}
 
-              {usersData && (
+              {fetchedUsers && (
                 <>
                   <TableHeader>
                     <TableRow>
@@ -76,7 +80,7 @@ function UserList() {
                   </TableHeader>
 
                   <TableBody>
-                    {usersData.users.map((user) => (
+                    {fetchedUsers.users.map((user) => (
                       <TableRow key={user.id}>
                         <TableCell className="font-medium">{user.id}</TableCell>
                         <TableCell>

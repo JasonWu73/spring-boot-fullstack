@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer } from 'react'
+import React, { createContext, useContext, useEffect, useReducer } from 'react'
 
 import { type Friend, getFriendsApi } from '@/api/fake/friend'
 import { useFetch } from '@/hooks/use-fetch'
@@ -8,15 +8,21 @@ const STORAGE_KEY = 'demo-friends'
 
 type NewFriend = Omit<Friend, 'id'>
 
+type FetchFriendParams = {
+  id: number
+}
+
 type FriendProviderState = {
   friends: Friend[]
   errorFriends: string
   loadingFriends: boolean
+  fetchFriends: () => AbortController
+
   curFriend: Friend | null
   errorFriend: string
   loadingFriend: boolean
-  getFriends: () => Promise<void>
-  getFriend: (id: number) => Promise<void>
+  fetchFriend: (params: FetchFriendParams) => AbortController
+
   addFriend: (friend: NewFriend) => void
   deleteFriend: (id: number) => void
 
@@ -146,38 +152,55 @@ function FriendProvider({ children }: FriendProviderProps) {
   )
 
   const {
+    data: fetchedFriends,
     error: errorFriends,
     loading: loadingFriends,
-    getFriends: sendGetFriends
-  } = useFriendsApi()
+    fetchData: fetchFriends
+  } = useFetch(getFriendsApi)
 
-  async function getFriends() {
-    const { data } = await sendGetFriends()
-
-    if (data) {
-      dispatch({ type: 'friends/loaded', payload: data })
+  useEffect(() => {
+    if (fetchedFriends) {
+      dispatch({ type: 'friends/loaded', payload: fetchedFriends })
       return
     }
 
     dispatch({ type: 'friends/loaded', payload: [] })
-  }
+  }, [JSON.stringify(fetchedFriends)])
 
   const {
+    data: fetchedFriend,
     error: errorFriend,
     loading: loadingFriend,
-    getFriend: fakeGetFriend
-  } = useFriendApi()
+    fetchData: fetchFriend
+  } = useFetch<Friend, FetchFriendParams>(async (_, params) => {
+    if (!params) {
+      return { data: null, error: '未传入参数' }
+    }
 
-  async function getFriend(id: number) {
-    const { data } = await fakeGetFriend(id)
+    // 仅为了模拟查看骨架屏的效果
+    await wait(1)
 
-    if (data) {
-      dispatch({ type: 'friends/selected', payload: data })
+    const friends = JSON.parse(
+      localStorage.getItem(STORAGE_KEY) || '[]'
+    ) as Friend[]
+
+    const friend = friends.find((f) => f.id === params.id)
+
+    if (friend) {
+      return { data: friend, error: '' }
+    }
+
+    return { data: null, error: '未找到好友数据' }
+  })
+
+  useEffect(() => {
+    if (fetchedFriend) {
+      dispatch({ type: 'friends/selected', payload: fetchedFriend })
       return
     }
 
     dispatch({ type: 'friends/selected', payload: null })
-  }
+  }, [JSON.stringify(fetchedFriend)])
 
   function addFriend(friend: NewFriend) {
     dispatch({
@@ -206,15 +229,19 @@ function FriendProvider({ children }: FriendProviderProps) {
     friends,
     errorFriends,
     loadingFriends,
+    fetchFriends,
+
     curFriend,
     errorFriend,
     loadingFriend,
-    getFriends,
-    getFriend,
+    fetchFriend,
+
     addFriend,
     deleteFriend,
+
     showAddFriend,
     setShowAddFriend,
+
     splitBill,
     setCredit
   }
@@ -234,43 +261,6 @@ function useFriends() {
   }
 
   return context
-}
-
-function useFriendsApi() {
-  const {
-    error,
-    loading,
-    fetchData: getFriends
-  } = useFetch(async (_, { signal }) => {
-    return await getFriendsApi(signal)
-  }, false)
-
-  return { error, loading, getFriends }
-}
-
-function useFriendApi() {
-  const {
-    error,
-    loading,
-    fetchData: getFriend
-  } = useFetch<Friend, number>(async (id) => {
-    // 仅为了模拟查看骨架屏的效果
-    await wait(1)
-
-    const friends = JSON.parse(
-      localStorage.getItem(STORAGE_KEY) || '[]'
-    ) as Friend[]
-
-    const friend = friends.find((f) => f.id === id)
-
-    if (friend) {
-      return { data: friend, error: '' }
-    }
-
-    return { data: null, error: '未找到好友数据' }
-  }, false)
-
-  return { error, loading, getFriend }
 }
 
 export { FriendProvider, useFriends }

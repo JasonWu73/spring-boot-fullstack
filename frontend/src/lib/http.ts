@@ -1,6 +1,6 @@
 type ContentType = 'JSON' | 'FORM' | 'FILE'
 
-type UrlData = Record<string, string | number | boolean>
+type UrlData = Record<string, string | number | boolean | undefined | null>
 type BodyData = Record<string, unknown> | FormData
 
 type Request = {
@@ -89,7 +89,7 @@ function appendParamsToUrl({ url, urlData }: UrlInfo) {
   const urlObj = new URL(url)
   urlData &&
     Object.keys(urlData).forEach((key) =>
-      urlObj.searchParams.append(key, urlData[key].toString())
+      urlObj.searchParams.append(key, urlData[key]?.toString() ?? '')
     )
   return urlObj.toString()
 }
@@ -143,7 +143,8 @@ function getBody({ contentType, bodyData }: RequestBody) {
 function getUrlEncodedData(bodyData: UrlData) {
   return Object.keys(bodyData)
     .map(
-      (key) => encodeURIComponent(key) + '=' + encodeURIComponent(bodyData[key])
+      (key) =>
+        encodeURIComponent(key) + '=' + encodeURIComponent(bodyData[key] ?? '')
     )
     .join('&')
 }

@@ -25,6 +25,7 @@ import {
 import { useTitle } from '@/hooks/use-title'
 import { useFriends } from '@/components/eat-n-split/FriendProvider'
 import { FormSplitBillError } from '@/components/eat-n-split/FormSplitBillError'
+import { useRefresh } from '@/hooks/use-refresh'
 
 const whoIsPayingOptions = [
   { value: 'user', label: '您' },
@@ -93,7 +94,7 @@ function FormSplitBill() {
     curFriend: friend,
     errorFriend: error,
     loadingFriend: loading,
-    getFriend,
+    fetchFriend,
     setCredit,
     splitBill
   } = useFriends()
@@ -101,7 +102,10 @@ function FormSplitBill() {
   const params = useParams()
   const id = Number(params.friendId)
 
-  useIdChanged(id, form.reset, getFriend)
+  useRefresh(() => {
+    form.reset()
+    fetchFriend({ id })
+  })
 
   const navigate = useNavigate()
 
@@ -243,17 +247,6 @@ function useWatchExpense(form: UseFormReturn<FormSchema>) {
 
     setValue('friendExpense', Number((nBill - nUserExpense).toFixed(2)))
   }, [bill, userExpense, setValue])
-}
-
-function useIdChanged(
-  friendId: number,
-  resetForm: (values?: Partial<FormSchema>) => void,
-  getFriend: (id: number) => Promise<void>
-) {
-  useEffect(() => {
-    resetForm()
-    getFriend(friendId).then()
-  }, [friendId])
 }
 
 export { FormSplitBill }

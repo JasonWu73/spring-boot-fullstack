@@ -1,7 +1,7 @@
-import React, { createContext, useContext, useState } from 'react'
+import React, { createContext, useContext, useEffect, useState } from 'react'
 
 import { useFetch } from '@/hooks/use-fetch'
-import { type AuthResponse, loginApi } from '@/api/dummyjson/auth'
+import { loginApi } from '@/api/dummyjson/auth'
 import { decrypt, encrypt } from '@/lib/rsa'
 
 const PUBLIC_KEY =
@@ -21,19 +21,12 @@ type Auth = {
   nickname: string
 }
 
-type LoginParams = {
-  username: string
-  password: string
-}
-
-type LoginMessage = { isOk: true } | { isOk: false; message: string }
-
 type AuthProviderState = {
   auth: Auth | null
   error: string
   loading: boolean
-  login: (username: string, password: string) => Promise<LoginMessage>
-  resetLogin: () => void
+  login: (username: string, password: string) => void
+  resetFetchLogin: () => void
   logout: () => void
   updateToken: (token: string) => void
 }
@@ -62,44 +55,43 @@ function createInitialAuthState(): Auth | null {
 function AuthProvider({ children }: AuthProviderProps) {
   const [auth, setAuth] = useState(createInitialAuthState)
 
-  const { error, loading, login: sendLogin, resetLogin } = useLoginAPi()
+  const {
+    data: fetchedAuth,
+    error,
+    loading,
+    fetchData: fetchLogin,
+    reset: resetFetchLogin
+  } = useFetch(loginApi)
 
-  async function login(
-    username: string,
-    password: string
-  ): Promise<LoginMessage> {
-    const { data, error } = await sendLogin({ username, password })
-
+  useEffect(() => {
     if (error) {
       setAuth(null)
-
-      return { isOk: false, message: error }
     }
 
-    if (data) {
+    if (fetchedAuth) {
       const authData = {
-        id: data.id,
-        username,
-        password,
-        token: data.token,
-        nickname: data.firstName + ' ' + data.lastName
+        id: fetchedAuth.id,
+        username: fetchedAuth.username,
+        password: fetchedAuth.password,
+        token: fetchedAuth.token,
+        nickname: fetchedAuth.firstName + ' ' + fetchedAuth.lastName
       }
 
       localStorage.setItem(
         STORAGE_KEY,
         JSON.stringify({
           ...authData,
-          username: encrypt(PUBLIC_KEY, username),
-          password: encrypt(PUBLIC_KEY, password)
+          username: encrypt(PUBLIC_KEY, fetchedAuth.username),
+          password: encrypt(PUBLIC_KEY, fetchedAuth.password)
         })
       )
 
       setAuth(authData)
-
-      return { isOk: true }
     }
+  }, [error, JSON.stringify(fetchedAuth)])
 
-    return { isOk: false, message: '登录失败' }
+  function login(username: string, password: string): void {
+    fetchLogin({ username, password })
   }
 
   function logout() {
@@ -131,7 +123,7 @@ function AuthProvider({ children }: AuthProviderProps) {
     error,
     loading,
     login,
-    resetLogin,
+    resetFetchLogin,
     logout,
     updateToken
   }
@@ -151,19 +143,6 @@ function useAuth() {
   }
 
   return context
-}
-
-function useLoginAPi() {
-  const {
-    error,
-    loading,
-    fetchData: login,
-    reset: resetLogin
-  } = useFetch<AuthResponse, LoginParams>(async (params, { signal }) => {
-    return await loginApi(params!, signal)
-  }, false)
-
-  return { error, loading, login, resetLogin }
 }
 
 export { AuthProvider, useAuth, type Auth }

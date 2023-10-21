@@ -1,4 +1,8 @@
-import type { ApiResponse, FetchPayload, ReLogin } from '@/hooks/use-fetch'
+import {
+  type ApiResponse,
+  type FetchPayload,
+  type ReLogin
+} from '@/hooks/use-fetch'
 import { sendRequest, type Request } from '@/lib/http'
 
 const BASE_URL = 'https://dummyjson.com/auth'
@@ -22,6 +26,10 @@ type AuthResponse = {
   token: string
 }
 
+type LoginResult = AuthResponse & {
+  password: string
+}
+
 type LoginParams = {
   username: string
   password: string
@@ -29,9 +37,15 @@ type LoginParams = {
 }
 
 async function loginApi(
-  { username, password }: LoginParams,
-  signal?: AbortSignal
-): Promise<ApiResponse<AuthResponse>> {
+  payload: FetchPayload,
+  params?: LoginParams
+): Promise<ApiResponse<LoginResult>> {
+  if (!params) {
+    return { data: null, error: '未传入参数' }
+  }
+
+  const { username, password } = params
+
   const { data, error } = await sendRequest<AuthResponse, ApiError>({
     url: `${BASE_URL}/login`,
     method: 'POST',
@@ -40,7 +54,7 @@ async function loginApi(
       password: password,
       expiresInMins: EXPIRES_IN_MINS
     },
-    signal: signal
+    signal: payload.signal
   })
 
   if (error) {
@@ -51,7 +65,9 @@ async function loginApi(
     return { data: null, error: error.message }
   }
 
-  return { data, error: '' }
+  const result = { ...data, password } as LoginResult
+
+  return { data: result, error: '' }
 }
 
 type SendRequestWrapper = Omit<Request, 'signal'> & {
@@ -99,7 +115,10 @@ async function sendAuthDummyJsonApi<T>({
     error.name === 'TokenExpiredError' || error.name === 'JsonWebTokenError'
 
   if (!reLogin && authFailed) {
-    const { data, error } = await tryReLogin(auth.username, auth.password)
+    const { data, error } = await tryReLogin(payload, {
+      username: auth.username,
+      password: auth.password
+    })
 
     if (error) {
       return { data: null, error, reLogin: { isOk: false } }
@@ -121,8 +140,8 @@ async function sendAuthDummyJsonApi<T>({
   return { data: null, error: error.message }
 }
 
-async function tryReLogin(username: string, password: string) {
-  const { data, error } = await loginApi({ username, password })
+async function tryReLogin(payload: FetchPayload, params: LoginParams) {
+  const { data, error } = await loginApi(payload, params)
 
   if (error) {
     return { data: null, error }
@@ -131,4 +150,4 @@ async function tryReLogin(username: string, password: string) {
   return { data, error }
 }
 
-export { loginApi, sendAuthDummyJsonApi, type AuthResponse }
+export { loginApi, sendAuthDummyJsonApi }

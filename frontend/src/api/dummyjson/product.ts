@@ -1,4 +1,4 @@
-import type { ApiResponse, FetchPayload } from '@/hooks/use-fetch'
+import { type ApiResponse, type FetchPayload } from '@/hooks/use-fetch'
 import { sendAuthDummyJsonApi } from '@/api/dummyjson/auth'
 
 type Product = {

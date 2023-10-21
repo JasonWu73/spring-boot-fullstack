@@ -1,4 +1,4 @@
-import type { ApiResponse, FetchPayload } from '@/hooks/use-fetch'
+import { type ApiResponse, type FetchPayload } from '@/hooks/use-fetch'
 import { sendAuthDummyJsonApi } from '@/api/dummyjson/auth'
 
 type User = {
@@ -26,9 +26,15 @@ type GetUsersParams = {
 }
 
 async function getUsersApi(
-  { pageNum, pageSize, query }: GetUsersParams,
-  payload: FetchPayload
+  payload: FetchPayload,
+  params?: GetUsersParams
 ): Promise<ApiResponse<UserPagination>> {
+  if (!params) {
+    return { data: null, error: '未传入参数' }
+  }
+
+  const { pageNum, pageSize, query } = params
+
   return await sendAuthDummyJsonApi<UserPagination>({
     payload,
     url: `users/search?select=id,firstName,lastName,email,username,password,birthDate,image`,

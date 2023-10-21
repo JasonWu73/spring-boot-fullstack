@@ -1,28 +1,26 @@
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 
-let prevKey = ''
+type Cleanup = () => void
+type ReturnCleanup = void | Cleanup
+
+type RefreshCallback = () => ReturnCleanup
 
 /**
- * 当 URL 状态改变时（即哪怕点击了相同的 React Router Link）触发的刷新回调。
+ * 当 URL 状态改变时（即哪怕点击了相同的 React Router Link）也会触发的刷新回调。
  *
- * @param callback - 刷新组件状态的回调函数
+ * @param callback - 刷新组件状态的回调函数，可以返回清理函数
  */
-function useRefresh(callback: () => void) {
+function useRefresh(callback: RefreshCallback) {
   const location = useLocation()
-  const canReload = useRef(false)
 
   useEffect(() => {
-    const curKey = location.key
-    const keyChanged = !!prevKey && prevKey !== curKey
-
-    if (keyChanged && canReload.current) {
-      callback()
-    }
+    const cleanup = callback()
 
     return () => {
-      prevKey = curKey
-      canReload.current = true
+      if (cleanup) {
+        cleanup()
+      }
     }
   }, [location.key])
 }
