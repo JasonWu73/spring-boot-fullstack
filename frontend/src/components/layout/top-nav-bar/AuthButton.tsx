@@ -32,10 +32,10 @@ function AuthButton() {
 
           <NavigationMenuContent>
             <ul className="grid min-w-max grid-flow-row grid-cols-1 gap-1 py-2">
-              <LinkItem to="/admin">
+              <NavItem link="/admin">
                 <LayoutDashboard className="h-4 w-4" />
                 管理后台
-              </LinkItem>
+              </NavItem>
 
               <li>
                 <LogoutButton />
@@ -48,16 +48,16 @@ function AuthButton() {
   )
 }
 
-type LinkItemProps = {
+type NavItemProps = {
   children: React.ReactNode
-  to: string
+  link: string
 }
 
-function LinkItem({ children, to }: LinkItemProps) {
+function NavItem({ children, link }: NavItemProps) {
   return (
     <li>
       <Link
-        to={to}
+        to={link}
         className={cn(
           buttonVariants({ variant: 'link' }),
           'grid w-full grid-cols-[auto_1fr] gap-2'
