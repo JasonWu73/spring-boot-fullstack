@@ -4,27 +4,30 @@ import { FolderCog, UserCog2 } from 'lucide-react'
 
 import { Separator } from '@/components/ui/Separator'
 import { cn } from '@/lib/utils'
+import { ScrollArea } from '@/components/ui/ScrollArea'
 
 function SideNavBar() {
   return (
-    <nav className="flex w-48 flex-col items-center justify-center gap-2">
-      <h2 className="font-semibold text-slate-400">后端交互</h2>
-      <Menu>
-        <MenuItem link="/users">
-          <UserCog2 className="h-5 w-5" />
-          用户列表
-        </MenuItem>
-      </Menu>
+    <ScrollArea className="h-[calc(100vh-4rem)] w-48">
+      <nav className="flex flex-col items-center justify-center gap-2">
+        <h2 className="font-semibold text-slate-400">后端交互</h2>
+        <Menu>
+          <MenuItem link="/users">
+            <UserCog2 className="h-5 w-5" />
+            用户列表
+          </MenuItem>
+        </Menu>
 
-      <MenuSeparator />
-      <h2 className="font-semibold text-slate-400">前端存储</h2>
-      <Menu>
-        <MenuItem link="/menus">
-          <FolderCog className="h-4 w-4" />
-          菜单权限
-        </MenuItem>
-      </Menu>
-    </nav>
+        <MenuSeparator />
+        <h2 className="font-semibold text-slate-400">前端存储</h2>
+        <Menu>
+          <MenuItem link="/menus">
+            <FolderCog className="h-4 w-4" />
+            菜单权限
+          </MenuItem>
+        </Menu>
+      </nav>
+    </ScrollArea>
   )
 }
 

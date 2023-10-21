@@ -22,7 +22,7 @@ function PageNav({ isOpen }: PageNavProps) {
 
       <NavigationMenu
         className={cn(
-          'dark:bg-night-2 absolute left-0 top-16 z-50 h-[calc(100%-4rem)] w-full max-w-full -translate-x-full transform items-start bg-slate-950 transition duration-500 lg:hidden',
+          'dark:bg-night-2 absolute left-0 top-16 z-50 h-[calc(100%-4rem)] w-full max-w-full -translate-x-full transform items-start bg-slate-950 pt-4 transition duration-500 lg:hidden',
           {
             'translate-x-0': isOpen
           }

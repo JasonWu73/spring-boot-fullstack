@@ -35,7 +35,7 @@ function ThemeProvider({
 
   const [folded, setFolded] = useState(false)
 
-  useSmallScreen(folded, setFolded)
+  useSmallScreenFold(setFolded)
 
   const value = {
     theme,
@@ -87,27 +87,7 @@ function useApplyTheme(theme: Theme) {
   }, [theme])
 }
 
-function resetTheme() {
-  document.documentElement.classList.remove('light', 'dark')
-}
-
-function applyTheme(theme: Theme) {
-  document.documentElement.classList.add(theme)
-}
-
-function handleToggleTheme(event: MediaQueryListEvent) {
-  resetTheme()
-
-  if (event.matches) {
-    applyTheme('dark')
-    return
-  }
-
-  applyTheme('light')
-}
-
-function useSmallScreen(
-  folded: boolean,
+function useSmallScreenFold(
   setFolded: React.Dispatch<React.SetStateAction<boolean>>
 ) {
   useEffect(() => {
@@ -126,7 +106,26 @@ function useSmallScreen(
     return () => {
       smallScreen.removeEventListener('change', handleScreenChange)
     }
-  }, [folded, setFolded])
+  }, [])
+}
+
+function resetTheme() {
+  document.documentElement.classList.remove('light', 'dark')
+}
+
+function applyTheme(theme: Theme) {
+  document.documentElement.classList.add(theme)
+}
+
+function handleToggleTheme(event: MediaQueryListEvent) {
+  resetTheme()
+
+  if (event.matches) {
+    applyTheme('dark')
+    return
+  }
+
+  applyTheme('light')
 }
 
 export { ThemeProvider, useTheme }
