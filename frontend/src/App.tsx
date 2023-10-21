@@ -15,6 +15,7 @@ import { MainLayout } from '@/components/layout/MainLayout'
 import { AdminLayout } from '@/components/layout/AdminLayout'
 import { LoginLayout } from '@/components/layout/LoginLayout'
 import { SecureRoute } from '@/components/auth/SecureRoute'
+import { UserList } from '@/pages/UserList'
 
 // ----- 开始：测试 React Router 懒加载（React Split Code 技术）-----
 const FormSplitBill = lazy(() =>
@@ -66,7 +67,7 @@ export default function App() {
           <Route element={<AdminLayout />}>
             <Route element={<SecureRoute />}>
               <Route path="/admin" element={<Navigate to="/users" replace />} />
-              <Route path="/users" element={<h1>Users</h1>} />
+              <Route path="/users" element={<UserList />} />
               <Route path="/menus" element={<h1>Menus</h1>} />
             </Route>
           </Route>

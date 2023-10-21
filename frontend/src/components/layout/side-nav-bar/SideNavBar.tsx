@@ -8,7 +8,7 @@ import { ScrollArea } from '@/components/ui/ScrollArea'
 
 function SideNavBar() {
   return (
-    <ScrollArea className="h-[calc(100vh-4rem)] w-48">
+    <ScrollArea className="h-[calc(100vh-6rem)] w-48">
       <nav className="flex flex-col items-center justify-center gap-2">
         <h2 className="font-semibold text-slate-400">后端交互</h2>
         <Menu>
@@ -65,7 +65,7 @@ function MenuItem({ link, children }: MenuItemProps) {
 }
 
 function MenuSeparator() {
-  return <Separator className="dark:bg-night-3 my-2 w-4/5" />
+  return <Separator className="my-2 w-4/5 dark:bg-night-3" />
 }
 
 export { SideNavBar }

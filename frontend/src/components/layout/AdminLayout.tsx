@@ -23,11 +23,13 @@ function AdminLayout() {
       />
 
       <main
-        className={cn('col-span-1 row-span-1', {
+        className={cn('col-span-1 row-span-1 flex flex-col', {
           'col-span-2': folded
         })}
       >
-        <Outlet />
+        <section className="flex-grow p-4">
+          <Outlet />
+        </section>
 
         <Footer />
       </main>

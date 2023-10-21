@@ -11,7 +11,10 @@
   --bg-dark-color-2: #2e3440;
 
   /* night-3 */
-  --bg-dark-color-3: #4c566a;
+  --bg-dark-color-3: #3b4252;
+
+  /* night-4 */
+  --bg-dark-color-4: #434c5e;
 
   /* snow-1 */
   --fg-dark-color: #eceff4;
@@ -25,7 +28,7 @@
 
 /* 暗色主题 */
 html.dark {
-  background-color: var(--bg-dark-color);
+  background-color: var(--bg-dark-color-3);
   color: var(--fg-dark-color);
 }
 
