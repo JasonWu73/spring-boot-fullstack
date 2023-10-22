@@ -91,9 +91,9 @@ function useSmallScreenFold(
   setFolded: React.Dispatch<React.SetStateAction<boolean>>
 ) {
   useEffect(() => {
-    const smallScreen = window.matchMedia('(max-width: 640px)')
+    const largeScreen = window.matchMedia('(max-width: 1024px)')
 
-    if (smallScreen.matches) {
+    if (largeScreen.matches) {
       setFolded(true)
     }
 
@@ -101,10 +101,10 @@ function useSmallScreenFold(
       setFolded(event.matches)
     }
 
-    smallScreen.addEventListener('change', handleScreenChange)
+    largeScreen.addEventListener('change', handleScreenChange)
 
     return () => {
-      smallScreen.removeEventListener('change', handleScreenChange)
+      largeScreen.removeEventListener('change', handleScreenChange)
     }
   }, [])
 }
