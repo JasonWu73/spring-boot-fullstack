@@ -27,9 +27,9 @@ function AdminLayout() {
           'col-span-2': folded
         })}
       >
-        <section className="flex-grow p-4">
+        <div className="flex-grow p-4">
           <Outlet />
-        </section>
+        </div>
 
         <Footer />
       </main>

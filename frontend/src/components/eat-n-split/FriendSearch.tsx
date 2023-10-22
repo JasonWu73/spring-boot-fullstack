@@ -24,7 +24,7 @@ function FriendSearch() {
 
   function handleSearch(event: React.ChangeEvent<HTMLInputElement>) {
     return setSearchParams(
-      { s: event.target.value },
+      { [KEY_SEARCH]: event.target.value },
       { replace: true, state: { noRefresh: true } }
     )
   }

@@ -1,5 +1,7 @@
-import { useSearchParams } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { type ColumnDef } from '@tanstack/react-table'
+import { Button } from '@/components/ui/Button'
+import { MoreHorizontal } from 'lucide-react'
 
 import {
   Card,
@@ -11,14 +13,121 @@ import {
 import { useFetch } from '@/hooks/use-fetch'
 import { getUsersApi, type User } from '@/api/dummyjson/user'
 import { useRefresh } from '@/hooks/use-refresh'
-import { DataTable } from '@/components/ui/DataTable'
+import {
+  DataTable,
+  DEFAULT_PAGE_NUM,
+  DEFAULT_PAGE_SIZE,
+  type Paging
+} from '@/components/ui/DataTable'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from '@/components/ui/DropdownMenu'
 
 const KEY_PAGE_NUM = 'p'
 const KEY_PAGE_SIZE = 's'
 const KEY_QUERY = 'q'
 
-const DEFAULT_PAGE_NUM = 1
-const DEFAULT_PAGE_SIZE = 10
+const columns: ColumnDef<User>[] = [
+  {
+    accessorKey: 'id',
+    header: 'ID'
+  },
+  {
+    accessorKey: 'fullName',
+    header: '姓名',
+    cell: ({ row }) => {
+      const user = row.original
+      return user.firstName + ' ' + user.lastName
+    }
+  },
+  {
+    accessorKey: 'username',
+    header: () => (
+      <>
+        用户名
+        <span className="ml-1 text-xs text-slate-500">（可用作登录）</span>
+      </>
+    ),
+    cell: ({ row }) => {
+      const user = row.original
+
+      return (
+        <span className="text-emerald-500 dark:text-amber-500">
+          {user.username}
+        </span>
+      )
+    }
+  },
+  {
+    accessorKey: 'password',
+    header: () => (
+      <>
+        密码
+        <span className="ml-1 text-xs text-slate-500">（可用作登录）</span>
+      </>
+    ),
+    cell: ({ row }) => {
+      const user = row.original
+
+      return (
+        <span className="text-emerald-500 dark:text-amber-500">
+          {user.password}
+        </span>
+      )
+    }
+  },
+  {
+    id: '操作',
+    cell: ({ row }) => {
+      const user = row.original
+
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only"></span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>操作</DropdownMenuLabel>
+            <DropdownMenuItem
+              onClick={() => navigator.clipboard.writeText(user.username)}
+            >
+              复制用户名
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => navigator.clipboard.writeText(user.password)}
+            >
+              复制密码
+            </DropdownMenuItem>
+
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              <Link to={`/users/${user.id}`} className="inline-block w-full">
+                编辑
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link
+                to={`/users/${user.id}/delete`}
+                className="inline-block w-full"
+              >
+                删除
+              </Link>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )
+    }
+  }
+]
 
 function UserList() {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -34,25 +143,6 @@ function UserList() {
     reset: resetFetchUsers
   } = useFetch(getUsersApi)
 
-  const columns: ColumnDef<User>[] = [
-    {
-      accessorKey: 'id',
-      header: 'ID'
-    },
-    {
-      accessorKey: 'fullName',
-      header: '全名'
-    },
-    {
-      accessorKey: 'username',
-      header: '用户名'
-    },
-    {
-      accessorKey: 'password',
-      header: '密码'
-    }
-  ]
-
   useRefresh(() => {
     resetFetchUsers()
 
@@ -62,6 +152,15 @@ function UserList() {
       controller.abort()
     }
   })
+
+  function handlePaging(paging: Paging) {
+    const params = {
+      [KEY_PAGE_NUM]: String(paging.pageNum),
+      [KEY_PAGE_SIZE]: String(paging.pageSize)
+    }
+
+    setSearchParams(params, { replace: true })
+  }
 
   return (
     <Card className="mx-auto h-full w-full">
@@ -77,6 +176,12 @@ function UserList() {
           data={fetchedUsers?.users || []}
           error={error}
           loading={loading}
+          pagination={{
+            pageNum,
+            pageSize,
+            pageCount: Math.ceil((fetchedUsers?.total || 0) / pageSize)
+          }}
+          onPaging={handlePaging}
         />
       </CardContent>
     </Card>
