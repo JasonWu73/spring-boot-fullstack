@@ -28,6 +28,8 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/DropdownMenu'
 import { DataTableColumnHeader } from '@/components/ui/DataTableColumnHeader'
+import { useTitle } from '@/hooks/use-title'
+import { UserSearch } from '@/components/user/UserSearch'
 
 const KEY_PAGE_NUM = 'p'
 const KEY_PAGE_SIZE = 's'
@@ -136,6 +138,8 @@ const columns: ColumnDef<User>[] = [
 ]
 
 function UserList() {
+  useTitle('用户列表')
+
   const [searchParams, setSearchParams] = useSearchParams()
   const pageNum = Number(searchParams.get(KEY_PAGE_NUM)) || DEFAULT_PAGE_NUM
   const pageSize = Number(searchParams.get(KEY_PAGE_SIZE)) || DEFAULT_PAGE_SIZE
@@ -160,12 +164,14 @@ function UserList() {
   })
 
   function handlePaging(paging: Paging) {
-    const params = {
-      [KEY_PAGE_NUM]: String(paging.pageNum),
-      [KEY_PAGE_SIZE]: String(paging.pageSize)
-    }
+    searchParams.set(KEY_PAGE_NUM, String(paging.pageNum))
+    searchParams.set(KEY_PAGE_SIZE, String(paging.pageSize))
 
-    setSearchParams(params, { replace: true })
+    setSearchParams(searchParams, { replace: true })
+  }
+
+  function handleSearch(query: string) {
+    setSearchParams({ [KEY_QUERY]: query }, { replace: true })
   }
 
   return (
@@ -177,6 +183,8 @@ function UserList() {
       </CardHeader>
 
       <CardContent>
+        <UserSearch onSearch={handleSearch} loading={loading} />
+
         <DataTable
           columns={columns}
           data={fetchedUsers?.users || []}

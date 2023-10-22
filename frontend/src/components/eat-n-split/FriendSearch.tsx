@@ -23,10 +23,12 @@ function FriendSearch() {
   const navigate = useNavigate()
 
   function handleSearch(event: React.ChangeEvent<HTMLInputElement>) {
-    return setSearchParams(
-      { [KEY_SEARCH]: event.target.value },
-      { replace: true, state: { noRefresh: true } }
-    )
+    searchParams.set(KEY_SEARCH, event.target.value)
+
+    return setSearchParams(searchParams, {
+      replace: true,
+      state: { noRefresh: true }
+    })
   }
 
   function handleFocus() {
