@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import {
   type ColumnDef,
   flexRender,
@@ -36,6 +36,11 @@ type DataTableProps<TData, TValue> = {
   manualPagination?: boolean
   pagination?: Pagination
   onPaging?: (state: Paging) => void
+
+  enableRowSelection?: boolean
+  onSelect?: (rowIndexes: number[]) => void
+
+  children?: React.ReactNode
 }
 
 /**
@@ -46,11 +51,19 @@ function DataTable<TData, TValue>({
   data,
   error = '',
   loading = false,
+
   manualPagination = true,
   pagination,
-  onPaging
+  onPaging,
+
+  enableRowSelection = false,
+  onSelect,
+
+  children
 }: DataTableProps<TData, TValue>) {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+
+  const [rowSelection, setRowSelection] = useState({})
 
   const table = useReactTable({
     state: {
@@ -59,7 +72,9 @@ function DataTable<TData, TValue>({
         pageSize: pagination?.pageSize || DEFAULT_PAGE_SIZE
       },
 
-      columnVisibility
+      columnVisibility,
+
+      rowSelection
     },
 
     data,
@@ -80,16 +95,39 @@ function DataTable<TData, TValue>({
           pageSize: next.pageSize
         })
       }
+
+      // 为了提升用户体验，分页后刷新行选中状态
+      setRowSelection({})
+      onSelect?.([])
     },
 
-    onColumnVisibilityChange: setColumnVisibility
+    onColumnVisibilityChange: setColumnVisibility,
+
+    enableRowSelection,
+    onRowSelectionChange: (updater) => {
+      const prev = table.getState().rowSelection
+
+      if (typeof updater === 'function') {
+        const next = updater({ ...prev })
+
+        setRowSelection(next)
+
+        // 提取选中数据以供外部组件使用
+        const rowIndexes = Object.keys(next).map((key) => Number(key))
+
+        onSelect?.(rowIndexes)
+      }
+    }
   })
 
   return (
     <>
-      <DataTableViewOptions table={table} />
+      <div className="mb-4 flex items-center gap-4">
+        {children}
+        <DataTableViewOptions table={table} />
+      </div>
 
-      <div className="mt-4 rounded-md border">
+      <div className="rounded-md border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -151,7 +189,12 @@ function DataTable<TData, TValue>({
         </Table>
       </div>
 
-      {!loading && !error && <DataTablePagination table={table} />}
+      {!loading && !error && (
+        <DataTablePagination
+          table={table}
+          needsSelection={enableRowSelection}
+        />
+      )}
     </>
   )
 }

@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { type ColumnDef } from '@tanstack/react-table'
 import { Button } from '@/components/ui/Button'
@@ -30,12 +31,32 @@ import {
 import { DataTableColumnHeader } from '@/components/ui/DataTableColumnHeader'
 import { useTitle } from '@/hooks/use-title'
 import { UserSearch } from '@/components/user/UserSearch'
+import { Checkbox } from '@/components/ui/Checkbox'
 
 const KEY_PAGE_NUM = 'p'
 const KEY_PAGE_SIZE = 's'
 const KEY_QUERY = 'q'
 
 const columns: ColumnDef<User>[] = [
+  {
+    id: 'select',
+    header: ({ table }) => (
+      <Checkbox
+        checked={table.getIsAllPageRowsSelected()}
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="全选"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="选择行"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false
+  },
   {
     id: 'ID',
     accessorKey: 'id',
@@ -163,6 +184,8 @@ function UserList() {
     }
   })
 
+  const [selectedRowIndexes, setSelectedRowIndexes] = useState<number[]>([])
+
   function handlePaging(paging: Paging) {
     searchParams.set(KEY_PAGE_NUM, String(paging.pageNum))
     searchParams.set(KEY_PAGE_SIZE, String(paging.pageSize))
@@ -172,6 +195,23 @@ function UserList() {
 
   function handleSearch(query: string) {
     setSearchParams({ [KEY_QUERY]: query }, { replace: true })
+  }
+
+  function handleSelect(rowIndexes: number[]) {
+    setSelectedRowIndexes(rowIndexes)
+  }
+
+  function handleShowSelection() {
+    const ids = (fetchedUsers?.users || [])
+      .filter((_, index) => selectedRowIndexes.includes(index))
+      .map((user) => user.id)
+
+    if (ids.length === 0) {
+      alert('没有选中任何一行')
+      return
+    }
+
+    alert(`被选中的行 ID(s)：${ids.join(', ')}`)
   }
 
   return (
@@ -196,7 +236,19 @@ function UserList() {
             pageCount: Math.ceil((fetchedUsers?.total || 0) / pageSize)
           }}
           onPaging={handlePaging}
-        />
+          enableRowSelection
+          onSelect={handleSelect}
+        >
+          <div>
+            <Button
+              onClick={handleShowSelection}
+              variant="destructive"
+              size="sm"
+            >
+              查看被选中的行
+            </Button>
+          </div>
+        </DataTable>
       </CardContent>
     </Card>
   )

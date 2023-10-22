@@ -17,17 +17,17 @@ import { Button } from '@/components/ui/Button'
 
 type DataTablePaginationProps<TData> = {
   table: Table<TData>
-  needsSelect?: boolean
+  needsSelection?: boolean
 }
 
 function DataTablePagination<TData>({
   table,
-  needsSelect = false
+  needsSelection = false
 }: DataTablePaginationProps<TData>) {
   return (
     <div className="mt-4 flex items-center justify-between px-2">
       <div className="text-muted-foreground hidden flex-1 text-sm lg:flex">
-        {needsSelect && (
+        {needsSelection && (
           <>
             已选择 {table.getFilteredRowModel().rows.length} 行中的{' '}
             {table.getFilteredSelectedRowModel().rows.length} 行
