@@ -2,6 +2,9 @@ import React, { forwardRef } from 'react'
 
 import { cn } from '@/lib/utils'
 
+/**
+ * {@link https://ui.shadcn.com/docs/components/table|Table - shadcn/ui}
+ */
 const Table = forwardRef<
   HTMLTableElement,
   React.HTMLAttributes<HTMLTableElement>

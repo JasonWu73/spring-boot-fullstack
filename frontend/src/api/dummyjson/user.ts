@@ -46,4 +46,4 @@ async function getUsersApi(
   })
 }
 
-export { getUsersApi }
+export { getUsersApi, type User }

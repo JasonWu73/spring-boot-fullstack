@@ -1,14 +1,6 @@
 import { useSearchParams } from 'react-router-dom'
+import { type ColumnDef } from '@tanstack/react-table'
 
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow
-} from '@/components/ui/Table'
 import {
   Card,
   CardContent,
@@ -17,9 +9,9 @@ import {
   CardTitle
 } from '@/components/ui/Card'
 import { useFetch } from '@/hooks/use-fetch'
-import { getUsersApi } from '@/api/dummyjson/user'
+import { getUsersApi, type User } from '@/api/dummyjson/user'
 import { useRefresh } from '@/hooks/use-refresh'
-import { Skeleton } from '@/components/ui/Skeleton'
+import { DataTable } from '@/components/ui/DataTable'
 
 const KEY_PAGE_NUM = 'p'
 const KEY_PAGE_SIZE = 's'
@@ -42,6 +34,25 @@ function UserList() {
     reset: resetFetchUsers
   } = useFetch(getUsersApi)
 
+  const columns: ColumnDef<User>[] = [
+    {
+      accessorKey: 'id',
+      header: 'ID'
+    },
+    {
+      accessorKey: 'fullName',
+      header: '全名'
+    },
+    {
+      accessorKey: 'username',
+      header: '用户名'
+    },
+    {
+      accessorKey: 'password',
+      header: '密码'
+    }
+  ]
+
   useRefresh(() => {
     resetFetchUsers()
 
@@ -61,45 +72,12 @@ function UserList() {
       </CardHeader>
 
       <CardContent>
-        <Table>
-          {error && (
-            <TableCaption className="text-red-500 dark:text-red-600">
-              {error}
-            </TableCaption>
-          )}
-
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[100px]">ID</TableHead>
-              <TableHead>全名</TableHead>
-              <TableHead>用户名</TableHead>
-              <TableHead className="text-right">密码</TableHead>
-            </TableRow>
-          </TableHeader>
-
-          <TableBody>
-            {loading &&
-              Array.from({ length: 10 }).map((_, i) => (
-                <TableRow key={i}>
-                  {Array.from({ length: 4 }).map((_, i) => (
-                    <TableCell key={i}>
-                      <Skeleton className="h-8 w-full" />
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))}
-
-            {fetchedUsers &&
-              fetchedUsers.users.map((user) => (
-                <TableRow key={user.id}>
-                  <TableCell className="font-medium">{user.id}</TableCell>
-                  <TableCell>{user.firstName + ' ' + user.lastName}</TableCell>
-                  <TableCell>{user.username}</TableCell>
-                  <TableCell className="text-right">{user.password}</TableCell>
-                </TableRow>
-              ))}
-          </TableBody>
-        </Table>
+        <DataTable
+          columns={columns}
+          data={fetchedUsers?.users || []}
+          error={error}
+          loading={loading}
+        />
       </CardContent>
     </Card>
   )

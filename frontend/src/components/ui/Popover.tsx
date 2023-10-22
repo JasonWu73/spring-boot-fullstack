@@ -4,7 +4,7 @@ import * as PopoverPrimitive from '@radix-ui/react-popover'
 import { cn } from '@/lib/utils'
 
 /**
- * {@link https://ui.shadcn.com/docs/components/popover | Popover - shadcn/ui}
+ * {@link https://ui.shadcn.com/docs/components/popover|Popover - shadcn/ui}
  */
 const Popover = PopoverPrimitive.Root
 
