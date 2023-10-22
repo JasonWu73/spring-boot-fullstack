@@ -27,6 +27,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/DropdownMenu'
+import { DataTableColumnHeader } from '@/components/ui/DataTableColumnHeader'
 
 const KEY_PAGE_NUM = 'p'
 const KEY_PAGE_SIZE = 's'
@@ -34,24 +35,28 @@ const KEY_QUERY = 'q'
 
 const columns: ColumnDef<User>[] = [
   {
+    id: 'ID',
     accessorKey: 'id',
-    header: 'ID'
+    header: ({ column }) => <DataTableColumnHeader column={column} title="ID" />
   },
   {
-    accessorKey: 'fullName',
-    header: '姓名',
+    id: '姓名',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="姓名" />
+    ),
     cell: ({ row }) => {
       const user = row.original
       return user.firstName + ' ' + user.lastName
     }
   },
   {
+    id: '用户名',
     accessorKey: 'username',
-    header: () => (
-      <>
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column}>
         用户名
         <span className="ml-1 text-xs text-slate-500">（可用作登录）</span>
-      </>
+      </DataTableColumnHeader>
     ),
     cell: ({ row }) => {
       const user = row.original
@@ -64,12 +69,13 @@ const columns: ColumnDef<User>[] = [
     }
   },
   {
+    id: '密码',
     accessorKey: 'password',
-    header: () => (
-      <>
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column}>
         密码
         <span className="ml-1 text-xs text-slate-500">（可用作登录）</span>
-      </>
+      </DataTableColumnHeader>
     ),
     cell: ({ row }) => {
       const user = row.original

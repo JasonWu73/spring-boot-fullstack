@@ -23,7 +23,7 @@ function DataTablePagination<TData>({
   table
 }: DataTablePaginationProps<TData>) {
   return (
-    <div className="mt-2 flex items-center justify-between px-2">
+    <div className="mt-4 flex items-center justify-between px-2">
       <div className="text-muted-foreground hidden flex-1 text-sm lg:flex">
         已选择 {table.getFilteredRowModel().rows.length} 行中的{' '}
         {table.getFilteredSelectedRowModel().rows.length} 行

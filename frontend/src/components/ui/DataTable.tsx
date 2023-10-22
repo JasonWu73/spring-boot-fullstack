@@ -1,9 +1,11 @@
+import { useState } from 'react'
 import {
   type ColumnDef,
   flexRender,
   getCoreRowModel,
   getPaginationRowModel,
-  useReactTable
+  useReactTable,
+  type VisibilityState
 } from '@tanstack/react-table'
 
 import {
@@ -16,6 +18,7 @@ import {
 } from '@/components/ui/Table'
 import { Skeleton } from '@/components/ui/Skeleton'
 import { DataTablePagination } from '@/components/ui/DataTablePagination'
+import { DataTableViewOptions } from '@/components/ui/DataTableViewOptions'
 
 const DEFAULT_PAGE_NUM = 1
 const DEFAULT_PAGE_SIZE = 10
@@ -47,12 +50,16 @@ function DataTable<TData, TValue>({
   pagination,
   onPaging
 }: DataTableProps<TData, TValue>) {
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+
   const table = useReactTable({
     state: {
       pagination: {
         pageIndex: (pagination?.pageNum || DEFAULT_PAGE_NUM) - 1,
         pageSize: pagination?.pageSize || DEFAULT_PAGE_SIZE
-      }
+      },
+
+      columnVisibility
     },
 
     data,
@@ -73,12 +80,16 @@ function DataTable<TData, TValue>({
           pageSize: next.pageSize
         })
       }
-    }
+    },
+
+    onColumnVisibilityChange: setColumnVisibility
   })
 
   return (
     <>
-      <div className="rounded-md border">
+      <DataTableViewOptions table={table} />
+
+      <div className="mt-4 rounded-md border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
