@@ -1,4 +1,4 @@
-import { useForm } from 'react-hook-form'
+import { useForm, type UseFormSetValue } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 
@@ -6,6 +6,10 @@ import { Form } from '@/components/ui/Form'
 import { FormInput } from '@/components/ui/CustomFormField'
 import { Button } from '@/components/ui/Button'
 import { ReloadIcon } from '@radix-ui/react-icons'
+import { useSearchParams } from 'react-router-dom'
+import { useEffect } from 'react'
+
+const KEY_QUERY = 'q'
 
 const formSchema = z.object({
   query: z.string()
@@ -25,6 +29,8 @@ function UserSearch({ onSearch, loading }: UserSearchProps) {
       query: ''
     }
   })
+
+  useSyncQuery(form.setValue)
 
   function onSubmit(values: FormSchema) {
     onSearch(values.query)
@@ -67,4 +73,13 @@ function UserSearch({ onSearch, loading }: UserSearchProps) {
   )
 }
 
-export { UserSearch }
+function useSyncQuery(setValue: UseFormSetValue<FormSchema>) {
+  const [searchParams] = useSearchParams()
+  const query = searchParams.get(KEY_QUERY) ?? ''
+
+  useEffect(() => {
+    setValue('query', query)
+  }, [query])
+}
+
+export { UserSearch, KEY_QUERY }

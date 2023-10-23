@@ -30,12 +30,11 @@ import {
 } from '@/components/ui/DropdownMenu'
 import { DataTableColumnHeader } from '@/components/ui/DataTableColumnHeader'
 import { useTitle } from '@/hooks/use-title'
-import { UserSearch } from '@/components/user/UserSearch'
+import { KEY_QUERY, UserSearch } from '@/components/user/UserSearch'
 import { Checkbox } from '@/components/ui/Checkbox'
 
 const KEY_PAGE_NUM = 'p'
 const KEY_PAGE_SIZE = 's'
-const KEY_QUERY = 'q'
 
 const columns: ColumnDef<User>[] = [
   {
@@ -162,9 +161,9 @@ function UserList() {
   useTitle('用户列表')
 
   const [searchParams, setSearchParams] = useSearchParams()
-  const pageNum = Number(searchParams.get(KEY_PAGE_NUM)) || DEFAULT_PAGE_NUM
-  const pageSize = Number(searchParams.get(KEY_PAGE_SIZE)) || DEFAULT_PAGE_SIZE
-  const query = searchParams.get(KEY_QUERY) || ''
+  const pageNum = Number(searchParams.get(KEY_PAGE_NUM)) ?? DEFAULT_PAGE_NUM
+  const pageSize = Number(searchParams.get(KEY_PAGE_SIZE)) ?? DEFAULT_PAGE_SIZE
+  const query = searchParams.get(KEY_QUERY) ?? ''
 
   const {
     data: fetchedUsers,
