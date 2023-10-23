@@ -96,7 +96,7 @@ function DataTable<TData, TValue>({
         })
       }
 
-      // 为了提升用户体验，分页后刷新行选中状态
+      // 为了提升用户体验，分页后应该重置行选中状态
       setRowSelection({})
       onSelect?.([])
     },
@@ -105,15 +105,28 @@ function DataTable<TData, TValue>({
 
     enableRowSelection,
     onRowSelectionChange: (updater) => {
-      const prev = table.getState().rowSelection
-
       if (typeof updater === 'function') {
+        const prev = table.getState().rowSelection
+
         const next = updater({ ...prev })
 
         setRowSelection(next)
 
-        // 提取选中数据以供外部组件使用
+        // 提取选中数据的索引以供外部组件使用
         const rowIndexes = Object.keys(next).map((key) => Number(key))
+
+        // 判断若是从全选状态再取消全选，则应该重置所有行的选中状态，而非只是当前页
+        const prevSelectedAll = table.getIsAllPageRowsSelected()
+
+        const currentPageUpdatedAll = rowIndexes.length === 0
+        const searchedPageUpdatedAll = rowIndexes.length === data.length
+        const isDeselectedAll = currentPageUpdatedAll || searchedPageUpdatedAll
+
+        if (prevSelectedAll && isDeselectedAll) {
+          setRowSelection({})
+          onSelect?.([])
+          return
+        }
 
         onSelect?.(rowIndexes)
       }
