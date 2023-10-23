@@ -89,7 +89,7 @@ function appendParamsToUrl({ url, urlData }: UrlInfo) {
   const urlObj = new URL(url)
   urlData &&
     Object.keys(urlData).forEach((key) =>
-      urlObj.searchParams.append(key, urlData[key]?.toString() ?? '')
+      urlObj.searchParams.append(key, urlData[key]?.toString() || '')
     )
   return urlObj.toString()
 }
@@ -144,7 +144,7 @@ function getUrlEncodedData(bodyData: UrlData) {
   return Object.keys(bodyData)
     .map(
       (key) =>
-        encodeURIComponent(key) + '=' + encodeURIComponent(bodyData[key] ?? '')
+        encodeURIComponent(key) + '=' + encodeURIComponent(bodyData[key] || '')
     )
     .join('&')
 }

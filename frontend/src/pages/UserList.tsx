@@ -161,9 +161,9 @@ function UserList() {
   useTitle('用户列表')
 
   const [searchParams, setSearchParams] = useSearchParams()
-  const pageNum = Number(searchParams.get(KEY_PAGE_NUM)) ?? DEFAULT_PAGE_NUM
-  const pageSize = Number(searchParams.get(KEY_PAGE_SIZE)) ?? DEFAULT_PAGE_SIZE
-  const query = searchParams.get(KEY_QUERY) ?? ''
+  const pageNum = Number(searchParams.get(KEY_PAGE_NUM)) || DEFAULT_PAGE_NUM
+  const pageSize = Number(searchParams.get(KEY_PAGE_SIZE)) || DEFAULT_PAGE_SIZE
+  const query = searchParams.get(KEY_QUERY) || ''
 
   const {
     data: fetchedUsers,

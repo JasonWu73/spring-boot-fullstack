@@ -75,7 +75,7 @@ function UserSearch({ onSearch, loading }: UserSearchProps) {
 
 function useSyncQuery(setValue: UseFormSetValue<FormSchema>) {
   const [searchParams] = useSearchParams()
-  const query = searchParams.get(KEY_QUERY) ?? ''
+  const query = searchParams.get(KEY_QUERY) || ''
 
   useEffect(() => {
     setValue('query', query)

@@ -10,7 +10,7 @@ function FriendSearch() {
   const inputRef = useRef<HTMLInputElement | null>(null)
 
   const [searchParams, setSearchParams] = useSearchParams()
-  const name = searchParams.get(KEY_SEARCH) ?? ''
+  const name = searchParams.get(KEY_SEARCH) || ''
 
   useKeypress({ key: '\\', modifiers: ['ctrlKey'] }, () => {
     if (document.activeElement === inputRef.current) {
