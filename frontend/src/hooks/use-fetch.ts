@@ -5,14 +5,14 @@ import { type Auth, useAuth } from '@/components/auth/AuthProvider'
 
 type ReLogin = { isOk: true; token: string } | { isOk: false }
 
-type ApiResponse<T> = {
-  data: T | null
+type ApiResponse<TData> = {
+  data: TData | null
   error: string
   reLogin?: ReLogin
 }
 
-type State<T> = {
-  data: T | null
+type State<TData> = {
+  data: TData | null
   error: string
   loading: boolean
   controller: AbortController | null
@@ -26,19 +26,22 @@ const initialState: State<unknown> = {
   controller: null
 }
 
-type Action<T> =
+type Action<TData> =
   | { type: 'fetch/init'; payload: AbortController | null }
-  | { type: 'fetch/resolved'; payload: T }
+  | { type: 'fetch/resolved'; payload: TData }
   | { type: 'fetch/rejected'; payload: string }
   | { type: 'fetch/aborted' }
   | { type: 'fetch/reset' }
   | { type: 'auth/reLogin'; payload: ReLogin }
 
-function reducer<T>(state: State<T>, action: Action<T>): State<T> {
+function reducer<TData>(
+  state: State<TData>,
+  action: Action<TData>
+): State<TData> {
   switch (action.type) {
     case 'fetch/init': {
       return {
-        ...(initialState as State<T>),
+        ...(initialState as State<TData>),
         loading: true,
         controller: action.payload
       }
@@ -72,7 +75,7 @@ function reducer<T>(state: State<T>, action: Action<T>): State<T> {
       }
 
       return {
-        ...(initialState as State<T>)
+        ...(initialState as State<TData>)
       }
     }
     case 'auth/reLogin': {
@@ -92,10 +95,10 @@ type FetchPayload = {
   auth: Auth | null
 }
 
-type ApiCallback<T, E> = (
+type ApiCallback<TData, TParams> = (
   payload: FetchPayload,
-  params?: E
-) => Promise<ApiResponse<T>>
+  params?: TParams
+) => Promise<ApiResponse<TData>>
 
 /**
  * 获取数据（包含了身份验证自动刷新机制）的自定义 Hook。
@@ -106,10 +109,10 @@ type ApiCallback<T, E> = (
  * @param callback - 获取数据的回调函数
  * @returns - 数据、错误信息、加载状态、获取数据和重置加载的回调函数
  */
-function useFetch<T, E>(callback: ApiCallback<T, E>) {
+function useFetch<TData, TParams>(callback: ApiCallback<TData, TParams>) {
   const [{ data, error, loading, reLogin }, dispatch] = useReducer(
-    reducer as React.Reducer<State<T | null>, Action<T | null>>,
-    initialState as State<T>
+    reducer as React.Reducer<State<TData | null>, Action<TData | null>>,
+    initialState as State<TData>
   )
 
   useLoading(loading)
@@ -119,7 +122,7 @@ function useFetch<T, E>(callback: ApiCallback<T, E>) {
   useFetchAuth(reLogin, logout, updateToken)
 
   const fetchData = useCallback(
-    function fetchData(params?: E): AbortController {
+    function fetchData(params?: TParams): AbortController {
       const controller = new AbortController()
 
       dispatch({ type: 'fetch/init', payload: controller })

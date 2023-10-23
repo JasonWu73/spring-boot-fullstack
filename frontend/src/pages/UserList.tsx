@@ -186,7 +186,7 @@ function UserList() {
 
   const [selectedRowIndexes, setSelectedRowIndexes] = useState<number[]>([])
 
-  function handlePaging(paging: Paging) {
+  function handlePaginate(paging: Paging) {
     searchParams.set(KEY_PAGE_NUM, String(paging.pageNum))
     searchParams.set(KEY_PAGE_SIZE, String(paging.pageSize))
 
@@ -235,7 +235,7 @@ function UserList() {
             pageSize,
             pageCount: Math.ceil((fetchedUsers?.total || 0) / pageSize)
           }}
-          onPaging={handlePaging}
+          onPaginate={handlePaginate}
           enableRowSelection
           onSelect={handleSelect}
         >

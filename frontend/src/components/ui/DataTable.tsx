@@ -35,7 +35,7 @@ type DataTableProps<TData, TValue> = {
 
   manualPagination?: boolean
   pagination?: Pagination
-  onPaging?: (state: Paging) => void
+  onPaginate?: (paging: Paging) => void
 
   enableRowSelection?: boolean
   onSelect?: (rowIndexes: number[]) => void
@@ -54,7 +54,7 @@ function DataTable<TData, TValue>({
 
   manualPagination = true,
   pagination,
-  onPaging,
+  onPaginate,
 
   enableRowSelection = false,
   onSelect,
@@ -90,7 +90,7 @@ function DataTable<TData, TValue>({
       if (typeof updater === 'function') {
         const next = updater({ ...prev })
 
-        onPaging?.({
+        onPaginate?.({
           pageNum: next.pageIndex + 1,
           pageSize: next.pageSize
         })
