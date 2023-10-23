@@ -23,7 +23,8 @@ function FriendList() {
     errorFriends: error,
     loadingFriends: loading,
     fetchFriends,
-    deleteFriend
+    deleteFriend,
+    setShowAddFriend
   } = useFriends()
 
   const [searchParams] = useSearchParams()
@@ -41,6 +42,8 @@ function FriendList() {
     if (nameQuery !== null || location.state?.noRefresh === true) {
       return
     }
+
+    setShowAddFriend(false)
 
     const controller = fetchFriends()
 

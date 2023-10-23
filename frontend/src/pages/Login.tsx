@@ -52,11 +52,13 @@ function Login() {
   })
 
   useEffect(() => {
-    toast({
-      title: '登录失败',
-      description: error,
-      variant: 'destructive'
-    })
+    if (error) {
+      toast({
+        title: '登录失败',
+        description: error,
+        variant: 'destructive'
+      })
+    }
   }, [error])
 
   const location = useLocation()

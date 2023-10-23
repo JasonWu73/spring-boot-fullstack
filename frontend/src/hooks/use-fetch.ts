@@ -103,8 +103,8 @@ type ApiCallback<TData, TParams> = (
 /**
  * 获取数据（包含了身份验证自动刷新机制）的自定义 Hook。
  *
- * @template T - 返回的数据类型
- * @template E - 请求参数类型
+ * @template TData - 返回的数据类型
+ * @template TParams - 请求参数类型
  *
  * @param callback - 获取数据的回调函数
  * @returns - 数据、错误信息、加载状态、获取数据和重置加载的回调函数
