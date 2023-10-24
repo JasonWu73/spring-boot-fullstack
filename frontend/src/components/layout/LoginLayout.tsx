@@ -6,9 +6,9 @@ import { Footer } from '@/components/layout/Footer'
 function LoginLayout() {
   return (
     <div className="flex min-h-screen flex-col">
-      <Header />
+      <Header className="dark:bg-night-2" />
 
-      <main className="flex-grow bg-night-1 bg-[url('/img/bg_login.png')] bg-cover bg-fixed bg-center bg-no-repeat">
+      <main className="flex-grow bg-night-1 bg-[url('/img/bg_login.png')] bg-[length:100%] bg-no-repeat">
         <Outlet />
       </main>
 

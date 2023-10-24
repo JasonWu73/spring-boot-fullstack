@@ -63,7 +63,7 @@ function UserSearch({ onSearch, loading }: UserSearchProps) {
             查询
           </Button>
           {form.getValues('query').length > 0 && (
-            <Button onClick={handleReset} type="button" variant="outline">
+            <Button onClick={handleReset} type="reset" variant="outline">
               重置
             </Button>
           )}
