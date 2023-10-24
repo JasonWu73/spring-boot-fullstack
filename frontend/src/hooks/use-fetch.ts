@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useReducer } from 'react'
 import NProgress from 'nprogress'
 
-import { type Auth, useAuth } from '@/components/auth/AuthProvider'
+import { type Auth, useAuth } from '@/contexts/AuthContext'
 
 type ReLogin = { isOk: true; token: string } | { isOk: false }
 

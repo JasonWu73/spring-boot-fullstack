@@ -11,10 +11,10 @@ import { ScrollArea } from '@/components/ui/ScrollArea'
 import { Card } from '@/components/ui/Card'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/Alert'
 import { useToast } from '@/components/ui/use-toast'
-import { FriendItem } from '@/components/eat-n-split/FriendItem'
-import { FriendSearch, KEY_SEARCH } from '@/components/eat-n-split/FriendSearch'
+import { FriendItem } from '@/components/eat-split/FriendItem'
+import { FriendSearch, KEY_SEARCH } from '@/components/eat-split/FriendSearch'
 import { type Friend } from '@/api/fake/friend'
-import { useFriends } from '@/components/eat-n-split/FriendProvider'
+import { useFriends } from '@/components/eat-split/FriendProvider'
 import { useRefresh } from '@/hooks/use-refresh'
 
 function FriendList() {

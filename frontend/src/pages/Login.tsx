@@ -17,7 +17,7 @@ import { Button } from '@/components/ui/Button'
 import { useToast } from '@/components/ui/use-toast'
 import { useTitle } from '@/hooks/use-title'
 import { useRefresh } from '@/hooks/use-refresh'
-import { useAuth } from '@/components/auth/AuthProvider'
+import { useAuth } from '@/contexts/AuthContext'
 import { useEffect } from 'react'
 
 const USERNAME = 'jissetts'

@@ -8,19 +8,19 @@ import { EatAndSplit } from '@/pages/EatAndSplit'
 import { PageNotFound } from '@/pages/PageNotFound'
 import { wait } from '@/lib/utils'
 import { Loading } from '@/components/ui/Loading'
-import { FriendProvider } from '@/components/eat-n-split/FriendProvider'
-import { AuthProvider } from '@/components/auth/AuthProvider'
+import { FriendProvider } from '@/components/eat-split/FriendProvider'
+import { AuthProvider } from '@/contexts/AuthContext'
+import { SecureRoute } from '@/components/auth/SecureRoute'
 import { ThemeProvider } from '@/components/ui/ThemeProvider'
 import { MainLayout } from '@/components/layout/MainLayout'
 import { AdminLayout } from '@/components/layout/AdminLayout'
 import { LoginLayout } from '@/components/layout/LoginLayout'
-import { SecureRoute } from '@/components/auth/SecureRoute'
 import { UserList } from '@/pages/UserList'
 
 // ----- 开始：测试 React Router 懒加载（React Split Code 技术）-----
 const FormSplitBill = lazy(() =>
   wait(1).then(() =>
-    import('@/components/eat-n-split/FormSplitBill').then((module) => ({
+    import('@/components/eat-split/FormSplitBill').then((module) => ({
       default: module.FormSplitBill
     }))
   )

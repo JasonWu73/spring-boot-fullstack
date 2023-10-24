@@ -15,7 +15,7 @@ import {
 import { FormInput, FormSelect } from '@/components/ui/CustomFormField'
 import { Form } from '@/components/ui/Form'
 import { StarRating } from '@/components/ui/StarRating'
-import { FormSplitBillSkeleton } from '@/components/eat-n-split/FormSplitBillSkeleton'
+import { FormSplitBillSkeleton } from '@/components/eat-split/FormSplitBillSkeleton'
 import {
   Tooltip,
   TooltipContent,
@@ -23,8 +23,8 @@ import {
   TooltipTrigger
 } from '@/components/ui/Tooltip'
 import { useTitle } from '@/hooks/use-title'
-import { useFriends } from '@/components/eat-n-split/FriendProvider'
-import { FormSplitBillError } from '@/components/eat-n-split/FormSplitBillError'
+import { useFriends } from '@/components/eat-split/FriendProvider'
+import { FormSplitBillError } from '@/components/eat-split/FormSplitBillError'
 import { useRefresh } from '@/hooks/use-refresh'
 
 const whoIsPayingOptions = [

@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { LayoutDashboard } from 'lucide-react'
 
-import { useAuth } from '@/components/auth/AuthProvider'
+import { useAuth } from '@/contexts/AuthContext'
 import {
   NavigationMenu,
   NavigationMenuContent,

@@ -3,16 +3,16 @@ import { Outlet, useNavigate } from 'react-router-dom'
 
 import { Button } from '@/components/ui/Button'
 import { Loading } from '@/components/ui/Loading'
-import { FriendList } from '@/components/eat-n-split/FriendList'
+import { FriendList } from '@/components/eat-split/FriendList'
 import { useKeypress } from '@/hooks/use-keypress'
 import { useTitle } from '@/hooks/use-title'
 import { wait } from '@/lib/utils'
-import { useFriends } from '@/components/eat-n-split/FriendProvider'
+import { useFriends } from '@/components/eat-split/FriendProvider'
 
 // ----- 开始：测试懒加载（React Split Code 技术）-----
 const FormAddFriend = lazy(() =>
   wait(1).then(() =>
-    import('@/components/eat-n-split/FormAddFriend').then((module) => ({
+    import('@/components/eat-split/FormAddFriend').then((module) => ({
       default: module.FormAddFriend
     }))
   )

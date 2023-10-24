@@ -1,7 +1,7 @@
 import { LogOut } from 'lucide-react'
 
 import { Button } from '@/components/ui/Button'
-import { useAuth } from '@/components/auth/AuthProvider'
+import { useAuth } from '@/contexts/AuthContext'
 
 function LogoutButton() {
   const { logout } = useAuth()

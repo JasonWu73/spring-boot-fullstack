@@ -8,10 +8,10 @@ import {
   TooltipTrigger
 } from '@/components/ui/Tooltip'
 import { buttonVariants } from '@/components/ui/Button'
-import { ButtonDeleteFriend } from '@/components/eat-n-split/ButtonDeleteFriend'
+import { ButtonDeleteFriend } from '@/components/eat-split/ButtonDeleteFriend'
 import { cn, truncate } from '@/lib/utils'
 import { type Friend } from '@/api/fake/friend'
-import { useFriends } from '@/components/eat-n-split/FriendProvider'
+import { useFriends } from '@/components/eat-split/FriendProvider'
 
 type FriendItemProps = {
   friend: Friend
