@@ -20,7 +20,7 @@ function FormSplitBillSkeleton() {
       </CardHeader>
 
       <CardContent className="flex flex-col gap-4">
-        {Array.from({ length: 4 }).map((_, i) => (
+        {Array.from({ length: 4 }, (_, i) => (
           <div key={i} className="flex gap-4">
             <Skeleton className="h-8 w-32" />
             <Skeleton className="h-8 w-full" />

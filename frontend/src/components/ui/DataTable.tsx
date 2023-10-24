@@ -163,7 +163,7 @@ function DataTable<TData, TValue>({
 
           <TableBody>
             {loading &&
-              Array.from({ length: 10 }).map((_, i) => (
+              Array.from({ length: 10 }, (_, i) => (
                 <TableRow key={i}>
                   {columns.map((_, i) => (
                     <TableCell key={i}>
