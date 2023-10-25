@@ -48,16 +48,15 @@ type State = {
 }
 
 function createInitialState() {
-  const friends = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]')
-
   return {
-    friends,
+    friends: getFriendsFromStorage(),
     curFriend: null,
     showAddFriend: false
   }
 }
 
 type Action =
+  | { type: 'friends/loadedFailed' }
   | { type: 'friends/loaded'; payload: Friend[] }
   | { type: 'friends/selected'; payload: Friend | null }
   | { type: 'friends/created'; payload: Friend }
@@ -68,9 +67,14 @@ type Action =
 
 function reducer(state: State, action: Action) {
   switch (action.type) {
+    case 'friends/loadedFailed': {
+      return { ...state, friends: [] }
+    }
     case 'friends/loaded': {
-      if (state.friends.length > 0) {
-        return state
+      const friends = getFriendsFromStorage()
+
+      if (friends.length > 0) {
+        return { ...state, friends }
       }
 
       localStorage.setItem(STORAGE_KEY, JSON.stringify(action.payload))
@@ -164,7 +168,7 @@ function FriendProvider({ children }: FriendProviderProps) {
       return
     }
 
-    dispatch({ type: 'friends/loaded', payload: [] })
+    dispatch({ type: 'friends/loadedFailed' })
   }, [JSON.stringify(fetchedFriends)])
 
   const {
@@ -261,6 +265,10 @@ function useFriends() {
   }
 
   return context
+}
+
+function getFriendsFromStorage() {
+  return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]')
 }
 
 export { FriendProvider, useFriends }

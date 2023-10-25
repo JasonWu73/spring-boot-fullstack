@@ -43,9 +43,9 @@ function ProductShowcase() {
     <div className="mx-auto mt-8 flex w-[400px] flex-col items-center rounded border p-4 shadow-sm">
       {loading && <Title label="加载中..." />}
 
-      {!loading && error && <Title label={error} isError />}
+      {error && <Title label={error} isError />}
 
-      {!loading && fetchedProduct && (
+      {fetchedProduct && (
         <>
           <Title label={fetchedProduct.title} />
           <img

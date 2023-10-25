@@ -128,9 +128,9 @@ function FormSplitBill() {
     <Card className="w-96 bg-amber-100 text-slate-700 dark:bg-amber-100 dark:text-slate-700 md:w-[22rem] lg:w-[30rem]">
       {loading && <FormSplitBillSkeleton />}
 
-      {!loading && error && <FormSplitBillError message={error} />}
+      {error && <FormSplitBillError message={error} />}
 
-      {!loading && friend && (
+      {friend && (
         <>
           <CardHeader>
             <CardTitle>分摊账单，我的朋友</CardTitle>

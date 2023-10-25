@@ -58,6 +58,7 @@ function reducer<TData>(
     case 'fetch/rejected': {
       return {
         ...state,
+        data: null,
         error: action.payload,
         loading: false,
         controller: null

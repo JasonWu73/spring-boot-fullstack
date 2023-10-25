@@ -28,7 +28,7 @@ function FriendList() {
   } = useFriends()
 
   const [searchParams] = useSearchParams()
-  const nameQuery = searchParams.get(KEY_SEARCH)
+  const nameQuery = searchParams.get(KEY_SEARCH) || ''
 
   const filteredFriends = nameQuery
     ? friends.filter((f) =>
@@ -39,7 +39,12 @@ function FriendList() {
   const location = useLocation()
 
   useRefresh(() => {
-    if (nameQuery !== null || location.state?.noRefresh === true) {
+    if (location.state?.noRefresh === true) {
+      // 重置为可刷新，解决 F5 刷新时，无法刷新的问题
+      if (location.state) {
+        location.state.noRefresh = false
+      }
+
       return
     }
 
@@ -85,7 +90,7 @@ function FriendList() {
               </Alert>
             )}
 
-            {!loading && error && (
+            {error && (
               <Alert variant="destructive">
                 <ExclamationTriangleIcon className="h-4 w-4" />
                 <AlertTitle>错误</AlertTitle>
@@ -93,7 +98,7 @@ function FriendList() {
               </Alert>
             )}
 
-            {!loading && filteredFriends.length === 0 && (
+            {!loading && !error && filteredFriends.length === 0 && (
               <Alert>
                 <RocketIcon className="h-4 w-4" />
                 <AlertTitle>温馨提示！</AlertTitle>
@@ -103,7 +108,7 @@ function FriendList() {
               </Alert>
             )}
 
-            {!loading && filteredFriends.length > 0 && (
+            {filteredFriends.length > 0 && (
               <ul>
                 {filteredFriends.map((f, i, arr) => (
                   <React.Fragment key={f.id}>
