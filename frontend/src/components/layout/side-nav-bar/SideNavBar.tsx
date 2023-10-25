@@ -19,11 +19,11 @@ function SideNavBar() {
         </Menu>
 
         <MenuSeparator />
-        <h2 className="font-semibold text-slate-400">前端存储</h2>
+        <h2 className="font-semibold text-slate-400">React 性能优化</h2>
         <Menu>
-          <MenuItem link="/menus">
+          <MenuItem link="/children">
             <FolderCog className="h-4 w-4" />
-            菜单权限
+            children 属性
           </MenuItem>
         </Menu>
       </nav>

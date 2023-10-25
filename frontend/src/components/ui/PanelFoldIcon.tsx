@@ -21,9 +21,9 @@ function PanelFoldIcon() {
 
   return (
     <>
-      {folded && <PanelLeftClose className={style} onClick={handleOpen} />}
+      {folded && <PanelLeftOpen className={style} onClick={handleOpen} />}
 
-      {!folded && <PanelLeftOpen className={style} onClick={handleClose} />}
+      {!folded && <PanelLeftClose className={style} onClick={handleClose} />}
     </>
   )
 }
