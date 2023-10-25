@@ -25,6 +25,10 @@ function SideNavBar() {
             <FolderCog className="h-4 w-4" />
             children 属性
           </MenuItem>
+          <MenuItem link="/memo">
+            <FolderCog className="h-4 w-4" />
+            memo 组件
+          </MenuItem>
         </Menu>
       </nav>
     </ScrollArea>
