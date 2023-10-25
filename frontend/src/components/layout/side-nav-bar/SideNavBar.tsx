@@ -1,6 +1,6 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
-import { FolderCog, UserCog2 } from 'lucide-react'
+import { Bike, Binary, UserCog2 } from 'lucide-react'
 
 import { Separator } from '@/components/ui/Separator'
 import { cn } from '@/lib/utils'
@@ -22,11 +22,11 @@ function SideNavBar() {
         <h2 className="font-semibold text-slate-400">React 性能优化</h2>
         <Menu>
           <MenuItem link="/children">
-            <FolderCog className="h-4 w-4" />
+            <Binary className="h-4 w-4" />
             children 属性
           </MenuItem>
           <MenuItem link="/memo">
-            <FolderCog className="h-4 w-4" />
+            <Bike className="h-4 w-4" />
             memo 组件
           </MenuItem>
         </Menu>

@@ -9,10 +9,16 @@ import {
 } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { SlowComponent } from '@/components/performance/SlowComponent'
+import { useRefresh } from '@/hooks/use-refresh'
 
 function ChildrenProp() {
   const [showBefore, setShowBefore] = useState(false)
   const [showAfter, setShowAfter] = useState(false)
+
+  useRefresh(() => {
+    setShowBefore(false)
+    setShowAfter(false)
+  })
 
   return (
     <Card className="w-64 min-w-fit">

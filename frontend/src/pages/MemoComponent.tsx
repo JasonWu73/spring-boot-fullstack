@@ -12,10 +12,16 @@ import {
   MemoizedSlowComponent,
   SlowComponent
 } from '@/components/performance/SlowComponent'
+import { useRefresh } from '@/hooks/use-refresh'
 
 function MemoComponent() {
   const [showBefore, setShowBefore] = useState(false)
   const [showAfter, setShowAfter] = useState(false)
+
+  useRefresh(() => {
+    setShowBefore(false)
+    setShowAfter(false)
+  })
 
   return (
     <Card className="w-64 min-w-fit">
