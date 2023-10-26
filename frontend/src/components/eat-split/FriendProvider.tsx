@@ -33,8 +33,8 @@ type FriendProviderState = {
   setCredit: (id: number, creditRating: number) => void
 }
 
-const FriendProviderContext = createContext<FriendProviderState>(
-  {} as FriendProviderState
+const FriendProviderContext = createContext<FriendProviderState | undefined>(
+  undefined
 )
 
 type FriendProviderProps = {

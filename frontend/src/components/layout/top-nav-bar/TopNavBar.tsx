@@ -5,7 +5,7 @@ import { Logo } from '@/components/layout/top-nav-bar/Logo'
 import { PageNav } from '@/components/layout/top-nav-bar/PageNav'
 import { AuthButton } from '@/components/layout/top-nav-bar/AuthButton'
 import { MenuUnfoldIcon } from '@/components/ui/MenuUnfoldIcon'
-import { PanelFoldIcon } from '@/components/ui/PanelFoldIcon'
+import { PanelFoldIcon } from '@/components/layout/panel-fold/PanelFoldIcon'
 
 type TopNavBarProps = {
   showPanelFoldIcon?: boolean

@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useReducer } from 'react'
 import NProgress from 'nprogress'
 
-import { type Auth, useAuth } from '@/contexts/AuthContext'
+import { type Auth } from '@/components/auth/AuthContext'
 
 type ReLogin = { isOk: true; token: string } | { isOk: false }
 
@@ -91,6 +91,12 @@ function reducer<TData>(
   }
 }
 
+type AuthProvider = {
+  auth: Auth
+  logout: () => void
+  updateToken: (token: string) => void
+}
+
 type FetchPayload = {
   signal: AbortSignal
   auth: Auth | null
@@ -108,9 +114,13 @@ type ApiCallback<TData, TParams> = (
  * @template TParams - 请求参数类型
  *
  * @param callback - 获取数据的回调函数
+ * @param authProvider - 提供给身份验证相关的数据及操作
  * @returns - 数据、错误信息、加载状态、获取数据和重置加载的回调函数
  */
-function useFetch<TData, TParams>(callback: ApiCallback<TData, TParams>) {
+function useFetch<TData, TParams>(
+  callback: ApiCallback<TData, TParams>,
+  authProvider?: AuthProvider
+) {
   const [{ data, error, loading, reLogin }, dispatch] = useReducer(
     reducer as React.Reducer<State<TData | null>, Action<TData | null>>,
     initialState as State<TData>
@@ -118,7 +128,7 @@ function useFetch<TData, TParams>(callback: ApiCallback<TData, TParams>) {
 
   useLoading(loading)
 
-  const { auth, logout, updateToken } = useAuth()
+  const { auth = null, logout, updateToken } = authProvider || {}
 
   useFetchAuth(reLogin, logout, updateToken)
 
@@ -179,9 +189,9 @@ function useLoading(loading: boolean) {
 }
 
 function useFetchAuth(
-  reLogin: ReLogin | undefined,
-  logout: () => void,
-  updateToken: (token: string) => void
+  reLogin?: ReLogin,
+  logout?: () => void,
+  updateToken?: (token: string) => void
 ) {
   useEffect(() => {
     if (!reLogin) {
@@ -189,11 +199,13 @@ function useFetchAuth(
     }
 
     if (!reLogin.isOk) {
-      logout()
+      if (logout) {
+        logout()
+      }
       return
     }
 
-    if (reLogin.token) {
+    if (updateToken) {
       updateToken(reLogin.token)
     }
   }, [reLogin?.isOk])

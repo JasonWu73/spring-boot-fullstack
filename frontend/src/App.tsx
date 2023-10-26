@@ -9,9 +9,10 @@ import { PageNotFound } from '@/pages/PageNotFound'
 import { wait } from '@/lib/utils'
 import { Loading } from '@/components/ui/Loading'
 import { FriendProvider } from '@/components/eat-split/FriendProvider'
-import { AuthProvider } from '@/contexts/AuthContext'
+import { AuthProvider } from '@/components/auth/AuthContext'
 import { SecureRoute } from '@/components/auth/SecureRoute'
 import { ThemeProvider } from '@/components/ui/ThemeProvider'
+import { PanelFoldProvider } from '@/components/layout/panel-fold/PanelFoldProvider'
 import { MainLayout } from '@/components/layout/MainLayout'
 import { AdminLayout } from '@/components/layout/AdminLayout'
 import { LoginLayout } from '@/components/layout/LoginLayout'
@@ -68,7 +69,13 @@ export default function App() {
             <Route path="*" element={<PageNotFound />} />
           </Route>
 
-          <Route element={<AdminLayout />}>
+          <Route
+            element={
+              <PanelFoldProvider>
+                <AdminLayout />
+              </PanelFoldProvider>
+            }
+          >
             <Route element={<SecureRoute />}>
               <Route path="/admin" element={<Navigate to="/users" replace />} />
               <Route path="/users" element={<UserList />} />

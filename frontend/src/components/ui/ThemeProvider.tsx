@@ -5,12 +5,11 @@ type Theme = 'dark' | 'light' | 'system'
 type ThemeProviderState = {
   theme: Theme
   setTheme: (theme: Theme) => void
-
-  folded: boolean
-  setFolded: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const ThemeProviderContext = createContext({} as ThemeProviderState)
+const ThemeProviderContext = createContext<ThemeProviderState | undefined>(
+  undefined
+)
 
 type ThemeProviderProps = {
   children: React.ReactNode
@@ -33,19 +32,12 @@ function ThemeProvider({
 
   useApplyTheme(theme)
 
-  const [folded, setFolded] = useState(false)
-
-  useSmallScreenFold(setFolded)
-
   const value = {
     theme,
     setTheme: (theme: Theme) => {
       localStorage.setItem(storageKey, theme)
       setTheme(theme)
-    },
-
-    folded,
-    setFolded
+    }
   }
 
   return (
@@ -85,28 +77,6 @@ function useApplyTheme(theme: Theme) {
 
     applyTheme(theme)
   }, [theme])
-}
-
-function useSmallScreenFold(
-  setFolded: React.Dispatch<React.SetStateAction<boolean>>
-) {
-  useEffect(() => {
-    const largeScreen = window.matchMedia('(max-width: 1024px)')
-
-    if (largeScreen.matches) {
-      setFolded(true)
-    }
-
-    function handleScreenChange(event: MediaQueryListEvent) {
-      setFolded(event.matches)
-    }
-
-    largeScreen.addEventListener('change', handleScreenChange)
-
-    return () => {
-      largeScreen.removeEventListener('change', handleScreenChange)
-    }
-  }, [])
 }
 
 function resetTheme() {

@@ -85,7 +85,7 @@ async function sendAuthDummyJsonApi<T>({
   bodyData,
   reLogin
 }: SendRequestWrapper): Promise<ApiResponse<T>> {
-  const { signal, auth } = payload
+  const { auth, signal } = payload
 
   if (!auth) {
     return { data: null, error: '未登录', reLogin: { isOk: false } }

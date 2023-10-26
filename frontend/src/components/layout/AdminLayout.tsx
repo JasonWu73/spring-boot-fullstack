@@ -1,13 +1,13 @@
 import { Outlet } from 'react-router-dom'
 
+import { usePanelFold } from '@/components/layout/panel-fold/PanelFoldProvider'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { Aside } from '@/components/layout/Aside'
-import { useTheme } from '@/components/ui/ThemeProvider'
 import { cn } from '@/lib/utils'
 
 function AdminLayout() {
-  const { folded } = useTheme()
+  const { folded } = usePanelFold()
 
   return (
     <div className="grid min-h-screen grid-cols-[auto_1fr] grid-rows-[auto_1fr]">

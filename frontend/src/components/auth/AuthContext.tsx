@@ -31,7 +31,9 @@ type AuthProviderState = {
   updateToken: (token: string) => void
 }
 
-const AuthProviderContext = createContext({} as AuthProviderState)
+const AuthProviderContext = createContext<AuthProviderState | undefined>(
+  undefined
+)
 
 type AuthProviderProps = {
   children: React.ReactNode
