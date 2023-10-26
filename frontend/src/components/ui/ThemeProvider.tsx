@@ -7,9 +7,11 @@ type ThemeProviderState = {
   setTheme: (theme: Theme) => void
 }
 
-const ThemeProviderContext = createContext<ThemeProviderState | undefined>(
-  undefined
-)
+const initialState: ThemeProviderState = {
+  theme: 'system',
+  setTheme: () => null
+}
+const ThemeProviderContext = createContext(initialState)
 
 type ThemeProviderProps = {
   children: React.ReactNode
@@ -48,13 +50,7 @@ function ThemeProvider({
 }
 
 function useTheme() {
-  const context = useContext(ThemeProviderContext)
-
-  if (context === undefined) {
-    throw new Error('useTheme 必须在 ThemeProvider 中使用')
-  }
-
-  return context
+  return useContext(ThemeProviderContext)
 }
 
 function useApplyTheme(theme: Theme) {

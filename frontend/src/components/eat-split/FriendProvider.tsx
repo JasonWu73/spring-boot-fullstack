@@ -33,9 +33,28 @@ type FriendProviderState = {
   setCredit: (id: number, creditRating: number) => void
 }
 
-const FriendProviderContext = createContext<FriendProviderState | undefined>(
-  undefined
-)
+const initialState: FriendProviderState = {
+  friends: [],
+  errorFriends: '',
+  loadingFriends: false,
+  fetchFriends: () => new AbortController(),
+
+  curFriend: null,
+  errorFriend: '',
+  loadingFriend: false,
+  fetchFriend: () => new AbortController(),
+
+  addFriend: () => null,
+  deleteFriend: () => null,
+
+  showAddFriend: false,
+  setShowAddFriend: () => null,
+
+  splitBill: () => null,
+  setCredit: () => null
+}
+
+const FriendProviderContext = createContext(initialState)
 
 type FriendProviderProps = {
   children: React.ReactNode
@@ -258,13 +277,7 @@ function FriendProvider({ children }: FriendProviderProps) {
 }
 
 function useFriends() {
-  const context = useContext(FriendProviderContext)
-
-  if (context === undefined) {
-    throw new Error('useFriends 必须在 FriendProvider 中使用')
-  }
-
-  return context
+  return useContext(FriendProviderContext)
 }
 
 function getFriendsFromStorage() {

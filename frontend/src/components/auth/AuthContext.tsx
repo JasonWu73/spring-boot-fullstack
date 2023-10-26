@@ -31,9 +31,17 @@ type AuthProviderState = {
   updateToken: (token: string) => void
 }
 
-const AuthProviderContext = createContext<AuthProviderState | undefined>(
-  undefined
-)
+const initialState: AuthProviderState = {
+  auth: null,
+  error: '',
+  loading: false,
+  login: () => null,
+  resetFetchLogin: () => null,
+  logout: () => null,
+  updateToken: () => null
+}
+
+const AuthProviderContext = createContext(initialState)
 
 type AuthProviderProps = {
   children: React.ReactNode
@@ -98,6 +106,8 @@ function AuthProvider({ children }: AuthProviderProps) {
 
   function logout() {
     setAuth(null)
+
+    localStorage.removeItem(STORAGE_KEY)
   }
 
   function updateToken(token: string) {
@@ -138,13 +148,7 @@ function AuthProvider({ children }: AuthProviderProps) {
 }
 
 function useAuth() {
-  const context = useContext(AuthProviderContext)
-
-  if (context === undefined) {
-    throw new Error('useAuth 必须在 AuthProvider 中使用')
-  }
-
-  return context
+  return useContext(AuthProviderContext)
 }
 
 export { AuthProvider, useAuth, type Auth }
