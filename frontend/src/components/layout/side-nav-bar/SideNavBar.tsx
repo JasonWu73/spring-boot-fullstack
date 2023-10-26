@@ -11,7 +11,6 @@ import {
 import { Separator } from '@/components/ui/Separator'
 import { cn } from '@/lib/utils'
 import { ScrollArea } from '@/components/ui/ScrollArea'
-import { Code } from '@/components/ui/Code'
 
 function SideNavBar() {
   return (
@@ -28,27 +27,19 @@ function SideNavBar() {
         <Menu title="React 性能优化">
           <MenuItem link="/children">
             <Binary className="h-4 w-4" />
-            <span>
-              <Code>children</Code> 属性
-            </span>
+            <span>children 属性</span>
           </MenuItem>
           <MenuItem link="/memo">
             <Component className="h-4 w-4" />
-            <span>
-              <Code>memo</Code> 组件
-            </span>
+            <span>memo 组件</span>
           </MenuItem>
           <MenuItem link="/use-memo">
             <Calculator className="h-4 w-4" />
-            <span>
-              <Code>useMemo</Code>
-            </span>
+            <span>useMemo</span>
           </MenuItem>
           <MenuItem link="/use-callback">
             <FunctionSquare className="h-4 w-4" />
-            <span>
-              <Code>useCallback</Code>
-            </span>
+            <span>useCallback</span>
           </MenuItem>
         </Menu>
       </nav>

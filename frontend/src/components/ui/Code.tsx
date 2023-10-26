@@ -8,7 +8,11 @@ type CodeProps = {
 }
 
 function Code({ children, className }: CodeProps) {
-  return <code className={cn('text-amber-500', className)}>{children}</code>
+  return (
+    <code className={cn('text-rose-500 dark:text-amber-500', className)}>
+      {children}
+    </code>
+  )
 }
 
 export { Code }
