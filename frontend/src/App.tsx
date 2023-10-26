@@ -19,6 +19,7 @@ import { UserList } from '@/pages/UserList'
 import { ChildrenProp } from '@/pages/ChildrenProp'
 import { MemoComponent } from '@/pages/MemoComponent'
 import { UseMemo } from '@/pages/UseMemo'
+import { UseCallback } from '@/pages/UseCallback'
 
 // ----- 开始：测试 React Router 懒加载（React Split Code 技术）-----
 const FormSplitBill = lazy(() =>
@@ -74,6 +75,7 @@ export default function App() {
               <Route path="/children" element={<ChildrenProp />} />
               <Route path="/memo" element={<MemoComponent />} />
               <Route path="/use-memo" element={<UseMemo />} />
+              <Route path="/use-callback" element={<UseCallback />} />
             </Route>
           </Route>
         </Routes>
