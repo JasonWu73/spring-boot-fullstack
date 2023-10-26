@@ -8,8 +8,9 @@ import {
   CardTitle
 } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
-import { SlowComponent } from '@/components/performance/SlowComponent'
+import { HeavyComputedComponent } from '@/components/performance/HeavyComputedComponent'
 import { useRefresh } from '@/hooks/use-refresh'
+import { Code } from '@/components/ui/Code'
 
 function ChildrenProp() {
   const [showBefore, setShowBefore] = useState(false)
@@ -23,7 +24,9 @@ function ChildrenProp() {
   return (
     <Card className="w-64 min-w-fit">
       <CardHeader>
-        <CardTitle>性能优化 - children 属性</CardTitle>
+        <CardTitle>
+          性能优化 - <Code>children</Code> 属性
+        </CardTitle>
 
         <CardDescription>父组件刷新，导致子组件刷新</CardDescription>
       </CardHeader>
@@ -53,7 +56,7 @@ function ChildrenProp() {
 
             {showAfter && (
               <AfterOptimization>
-                <SlowComponent />
+                <HeavyComputedComponent />
               </AfterOptimization>
             )}
           </div>
@@ -72,7 +75,7 @@ function BeforeOptimization() {
         点击刷新父组件 - {count}
       </Button>
 
-      <SlowComponent />
+      <HeavyComputedComponent />
     </div>
   )
 }

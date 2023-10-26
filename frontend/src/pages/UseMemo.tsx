@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import {
   Card,
@@ -8,14 +8,11 @@ import {
   CardTitle
 } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
-import {
-  MemoizedHeavyComputedComponent,
-  HeavyComputedComponent
-} from '@/components/performance/HeavyComputedComponent'
 import { useRefresh } from '@/hooks/use-refresh'
 import { Code } from '@/components/ui/Code'
+import { MemoizedTooMuchComponent } from '@/components/performance/TooMuchComponent'
 
-function MemoComponent() {
+function UseMemo() {
   const [showBefore, setShowBefore] = useState(false)
   const [showAfter, setShowAfter] = useState(false)
 
@@ -28,12 +25,12 @@ function MemoComponent() {
     <Card className="w-64 min-w-fit">
       <CardHeader>
         <CardTitle>
-          性能优化 - <Code>memo</Code> 高阶组件（Higher Order Component）
+          性能优化 - <Code>useMemo</Code> Hook
         </CardTitle>
 
         <CardDescription>
-          使用 <Code>memo</Code> 高阶组件，避免在 <Code>props</Code>{' '}
-          未发生改变时产生不必要的渲染
+          使用 <Code>useMemo</Code> 缓存对象值，可避免重复渲染（JS 中{' '}
+          <Code>(&#123;&#125; !== &#123;&#125;) === true</Code>）
         </CardDescription>
       </CardHeader>
 
@@ -71,13 +68,18 @@ function MemoComponent() {
 function BeforeOptimization() {
   const [count, setCount] = useState(0)
 
+  const info = {
+    name: 'TooMuchComponent',
+    version: 'v1.0.0'
+  }
+
   return (
     <div className="space-y-2 border-t border-amber-500 pt-2">
       <Button onClick={() => setCount((prev) => prev + 1)}>
         点击刷新父组件 - {count}
       </Button>
 
-      <HeavyComputedComponent />
+      <MemoizedTooMuchComponent info={info} />
     </div>
   )
 }
@@ -85,15 +87,22 @@ function BeforeOptimization() {
 function AfterOptimization() {
   const [count, setCount] = useState(0)
 
+  const info = useMemo(() => {
+    return {
+      name: 'TooMuchComponent',
+      version: 'v1.0.0'
+    }
+  }, [])
+
   return (
     <div className="space-y-2 border-t border-amber-500 pt-2">
       <Button onClick={() => setCount((prev) => prev + 1)}>
         点击刷新父组件 - {count}
       </Button>
 
-      <MemoizedHeavyComputedComponent />
+      <MemoizedTooMuchComponent info={info} />
     </div>
   )
 }
 
-export { MemoComponent }
+export { UseMemo }

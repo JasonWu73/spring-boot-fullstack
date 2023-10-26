@@ -32,6 +32,7 @@ import { DataTableColumnHeader } from '@/components/ui/DataTableColumnHeader'
 import { useTitle } from '@/hooks/use-title'
 import { KEY_QUERY, UserSearch } from '@/components/user/UserSearch'
 import { Checkbox } from '@/components/ui/Checkbox'
+import { Code } from '@/components/ui/Code'
 
 const KEY_PAGE_NUM = 'p'
 const KEY_PAGE_SIZE = 's'
@@ -83,11 +84,7 @@ const columns: ColumnDef<User>[] = [
     cell: ({ row }) => {
       const user = row.original
 
-      return (
-        <span className="text-emerald-500 dark:text-amber-500">
-          {user.username}
-        </span>
-      )
+      return <Code>{user.username}</Code>
     }
   },
   {
@@ -102,11 +99,7 @@ const columns: ColumnDef<User>[] = [
     cell: ({ row }) => {
       const user = row.original
 
-      return (
-        <span className="text-emerald-500 dark:text-amber-500">
-          {user.password}
-        </span>
-      )
+      return <Code>{user.password}</Code>
     }
   },
   {

@@ -1,33 +1,54 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
-import { Bike, Binary, UserCog2 } from 'lucide-react'
+import {
+  Binary,
+  Calculator,
+  Component,
+  FunctionSquare,
+  UserCog2
+} from 'lucide-react'
 
 import { Separator } from '@/components/ui/Separator'
 import { cn } from '@/lib/utils'
 import { ScrollArea } from '@/components/ui/ScrollArea'
+import { Code } from '@/components/ui/Code'
 
 function SideNavBar() {
   return (
     <ScrollArea className="h-[calc(100vh-6rem)] w-48">
-      <nav className="flex flex-col items-center justify-center gap-2">
-        <h2 className="font-semibold text-slate-400">后端交互</h2>
-        <Menu>
+      <nav className="flex flex-col items-center gap-2">
+        <Menu title="后端交互">
           <MenuItem link="/users">
             <UserCog2 className="h-5 w-5" />
-            用户列表
+            <span>用户列表</span>
           </MenuItem>
         </Menu>
 
         <MenuSeparator />
-        <h2 className="font-semibold text-slate-400">React 性能优化</h2>
-        <Menu>
+        <Menu title="React 性能优化">
           <MenuItem link="/children">
             <Binary className="h-4 w-4" />
-            children 属性
+            <span>
+              <Code>children</Code> 属性
+            </span>
           </MenuItem>
           <MenuItem link="/memo">
-            <Bike className="h-4 w-4" />
-            memo 组件
+            <Component className="h-4 w-4" />
+            <span>
+              <Code>memo</Code> 组件
+            </span>
+          </MenuItem>
+          <MenuItem link="/use-memo">
+            <Calculator className="h-4 w-4" />
+            <span>
+              <Code>useMemo</Code>
+            </span>
+          </MenuItem>
+          <MenuItem link="/use-callback">
+            <FunctionSquare className="h-4 w-4" />
+            <span>
+              <Code>useCallback</Code>
+            </span>
           </MenuItem>
         </Menu>
       </nav>
@@ -36,11 +57,17 @@ function SideNavBar() {
 }
 
 type MenuProps = {
+  title: string
   children: React.ReactNode
 }
 
-function Menu({ children }: MenuProps) {
-  return <ul className="w-3/4">{children}</ul>
+function Menu({ title, children }: MenuProps) {
+  return (
+    <>
+      <h2 className="w-10/12 pl-4 font-semibold text-slate-400">{title}</h2>
+      <ul className="w-10/12">{children}</ul>
+    </>
+  )
 }
 
 type MenuItemProps = {
@@ -55,7 +82,7 @@ function MenuItem({ link, children }: MenuItemProps) {
         to={link}
         className={({ isActive }) =>
           cn(
-            'flex items-center justify-center gap-1 rounded px-4 py-2 text-sm',
+            'grid grid-cols-[16px_1fr] grid-rows-1 items-center gap-2 rounded px-4 py-2 text-sm',
             {
               'bg-sky-500 font-bold dark:bg-sky-600': isActive
             }
