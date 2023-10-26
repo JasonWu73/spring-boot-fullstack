@@ -115,9 +115,16 @@ async function sendAuthDummyJsonApi<T>({
     error.name === 'TokenExpiredError' || error.name === 'JsonWebTokenError'
 
   if (!reLogin && authFailed) {
+    const username = auth.username
+    const password = auth.password
+
+    if (!username || !password) {
+      return { data: null, error: '未登录', reLogin: { isOk: false } }
+    }
+
     const { data, error } = await tryReLogin(payload, {
-      username: auth.username,
-      password: auth.password
+      username: username,
+      password: password
     })
 
     if (error) {
