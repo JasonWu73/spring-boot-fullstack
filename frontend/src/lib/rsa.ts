@@ -5,9 +5,9 @@ import { JSEncrypt } from 'jsencrypt'
  *
  * @param publicKey - 公钥
  * @param raw - 原始字符串
- * @returns - 加密后的字符串
+ * @returns {string} - 加密后的字符串
  */
-function encrypt(publicKey: string, raw: string) {
+function encrypt(publicKey: string, raw: string): string {
   const encrypt = new JSEncrypt()
   encrypt.setPublicKey(publicKey)
   return encrypt.encrypt(raw) as string
@@ -18,9 +18,9 @@ function encrypt(publicKey: string, raw: string) {
  *
  * @param privateKey - 私钥
  * @param encrypted - 加密后的字符串
- * @returns - 解密后的字符串
+ * @returns {string} - 解密后的字符串
  */
-function decrypt(privateKey: string, encrypted: string) {
+function decrypt(privateKey: string, encrypted: string): string {
   const encrypt = new JSEncrypt()
   encrypt.setPrivateKey(privateKey)
   return encrypt.decrypt(encrypted) as string

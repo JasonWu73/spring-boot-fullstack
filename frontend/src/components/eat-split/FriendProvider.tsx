@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer } from 'react'
+import React, { useReducer } from 'react'
 
 import {
   type FetchFriendParams,
@@ -131,24 +131,40 @@ function FriendProvider({ children }: FriendProviderProps) {
   )
 
   const {
-    data: fetchedFriends,
     error: errorFriends,
     loading: loadingFriends,
     fetchData: fetchFriends
-  } = useFetch(getFriendsApi)
+  } = useFetch(async (payload) => {
+    const response = await getFriendsApi(payload)
 
-  // 处理获取到的好友列表数据
-  useFetchFriends(fetchedFriends, dispatch)
+    if (response.error) {
+      dispatch({ type: 'friends/loadedFailed' })
+    }
+
+    if (response.data) {
+      dispatch({ type: 'friends/loaded', payload: response.data })
+    }
+
+    return response
+  })
 
   const {
-    data: fetchedFriend,
     error: errorFriend,
     loading: loadingFriend,
     fetchData: fetchFriend
-  } = useFetch<Friend, FetchFriendParams>(fakeFetchFriend)
+  } = useFetch<Friend, FetchFriendParams>(async (payload, params) => {
+    const response = await fakeFetchFriend(payload, params)
 
-  // 处理获取到的所选择好友数据
-  useFetchFriend(fetchedFriend, dispatch)
+    if (response.error) {
+      dispatch({ type: 'friends/selected', payload: null })
+    }
+
+    if (response.data) {
+      dispatch({ type: 'friends/selected', payload: response.data })
+    }
+
+    return response
+  })
 
   function addFriend(friend: NewFriend) {
     dispatch({
@@ -203,34 +219,6 @@ function FriendProvider({ children }: FriendProviderProps) {
 
 function getFriendsFromStorage() {
   return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]')
-}
-
-function useFetchFriends(
-  friends: Friend[] | null,
-  dispatch: React.Dispatch<Action>
-) {
-  useEffect(() => {
-    if (friends) {
-      dispatch({ type: 'friends/loaded', payload: friends })
-      return
-    }
-
-    dispatch({ type: 'friends/loadedFailed' })
-  }, [friends, dispatch])
-}
-
-function useFetchFriend(
-  friend: Friend | null,
-  dispatch: React.Dispatch<Action>
-) {
-  useEffect(() => {
-    if (friend) {
-      dispatch({ type: 'friends/selected', payload: friend })
-      return
-    }
-
-    dispatch({ type: 'friends/selected', payload: null })
-  }, [friend, dispatch])
 }
 
 async function fakeFetchFriend(_: FetchPayload, params?: FetchFriendParams) {

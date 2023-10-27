@@ -1,8 +1,7 @@
-import React, { useEffect, useReducer } from 'react'
+import React, { useReducer } from 'react'
 import NProgress from 'nprogress'
 
 import { type Auth, useAuth } from '@/components/auth/AuthContext'
-import { useCallbackRef, useObjectRef } from '@/hooks/use-saved'
 
 type ReLogin = { isOk: true; token: string } | { isOk: false }
 
@@ -32,7 +31,6 @@ type Action<TData> =
   | { type: 'fetch/resolved'; payload: TData }
   | { type: 'fetch/rejected'; payload: string }
   | { type: 'fetch/aborted' }
-  | { type: 'auth/reLogin'; payload: ReLogin }
 
 function reducer<TData>(
   state: State<TData>,
@@ -77,14 +75,10 @@ function reducer<TData>(
 
       return {
         ...state,
+        data: null,
+        error: '',
         loading: state.loadingCount > 1,
         loadingCount: state.loadingCount - 1
-      }
-    }
-    case 'auth/reLogin': {
-      return {
-        ...state,
-        reLogin: action.payload
       }
     }
     default: {
@@ -124,15 +118,12 @@ type UseFetch<TData, TParams> = {
 function useFetch<TData, TParams>(
   callback: ApiCallback<TData, TParams>
 ): UseFetch<TData, TParams> {
-  const [{ data, error, loading, reLogin }, dispatch] = useReducer(
+  const [{ data, error, loading }, dispatch] = useReducer(
     reducer as React.Reducer<State<TData | null>, Action<TData | null>>,
     initialState as State<TData>
   )
 
   const { auth, logout, updateToken } = useAuth()
-
-  // 身份验证自动刷新机制
-  useFetchAuth(reLogin, logout, updateToken)
 
   function fetchData(params?: TParams): AbortCallback {
     const controller = new AbortController()
@@ -148,8 +139,15 @@ function useFetch<TData, TParams>(
         params
       )
 
+      // 实现身份验证自动刷新机制
       if (response.reLogin) {
-        dispatch({ type: 'auth/reLogin', payload: response.reLogin })
+        if (response.reLogin.isOk) {
+          updateToken(response.reLogin.token)
+        }
+
+        if (!response.reLogin.isOk) {
+          logout()
+        }
       }
 
       if (controller.signal.aborted) {
@@ -173,30 +171,6 @@ function useFetch<TData, TParams>(
   }
 
   return { data, error, loading, fetchData }
-}
-
-function useFetchAuth(
-  reLogin: ReLogin | undefined,
-  logout: () => void,
-  updateToken: (token: string) => void
-) {
-  const reLoginRef = useObjectRef(reLogin)
-
-  const logoutRef = useCallbackRef(logout)
-  const updateTokenRef = useCallbackRef(updateToken)
-
-  useEffect(() => {
-    if (reLoginRef.current === undefined) {
-      return
-    }
-
-    if (!reLoginRef.current.isOk) {
-      logoutRef.current()
-      return
-    }
-
-    updateTokenRef.current(reLoginRef.current.token)
-  }, [reLogin?.isOk, reLoginRef, logoutRef, updateTokenRef])
 }
 
 function tryNProgressDone(loadingCount: number) {

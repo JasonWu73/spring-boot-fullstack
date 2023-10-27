@@ -8,7 +8,7 @@ import React, { useEffect, useState } from 'react'
  * @param storageKey - LocalStorage 的键
  * @param defaultValue - LocalStorage 键的默认值
  * @param isJsonParse - 是否 JSON 解析 LocalStorage 的值，默认为 true
- * @returns - [value, setValue]
+ * @returns {[T, React.Dispatch<React.SetStateAction<T>>]}
  */
 function useLocalStorageState<T>(
   storageKey: string,

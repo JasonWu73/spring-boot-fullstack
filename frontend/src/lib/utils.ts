@@ -7,9 +7,9 @@ import { twMerge } from 'tailwind-merge'
  * {@link https://ui.shadcn.com/docs/installation/vite|Vite - shadcn/ui}
  *
  * @param inputs - 类名
- * @returns - 合并后的类名
+ * @returns {string} - 合并后的类名
  */
-function cn(...inputs: ClassValue[]) {
+function cn(...inputs: ClassValue[]): string {
   return twMerge(clsx(inputs))
 }
 
@@ -20,9 +20,9 @@ function cn(...inputs: ClassValue[]) {
  *
  * @param strings - 字符串数组
  * @param values - 模板字符串中的变量
- * @returns - 模板字符串
+ * @returns {string} - 模板字符串
  */
-function tw(strings: TemplateStringsArray, ...values: unknown[]) {
+function tw(strings: TemplateStringsArray, ...values: unknown[]): string {
   return String.raw({ raw: strings }, ...values)
 }
 
@@ -31,9 +31,9 @@ function tw(strings: TemplateStringsArray, ...values: unknown[]) {
  *
  * @param str - 需要截断的字符串
  * @param maxlength - 字符串最大长度
- * @returns - 将 `str` 的末尾替换为省略号 `…`（实际上省略号是单个 Unicode 字符，不是 `...` 这样的三个点），使其长度等于 `maxlength`
+ * @returns {string} - 将 `str` 的末尾替换为省略号 `…`（实际上省略号是单个 Unicode 字符，不是 `...` 这样的三个点），使其长度等于 `maxlength`
  */
-function truncate(str: string, maxlength: number) {
+function truncate(str: string, maxlength: number): string {
   if (str.length <= maxlength) {
     return str
   }
@@ -45,20 +45,22 @@ function truncate(str: string, maxlength: number) {
  * 等待指定秒数。
  *
  * @param secs - 等待的秒数
- * @returns - 等待指定秒数后执行的 `Promise`
+ * @returns {Promise<void>} - 等待指定秒数后执行的 `Promise`
  */
-function wait(secs: number) {
+function wait(secs: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, secs * 1000))
 }
+
+type Debounce = () => void
 
 /**
  * 防抖动函数，通过添加防抖机制，确保在一定时间内只执行一次相关函数，而不是在每次事件触发时都执行。
  *
  * @param callback - 需要防抖动的回调函数
  * @param delay - 防抖动的时间间隔，单位为：毫秒
- * @returns - 防抖动函数
+ * @returns {Debounce} - 防抖动函数
  */
-function debounce(callback: () => void, delay: number) {
+function debounce(callback: () => void, delay: number): Debounce {
   let timer: number | null
 
   return function () {
