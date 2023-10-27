@@ -23,7 +23,7 @@ import {
   TooltipTrigger
 } from '@/components/ui/Tooltip'
 import { useTitle } from '@/hooks/use-title'
-import { useFriends } from '@/components/eat-split/FriendProvider'
+import { useFriends } from '@/components/eat-split/FriendContext'
 import { FormSplitBillError } from '@/components/eat-split/FormSplitBillError'
 import { useRefresh } from '@/hooks/use-refresh'
 
@@ -90,21 +90,34 @@ function FormSplitBill() {
 
   useWatchExpense(form)
 
+  // 因为是 API，所以会导致 loading 时还是显示上次的数据，为了避免页面闪烁，所以这里需要重置一下
+  const friendsContext = useFriends()
+
   const {
-    curFriend: friend,
-    errorFriend: error,
     loadingFriend: loading,
     fetchFriend,
     setCredit,
     splitBill
-  } = useFriends()
+  } = friendsContext
+
+  let { curFriend: friend, errorFriend: error } = friendsContext
+
+  if (loading) {
+    error = ''
+    friend = null
+  }
 
   const params = useParams()
   const id = Number(params.friendId)
 
   useRefresh(() => {
     form.reset()
-    fetchFriend({ id })
+
+    const abort = fetchFriend({ id })
+
+    return () => {
+      abort()
+    }
   })
 
   const navigate = useNavigate()

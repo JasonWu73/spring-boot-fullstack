@@ -7,7 +7,7 @@ import { FriendList } from '@/components/eat-split/FriendList'
 import { useKeypress } from '@/hooks/use-keypress'
 import { useTitle } from '@/hooks/use-title'
 import { wait } from '@/lib/utils'
-import { useFriends } from '@/components/eat-split/FriendProvider'
+import { useFriends } from '@/components/eat-split/FriendContext'
 
 // ----- 开始：测试懒加载（React Split Code 技术）-----
 const FormAddFriend = lazy(() =>

@@ -19,9 +19,7 @@ import {
 import { Skeleton } from '@/components/ui/Skeleton'
 import { DataTablePagination } from '@/components/ui/DataTablePagination'
 import { DataTableViewOptions } from '@/components/ui/DataTableViewOptions'
-
-const DEFAULT_PAGE_NUM = 1
-const DEFAULT_PAGE_SIZE = 10
+import { DEFAULT_PAGE_NUM, DEFAULT_PAGE_SIZE } from '@/components/ui/ui-config'
 
 type Pagination = { pageNum: number; pageSize: number; pageCount: number }
 
@@ -228,4 +226,4 @@ function ErrorRow({ columnLen, error }: ErrorRowProps) {
   )
 }
 
-export { DataTable, DEFAULT_PAGE_NUM, DEFAULT_PAGE_SIZE, type Paging }
+export { DataTable, type Paging }

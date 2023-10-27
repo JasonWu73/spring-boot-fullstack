@@ -3,14 +3,13 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 
 import { Input } from '@/components/ui/Input'
 import { useKeypress } from '@/hooks/use-keypress'
-
-const KEY_SEARCH = 's'
+import { KEY_QUERY } from '@/lib/constants'
 
 function FriendSearch() {
   const inputRef = useRef<HTMLInputElement | null>(null)
 
   const [searchParams, setSearchParams] = useSearchParams()
-  const name = searchParams.get(KEY_SEARCH) || ''
+  const name = searchParams.get(KEY_QUERY) || ''
 
   useKeypress({ key: '\\', modifiers: ['ctrlKey'] }, () => {
     if (document.activeElement === inputRef.current) {
@@ -23,7 +22,7 @@ function FriendSearch() {
   const navigate = useNavigate()
 
   function handleSearch(event: React.ChangeEvent<HTMLInputElement>) {
-    searchParams.set(KEY_SEARCH, event.target.value)
+    searchParams.set(KEY_QUERY, event.target.value)
 
     return setSearchParams(searchParams, {
       replace: true,
@@ -50,4 +49,4 @@ function FriendSearch() {
   )
 }
 
-export { FriendSearch, KEY_SEARCH }
+export { FriendSearch }

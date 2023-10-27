@@ -18,7 +18,8 @@ import { useToast } from '@/components/ui/use-toast'
 import { useTitle } from '@/hooks/use-title'
 import { useRefresh } from '@/hooks/use-refresh'
 import { useAuth } from '@/components/auth/AuthContext'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
+import { type AbortCallback } from '@/hooks/use-fetch'
 
 const USERNAME = 'jissetts'
 const PASSWORD = 'ePawWgrnZR8L'
@@ -43,12 +44,17 @@ function Login() {
 
   const { toast, dismiss } = useToast()
 
-  const { auth, error, loading, login, resetFetchLogin } = useAuth()
+  const { auth, error, loading, login } = useAuth()
+
+  const abortLoginRef = useRef<AbortCallback>()
 
   useRefresh(() => {
     form.reset()
-    resetFetchLogin()
     dismiss()
+
+    if (abortLoginRef.current) {
+      abortLoginRef.current()
+    }
   })
 
   useEffect(() => {
@@ -59,7 +65,7 @@ function Login() {
         variant: 'destructive'
       })
     }
-  }, [error])
+  }, [error, toast])
 
   const location = useLocation()
   const originUrl = location.state?.from || '/admin'
@@ -69,7 +75,7 @@ function Login() {
   }
 
   function onSubmit(values: FormSchema) {
-    login(values.username, values.password)
+    abortLoginRef.current = login(values.username, values.password)
   }
 
   return (

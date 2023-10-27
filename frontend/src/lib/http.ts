@@ -22,10 +22,15 @@ type RequestConfig = Pick<
 
 type RequestBody = Pick<Request, 'contentType' | 'bodyData'>
 
-type Response<TData, TError> = {
-  data: TData | null
-  error: TError | string | null
-}
+type Response<TData, TError> =
+  | {
+      data: TData
+      error: null
+    }
+  | {
+      data: null
+      error: TError | string
+    }
 
 /**
  * 发送 HTTP 请求，并以 JSON 数据格式解析响应数据。
@@ -41,7 +46,7 @@ type Response<TData, TError> = {
  * @param Request.urlData - URL 参数
  * @param Request.bodyData - 请求体数据
  * @param Request.signal - `AbortController` 实例的 `signal` 属性，用于主动取消请求
- * @returns - 以 JSON 数据格式解析后的正常或异常响应数据
+ * @returns {Promise<Response<TData, TError>>} - 以 JSON 数据格式解析后的正常或异常响应数据
  */
 async function sendRequest<TData, TError>({
   url,
@@ -76,8 +81,8 @@ async function sendRequest<TData, TError>({
     // 忽略因主动取消请求而产生的非程序异常
     // 此时无需结束加载画面
     if (error instanceof Error && error.name === 'AbortError') {
-      console.log(`${error.message} [${method} ${url}]`)
-      return { data: null, error: null }
+      // console.log(`${error.message} [${method} ${url}]`)
+      return { data: null, error: '用户主动取消了请求' }
     }
 
     // 处理程序异常

@@ -1,16 +1,9 @@
-import React, { createContext, useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
-type PanelFoldProviderState = {
-  folded: boolean
-  setFolded: React.Dispatch<React.SetStateAction<boolean>>
-}
-
-const initialState: PanelFoldProviderState = {
-  folded: false,
-  setFolded: () => null
-}
-
-const PanelFoldProviderContext = createContext(initialState)
+import {
+  PanelFoldProviderContext,
+  type PanelFoldProviderState
+} from '@/components/layout/panel-fold/PanelFoldContext'
 
 type PanelFoldProviderProps = {
   children: React.ReactNode
@@ -21,7 +14,7 @@ function PanelFoldProvider({ children }: PanelFoldProviderProps) {
 
   useSmallScreenFold(setFolded)
 
-  const value = {
+  const value: PanelFoldProviderState = {
     folded,
     setFolded
   }
@@ -31,10 +24,6 @@ function PanelFoldProvider({ children }: PanelFoldProviderProps) {
       {children}
     </PanelFoldProviderContext.Provider>
   )
-}
-
-function usePanelFold() {
-  return useContext(PanelFoldProviderContext)
 }
 
 function useSmallScreenFold(
@@ -56,7 +45,7 @@ function useSmallScreenFold(
     return () => {
       largeScreen.removeEventListener('change', handleScreenChange)
     }
-  }, [])
+  }, [setFolded])
 }
 
-export { PanelFoldProvider, usePanelFold }
+export { PanelFoldProvider }

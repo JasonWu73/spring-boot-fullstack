@@ -1,6 +1,6 @@
 import { PanelLeftClose, PanelLeftOpen } from 'lucide-react'
 
-import { usePanelFold } from '@/components/layout/panel-fold/PanelFoldProvider'
+import { usePanelFold } from '@/components/layout/panel-fold/PanelFoldContext'
 import { tw } from '@/lib/utils'
 
 /**

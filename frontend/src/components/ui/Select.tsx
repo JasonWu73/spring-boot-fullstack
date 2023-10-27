@@ -3,7 +3,7 @@ import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons'
 import * as SelectPrimitive from '@radix-ui/react-select'
 
 import { cn } from '@/lib/utils'
-import { inputErrorClasses } from '@/components/ui/Input'
+import { inputErrorClasses } from '@/components/ui/ui-config'
 
 const Select = SelectPrimitive.Root
 

@@ -1,7 +1,8 @@
-import React, { useCallback, useEffect, useReducer } from 'react'
+import React, { useEffect, useReducer } from 'react'
 import NProgress from 'nprogress'
 
 import { type Auth, useAuth } from '@/components/auth/AuthContext'
+import { useCallbackRef, useObjectRef } from '@/hooks/use-saved'
 
 type ReLogin = { isOk: true; token: string } | { isOk: false }
 
@@ -15,7 +16,7 @@ type State<TData> = {
   data: TData | null
   error: string
   loading: boolean
-  controller: AbortController | null
+  loadingCount: number
   reLogin?: ReLogin
 }
 
@@ -23,15 +24,14 @@ const initialState: State<unknown> = {
   data: null,
   error: '',
   loading: false,
-  controller: null
+  loadingCount: 0
 }
 
 type Action<TData> =
-  | { type: 'fetch/init'; payload: AbortController | null }
+  | { type: 'loading' }
   | { type: 'fetch/resolved'; payload: TData }
   | { type: 'fetch/rejected'; payload: string }
   | { type: 'fetch/aborted' }
-  | { type: 'fetch/reset' }
   | { type: 'auth/reLogin'; payload: ReLogin }
 
 function reducer<TData>(
@@ -39,44 +39,46 @@ function reducer<TData>(
   action: Action<TData>
 ): State<TData> {
   switch (action.type) {
-    case 'fetch/init': {
+    case 'loading': {
+      NProgress.start()
+
       return {
-        ...(initialState as State<TData>),
+        ...state,
+        data: null,
+        error: '',
         loading: true,
-        controller: action.payload
+        loadingCount: state.loadingCount + 1
       }
     }
     case 'fetch/resolved': {
+      tryNProgressDone(state.loadingCount)
+
       return {
         ...state,
         data: action.payload,
         error: '',
-        loading: false,
-        controller: null
+        loading: state.loadingCount > 1,
+        loadingCount: state.loadingCount - 1
       }
     }
     case 'fetch/rejected': {
+      tryNProgressDone(state.loadingCount)
+
       return {
         ...state,
         data: null,
         error: action.payload,
-        loading: false,
-        controller: null
+        loading: state.loadingCount > 1,
+        loadingCount: state.loadingCount - 1
       }
     }
     case 'fetch/aborted': {
-      return {
-        ...state,
-        controller: null
-      }
-    }
-    case 'fetch/reset': {
-      if (state.controller) {
-        state.controller.abort()
-      }
+      tryNProgressDone(state.loadingCount)
 
       return {
-        ...(initialState as State<TData>)
+        ...state,
+        loading: state.loadingCount > 1,
+        loadingCount: state.loadingCount - 1
       }
     }
     case 'auth/reLogin': {
@@ -101,6 +103,15 @@ type ApiCallback<TData, TParams> = (
   params?: TParams
 ) => Promise<ApiResponse<TData>>
 
+type AbortCallback = () => void
+
+type UseFetch<TData, TParams> = {
+  data: TData | null
+  error: string
+  loading: boolean
+  fetchData: (params?: TParams) => AbortCallback
+}
+
 /**
  * 获取数据（包含了身份验证自动刷新机制）的自定义 Hook。
  *
@@ -108,74 +119,60 @@ type ApiCallback<TData, TParams> = (
  * @template TParams - 请求参数类型
  *
  * @param callback - 获取数据的回调函数
- * @returns - 数据、错误信息、加载状态、获取数据和重置加载的回调函数
+ * @returns {UseFetch} - 数据、错误信息、加载状态、获取数据的回调函数
  */
-function useFetch<TData, TParams>(callback: ApiCallback<TData, TParams>) {
+function useFetch<TData, TParams>(
+  callback: ApiCallback<TData, TParams>
+): UseFetch<TData, TParams> {
   const [{ data, error, loading, reLogin }, dispatch] = useReducer(
     reducer as React.Reducer<State<TData | null>, Action<TData | null>>,
     initialState as State<TData>
   )
 
-  useLoading(loading)
-
   const { auth, logout, updateToken } = useAuth()
 
+  // 身份验证自动刷新机制
   useFetchAuth(reLogin, logout, updateToken)
 
-  const fetchData = useCallback(
-    function fetchData(params?: TParams): AbortController {
-      const controller = new AbortController()
+  function fetchData(params?: TParams): AbortCallback {
+    const controller = new AbortController()
 
-      dispatch({ type: 'fetch/init', payload: controller })
+    dispatch({ type: 'loading' })
 
-      async function doCallback() {
-        const response = await callback(
-          {
-            signal: controller.signal,
-            auth
-          },
-          params
-        )
+    async function executeCallback() {
+      const response = await callback(
+        {
+          signal: controller.signal,
+          auth
+        },
+        params
+      )
 
-        if (response.reLogin) {
-          dispatch({ type: 'auth/reLogin', payload: response.reLogin })
-        }
-
-        if (controller.signal.aborted) {
-          dispatch({ type: 'fetch/aborted' })
-          return controller
-        }
-
-        if (response.error) {
-          dispatch({ type: 'fetch/rejected', payload: response.error })
-          return controller
-        }
-
-        dispatch({ type: 'fetch/resolved', payload: response.data })
+      if (response.reLogin) {
+        dispatch({ type: 'auth/reLogin', payload: response.reLogin })
       }
 
-      doCallback().then()
+      if (controller.signal.aborted) {
+        return
+      }
 
-      return controller
-    },
-    [JSON.stringify(auth)]
-  )
+      if (response.error) {
+        dispatch({ type: 'fetch/rejected', payload: response.error })
+        return
+      }
 
-  const reset = useCallback(function reset() {
-    dispatch({ type: 'fetch/reset' })
-  }, [])
+      dispatch({ type: 'fetch/resolved', payload: response.data })
+    }
 
-  return { data, error, loading, fetchData, reset }
-}
+    executeCallback().then()
 
-function useLoading(loading: boolean) {
-  useEffect(() => {
-    // 开始加载动画
-    loading && NProgress.start()
+    return () => {
+      dispatch({ type: 'fetch/aborted' })
+      controller.abort()
+    }
+  }
 
-    // 结束加载动画
-    !loading && NProgress.done()
-  }, [loading])
+  return { data, error, loading, fetchData }
 }
 
 function useFetchAuth(
@@ -183,18 +180,35 @@ function useFetchAuth(
   logout: () => void,
   updateToken: (token: string) => void
 ) {
+  const reLoginRef = useObjectRef(reLogin)
+
+  const logoutRef = useCallbackRef(logout)
+  const updateTokenRef = useCallbackRef(updateToken)
+
   useEffect(() => {
-    if (!reLogin) {
+    if (reLoginRef.current === undefined) {
       return
     }
 
-    if (!reLogin.isOk) {
-      logout()
+    if (!reLoginRef.current.isOk) {
+      logoutRef.current()
       return
     }
 
-    updateToken(reLogin.token)
-  }, [reLogin?.isOk])
+    updateTokenRef.current(reLoginRef.current.token)
+  }, [reLogin?.isOk, reLoginRef, logoutRef, updateTokenRef])
 }
 
-export { useFetch, type ApiResponse, type FetchPayload, type ReLogin }
+function tryNProgressDone(loadingCount: number) {
+  if (loadingCount <= 1) {
+    NProgress.done()
+  }
+}
+
+export {
+  useFetch,
+  type ApiResponse,
+  type FetchPayload,
+  type ReLogin,
+  type AbortCallback
+}

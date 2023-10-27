@@ -1,17 +1,6 @@
-import React, { createContext, useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
-type Theme = 'dark' | 'light' | 'system'
-
-type ThemeProviderState = {
-  theme: Theme
-  setTheme: (theme: Theme) => void
-}
-
-const initialState: ThemeProviderState = {
-  theme: 'system',
-  setTheme: () => null
-}
-const ThemeProviderContext = createContext(initialState)
+import { ThemeProviderContext, type Theme } from '@/components/ui/ThemeContext'
 
 type ThemeProviderProps = {
   children: React.ReactNode
@@ -47,10 +36,6 @@ function ThemeProvider({
       {children}
     </ThemeProviderContext.Provider>
   )
-}
-
-function useTheme() {
-  return useContext(ThemeProviderContext)
 }
 
 function useApplyTheme(theme: Theme) {
@@ -94,4 +79,4 @@ function handleToggleTheme(event: MediaQueryListEvent) {
   applyTheme('light')
 }
 
-export { ThemeProvider, useTheme }
+export { ThemeProvider }

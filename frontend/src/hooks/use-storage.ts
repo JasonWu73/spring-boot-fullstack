@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 /**
  * 设置或读取 LocalStorage 值的自定义 Hook.
  *
- * @template T - 值的类型
+ * @template T - 值类型
  *
  * @param storageKey - LocalStorage 的键
  * @param defaultValue - LocalStorage 键的默认值

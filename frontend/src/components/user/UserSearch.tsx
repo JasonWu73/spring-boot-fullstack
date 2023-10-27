@@ -8,8 +8,7 @@ import { Button } from '@/components/ui/Button'
 import { ReloadIcon } from '@radix-ui/react-icons'
 import { useSearchParams } from 'react-router-dom'
 import { useEffect } from 'react'
-
-const KEY_QUERY = 'q'
+import { KEY_QUERY } from '@/lib/constants'
 
 const formSchema = z.object({
   query: z.string()
@@ -38,6 +37,7 @@ function UserSearch({ onSearch, loading }: UserSearchProps) {
 
   function handleReset() {
     form.reset()
+
     onSubmit({ query: '' })
   }
 
@@ -79,7 +79,7 @@ function useSyncQuery(setValue: UseFormSetValue<FormSchema>) {
 
   useEffect(() => {
     setValue('query', query)
-  }, [query])
+  }, [query, setValue])
 }
 
-export { UserSearch, KEY_QUERY }
+export { UserSearch }

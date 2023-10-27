@@ -10,7 +10,8 @@ import {
   FormLabel,
   FormMessage
 } from '@/components/ui/Form'
-import { Input, inputErrorClasses } from '@/components/ui/Input'
+import { Input } from '@/components/ui/Input'
+import { inputErrorClasses } from '@/components/ui/ui-config'
 import {
   Select,
   SelectContent,

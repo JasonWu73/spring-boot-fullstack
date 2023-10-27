@@ -157,4 +157,4 @@ async function tryReLogin(payload: FetchPayload, params: LoginParams) {
   return { data, error }
 }
 
-export { loginApi, sendAuthDummyJsonApi }
+export { loginApi, sendAuthDummyJsonApi, type LoginResult, type LoginParams }

@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { FormCalendar, FormInput } from '@/components/ui/CustomFormField'
 import { useTitle } from '@/hooks/use-title'
 import { type Friend } from '@/api/fake/friend'
-import { useFriends } from '@/components/eat-split/FriendProvider'
+import { useFriends } from '@/components/eat-split/FriendContext'
 import { format } from 'date-fns'
 
 const formSchema = z.object({

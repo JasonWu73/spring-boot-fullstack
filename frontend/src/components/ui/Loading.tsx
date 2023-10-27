@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import NProgress from 'nprogress'
 
 function Loading() {
+  // NProgress 加载动画
   useLoading()
 
   return (
@@ -29,11 +30,9 @@ function Loading() {
 
 function useLoading() {
   useEffect(() => {
-    // 开始加载动画
     NProgress.start()
 
     return () => {
-      // 结束加载动画
       NProgress.done()
     }
   }, [])

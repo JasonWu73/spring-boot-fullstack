@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom'
 
-import { usePanelFold } from '@/components/layout/panel-fold/PanelFoldProvider'
+import { usePanelFold } from '@/components/layout/panel-fold/PanelFoldContext'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { Aside } from '@/components/layout/Aside'

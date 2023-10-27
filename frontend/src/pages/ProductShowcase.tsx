@@ -17,8 +17,7 @@ function ProductShowcase() {
     data: fetchedProduct,
     loading,
     error,
-    fetchData: fetchProduct,
-    reset: resetFetchProduct
+    fetchData: fetchProduct
   } = useFetch(async (payload) => {
     const response = await getRandomProductApi(payload)
 
@@ -30,42 +29,51 @@ function ProductShowcase() {
   })
 
   useRefresh(() => {
-    resetFetchProduct()
-
-    const controller = fetchProduct()
+    const abort = fetchProduct()
 
     return () => {
-      controller.abort()
+      abort()
     }
   })
 
   return (
-    <div className="mx-auto mt-8 flex w-[400px] flex-col items-center rounded border p-4 shadow-sm">
-      {loading && <Title label="加载中..." />}
+    <div className="mx-auto mt-8 grid w-[400px] grid-cols-1 grid-rows-[2rem_8rem_3rem_2rem] place-items-center rounded border p-4 shadow-sm">
+      <div className="row-span-1">
+        {loading && <Title label="加载中..." />}
 
-      {error && <Title label={error} isError />}
+        {error && <Title label={error} isError />}
 
-      {fetchedProduct && (
-        <>
-          <Title label={fetchedProduct.title} />
+        {fetchedProduct && <Title label={fetchedProduct.title} />}
+      </div>
+
+      <div className="row-span-1">
+        {!fetchedProduct && (
+          <div className="h-32 w-32 rounded-full border border-gray-300 bg-gradient-to-r from-cyan-500 to-sky-500 object-cover shadow-sm" />
+        )}
+
+        {fetchedProduct && (
           <img
             src={fetchedProduct.thumbnail}
             alt={fetchedProduct.title}
             className="h-32 w-32 rounded-full border border-gray-300 object-cover shadow-sm"
           />
-        </>
-      )}
+        )}
+      </div>
 
-      <Button
-        onClick={() => fetchProduct()}
-        className="my-4"
-        disabled={loading}
-      >
-        {loading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
-        获取商品
-      </Button>
+      <div className="row-span-1">
+        <Button
+          onClick={() => fetchProduct()}
+          className="my-4"
+          disabled={loading}
+        >
+          {loading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
+          获取商品
+        </Button>
+      </div>
 
-      <Message count={count} />
+      <div className="row-span-1">
+        <Message count={count} />
+      </div>
     </div>
   )
 }

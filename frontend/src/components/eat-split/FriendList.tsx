@@ -12,23 +12,32 @@ import { Card } from '@/components/ui/Card'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/Alert'
 import { useToast } from '@/components/ui/use-toast'
 import { FriendItem } from '@/components/eat-split/FriendItem'
-import { FriendSearch, KEY_SEARCH } from '@/components/eat-split/FriendSearch'
+import { FriendSearch } from '@/components/eat-split/FriendSearch'
 import { type Friend } from '@/api/fake/friend'
-import { useFriends } from '@/components/eat-split/FriendProvider'
+import { useFriends } from '@/components/eat-split/FriendContext'
 import { useRefresh } from '@/hooks/use-refresh'
+import { KEY_QUERY } from '@/lib/constants'
 
 function FriendList() {
+  // 因为是 API，所以会导致 loading 时还是显示上次的数据，为了避免页面闪烁，所以这里需要重置一下
+  const friendsContext = useFriends()
+
   const {
-    friends,
-    errorFriends: error,
     loadingFriends: loading,
     fetchFriends,
     deleteFriend,
     setShowAddFriend
-  } = useFriends()
+  } = friendsContext
+
+  let { friends, errorFriends: error } = friendsContext
+
+  if (loading) {
+    error = ''
+    friends = []
+  }
 
   const [searchParams] = useSearchParams()
-  const nameQuery = searchParams.get(KEY_SEARCH) || ''
+  const nameQuery = searchParams.get(KEY_QUERY) || ''
 
   const filteredFriends = nameQuery
     ? friends.filter((f) =>
@@ -50,10 +59,10 @@ function FriendList() {
 
     setShowAddFriend(false)
 
-    const controller = fetchFriends()
+    const abort = fetchFriends()
 
     return () => {
-      controller.abort()
+      abort()
     }
   })
 

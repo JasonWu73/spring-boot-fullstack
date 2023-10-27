@@ -7,11 +7,11 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from '@/components/ui/Tooltip'
-import { buttonVariants } from '@/components/ui/Button'
+import { buttonVariants } from '@/components/ui/ui-config'
 import { ButtonDeleteFriend } from '@/components/eat-split/ButtonDeleteFriend'
 import { cn, truncate } from '@/lib/utils'
 import { type Friend } from '@/api/fake/friend'
-import { useFriends } from '@/components/eat-split/FriendProvider'
+import { useFriends } from '@/components/eat-split/FriendContext'
 
 type FriendItemProps = {
   friend: Friend

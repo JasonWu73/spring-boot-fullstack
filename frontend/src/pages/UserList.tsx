@@ -14,12 +14,7 @@ import {
 import { useFetch } from '@/hooks/use-fetch'
 import { getUsersApi, type User } from '@/api/dummyjson/user'
 import { useRefresh } from '@/hooks/use-refresh'
-import {
-  DataTable,
-  DEFAULT_PAGE_NUM,
-  DEFAULT_PAGE_SIZE,
-  type Paging
-} from '@/components/ui/DataTable'
+import { DataTable, type Paging } from '@/components/ui/DataTable'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -30,9 +25,11 @@ import {
 } from '@/components/ui/DropdownMenu'
 import { DataTableColumnHeader } from '@/components/ui/DataTableColumnHeader'
 import { useTitle } from '@/hooks/use-title'
-import { KEY_QUERY, UserSearch } from '@/components/user/UserSearch'
+import { UserSearch } from '@/components/user/UserSearch'
 import { Checkbox } from '@/components/ui/Checkbox'
 import { Code } from '@/components/ui/Code'
+import { DEFAULT_PAGE_NUM, DEFAULT_PAGE_SIZE } from '@/components/ui/ui-config'
+import { KEY_QUERY } from '@/lib/constants'
 
 const KEY_PAGE_NUM = 'p'
 const KEY_PAGE_SIZE = 's'
@@ -162,17 +159,14 @@ function UserList() {
     data: fetchedUsers,
     error,
     loading,
-    fetchData: fetchUsers,
-    reset: resetFetchUsers
+    fetchData: fetchUsers
   } = useFetch(getUsersApi)
 
   useRefresh(() => {
-    resetFetchUsers()
-
-    const controller = fetchUsers({ pageNum, pageSize, query })
+    const abort = fetchUsers({ pageNum, pageSize, query })
 
     return () => {
-      controller.abort()
+      abort()
     }
   })
 
