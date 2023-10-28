@@ -147,7 +147,7 @@ const columns: ColumnDef<User>[] = [
   }
 ]
 
-function UserList() {
+export default function UserList() {
   useTitle('用户列表')
 
   const [searchParams, setSearchParams] = useSearchParams()
@@ -239,5 +239,3 @@ function UserList() {
     </Card>
   )
 }
-
-export { UserList }

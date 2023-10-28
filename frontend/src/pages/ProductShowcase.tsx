@@ -8,7 +8,7 @@ import { useTitle } from '@/hooks/use-title'
 import { getRandomProductApi } from '@/api/dummyjson/product'
 import { useRefresh } from '@/hooks/use-refresh'
 
-function ProductShowcase() {
+export default function ProductShowcase() {
   useTitle('产品展示')
 
   const [count, setCount] = useState(0)
@@ -106,5 +106,3 @@ function Message({ count }: MessageProps) {
     </p>
   )
 }
-
-export { ProductShowcase }

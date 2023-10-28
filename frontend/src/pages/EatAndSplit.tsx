@@ -2,7 +2,7 @@ import { Suspense, lazy } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
 
 import { Button } from '@/components/ui/Button'
-import { Loading } from '@/components/ui/Loading'
+import { Spinner } from '@/components/ui/Spinner'
 import { FriendList } from '@/components/eat-split/FriendList'
 import { useKeypress } from '@/hooks/use-keypress'
 import { useTitle } from '@/hooks/use-title'
@@ -19,7 +19,7 @@ const FormAddFriend = lazy(() =>
 )
 // ----- 结束：测试懒加载（React Split Code 技术）-----
 
-function EatAndSplit() {
+export default function EatAndSplit() {
   useTitle('Eat & Split')
 
   const { showAddFriend, setShowAddFriend } = useFriends()
@@ -43,7 +43,7 @@ function EatAndSplit() {
       </div>
 
       <div className="flex flex-col gap-6 self-start md:col-span-1 md:row-start-2 md:row-end-3 md:justify-self-end">
-        <Suspense fallback={<Loading />}>
+        <Suspense fallback={<Spinner />}>
           {showAddFriend && <FormAddFriend />}
         </Suspense>
 
@@ -60,5 +60,3 @@ function EatAndSplit() {
     </div>
   )
 }
-
-export { EatAndSplit }

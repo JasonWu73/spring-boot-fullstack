@@ -6,7 +6,7 @@ import { Footer } from '@/components/layout/Footer'
 import { Aside } from '@/components/layout/Aside'
 import { cn } from '@/lib/utils'
 
-function AdminLayout() {
+export default function AdminLayout() {
   const { folded } = usePanelFold()
 
   return (
@@ -36,5 +36,3 @@ function AdminLayout() {
     </div>
   )
 }
-
-export { AdminLayout }

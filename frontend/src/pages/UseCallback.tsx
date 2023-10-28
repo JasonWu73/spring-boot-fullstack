@@ -12,7 +12,7 @@ import { useRefresh } from '@/hooks/use-refresh'
 import { Code } from '@/components/ui/Code'
 import { MemoizedTooMuchComponent } from '@/components/performance/TooMuchComponent'
 
-function UseCallback() {
+export default function UseCallback() {
   const [showBefore, setShowBefore] = useState(false)
   const [showAfter, setShowAfter] = useState(false)
 
@@ -100,5 +100,3 @@ function AfterOptimization() {
     </div>
   )
 }
-
-export { UseCallback }

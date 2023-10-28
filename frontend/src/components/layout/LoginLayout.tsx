@@ -3,7 +3,7 @@ import { Outlet } from 'react-router-dom'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 
-function LoginLayout() {
+export default function LoginLayout() {
   return (
     <div className="flex min-h-screen flex-col">
       <Header className="dark:bg-night-2" />
@@ -16,5 +16,3 @@ function LoginLayout() {
     </div>
   )
 }
-
-export { LoginLayout }

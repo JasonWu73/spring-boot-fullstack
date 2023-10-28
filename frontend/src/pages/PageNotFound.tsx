@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 
-function PageNotFound() {
+export default function PageNotFound() {
   return (
     <div className="mt-8 flex flex-col items-center gap-4">
       <h2 className="text-xl font-bold">页面不存在 😞</h2>
@@ -10,5 +10,3 @@ function PageNotFound() {
     </div>
   )
 }
-
-export { PageNotFound }

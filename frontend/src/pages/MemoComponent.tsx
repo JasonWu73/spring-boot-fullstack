@@ -15,7 +15,7 @@ import {
 import { useRefresh } from '@/hooks/use-refresh'
 import { Code } from '@/components/ui/Code'
 
-function MemoComponent() {
+export default function MemoComponent() {
   const [showBefore, setShowBefore] = useState(false)
   const [showAfter, setShowAfter] = useState(false)
 
@@ -95,5 +95,3 @@ function AfterOptimization() {
     </div>
   )
 }
-
-export { MemoComponent }

@@ -12,7 +12,7 @@ import { HeavyComputedComponent } from '@/components/performance/HeavyComputedCo
 import { useRefresh } from '@/hooks/use-refresh'
 import { Code } from '@/components/ui/Code'
 
-function ChildrenProp() {
+export default function ChildrenProp() {
   const [showBefore, setShowBefore] = useState(false)
   const [showAfter, setShowAfter] = useState(false)
 
@@ -97,5 +97,3 @@ function AfterOptimization({ children }: AfterOptimizationProps) {
     </div>
   )
 }
-
-export { ChildrenProp }

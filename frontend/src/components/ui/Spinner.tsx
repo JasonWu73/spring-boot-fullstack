@@ -1,7 +1,12 @@
 import { useEffect } from 'react'
 import NProgress from 'nprogress'
+import { cn } from '@/lib/utils'
 
-function Loading() {
+type SpinnerProps = {
+  className?: string
+}
+
+function Spinner({ className }: SpinnerProps) {
   // NProgress 加载动画
   useLoading()
 
@@ -9,7 +14,10 @@ function Loading() {
     <div role="status">
       <svg
         aria-hidden="true"
-        className="mr-2 h-8 w-8 animate-spin fill-sky-500 text-slate-200 dark:text-slate-600"
+        className={cn(
+          'mr-2 h-8 w-8 animate-spin fill-sky-500 text-slate-200 dark:text-slate-600',
+          className
+        )}
         viewBox="0 0 100 101"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -23,7 +31,7 @@ function Loading() {
           fill="currentFill"
         />
       </svg>
-      <span className="sr-only">Loading...</span>
+      <span className="sr-only">加载中...</span>
     </div>
   )
 }
@@ -38,4 +46,4 @@ function useLoading() {
   }, [])
 }
 
-export { Loading }
+export { Spinner }
