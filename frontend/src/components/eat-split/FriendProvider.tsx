@@ -31,21 +31,21 @@ function createInitialState() {
 }
 
 type Action =
-  | { type: 'friends/loadedFailed' }
-  | { type: 'friends/loaded'; payload: Friend[] }
-  | { type: 'friends/selected'; payload: Friend | null }
-  | { type: 'friends/created'; payload: Friend }
-  | { type: 'friends/delete'; payload: number }
-  | { type: 'formAddFriend/show'; payload: boolean }
-  | { type: 'bill/split'; payload: { id: number; expense: number } }
-  | { type: 'credit/rank'; payload: { id: number; creditRating: number } }
+  | { type: 'GET_FRIENDS_FAILED' }
+  | { type: 'SET_FRIENDS'; payload: Friend[] }
+  | { type: 'SELECT_FRIEND'; payload: Friend | null }
+  | { type: 'ADD_FRIEND'; payload: Friend }
+  | { type: 'DELETE_FRIEND'; payload: number }
+  | { type: 'SHOW_ADD_FRIEND_FORM'; payload: boolean }
+  | { type: 'SPLIT_BILL'; payload: { id: number; expense: number } }
+  | { type: 'RATE_CREDIT_RANK'; payload: { id: number; creditRating: number } }
 
 function reducer(state: State, action: Action) {
   switch (action.type) {
-    case 'friends/loadedFailed': {
+    case 'GET_FRIENDS_FAILED': {
       return { ...state, friends: [] }
     }
-    case 'friends/loaded': {
+    case 'SET_FRIENDS': {
       const friends = getFriendsFromStorage()
 
       if (friends.length > 0) {
@@ -56,20 +56,20 @@ function reducer(state: State, action: Action) {
 
       return { ...state, friends: action.payload }
     }
-    case 'friends/selected': {
+    case 'SELECT_FRIEND': {
       return {
         ...state,
         curFriend: action.payload
       }
     }
-    case 'friends/created': {
+    case 'ADD_FRIEND': {
       const friends = [...state.friends, action.payload]
 
       localStorage.setItem(STORAGE_KEY, JSON.stringify(friends))
 
       return { ...state, friends }
     }
-    case 'friends/delete': {
+    case 'DELETE_FRIEND': {
       const friends = state.friends.filter((f) => f.id !== action.payload)
 
       localStorage.setItem(STORAGE_KEY, JSON.stringify(friends))
@@ -79,10 +79,10 @@ function reducer(state: State, action: Action) {
         friends
       }
     }
-    case 'formAddFriend/show': {
+    case 'SHOW_ADD_FRIEND_FORM': {
       return { ...state, showAddFriend: action.payload }
     }
-    case 'bill/split': {
+    case 'SPLIT_BILL': {
       const friends = state.friends.map((f) => {
         if (f.id === action.payload.id) {
           return {
@@ -101,7 +101,7 @@ function reducer(state: State, action: Action) {
         friends
       }
     }
-    case 'credit/rank': {
+    case 'RATE_CREDIT_RANK': {
       const friends = state.friends.map((f) => {
         if (f.id === action.payload.id) {
           return { ...f, creditRating: action.payload.creditRating }
@@ -138,11 +138,11 @@ function FriendProvider({ children }: FriendProviderProps) {
     const response = await getFriendsApi(payload)
 
     if (response.error) {
-      dispatch({ type: 'friends/loadedFailed' })
+      dispatch({ type: 'GET_FRIENDS_FAILED' })
     }
 
     if (response.data) {
-      dispatch({ type: 'friends/loaded', payload: response.data })
+      dispatch({ type: 'SET_FRIENDS', payload: response.data })
     }
 
     return response
@@ -156,11 +156,11 @@ function FriendProvider({ children }: FriendProviderProps) {
     const response = await fakeFetchFriend(payload, params)
 
     if (response.error) {
-      dispatch({ type: 'friends/selected', payload: null })
+      dispatch({ type: 'SELECT_FRIEND', payload: null })
     }
 
     if (response.data) {
-      dispatch({ type: 'friends/selected', payload: response.data })
+      dispatch({ type: 'SELECT_FRIEND', payload: response.data })
     }
 
     return response
@@ -168,25 +168,25 @@ function FriendProvider({ children }: FriendProviderProps) {
 
   function addFriend(friend: NewFriend) {
     dispatch({
-      type: 'friends/created',
+      type: 'ADD_FRIEND',
       payload: { ...friend, id: Date.now() }
     })
   }
 
   function deleteFriend(id: number) {
-    dispatch({ type: 'friends/delete', payload: id })
+    dispatch({ type: 'DELETE_FRIEND', payload: id })
   }
 
   function setShowAddFriend(show: boolean) {
-    dispatch({ type: 'formAddFriend/show', payload: show })
+    dispatch({ type: 'SHOW_ADD_FRIEND_FORM', payload: show })
   }
 
   function setCredit(id: number, creditRating: number) {
-    dispatch({ type: 'credit/rank', payload: { id, creditRating } })
+    dispatch({ type: 'RATE_CREDIT_RANK', payload: { id, creditRating } })
   }
 
   function splitBill(id: number, expense: number) {
-    dispatch({ type: 'bill/split', payload: { id, expense } })
+    dispatch({ type: 'SPLIT_BILL', payload: { id, expense } })
   }
 
   const value: FriendProviderState = {

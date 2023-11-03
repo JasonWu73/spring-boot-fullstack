@@ -27,17 +27,17 @@ const initialState: State<unknown> = {
 }
 
 type Action<TData> =
-  | { type: 'loading' }
-  | { type: 'fetch/resolved'; payload: TData }
-  | { type: 'fetch/rejected'; payload: string }
-  | { type: 'fetch/aborted' }
+  | { type: 'START_LOADING' }
+  | { type: 'FETCH_SUCCESS'; payload: TData }
+  | { type: 'FETCH_FAILED'; payload: string }
+  | { type: 'ABORT_FETCH' }
 
 function reducer<TData>(
   state: State<TData>,
   action: Action<TData>
 ): State<TData> {
   switch (action.type) {
-    case 'loading': {
+    case 'START_LOADING': {
       NProgress.start()
 
       return {
@@ -48,7 +48,7 @@ function reducer<TData>(
         loadingCount: state.loadingCount + 1
       }
     }
-    case 'fetch/resolved': {
+    case 'FETCH_SUCCESS': {
       tryNProgressDone(state.loadingCount)
 
       return {
@@ -59,7 +59,7 @@ function reducer<TData>(
         loadingCount: state.loadingCount - 1
       }
     }
-    case 'fetch/rejected': {
+    case 'FETCH_FAILED': {
       tryNProgressDone(state.loadingCount)
 
       return {
@@ -70,7 +70,7 @@ function reducer<TData>(
         loadingCount: state.loadingCount - 1
       }
     }
-    case 'fetch/aborted': {
+    case 'ABORT_FETCH': {
       tryNProgressDone(state.loadingCount)
 
       return {
@@ -128,7 +128,7 @@ function useFetch<TData, TParams>(
   function fetchData(params?: TParams): AbortCallback {
     const controller = new AbortController()
 
-    dispatch({ type: 'loading' })
+    dispatch({ type: 'START_LOADING' })
 
     async function executeCallback() {
       const response = await callback(
@@ -155,17 +155,17 @@ function useFetch<TData, TParams>(
       }
 
       if (response.error) {
-        dispatch({ type: 'fetch/rejected', payload: response.error })
+        dispatch({ type: 'FETCH_FAILED', payload: response.error })
         return
       }
 
-      dispatch({ type: 'fetch/resolved', payload: response.data })
+      dispatch({ type: 'FETCH_SUCCESS', payload: response.data })
     }
 
     executeCallback().then()
 
     return () => {
-      dispatch({ type: 'fetch/aborted' })
+      dispatch({ type: 'ABORT_FETCH' })
       controller.abort()
     }
   }
