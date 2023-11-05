@@ -48,7 +48,7 @@ export default function ProductShowcase() {
 
       <div className="row-span-1">
         {!fetchedProduct && (
-          <div className="h-32 w-32 rounded-full border border-gray-300 bg-gradient-to-r from-cyan-500 to-sky-500 object-cover shadow-sm" />
+          <div className="h-32 w-32 rounded-full border border-gray-300 bg-gradient-to-r from-slate-100 to-slate-300 object-cover shadow-sm" />
         )}
 
         {fetchedProduct && (
