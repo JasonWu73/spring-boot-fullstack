@@ -10,12 +10,12 @@ import {
 import { buttonVariants } from '@/ui/shadcn-ui/ui-config'
 import { ButtonDeleteFriend } from '@/features/eat-split/ButtonDeleteFriend'
 import { cn, truncate } from '@/utils/helpers'
-import { type Friend } from '@/services/fake/friend'
+import { type FriendResponse } from '@/services/fake/friend-api'
 import { useFriends } from '@/features/eat-split/FriendContext'
 
 type FriendItemProps = {
-  friend: Friend
-  onDeleteFriend: (friend: Friend) => void
+  friend: FriendResponse
+  onDeleteFriend: (friend: FriendResponse) => void
 }
 
 function FriendItem({ friend, onDeleteFriend }: FriendItemProps) {

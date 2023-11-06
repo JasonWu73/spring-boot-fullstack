@@ -1,9 +1,13 @@
-import { type FetchPayload, type ReLogin } from '@/hooks/use-fetch'
+import {
+  type ApiResponse,
+  type FetchPayload,
+  type ReLogin
+} from '@/hooks/use-fetch'
 import { sendRequest, type Request } from '@/utils/http'
 
 const BASE_URL = 'https://dummyjson.com/auth'
 
-type ApiError = {
+type ErrorResponse = {
   message: string
   name?: string
   expiredAt?: string
@@ -32,14 +36,17 @@ type LoginParams = {
   expiresInMins?: number
 }
 
-async function loginApi(payload: FetchPayload, params?: LoginParams) {
+async function loginApi(
+  payload: FetchPayload,
+  params?: LoginParams
+): Promise<ApiResponse<AuthResponse>> {
   if (!params) {
     return { data: null, error: '未传入参数' }
   }
 
   const { username, password } = params
 
-  const { data, error } = await sendRequest<AuthResponse, ApiError>({
+  const { data, error } = await sendRequest<AuthResponse, ErrorResponse>({
     url: `${BASE_URL}/login`,
     method: 'POST',
     bodyData: {
@@ -77,7 +84,7 @@ async function sendAuthDummyJsonApi<T>({
   urlData,
   bodyData,
   reLogin
-}: SendRequestWrapper) {
+}: SendRequestWrapper): Promise<ApiResponse<T>> {
   const { auth, signal } = payload
 
   if (!auth) {
@@ -86,7 +93,7 @@ async function sendAuthDummyJsonApi<T>({
 
   const token = reLogin?.isOk ? reLogin.token : auth.token
 
-  const { data, error } = await sendRequest<T, ApiError>({
+  const { data, error } = await sendRequest<T, ErrorResponse>({
     url: `${BASE_URL}/${url}`,
     method,
     contentType,

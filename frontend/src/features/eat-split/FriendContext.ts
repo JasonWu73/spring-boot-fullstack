@@ -1,21 +1,21 @@
 import { createContext, useContext } from 'react'
 
-import { type Friend } from '@/services/fake/friend'
+import { type FriendResponse } from '@/services/fake/friend-api'
 import { type AbortCallback } from '@/hooks/use-fetch'
 
-type NewFriend = Omit<Friend, 'id'>
+type NewFriend = Omit<FriendResponse, 'id'>
 
 type FetchFriendParams = {
   id: number
 }
 
 type FriendProviderState = {
-  friends: Friend[]
+  friends: FriendResponse[]
   errorFriends: string
   loadingFriends: boolean
   fetchFriends: () => AbortCallback
 
-  curFriend: Friend | null
+  curFriend: FriendResponse | null
   errorFriend: string
   loadingFriend: boolean
   fetchFriend: (params: FetchFriendParams) => AbortCallback

@@ -5,7 +5,7 @@ import { Button } from '@/ui/shadcn-ui/Button'
 import { cn } from '@/utils/helpers'
 import { useFetch } from '@/hooks/use-fetch'
 import { useTitle } from '@/hooks/use-title'
-import { getRandomProductApi } from '@/services/dummyjson/product'
+import { getRandomProductApi } from '@/services/dummyjson/product-api'
 import { useRefresh } from '@/hooks/use-refresh'
 
 export default function ProductShowcase() {

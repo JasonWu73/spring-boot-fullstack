@@ -7,7 +7,7 @@ import { Form } from '@/ui/shadcn-ui/Form'
 import { Card, CardContent, CardHeader, CardTitle } from '@/ui/shadcn-ui/Card'
 import { FormCalendar, FormInput } from '@/ui/CustomFormField'
 import { useTitle } from '@/hooks/use-title'
-import { type Friend } from '@/services/fake/friend'
+import { type FriendResponse } from '@/services/fake/friend-api'
 import { useFriends } from '@/features/eat-split/FriendContext'
 import { format } from 'date-fns'
 
@@ -38,7 +38,7 @@ function FormAddFriend() {
   function onSubmit(values: FormSchema) {
     const newId = Date.now()
 
-    const newFriend: Friend = {
+    const newFriend: FriendResponse = {
       id: newId,
       name: values.name,
       image: `${values.image}?u=${newId}`,

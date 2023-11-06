@@ -12,7 +12,7 @@ import {
   CardTitle
 } from '@/ui/shadcn-ui/Card'
 import { useFetch } from '@/hooks/use-fetch'
-import { getUsersApi, type User } from '@/services/dummyjson/user'
+import { getUsersApi, type User } from '@/services/dummyjson/user-api'
 import { useRefresh } from '@/hooks/use-refresh'
 import { DataTable, type Paging } from '@/ui/shadcn-ui/DataTable'
 import {

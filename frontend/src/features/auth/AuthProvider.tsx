@@ -5,7 +5,7 @@ import {
   loginApi,
   type LoginParams,
   type LoginResult
-} from '@/services/dummyjson/auth'
+} from '@/services/dummyjson/auth-api'
 import { decrypt, encrypt } from '@/utils/rsa'
 import {
   AuthProviderContext,

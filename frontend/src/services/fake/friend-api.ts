@@ -1,8 +1,8 @@
-import { type FetchPayload } from '@/hooks/use-fetch'
+import { type ApiResponse, type FetchPayload } from '@/hooks/use-fetch'
 import { sendRequest } from '@/utils/http'
 import { wait } from '@/utils/helpers'
 
-type Friend = {
+type FriendResponse = {
   id: number
   name: string
   image: string
@@ -11,10 +11,12 @@ type Friend = {
   birthday: string
 }
 
-async function getFriendsApi(payload: FetchPayload) {
+async function getFriendsApi(
+  payload: FetchPayload
+): Promise<ApiResponse<FriendResponse[]>> {
   await wait(0.5)
 
-  const { data, error } = await sendRequest<Friend[], string>({
+  const { data, error } = await sendRequest<FriendResponse[], string>({
     url: 'http://localhost:5173/data/friends.json',
     signal: payload.signal
   })
@@ -26,4 +28,4 @@ async function getFriendsApi(payload: FetchPayload) {
   return { data, error: '' }
 }
 
-export { getFriendsApi, type Friend }
+export { getFriendsApi, type FriendResponse }

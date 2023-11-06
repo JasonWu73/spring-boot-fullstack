@@ -13,7 +13,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/ui/shadcn-ui/Alert'
 import { useToast } from '@/ui/shadcn-ui/use-toast'
 import { FriendItem } from '@/features/eat-split/FriendItem'
 import { FriendSearch } from '@/features/eat-split/FriendSearch'
-import { type Friend } from '@/services/fake/friend'
+import { type FriendResponse } from '@/services/fake/friend-api'
 import { useFriends } from '@/features/eat-split/FriendContext'
 import { useRefresh } from '@/hooks/use-refresh'
 import { KEY_QUERY } from '@/utils/constants'
@@ -70,7 +70,7 @@ function FriendList() {
 
   const navigate = useNavigate()
 
-  function handleDeleteFriend(friend: Friend) {
+  function handleDeleteFriend(friend: FriendResponse) {
     deleteFriend(friend.id)
 
     toast({

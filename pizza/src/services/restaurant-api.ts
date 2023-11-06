@@ -3,7 +3,7 @@ import { sendRequest } from '@/utils/http'
 
 const API_URL = 'https://react-fast-pizza-api.onrender.com/api'
 
-type MenuItem = {
+type Menu = {
   id: number
   name: string
   unitPrice: number
@@ -12,18 +12,20 @@ type MenuItem = {
   soldOut: boolean
 }
 
-type Menu = {
+type MenuResponse = {
   status: string
-  data: MenuItem[]
+  data: Menu[]
 }
 
-type ApiError = {
+type ErrorResponse = {
   status: number
   message: string
 }
 
-async function getMenu(payload: FetchPayload): Promise<ApiResponse<Menu>> {
-  const { data, error } = await sendRequest<Menu, ApiError>({
+async function getMenu(
+  payload: FetchPayload
+): Promise<ApiResponse<MenuResponse>> {
+  const { data, error } = await sendRequest<MenuResponse, ErrorResponse>({
     url: `${API_URL}/menu`,
     signal: payload.signal
   })
@@ -35,12 +37,12 @@ async function getMenu(payload: FetchPayload): Promise<ApiResponse<Menu>> {
   return generateError(error)
 }
 
-type Order = {
+type OrderResponse = {
   id: number
 }
 
 async function getOrder(payload: FetchPayload, id: number) {
-  const { data, error } = await sendRequest<Order, ApiError>({
+  const { data, error } = await sendRequest<OrderResponse, ErrorResponse>({
     url: `${API_URL}/order/${id}`,
     signal: payload.signal
   })
@@ -52,8 +54,8 @@ async function getOrder(payload: FetchPayload, id: number) {
   return generateError(error)
 }
 
-async function createOrder(payload: FetchPayload, newOrder: Order) {
-  const { data, error } = await sendRequest<Order, ApiError>({
+async function createOrder(payload: FetchPayload, newOrder: OrderResponse) {
+  const { data, error } = await sendRequest<OrderResponse, ErrorResponse>({
     url: `${API_URL}/order`,
     method: 'POST',
     signal: payload.signal,
@@ -69,14 +71,14 @@ async function createOrder(payload: FetchPayload, newOrder: Order) {
 
 type UpdateOrder = {
   id: number
-  updateObj: Order
+  updateObj: OrderResponse
 }
 
 async function updateOrder(
   payload: FetchPayload,
   { id, updateObj }: UpdateOrder
 ) {
-  const { data, error } = await sendRequest<void, ApiError>({
+  const { data, error } = await sendRequest<void, ErrorResponse>({
     url: `${API_URL}/order/${id}`,
     method: 'PATCH',
     signal: payload.signal,
@@ -90,7 +92,7 @@ async function updateOrder(
   return generateError(error)
 }
 
-function generateError(error: string | ApiError) {
+function generateError(error: string | ErrorResponse) {
   if (typeof error === 'string') {
     return { data: null, error }
   }

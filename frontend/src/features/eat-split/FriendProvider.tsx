@@ -6,7 +6,7 @@ import {
   type FriendProviderState,
   type NewFriend
 } from '@/features/eat-split/FriendContext'
-import { type Friend, getFriendsApi } from '@/services/fake/friend'
+import { type FriendResponse, getFriendsApi } from '@/services/fake/friend-api'
 import { FetchPayload, useFetch } from '@/hooks/use-fetch'
 import { wait } from '@/utils/helpers'
 
@@ -17,8 +17,8 @@ type FriendProviderProps = {
 }
 
 type State = {
-  friends: Friend[]
-  curFriend: Friend | null
+  friends: FriendResponse[]
+  curFriend: FriendResponse | null
   showAddFriend: boolean
 }
 
@@ -32,9 +32,9 @@ function createInitialState() {
 
 type Action =
   | { type: 'GET_FRIENDS_FAILED' }
-  | { type: 'SET_FRIENDS'; payload: Friend[] }
-  | { type: 'SELECT_FRIEND'; payload: Friend | null }
-  | { type: 'ADD_FRIEND'; payload: Friend }
+  | { type: 'SET_FRIENDS'; payload: FriendResponse[] }
+  | { type: 'SELECT_FRIEND'; payload: FriendResponse | null }
+  | { type: 'ADD_FRIEND'; payload: FriendResponse }
   | { type: 'DELETE_FRIEND'; payload: number }
   | { type: 'SHOW_ADD_FRIEND_FORM'; payload: boolean }
   | { type: 'SPLIT_BILL'; payload: { id: number; expense: number } }
@@ -152,7 +152,7 @@ function FriendProvider({ children }: FriendProviderProps) {
     error: errorFriend,
     loading: loadingFriend,
     fetchData: fetchFriend
-  } = useFetch<Friend, FetchFriendParams>(async (payload, params) => {
+  } = useFetch<FriendResponse, FetchFriendParams>(async (payload, params) => {
     const response = await fakeFetchFriend(payload, params)
 
     if (response.error) {
@@ -231,7 +231,7 @@ async function fakeFetchFriend(_: FetchPayload, params?: FetchFriendParams) {
 
   const friends = JSON.parse(
     localStorage.getItem(STORAGE_KEY) || '[]'
-  ) as Friend[]
+  ) as FriendResponse[]
 
   const friend = friends.find((f) => f.id === params.id)
 

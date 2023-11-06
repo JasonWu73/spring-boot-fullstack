@@ -179,4 +179,10 @@ function tryNProgressDone(loadingCount: number) {
   }
 }
 
-export { useFetch, type FetchPayload, type ReLogin, type AbortCallback }
+export {
+  useFetch,
+  type ApiResponse,
+  type FetchPayload,
+  type ReLogin,
+  type AbortCallback
+}
