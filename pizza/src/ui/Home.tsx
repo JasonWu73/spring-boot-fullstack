@@ -7,7 +7,7 @@ function Home() {
         Straight out of the oven, straight to you.
       </h1>
     </div>
-  );
+  )
 }
 
-export default Home;
+export default Home

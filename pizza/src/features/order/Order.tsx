@@ -1,4 +1,4 @@
-import { calcMinutesLeft, formatCurrency, formatDate } from '@/lib/helpers'
+import { calcMinutesLeft, formatCurrency, formatDate } from '@/lib/helpers.js'
 
 // Test ID: IIDSAT
 
