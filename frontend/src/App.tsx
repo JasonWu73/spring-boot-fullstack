@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react'
-import { Navigate, Route, Routes } from 'react-router-dom'
+import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
 
 import { Toaster } from '@/ui/shadcn-ui/Toaster'
 import { wait } from '@/utils/helpers'
@@ -36,64 +36,71 @@ const FormSplitBill = lazy(() =>
 )
 // ----- 结束：测试 React Router 懒加载（React Split Code 技术）-----
 
+const router = createBrowserRouter([
+  {
+    element: <LoginLayout />,
+    children: [{ path: '/login', element: <Login /> }]
+  },
+  {
+    element: <MainLayout />,
+    children: [
+      { path: '/', element: <Navigate to="/eat-split" replace /> },
+      {
+        element: <SecureRoute />,
+        children: [{ path: '/fetch', element: <ProductShowcase /> }]
+      },
+      {
+        path: '/eat-split',
+        element: (
+          <FriendProvider>
+            <EatAndSplit />
+          </FriendProvider>
+        ),
+        children: [
+          {
+            path: ':friendId',
+            element: (
+              <Suspense fallback={<Spinner />}>
+                <FormSplitBill />
+              </Suspense>
+            )
+          }
+        ]
+      },
+      {
+        path: '*',
+        element: <PageNotFound />
+      }
+    ]
+  },
+  {
+    element: (
+      <PanelFoldProvider>
+        <AdminLayout />
+      </PanelFoldProvider>
+    ),
+    children: [
+      {
+        element: <SecureRoute />,
+        children: [
+          { path: '/admin', element: <Navigate to="/users" replace /> },
+          { path: '/users', element: <UserList /> },
+          { path: '/children', element: <ChildrenProp /> },
+          { path: '/memo', element: <MemoComponent /> },
+          { path: '/use-memo', element: <UseMemo /> },
+          { path: '/use-callback', element: <UseCallback /> }
+        ]
+      }
+    ]
+  }
+])
+
 export default function App() {
   return (
     <ThemeProvider defaultTheme="system" storageKey="demo-ui-theme">
       <AuthProvider>
         <Suspense fallback={<SpinnerFullPage />}>
-          <Routes>
-            <Route path="/login" element={<LoginLayout />}>
-              <Route index element={<Login />} />
-            </Route>
-
-            <Route element={<MainLayout />}>
-              <Route path="/" element={<Navigate to="/eat-split" replace />} />
-
-              <Route element={<SecureRoute />}>
-                <Route path="/fetch" element={<ProductShowcase />} />
-              </Route>
-
-              <Route
-                path="/eat-split"
-                element={
-                  <FriendProvider>
-                    <EatAndSplit />
-                  </FriendProvider>
-                }
-              >
-                <Route
-                  path=":friendId"
-                  element={
-                    <Suspense fallback={<Spinner />}>
-                      <FormSplitBill />
-                    </Suspense>
-                  }
-                />
-              </Route>
-
-              <Route path="*" element={<PageNotFound />} />
-            </Route>
-
-            <Route
-              element={
-                <PanelFoldProvider>
-                  <AdminLayout />
-                </PanelFoldProvider>
-              }
-            >
-              <Route element={<SecureRoute />}>
-                <Route
-                  path="/admin"
-                  element={<Navigate to="/users" replace />}
-                />
-                <Route path="/users" element={<UserList />} />
-                <Route path="/children" element={<ChildrenProp />} />
-                <Route path="/memo" element={<MemoComponent />} />
-                <Route path="/use-memo" element={<UseMemo />} />
-                <Route path="/use-callback" element={<UseCallback />} />
-              </Route>
-            </Route>
-          </Routes>
+          <RouterProvider router={router} />
         </Suspense>
 
         <Toaster />
