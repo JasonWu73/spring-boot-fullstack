@@ -43,6 +43,9 @@ npm install --save-dev @types/nprogress
 
 # 安装 React Router
 npm install react-router-dom
+
+# 安装 shadcn/ui
+npx shadcn-ui@latest init
 ```
 
 ## Tutorials
