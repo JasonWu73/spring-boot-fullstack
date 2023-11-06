@@ -40,6 +40,9 @@ npx tailwindcss init -p
 # 安装 NProgress
 npm install nprogress
 npm install --save-dev @types/nprogress
+
+# 安装 React Router
+npm install react-router-dom
 ```
 
 ## Tutorials
