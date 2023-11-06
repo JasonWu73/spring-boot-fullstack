@@ -25,6 +25,8 @@
     "paths": {
       "@/*": ["./src/*"]
     },
+
+    /* 增加类型检查的兼容性 */
     "allowSyntheticDefaultImports": true
   },
   "include": ["src"],

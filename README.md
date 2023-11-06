@@ -13,10 +13,30 @@ POST /orders/1/lines  <---> orders[1].lines.push(data)
 
 # Frontend
 
-## Docs
+## 创建项目
 
-- [Install Tailwind CSS with Vite - Tailwind CSS](https://tailwindcss.com/docs/guides/vite)
-- [Vite - shadcn/ui](https://ui.shadcn.com/docs/installation/vite)
+```bash
+# Vite 创建 React + TS 项目
+npm create vite@latest my-react-app -- --template react-ts
+
+# 安装 Node 的类型定义，避免 IDE 因无法识别 Node 类型的而产生的警告
+npm install --save-dev @types/node
+
+# 安装 Prettier
+npm install --save-dev --save-exact prettier
+
+# 安装 `eslint-config-prettier`，关闭所有不必要或可能与 Prettier 冲突的 ESLint 规则
+npm install --save-dev eslint-config-prettier
+
+# 安装 Tailwind CSS 的 Prettier 插件
+npm install --save-dev prettier-plugin-tailwindcss
+
+# 安装 Tailwind CSS
+npm install --save-dev tailwindcss postcss autoprefixer
+
+# 生成 `tailwind.config.js` 和 `postcss.config.js` 文件
+npx tailwindcss init -p
+```
 
 ## Tutorials
 
