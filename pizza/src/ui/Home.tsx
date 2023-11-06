@@ -2,9 +2,9 @@ function Home() {
   return (
     <div>
       <h1>
-        The best pizza.
+        最好的披萨。
         <br />
-        Straight out of the oven, straight to you.
+        直接从烤箱里出来，直接送给您。
       </h1>
     </div>
   )
