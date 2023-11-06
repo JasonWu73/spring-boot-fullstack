@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 
 import App from '@/App'
-import { nprogressConfig } from '@/lib/nprogress-config'
+import { nprogressConfig } from '@/utils/nprogress-config'
 import '@/index.css'
 
 nprogressConfig()
