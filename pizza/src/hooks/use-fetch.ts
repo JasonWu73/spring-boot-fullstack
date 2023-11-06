@@ -1,14 +1,9 @@
 import React, { useReducer } from 'react'
 import NProgress from 'nprogress'
 
-import { type Auth, useAuth } from '@/components/auth/AuthContext'
-
-type ReLogin = { isOk: true; token: string } | { isOk: false }
-
 type ApiResponse<TData> = {
   data: TData | null
   error: string
-  reLogin?: ReLogin
 }
 
 type State<TData> = {
@@ -16,7 +11,6 @@ type State<TData> = {
   error: string
   loading: boolean
   loadingCount: number
-  reLogin?: ReLogin
 }
 
 const initialState: State<unknown> = {
@@ -89,7 +83,6 @@ function reducer<TData>(
 
 type FetchPayload = {
   signal: AbortSignal
-  auth: Auth | null
 }
 
 type ApiCallback<TData, TParams> = (
@@ -123,8 +116,6 @@ function useFetch<TData, TParams>(
     initialState as State<TData>
   )
 
-  const { auth, logout, updateToken } = useAuth()
-
   function fetchData(params?: TParams): AbortCallback {
     const controller = new AbortController()
 
@@ -133,22 +124,10 @@ function useFetch<TData, TParams>(
     async function executeCallback() {
       const response = await callback(
         {
-          signal: controller.signal,
-          auth
+          signal: controller.signal
         },
         params
       )
-
-      // 实现身份验证自动刷新机制
-      if (response.reLogin) {
-        if (response.reLogin.isOk) {
-          updateToken(response.reLogin.token)
-        }
-
-        if (!response.reLogin.isOk) {
-          logout()
-        }
-      }
 
       if (controller.signal.aborted) {
         return
@@ -179,10 +158,4 @@ function tryNProgressDone(loadingCount: number) {
   }
 }
 
-export {
-  useFetch,
-  type ApiResponse,
-  type FetchPayload,
-  type ReLogin,
-  type AbortCallback
-}
+export { useFetch, type ApiResponse, type FetchPayload, type AbortCallback }

@@ -5,7 +5,7 @@ type BodyData = Record<string, unknown> | FormData
 
 type Request = {
   url: string
-  method?: 'GET' | 'POST' | 'PUT' | 'DELETE'
+  method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'
   contentType?: ContentType
   headers?: Record<string, string>
   urlData?: UrlData
