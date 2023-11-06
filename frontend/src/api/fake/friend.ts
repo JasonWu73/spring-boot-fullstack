@@ -1,4 +1,4 @@
-import { type ApiResponse, type FetchPayload } from '@/hooks/use-fetch'
+import { type FetchPayload } from '@/hooks/use-fetch'
 import { sendRequest } from '@/lib/http'
 import { wait } from '@/lib/utils'
 
@@ -11,9 +11,7 @@ type Friend = {
   birthday: string
 }
 
-async function getFriendsApi(
-  payload: FetchPayload
-): Promise<ApiResponse<Friend[]>> {
+async function getFriendsApi(payload: FetchPayload) {
   await wait(0.5)
 
   const { data, error } = await sendRequest<Friend[], string>({

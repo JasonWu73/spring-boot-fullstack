@@ -1,8 +1,4 @@
-import {
-  type ApiResponse,
-  type FetchPayload,
-  type ReLogin
-} from '@/hooks/use-fetch'
+import { type FetchPayload, type ReLogin } from '@/hooks/use-fetch'
 import { sendRequest, type Request } from '@/lib/http'
 
 const BASE_URL = 'https://dummyjson.com/auth'
@@ -36,10 +32,7 @@ type LoginParams = {
   expiresInMins?: number
 }
 
-async function loginApi(
-  payload: FetchPayload,
-  params?: LoginParams
-): Promise<ApiResponse<LoginResult>> {
+async function loginApi(payload: FetchPayload, params?: LoginParams) {
   if (!params) {
     return { data: null, error: '未传入参数' }
   }
@@ -84,7 +77,7 @@ async function sendAuthDummyJsonApi<T>({
   urlData,
   bodyData,
   reLogin
-}: SendRequestWrapper): Promise<ApiResponse<T>> {
+}: SendRequestWrapper) {
   const { auth, signal } = payload
 
   if (!auth) {

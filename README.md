@@ -36,6 +36,10 @@ npm install --save-dev tailwindcss postcss autoprefixer
 
 # 生成 `tailwind.config.js` 和 `postcss.config.js` 文件
 npx tailwindcss init -p
+
+# 安装 NProgress
+npm install nprogress
+npm install --save-dev @types/nprogress
 ```
 
 ## Tutorials
