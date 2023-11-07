@@ -1,5 +1,6 @@
 import React, { useReducer } from 'react'
-import NProgress from 'nprogress'
+
+import { endNProgress, startNProgress } from '@/utils/nprogress'
 
 type ApiResponse<TData> = {
   data: TData | null
@@ -32,7 +33,7 @@ function reducer<TData>(
 ): State<TData> {
   switch (action.type) {
     case 'START_LOADING': {
-      NProgress.start()
+      startNProgress()
 
       return {
         ...state,
@@ -154,7 +155,7 @@ function useFetch<TData, TParams>(
 
 function tryNProgressDone(loadingCount: number) {
   if (loadingCount <= 1) {
-    NProgress.done()
+    endNProgress()
   }
 }
 

@@ -8,7 +8,9 @@ function Menu() {
   const { data: menus } = useLoaderData() as ApiResponse<Menu[]>
 
   return (
-    <ul>{menus?.map((pizza) => <MenuItem pizza={pizza} key={pizza.id} />)}</ul>
+    <ul className="flex flex-col gap-4">
+      {menus?.map((pizza) => <MenuItem pizza={pizza} key={pizza.id} />)}
+    </ul>
   )
 }
 

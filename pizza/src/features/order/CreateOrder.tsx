@@ -27,7 +27,7 @@ function CreateOrder() {
   const cart = fakeCart
 
   return (
-    <div>
+    <div className="max-w-md rounded-sm border p-4 shadow-md">
       <h2>Ready to order? Let's go!</h2>
 
       <form>
@@ -62,7 +62,9 @@ function CreateOrder() {
         </div>
 
         <div>
-          <button>Order now</button>
+          <button className="rounded bg-sky-500 px-2 py-1 text-white hover:bg-sky-600">
+            Order now
+          </button>
         </div>
       </form>
     </div>

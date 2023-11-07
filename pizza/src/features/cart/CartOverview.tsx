@@ -7,7 +7,9 @@ function CartOverview() {
         <span>23 个披萨</span>
         <span>$23.45</span>
       </p>
-      <Link to="/cart">打开购物车 →</Link>
+      <Link to="/cart" className="text-sky-500">
+        打开购物车 →
+      </Link>
     </div>
   )
 }

@@ -9,7 +9,7 @@ function MenuItem({ pizza }: MenuItemProps) {
   const { id, name, unitPrice, ingredients, soldOut, imageUrl } = pizza
 
   return (
-    <li>
+    <li className="rounded-md border bg-slate-300">
       <img src={imageUrl} alt={name} />
       <div>
         <p>{name}</p>

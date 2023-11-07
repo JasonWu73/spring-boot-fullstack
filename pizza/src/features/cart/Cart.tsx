@@ -29,13 +29,19 @@ function Cart() {
 
   return (
     <div>
-      <Link to="/menu">← 返回菜单</Link>
+      <Link to="/menu" className="text-sky-500">
+        ← 返回菜单
+      </Link>
 
-      <h2>您的购物车，%NAME%</h2>
+      <h2 className="text-lg font-bold">您的购物车，%NAME%</h2>
 
       <div>
-        <Link to="/order/new">订购披萨</Link>
-        <button>清除购物车</button>
+        <Link to="/order/new" className="text-sky-500">
+          订购披萨
+        </Link>
+        <button className="rounded bg-sky-500 px-2 py-1 text-white hover:bg-sky-600">
+          清除购物车
+        </button>
       </div>
     </div>
   )
