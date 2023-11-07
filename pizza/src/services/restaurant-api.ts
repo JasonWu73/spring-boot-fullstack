@@ -72,7 +72,15 @@ async function getOrderApi(payload: FetchPayload, id: string) {
   generateError(error)
 }
 
-async function createOrderApi(payload: FetchPayload, newOrder: OrderResponse) {
+type NewOrder = {
+  customer: string
+  phone: string
+  address: string
+  priority: boolean
+  cart: OrderItem[]
+}
+
+async function createOrderApi(payload: FetchPayload, newOrder: NewOrder) {
   const { data, error } = await sendRequest<OrderResponse, ErrorResponse>({
     url: `${API_URL}/order`,
     method: 'POST',
@@ -81,7 +89,7 @@ async function createOrderApi(payload: FetchPayload, newOrder: OrderResponse) {
   })
 
   if (!error) {
-    return { data, error: '' }
+    return { data: data?.data, error: '' }
   }
 
   generateError(error)
@@ -124,5 +132,6 @@ export {
   createOrderApi,
   updateOrderApi,
   type Menu,
-  type Order
+  type Order,
+  type NewOrder
 }

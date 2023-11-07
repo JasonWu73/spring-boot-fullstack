@@ -1,3 +1,5 @@
+import { Form } from 'react-router-dom'
+
 const fakeCart = [
   {
     pizzaId: 12,
@@ -30,7 +32,7 @@ function CreateOrder() {
     <div className="max-w-md rounded-sm border p-4 shadow-md">
       <h2>Ready to order? Let's go!</h2>
 
-      <form>
+      <Form method="POST">
         <div>
           <label>First Name</label>
           <input type="text" name="customer" required />
@@ -62,11 +64,15 @@ function CreateOrder() {
         </div>
 
         <div>
+          <input type="hidden" name="cart" value={JSON.stringify(cart)} />
+        </div>
+
+        <div>
           <button className="rounded bg-sky-500 px-2 py-1 text-white hover:bg-sky-600">
             Order now
           </button>
         </div>
-      </form>
+      </Form>
     </div>
   )
 }
