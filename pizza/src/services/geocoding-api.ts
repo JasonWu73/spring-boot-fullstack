@@ -16,7 +16,7 @@ type ErrorResponse = {
   description: string
 }
 
-async function getAddress(
+async function getAddressApi(
   payload: FetchPayload,
   { latitude, longitude }: GetAddressParams
 ): Promise<ApiResponse<GeocodeResponse>> {
@@ -36,4 +36,4 @@ async function getAddress(
   return { data: null, error: error.description }
 }
 
-export { getAddress }
+export { getAddressApi }

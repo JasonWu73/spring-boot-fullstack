@@ -1,6 +1,11 @@
 import { formatCurrency } from '@/utils/helpers-provided'
+import { type Menu } from '@/services/restaurant-api'
 
-function MenuItem({ pizza }) {
+type MenuItemProps = {
+  pizza: Menu
+}
+
+function MenuItem({ pizza }: MenuItemProps) {
   const { id, name, unitPrice, ingredients, soldOut, imageUrl } = pizza
 
   return (
@@ -9,9 +14,7 @@ function MenuItem({ pizza }) {
       <div>
         <p>{name}</p>
         <p>{ingredients.join(', ')}</p>
-        <div>
-          {!soldOut ? <p>{formatCurrency(unitPrice)}</p> : <p>Sold out</p>}
-        </div>
+        <div>{!soldOut ? <p>{formatCurrency(unitPrice)}</p> : <p>售罄</p>}</div>
       </div>
     </li>
   )

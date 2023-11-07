@@ -22,16 +22,14 @@ type ErrorResponse = {
   message: string
 }
 
-async function getMenu(
-  payload: FetchPayload
-): Promise<ApiResponse<MenuResponse>> {
+async function getMenuApi(payload: FetchPayload): Promise<ApiResponse<Menu[]>> {
   const { data, error } = await sendRequest<MenuResponse, ErrorResponse>({
     url: `${API_URL}/menu`,
     signal: payload.signal
   })
 
   if (!error) {
-    return { data, error: '' }
+    return { data: data?.data ?? [], error: '' }
   }
 
   return generateError(error)
@@ -41,7 +39,7 @@ type OrderResponse = {
   id: number
 }
 
-async function getOrder(payload: FetchPayload, id: number) {
+async function getOrderApi(payload: FetchPayload, id: number) {
   const { data, error } = await sendRequest<OrderResponse, ErrorResponse>({
     url: `${API_URL}/order/${id}`,
     signal: payload.signal
@@ -54,7 +52,7 @@ async function getOrder(payload: FetchPayload, id: number) {
   return generateError(error)
 }
 
-async function createOrder(payload: FetchPayload, newOrder: OrderResponse) {
+async function createOrderApi(payload: FetchPayload, newOrder: OrderResponse) {
   const { data, error } = await sendRequest<OrderResponse, ErrorResponse>({
     url: `${API_URL}/order`,
     method: 'POST',
@@ -74,7 +72,7 @@ type UpdateOrder = {
   updateObj: OrderResponse
 }
 
-async function updateOrder(
+async function updateOrderApi(
   payload: FetchPayload,
   { id, updateObj }: UpdateOrder
 ) {
@@ -100,4 +98,4 @@ function generateError(error: string | ErrorResponse) {
   return { data: null, error: error.message }
 }
 
-export { getMenu, getOrder, createOrder, updateOrder }
+export { getMenuApi, getOrderApi, createOrderApi, updateOrderApi, type Menu }
