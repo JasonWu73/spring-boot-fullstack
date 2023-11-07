@@ -1,7 +1,7 @@
-import { type ApiResponse, type FetchPayload } from '@/hooks/use-fetch'
+import { type FetchPayload } from '@/hooks/use-fetch'
 import { sendRequest } from '@/utils/http'
 
-const API_URL = 'https://react-fast-pizza-api.onrender.com/api'
+const API_URL = 'https://rreact-fast-pizza-api.onrender.com/api'
 
 type Menu = {
   id: number
@@ -22,7 +22,7 @@ type ErrorResponse = {
   message: string
 }
 
-async function getMenuApi(payload: FetchPayload): Promise<ApiResponse<Menu[]>> {
+async function getMenuApi(payload: FetchPayload) {
   const { data, error } = await sendRequest<MenuResponse, ErrorResponse>({
     url: `${API_URL}/menu`,
     signal: payload.signal
@@ -32,7 +32,7 @@ async function getMenuApi(payload: FetchPayload): Promise<ApiResponse<Menu[]>> {
     return { data: data?.data ?? [], error: '' }
   }
 
-  return generateError(error)
+  generateError(error)
 }
 
 type OrderResponse = {
@@ -49,7 +49,7 @@ async function getOrderApi(payload: FetchPayload, id: number) {
     return { data, error: '' }
   }
 
-  return generateError(error)
+  generateError(error)
 }
 
 async function createOrderApi(payload: FetchPayload, newOrder: OrderResponse) {
@@ -64,7 +64,7 @@ async function createOrderApi(payload: FetchPayload, newOrder: OrderResponse) {
     return { data, error: '' }
   }
 
-  return generateError(error)
+  generateError(error)
 }
 
 type UpdateOrder = {
@@ -87,15 +87,15 @@ async function updateOrderApi(
     return { data, error: '' }
   }
 
-  return generateError(error)
+  generateError(error)
 }
 
 function generateError(error: string | ErrorResponse) {
   if (typeof error === 'string') {
-    return { data: null, error }
+    throw new Error(error)
   }
 
-  return { data: null, error: error.message }
+  throw new Error(error.message)
 }
 
 export { getMenuApi, getOrderApi, createOrderApi, updateOrderApi, type Menu }

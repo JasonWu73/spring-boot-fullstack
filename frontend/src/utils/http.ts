@@ -78,14 +78,17 @@ async function sendRequest<TData, TError>({
     // 请求成功时，返回正常响应数据
     return { data: responseData, error: null }
   } catch (error) {
-    // 忽略因主动取消请求而产生的非程序异常
-    // 此时无需结束加载画面
-    if (error instanceof Error && error.name === 'AbortError') {
+    if (error instanceof Error) {
       // console.log(`${error.message} [${method} ${url}]`)
-      return { data: null, error: '用户主动取消了请求' }
+
+      // 忽略因主动取消请求而产生的非程序异常
+      if (error.name === 'AbortError') {
+        return { data: null, error: '用户主动取消了请求' }
+      }
+
+      return { data: null, error: error.message }
     }
 
-    // 处理程序异常
     return { data: null, error: String(error) }
   }
 }

@@ -1,4 +1,4 @@
-import { type ApiResponse, type FetchPayload } from '@/hooks/use-fetch'
+import { type FetchPayload } from '@/hooks/use-fetch'
 import { sendRequest } from '@/utils/http'
 
 type GetAddressParams = {
@@ -19,7 +19,7 @@ type ErrorResponse = {
 async function getAddressApi(
   payload: FetchPayload,
   { latitude, longitude }: GetAddressParams
-): Promise<ApiResponse<GeocodeResponse>> {
+) {
   const { data, error } = await sendRequest<GeocodeResponse, ErrorResponse>({
     url: `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}`,
     signal: payload.signal
@@ -30,10 +30,10 @@ async function getAddressApi(
   }
 
   if (typeof error === 'string') {
-    return { data: null, error }
+    throw new Error(error)
   }
 
-  return { data: null, error: error.description }
+  throw new Error(error.description)
 }
 
 export { getAddressApi }

@@ -10,7 +10,7 @@ function AppLayout() {
 
   return (
     <div className="layout">
-      {loading && <Spinner />}
+      {loading && <Spinner className="mt-4 h-10 w-10" />}
 
       <Header />
 
