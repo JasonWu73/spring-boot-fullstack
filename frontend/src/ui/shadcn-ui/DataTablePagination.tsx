@@ -1,4 +1,4 @@
-import { Table } from '@tanstack/react-table'
+import {type Table} from '@tanstack/react-table'
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -6,14 +6,8 @@ import {
   DoubleArrowRightIcon
 } from '@radix-ui/react-icons'
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@/ui/shadcn-ui/Select'
-import { Button } from '@/ui/shadcn-ui/Button'
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/ui/shadcn-ui/Select'
+import {Button} from '@/ui/shadcn-ui/Button'
 
 type DataTablePaginationProps<TData> = {
   table: Table<TData>
@@ -21,9 +15,9 @@ type DataTablePaginationProps<TData> = {
 }
 
 function DataTablePagination<TData>({
-  table,
-  needsSelection = false
-}: DataTablePaginationProps<TData>) {
+                                      table,
+                                      needsSelection = false
+                                    }: DataTablePaginationProps<TData>) {
   return (
     <div className="mt-4 flex items-center justify-between px-2">
       <div className="text-muted-foreground hidden flex-1 text-sm lg:flex">
@@ -45,7 +39,7 @@ function DataTablePagination<TData>({
             }}
           >
             <SelectTrigger className="h-8 w-[70px]">
-              <SelectValue placeholder={table.getState().pagination.pageSize} />
+              <SelectValue placeholder={table.getState().pagination.pageSize}/>
             </SelectTrigger>
             <SelectContent side="top">
               {[10, 20, 30, 40, 50].map((pageSize) => (
@@ -70,7 +64,7 @@ function DataTablePagination<TData>({
             disabled={!table.getCanPreviousPage()}
           >
             <span className="sr-only">转到第一页</span>
-            <DoubleArrowLeftIcon className="h-4 w-4" />
+            <DoubleArrowLeftIcon className="h-4 w-4"/>
           </Button>
 
           <Button
@@ -80,7 +74,7 @@ function DataTablePagination<TData>({
             disabled={!table.getCanPreviousPage()}
           >
             <span className="sr-only">转到上一页</span>
-            <ChevronLeftIcon className="h-4 w-4" />
+            <ChevronLeftIcon className="h-4 w-4"/>
           </Button>
 
           <Button
@@ -90,7 +84,7 @@ function DataTablePagination<TData>({
             disabled={!table.getCanNextPage()}
           >
             <span className="sr-only">转到下一页</span>
-            <ChevronRightIcon className="h-4 w-4" />
+            <ChevronRightIcon className="h-4 w-4"/>
           </Button>
 
           <Button
@@ -100,7 +94,7 @@ function DataTablePagination<TData>({
             disabled={!table.getCanNextPage()}
           >
             <span className="sr-only">转到最后一页</span>
-            <DoubleArrowRightIcon className="h-4 w-4" />
+            <DoubleArrowRightIcon className="h-4 w-4"/>
           </Button>
         </div>
       </div>
@@ -108,4 +102,4 @@ function DataTablePagination<TData>({
   )
 }
 
-export { DataTablePagination }
+export {DataTablePagination}

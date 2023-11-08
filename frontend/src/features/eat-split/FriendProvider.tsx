@@ -227,7 +227,7 @@ async function fakeGetFriendApi(_: FetchPayload, params?: GetFriendParams) {
   }
 
   // 仅为了模拟查看骨架屏的效果
-  await wait(1)
+  await wait(2)
 
   const friends = JSON.parse(
     localStorage.getItem(STORAGE_KEY) || '[]'

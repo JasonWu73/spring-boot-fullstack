@@ -11,7 +11,7 @@ import { useFriends } from '@/features/eat-split/FriendContext'
 
 // ----- 开始：测试懒加载（React Split Code 技术）-----
 const FormAddFriend = lazy(() =>
-  wait(1).then(() =>
+  wait(2).then(() =>
     import('@/features/eat-split/FormAddFriend').then((module) => ({
       default: module.FormAddFriend
     }))

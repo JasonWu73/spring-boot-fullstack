@@ -1,29 +1,17 @@
-import React, { HTMLInputTypeAttribute } from 'react'
-import { type Control, type FieldValues, type Path } from 'react-hook-form'
-import { format } from 'date-fns'
-import { CalendarIcon } from '@radix-ui/react-icons'
+import React, {type HTMLInputTypeAttribute} from 'react'
+import {type Control, type FieldValues, type Path} from 'react-hook-form'
+import {format} from 'date-fns'
+import {CalendarIcon} from '@radix-ui/react-icons'
 
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
-} from '@/ui/shadcn-ui/Form'
-import { Input } from '@/ui/shadcn-ui/Input'
-import { inputErrorClasses } from '@/ui/shadcn-ui/ui-config'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@/ui/shadcn-ui/Select'
-import { Popover, PopoverContent, PopoverTrigger } from '@/ui/shadcn-ui/Popover'
-import { Button } from '@/ui/shadcn-ui/Button'
-import { cn } from '@/utils/helpers'
-import { Calendar } from '@/ui/shadcn-ui/Calendar'
-import { zhCN } from 'date-fns/locale'
+import {FormControl, FormField, FormItem, FormLabel, FormMessage} from '@/ui/shadcn-ui/Form'
+import {Input} from '@/ui/shadcn-ui/Input'
+import {inputErrorClasses} from '@/ui/shadcn-ui/ui-config'
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/ui/shadcn-ui/Select'
+import {Popover, PopoverContent, PopoverTrigger} from '@/ui/shadcn-ui/Popover'
+import {Button} from '@/ui/shadcn-ui/Button'
+import {cn} from '@/utils/helpers'
+import {Calendar} from '@/ui/shadcn-ui/Calendar'
+import {zhCN} from 'date-fns/locale'
 
 type FormInputProps<T extends FieldValues> = {
   control: Control<T>
@@ -38,24 +26,24 @@ type FormInputProps<T extends FieldValues> = {
 }
 
 function FormInput<T extends FieldValues>({
-  control,
-  name,
-  label,
-  labelWidth,
-  type = 'text',
-  placeholder,
-  disabled,
-  isError = false,
-  inputRef
-}: FormInputProps<T>) {
+                                            control,
+                                            name,
+                                            label,
+                                            labelWidth,
+                                            type = 'text',
+                                            placeholder,
+                                            disabled,
+                                            isError = false,
+                                            inputRef
+                                          }: FormInputProps<T>) {
   return (
     <FormField
       control={control}
       name={name}
-      render={({ field }) => (
+      render={({field}) => (
         <FormItem className="grid grid-flow-row items-center gap-2 lg:grid-cols-[auto_1fr]">
           <FormLabel
-            style={{ width: labelWidth }}
+            style={{width: labelWidth}}
             className="overflow-hidden text-ellipsis whitespace-nowrap"
           >
             {label}
@@ -75,7 +63,7 @@ function FormInput<T extends FieldValues>({
             />
           </FormControl>
 
-          <FormMessage className="lg:col-start-2 lg:col-end-3 lg:row-span-1" />
+          <FormMessage className="lg:col-start-2 lg:col-end-3 lg:row-span-1"/>
         </FormItem>
       )}
     />
@@ -98,23 +86,23 @@ type FormSelectProps<T extends FieldValues> = Omit<
  * 下拉组件不需要考虑 `placeholder`, 而应该拥有默认值.
  */
 function FormSelect<T extends FieldValues>({
-  control,
-  name,
-  label,
-  labelWidth,
-  options,
-  placeholder,
-  disabled,
-  isError = false
-}: FormSelectProps<T>) {
+                                             control,
+                                             name,
+                                             label,
+                                             labelWidth,
+                                             options,
+                                             placeholder,
+                                             disabled,
+                                             isError = false
+                                           }: FormSelectProps<T>) {
   return (
     <FormField
       control={control}
       name={name}
-      render={({ field }) => (
+      render={({field}) => (
         <FormItem className="grid grid-flow-row items-center gap-1 lg:grid-cols-[auto_1fr]">
           <FormLabel
-            style={{ width: labelWidth }}
+            style={{width: labelWidth}}
             className="overflow-hidden text-ellipsis whitespace-nowrap"
           >
             {label}
@@ -123,12 +111,12 @@ function FormSelect<T extends FieldValues>({
           <Select value={field.value} onValueChange={field.onChange}>
             <FormControl className="bg-slate-100">
               <SelectTrigger disabled={disabled} isError={isError}>
-                <SelectValue placeholder={placeholder} />
+                <SelectValue placeholder={placeholder}/>
               </SelectTrigger>
             </FormControl>
 
             <SelectContent>
-              {options.map(({ value, label }) => (
+              {options.map(({value, label}) => (
                 <SelectItem key={value} value={value}>
                   {label}
                 </SelectItem>
@@ -136,7 +124,7 @@ function FormSelect<T extends FieldValues>({
             </SelectContent>
           </Select>
 
-          <FormMessage className="lg:col-start-2 lg:col-end-3 lg:row-span-1" />
+          <FormMessage className="lg:col-start-2 lg:col-end-3 lg:row-span-1"/>
         </FormItem>
       )}
     />
@@ -151,22 +139,22 @@ type FormCalendarProps<T extends FieldValues> = Omit<
 }
 
 function FormCalendar<T extends FieldValues>({
-  control,
-  name,
-  label,
-  labelWidth,
-  placeholder,
-  isError = false,
-  disabledWhen
-}: FormCalendarProps<T>) {
+                                               control,
+                                               name,
+                                               label,
+                                               labelWidth,
+                                               placeholder,
+                                               isError = false,
+                                               disabledWhen
+                                             }: FormCalendarProps<T>) {
   return (
     <FormField
       control={control}
       name={name}
-      render={({ field }) => (
+      render={({field}) => (
         <FormItem className="grid grid-flow-row items-center gap-2 lg:grid-cols-[auto_1fr]">
           <FormLabel
-            style={{ width: labelWidth }}
+            style={{width: labelWidth}}
             className="overflow-hidden text-ellipsis whitespace-nowrap"
           >
             {label}
@@ -188,7 +176,7 @@ function FormCalendar<T extends FieldValues>({
                   ) : (
                     <span>{placeholder}</span>
                   )}
-                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50"/>
                 </Button>
               </FormControl>
             </PopoverTrigger>
@@ -205,11 +193,11 @@ function FormCalendar<T extends FieldValues>({
             </PopoverContent>
           </Popover>
 
-          <FormMessage className="lg:col-start-2 lg:col-end-3 lg:row-span-1" />
+          <FormMessage className="lg:col-start-2 lg:col-end-3 lg:row-span-1"/>
         </FormItem>
       )}
     />
   )
 }
 
-export { FormInput, FormSelect, FormCalendar }
+export {FormInput, FormSelect, FormCalendar}

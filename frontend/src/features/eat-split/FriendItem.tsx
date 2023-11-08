@@ -1,31 +1,26 @@
-import { Link, useParams } from 'react-router-dom'
+import {Link, useParams} from 'react-router-dom'
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/ui/shadcn-ui/Avatar'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger
-} from '@/ui/shadcn-ui/Tooltip'
-import { buttonVariants } from '@/ui/shadcn-ui/ui-config'
-import { ButtonDeleteFriend } from '@/features/eat-split/ButtonDeleteFriend'
-import { cn, truncate } from '@/utils/helpers'
-import { type FriendResponse } from '@/services/fake/friend-api'
-import { useFriends } from '@/features/eat-split/FriendContext'
+import {Avatar, AvatarFallback, AvatarImage} from '@/ui/shadcn-ui/Avatar'
+import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from '@/ui/shadcn-ui/Tooltip'
+import {buttonVariants} from '@/ui/shadcn-ui/Button'
+import {ButtonDeleteFriend} from '@/features/eat-split/ButtonDeleteFriend'
+import {cn, truncate} from '@/utils/helpers'
+import {type FriendResponse} from '@/services/fake/friend-api'
+import {useFriends} from '@/features/eat-split/FriendContext'
 
 type FriendItemProps = {
   friend: FriendResponse
   onDeleteFriend: (friend: FriendResponse) => void
 }
 
-function FriendItem({ friend, onDeleteFriend }: FriendItemProps) {
+function FriendItem({friend, onDeleteFriend}: FriendItemProps) {
   const params = useParams()
   const selectedFriendId = Number(params.friendId)
   const isSelected = friend.id === selectedFriendId
 
   const name = truncate(friend.name, 5)
 
-  const { setShowAddFriend } = useFriends()
+  const {setShowAddFriend} = useFriends()
 
   const queryStr = window.location.search
 
@@ -37,13 +32,13 @@ function FriendItem({ friend, onDeleteFriend }: FriendItemProps) {
     <li
       className={cn(
         'group relative flex items-center justify-between gap-2 rounded px-4 py-2 hover:bg-amber-100 dark:hover:text-slate-700',
-        { 'bg-amber-100 dark:text-night-1': isSelected }
+        {'bg-amber-100 dark:text-night-1': isSelected}
       )}
     >
-      <ButtonDeleteFriend onDelete={() => onDeleteFriend(friend)} />
+      <ButtonDeleteFriend onDelete={() => onDeleteFriend(friend)}/>
 
       <Avatar>
-        <AvatarImage src={friend.image} alt={name} />
+        <AvatarImage src={friend.image} alt={name}/>
         <AvatarFallback>{name}</AvatarFallback>
       </Avatar>
 
@@ -87,7 +82,7 @@ function FriendItem({ friend, onDeleteFriend }: FriendItemProps) {
           noRefresh: true
         }}
         onClick={handleToggleSelect}
-        className={buttonVariants({ variant: 'default' })}
+        className={buttonVariants({variant: 'default'})}
       >
         {isSelected ? '关闭' : '选择'}
       </Link>
@@ -95,4 +90,4 @@ function FriendItem({ friend, onDeleteFriend }: FriendItemProps) {
   )
 }
 
-export { FriendItem }
+export {FriendItem}

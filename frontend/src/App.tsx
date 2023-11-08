@@ -26,7 +26,7 @@ const UseCallback = lazy(() => import('@/features/performance/UseCallback'))
 
 // ----- 开始：测试 React Router 懒加载（React Split Code）-----
 const FormSplitBill = lazy(() =>
-  wait(1).then(() =>
+  wait(2).then(() =>
     import('@/features/eat-split/FormSplitBill').then((module) => ({
       default: module.FormSplitBill
     }))

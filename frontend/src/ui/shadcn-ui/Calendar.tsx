@@ -3,7 +3,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons'
 import { DayPicker } from 'react-day-picker'
 
 import { cn } from '@/utils/helpers'
-import { buttonVariants } from '@/ui/shadcn-ui/ui-config'
+import { buttonVariants } from '@/ui/shadcn-ui/Button'
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>
 
