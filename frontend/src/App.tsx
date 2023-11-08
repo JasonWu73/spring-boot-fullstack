@@ -1,23 +1,21 @@
-import { lazy, Suspense } from 'react'
-import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
+import {lazy, Suspense} from 'react'
+import {createBrowserRouter, Navigate, RouterProvider} from 'react-router-dom'
 
-import { Toaster } from '@/ui/shadcn-ui/Toaster'
-import { wait } from '@/utils/helpers'
-import { Spinner } from '@/ui/Spinner'
-import { FriendProvider } from '@/features/eat-split/FriendProvider'
-import { AuthProvider } from '@/features/auth/AuthProvider'
-import { SecureRoute } from '@/features/auth/SecureRoute'
-import { ThemeProvider } from '@/ui/shadcn-ui/ThemeProvider'
-import { PanelFoldProvider } from '@/ui/layout/panel-fold/PanelFoldProvider'
-import { SpinnerFullPage } from '@/ui/SpinnerFullPage'
+import {wait} from '@/utils/helpers'
+import {SecureRoute} from '@/features/auth/SecureRoute'
+import {FriendProvider} from '@/features/eat-split/FriendProvider'
+import {Spinner} from '@/ui/Spinner'
+import {PanelFoldProvider} from '@/ui/layout/panel-fold/PanelFoldProvider'
+import {ThemeProvider} from '@/ui/shadcn-ui/ThemeProvider'
+import {AuthProvider} from '@/features/auth/AuthProvider'
+import {SpinnerFullPage} from '@/ui/SpinnerFullPage'
+import {Toaster} from '@/ui/shadcn-ui/Toaster'
 
 const MainLayout = lazy(() => import('@/ui/layout/MainLayout'))
 const AdminLayout = lazy(() => import('@/ui/layout/AdminLayout'))
 const LoginLayout = lazy(() => import('@/ui/layout/LoginLayout'))
 const Login = lazy(() => import('@/features/auth/Login'))
-const ProductShowcase = lazy(
-  () => import('@/features/product-showcase/ProductShowcase')
-)
+const ProductShowcase = lazy(() => import('@/features/product-showcase/ProductShowcase'))
 const EatAndSplit = lazy(() => import('@/features/eat-split/EatAndSplit'))
 const PageNotFound = lazy(() => import('@/ui/PageNotFound'))
 const UserList = lazy(() => import('@/features/user/UserList'))
@@ -26,7 +24,7 @@ const MemoComponent = lazy(() => import('@/features/performance/MemoComponent'))
 const UseMemo = lazy(() => import('@/features/performance/UseMemo'))
 const UseCallback = lazy(() => import('@/features/performance/UseCallback'))
 
-// ----- 开始：测试 React Router 懒加载（React Split Code 技术）-----
+// ----- 开始：测试 React Router 懒加载（React Split Code）-----
 const FormSplitBill = lazy(() =>
   wait(1).then(() =>
     import('@/features/eat-split/FormSplitBill').then((module) => ({
@@ -34,61 +32,50 @@ const FormSplitBill = lazy(() =>
     }))
   )
 )
-// ----- 结束：测试 React Router 懒加载（React Split Code 技术）-----
+// ----- 结束：测试 React Router 懒加载（React Split Code）-----
 
 const router = createBrowserRouter([
   {
-    element: <LoginLayout />,
-    children: [{ path: '/login', element: <Login /> }]
+    element: <LoginLayout/>,
+    children: [{path: '/login', element: <Login/>}]
   },
   {
-    element: <MainLayout />,
+    element: <MainLayout/>,
     children: [
-      { path: '/', element: <Navigate to="/eat-split" replace /> },
+      {path: '/', element: <Navigate to="/eat-split" replace/>},
       {
-        element: <SecureRoute />,
-        children: [{ path: '/fetch', element: <ProductShowcase /> }]
+        element: <SecureRoute/>,
+        children: [{path: '/fetch', element: <ProductShowcase/>}]
       },
       {
         path: '/eat-split',
-        element: (
-          <FriendProvider>
-            <EatAndSplit />
-          </FriendProvider>
-        ),
+        element: <FriendProvider><EatAndSplit/></FriendProvider>,
         children: [
           {
             path: ':friendId',
             element: (
-              <Suspense fallback={<Spinner />}>
-                <FormSplitBill />
+              <Suspense fallback={<Spinner/>}>
+                <FormSplitBill/>
               </Suspense>
             )
           }
         ]
       },
-      {
-        path: '*',
-        element: <PageNotFound />
-      }
+      {path: '*', element: <PageNotFound/>}
     ]
   },
   {
-    element: (
-      <PanelFoldProvider>
-        <AdminLayout />
-      </PanelFoldProvider>
-    ),
+    element: <PanelFoldProvider><AdminLayout/></PanelFoldProvider>,
     children: [
       {
-        element: <SecureRoute />,
+        element: <SecureRoute/>,
         children: [
-          { path: '/admin', element: <Navigate to="/users" replace /> },
-          { path: '/users', element: <UserList /> },
-          { path: '/children', element: <ChildrenProp /> },
-          { path: '/memo', element: <MemoComponent /> },
-          { path: '/use-memo', element: <UseMemo /> },
-          { path: '/use-callback', element: <UseCallback /> }
+          {path: '/admin', element: <Navigate to="/users" replace/>},
+          {path: '/users', element: <UserList/>},
+          {path: '/children', element: <ChildrenProp/>},
+          {path: '/memo', element: <MemoComponent/>},
+          {path: '/use-memo', element: <UseMemo/>},
+          {path: '/use-callback', element: <UseCallback/>}
         ]
       }
     ]
@@ -99,11 +86,11 @@ export default function App() {
   return (
     <ThemeProvider defaultTheme="system" storageKey="demo-ui-theme">
       <AuthProvider>
-        <Suspense fallback={<SpinnerFullPage />}>
-          <RouterProvider router={router} />
+        <Suspense fallback={<SpinnerFullPage/>}>
+          <RouterProvider router={router}/>
         </Suspense>
 
-        <Toaster />
+        <Toaster/>
       </AuthProvider>
     </ThemeProvider>
   )

@@ -19,9 +19,9 @@ services:
       - ./docker/init.sql:/docker-entrypoint-initdb.d/init.sql
       # 将数据库数据存放在宿主机中：`/Users/wxj/Downloads/demo/db`
       - /Users/wxj/Downloads/demo/db:/var/lib/mysql
-    command: [ '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci' ]
+    command: ['--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
     healthcheck:
-      test: [ 'CMD', 'mysqladmin', 'ping', '-h', 'localhost' ]
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
       interval: 10s
       timeout: 5s
       retries: 3
@@ -39,9 +39,9 @@ services:
       - '6380:6379'
     volumes:
       - /Users/wxj/Downloads/demo/redis:/data
-    command: [ 'redis-server','--save', '60', '1', '--loglevel', 'warning','--requirepass','qwe@123' ]
+    command: ['redis-server','--save', '60', '1', '--loglevel', 'warning','--requirepass','qwe@123']
     healthcheck:
-      test: [ 'CMD','redis-cli','ping' ]
+      test: ['CMD','redis-cli','ping']
       interval: 10s
       timeout: 5s
       retries: 3
@@ -73,7 +73,7 @@ services:
         condition: service_healthy
       demo-redis:
         condition: service_healthy
-    command: [ 'java', '-Djasypt.encryptor.password=wxj#secret_', '-jar', '/opt/web.jar' ]
+    command: ['java', '-Djasypt.encryptor.password=wxj#secret_', '-jar', '/opt/web.jar']
     networks:
       - demo_network
 
