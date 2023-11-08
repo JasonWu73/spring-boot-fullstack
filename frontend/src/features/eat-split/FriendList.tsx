@@ -24,7 +24,7 @@ function FriendList() {
 
   const {
     loadingFriends: loading,
-    fetchFriends,
+    getFriends,
     deleteFriend,
     setShowAddFriend
   } = friendsContext
@@ -59,7 +59,7 @@ function FriendList() {
 
     setShowAddFriend(false)
 
-    const abort = fetchFriends()
+    const abort = getFriends()
 
     return () => {
       abort()

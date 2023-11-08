@@ -1,13 +1,13 @@
 import React, { useReducer } from 'react'
 
 import {
-  type FetchFriendParams,
+  type GetFriendParams,
   FriendProviderContext,
   type FriendProviderState,
   type NewFriend
 } from '@/features/eat-split/FriendContext'
 import { type FriendResponse, getFriendsApi } from '@/services/fake/friend-api'
-import { FetchPayload, useFetch } from '@/hooks/use-fetch'
+import { type FetchPayload, useFetch } from '@/hooks/use-fetch'
 import { wait } from '@/utils/helpers'
 
 const STORAGE_KEY = 'demo-friends'
@@ -133,7 +133,7 @@ function FriendProvider({ children }: FriendProviderProps) {
   const {
     error: errorFriends,
     loading: loadingFriends,
-    fetchData: fetchFriends
+    fetchData: getFriends
   } = useFetch(async (payload) => {
     const response = await getFriendsApi(payload)
 
@@ -151,9 +151,9 @@ function FriendProvider({ children }: FriendProviderProps) {
   const {
     error: errorFriend,
     loading: loadingFriend,
-    fetchData: fetchFriend
-  } = useFetch<FriendResponse, FetchFriendParams>(async (payload, params) => {
-    const response = await fakeFetchFriend(payload, params)
+    fetchData: getFriend
+  } = useFetch<FriendResponse, GetFriendParams>(async (payload, params) => {
+    const response = await fakeGetFriendApi(payload, params)
 
     if (response.error) {
       dispatch({ type: 'SELECT_FRIEND', payload: null })
@@ -193,12 +193,12 @@ function FriendProvider({ children }: FriendProviderProps) {
     friends,
     errorFriends,
     loadingFriends,
-    fetchFriends,
+    getFriends,
 
     curFriend,
     errorFriend,
     loadingFriend,
-    fetchFriend,
+    getFriend,
 
     addFriend,
     deleteFriend,
@@ -221,7 +221,7 @@ function getFriendsFromStorage() {
   return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]')
 }
 
-async function fakeFetchFriend(_: FetchPayload, params?: FetchFriendParams) {
+async function fakeGetFriendApi(_: FetchPayload, params?: GetFriendParams) {
   if (!params) {
     return { data: null, error: '未传入参数' }
   }

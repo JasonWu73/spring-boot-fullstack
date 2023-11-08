@@ -47,7 +47,7 @@ function AuthProvider({ children }: AuthProviderProps) {
   const {
     error,
     loading,
-    fetchData: fetchLogin
+    fetchData: Login
   } = useFetch<LoginResult, LoginParams>(async (payload, params) => {
     const response = await loginApi(payload, params)
 
@@ -76,10 +76,6 @@ function AuthProvider({ children }: AuthProviderProps) {
 
     return response
   })
-
-  function login(username: string, password: string) {
-    return fetchLogin({ username, password })
-  }
 
   function logout() {
     setAuth(null)
@@ -111,7 +107,7 @@ function AuthProvider({ children }: AuthProviderProps) {
     auth,
     error,
     loading,
-    login,
+    login: (username, password) => Login({ username, password }),
     logout,
     updateToken
   }

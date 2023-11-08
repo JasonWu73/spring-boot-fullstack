@@ -14,10 +14,10 @@ export default function ProductShowcase() {
   const [count, setCount] = useState(0)
 
   const {
-    data: fetchedProduct,
+    data: product,
     loading,
     error,
-    fetchData: fetchProduct
+    fetchData: getProduct
   } = useFetch(async (payload) => {
     const response = await getRandomProductApi(payload)
 
@@ -29,7 +29,7 @@ export default function ProductShowcase() {
   })
 
   useRefresh(() => {
-    const abort = fetchProduct()
+    const abort = getProduct()
 
     return () => {
       abort()
@@ -43,18 +43,18 @@ export default function ProductShowcase() {
 
         {error && <Title label={error} isError />}
 
-        {fetchedProduct && <Title label={fetchedProduct.title} />}
+        {product && <Title label={product.title} />}
       </div>
 
       <div className="row-span-1">
-        {!fetchedProduct && (
+        {!product && (
           <div className="h-32 w-32 rounded-full border border-gray-300 bg-gradient-to-r from-slate-100 to-slate-300 object-cover shadow-sm" />
         )}
 
-        {fetchedProduct && (
+        {product && (
           <img
-            src={fetchedProduct.thumbnail}
-            alt={fetchedProduct.title}
+            src={product.thumbnail}
+            alt={product.title}
             className="h-32 w-32 rounded-full border border-gray-300 object-cover shadow-sm"
           />
         )}
@@ -62,7 +62,7 @@ export default function ProductShowcase() {
 
       <div className="row-span-1">
         <Button
-          onClick={() => fetchProduct()}
+          onClick={() => getProduct()}
           className="my-4"
           disabled={loading}
         >

@@ -5,7 +5,7 @@ import { type AbortCallback } from '@/hooks/use-fetch'
 
 type NewFriend = Omit<FriendResponse, 'id'>
 
-type FetchFriendParams = {
+type GetFriendParams = {
   id: number
 }
 
@@ -13,12 +13,12 @@ type FriendProviderState = {
   friends: FriendResponse[]
   errorFriends: string
   loadingFriends: boolean
-  fetchFriends: () => AbortCallback
+  getFriends: () => AbortCallback
 
   curFriend: FriendResponse | null
   errorFriend: string
   loadingFriend: boolean
-  fetchFriend: (params: FetchFriendParams) => AbortCallback
+  getFriend: (params: GetFriendParams) => AbortCallback
 
   addFriend: (friend: NewFriend) => void
   deleteFriend: (id: number) => void
@@ -34,12 +34,12 @@ const initialState: FriendProviderState = {
   friends: [],
   errorFriends: '',
   loadingFriends: false,
-  fetchFriends: () => () => null,
+  getFriends: () => () => null,
 
   curFriend: null,
   errorFriend: '',
   loadingFriend: false,
-  fetchFriend: () => () => null,
+  getFriend: () => () => null,
 
   addFriend: () => null,
   deleteFriend: () => null,
@@ -62,5 +62,5 @@ export {
   useFriends,
   type FriendProviderState,
   type NewFriend,
-  type FetchFriendParams
+  type GetFriendParams
 }

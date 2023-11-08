@@ -95,7 +95,7 @@ function FormSplitBill() {
 
   const {
     loadingFriend: loading,
-    fetchFriend,
+    getFriend,
     setCredit,
     splitBill
   } = friendsContext
@@ -113,7 +113,7 @@ function FormSplitBill() {
   useRefresh(() => {
     form.reset()
 
-    const abort = fetchFriend({ id })
+    const abort = getFriend({ id })
 
     return () => {
       abort()

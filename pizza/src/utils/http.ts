@@ -22,15 +22,17 @@ type RequestConfig = Pick<
 
 type RequestBody = Pick<Request, 'contentType' | 'bodyData'>
 
-type Response<TData, TError> =
-  | {
-      data: TData
-      error: null
-    }
-  | {
-      data: null
-      error: TError | string
-    }
+type SuccessResponse<T> = {
+  data: T
+  error: null
+}
+
+type ErrorResponse<T> = {
+  data: null
+  error: T | string
+}
+
+type Response<TData, TError> = SuccessResponse<TData> | ErrorResponse<TError>
 
 /**
  * 发送 HTTP 请求，并以 JSON 数据格式解析响应数据。

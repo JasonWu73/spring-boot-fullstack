@@ -156,14 +156,14 @@ export default function UserList() {
   const query = searchParams.get(KEY_QUERY) || ''
 
   const {
-    data: fetchedUsers,
+    data: users,
     error,
     loading,
-    fetchData: fetchUsers
+    fetchData: getUsers
   } = useFetch(getUsersApi)
 
   useRefresh(() => {
-    const abort = fetchUsers({ pageNum, pageSize, query })
+    const abort = getUsers({ pageNum, pageSize, query })
 
     return () => {
       abort()
@@ -188,7 +188,7 @@ export default function UserList() {
   }
 
   function handleShowSelection() {
-    const ids = (fetchedUsers?.users || [])
+    const ids = (users?.users || [])
       .filter((_, index) => selectedRowIndexes.includes(index))
       .map((user) => user.id)
 
@@ -213,13 +213,13 @@ export default function UserList() {
 
         <DataTable
           columns={columns}
-          data={fetchedUsers?.users || []}
+          data={users?.users || []}
           error={error}
           loading={loading}
           pagination={{
             pageNum,
             pageSize,
-            pageCount: Math.ceil((fetchedUsers?.total || 0) / pageSize)
+            pageCount: Math.ceil((users?.total || 0) / pageSize)
           }}
           onPaginate={handlePaginate}
           enableRowSelection
