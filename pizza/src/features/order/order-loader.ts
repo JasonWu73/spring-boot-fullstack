@@ -17,9 +17,19 @@ async function orderLoader({ params }: LoaderFunctionArgs) {
   )
 }
 
-async function createOrder({ request }: ActionFunctionArgs) {
+async function createOrderAction({ request }: ActionFunctionArgs) {
   const formData = await request.formData()
   const data = Object.fromEntries(formData)
+
+  const error: Record<string, string> = {}
+
+  if (!isValidPhone(data.phone as string)) {
+    error.phone = 'Invalid phone number'
+  }
+
+  if (Object.keys(error).length > 0) {
+    return error
+  }
 
   const newOrder = {
     ...data,
@@ -35,4 +45,8 @@ async function createOrder({ request }: ActionFunctionArgs) {
   return redirect(`/order/${response!.data!.id}`)
 }
 
-export { orderLoader, createOrder }
+function isValidPhone(phone: string) {
+  return /^\d+$/.test(phone)
+}
+
+export { orderLoader, createOrderAction }
