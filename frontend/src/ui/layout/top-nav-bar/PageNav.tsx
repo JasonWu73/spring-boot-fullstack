@@ -1,22 +1,18 @@
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuList
-} from '@/ui/shadcn-ui/NavigationMenu'
-import { cn } from '@/utils/helpers'
+import {NavigationMenu, NavigationMenuItem, NavigationMenuList} from '@/ui/shadcn-ui/NavigationMenu'
+import {cn} from '@/utils/helpers'
 import React from 'react'
-import { NavLink } from 'react-router-dom'
+import {NavLink} from 'react-router-dom'
 
 type PageNavProps = {
   isOpen: boolean
 }
 
-function PageNav({ isOpen }: PageNavProps) {
+function PageNav({isOpen}: PageNavProps) {
   return (
     <>
       <NavigationMenu className="hidden max-w-full justify-start lg:flex">
         <NavigationMenuList className="gap-4">
-          <NavItemList />
+          <NavItemList/>
         </NavigationMenuList>
       </NavigationMenu>
 
@@ -29,7 +25,7 @@ function PageNav({ isOpen }: PageNavProps) {
         )}
       >
         <NavigationMenuList className="flex-col gap-4">
-          <NavItemList />
+          <NavItemList/>
         </NavigationMenuList>
       </NavigationMenu>
     </>
@@ -50,12 +46,12 @@ type NavItemProps = {
   children: React.ReactNode
 }
 
-function NavItem({ link, children }: NavItemProps) {
+function NavItem({link, children}: NavItemProps) {
   return (
     <NavigationMenuItem className="font-bold hover:text-sky-500">
       <NavLink
         to={link}
-        className={({ isActive }) => (isActive ? 'text-sky-500' : '')}
+        className={({isActive}) => (isActive ? 'text-sky-500' : '')}
       >
         {children}
       </NavLink>
@@ -63,4 +59,4 @@ function NavItem({ link, children }: NavItemProps) {
   )
 }
 
-export { PageNav }
+export {PageNav}

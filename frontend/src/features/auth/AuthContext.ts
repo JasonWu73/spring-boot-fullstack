@@ -1,6 +1,6 @@
-import { createContext, useContext } from 'react'
+import {createContext, useContext} from 'react'
 
-import { type AbortCallback } from '@/hooks/use-fetch'
+import {type AbortCallback} from '@/hooks/use-fetch'
 
 type Auth = {
   id: number
@@ -34,4 +34,4 @@ function useAuth() {
   return useContext(AuthProviderContext)
 }
 
-export { AuthProviderContext, useAuth, type AuthProviderState, type Auth }
+export {AuthProviderContext, useAuth, type AuthProviderState, type Auth}

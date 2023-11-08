@@ -1,13 +1,13 @@
-import { useEffect } from 'react'
+import {useEffect} from 'react'
 
-import { cn } from '@/utils/helpers'
-import { endNProgress, startNProgress } from '@/utils/nprogress'
+import {cn} from '@/utils/helpers'
+import {endNProgress, startNProgress} from '@/utils/nprogress'
 
 type SpinnerProps = {
   className?: string
 }
 
-function Spinner({ className }: SpinnerProps) {
+function Spinner({className}: SpinnerProps) {
   // NProgress 加载动画
   useLoading()
 
@@ -47,4 +47,4 @@ function useLoading() {
   }, [])
 }
 
-export { Spinner }
+export {Spinner}

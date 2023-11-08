@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, {useEffect, useState} from 'react'
 
 import {
   PanelFoldProviderContext,
@@ -9,7 +9,7 @@ type PanelFoldProviderProps = {
   children: React.ReactNode
 }
 
-function PanelFoldProvider({ children }: PanelFoldProviderProps) {
+function PanelFoldProvider({children}: PanelFoldProviderProps) {
   const [folded, setFolded] = useState(false)
 
   useSmallScreenFold(setFolded)
@@ -48,4 +48,4 @@ function useSmallScreenFold(
   }, [setFolded])
 }
 
-export { PanelFoldProvider }
+export {PanelFoldProvider}

@@ -1,5 +1,5 @@
-import { useEffect } from 'react'
-import { useObjectRef } from '@/hooks/use-saved'
+import {useEffect} from 'react'
+import {useObjectRef} from '@/hooks/use-saved'
 
 type ModifierKey = 'ctrlKey' | 'shiftKey' | 'altKey' | 'metaKey'
 
@@ -15,12 +15,12 @@ type Keypress = {
  * @param modifiers - 修饰键
  * @param callback - 回调函数
  */
-function useKeypress({ key, modifiers = [] }: Keypress, callback: () => void) {
-  const keypressRef = useObjectRef({ key, modifiers, callback })
+function useKeypress({key, modifiers = []}: Keypress, callback: () => void) {
+  const keypressRef = useObjectRef({key, modifiers, callback})
 
   useEffect(() => {
     function handleKeydown(event: KeyboardEvent) {
-      const { key, modifiers, callback } = keypressRef.current
+      const {key, modifiers, callback} = keypressRef.current
 
       if (
         event.key?.toLowerCase() === key.toLowerCase() &&
@@ -38,4 +38,4 @@ function useKeypress({ key, modifiers = [] }: Keypress, callback: () => void) {
   }, [keypressRef])
 }
 
-export { useKeypress }
+export {useKeypress}

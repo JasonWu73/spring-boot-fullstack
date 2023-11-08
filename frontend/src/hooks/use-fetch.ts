@@ -1,9 +1,9 @@
-import React, { useReducer } from 'react'
+import React, {useReducer} from 'react'
 
-import { type Auth, useAuth } from '@/features/auth/AuthContext'
-import { endNProgress, startNProgress } from '@/utils/nprogress'
+import {type Auth, useAuth} from '@/features/auth/AuthContext'
+import {endNProgress, startNProgress} from '@/utils/nprogress'
 
-type ReLogin = { isOk: true; token: string } | { isOk: false }
+type ReLogin = {isOk: true; token: string} | {isOk: false}
 
 type ApiResponse<TData> = {
   data: TData | null
@@ -27,10 +27,10 @@ const initialState: State<unknown> = {
 }
 
 type Action<TData> =
-  | { type: 'START_LOADING' }
-  | { type: 'FETCH_SUCCESS'; payload: TData }
-  | { type: 'FETCH_FAILED'; payload: string }
-  | { type: 'ABORT_FETCH' }
+  | {type: 'START_LOADING'}
+  | {type: 'FETCH_SUCCESS'; payload: TData}
+  | {type: 'FETCH_FAILED'; payload: string}
+  | {type: 'ABORT_FETCH'}
 
 function reducer<TData>(
   state: State<TData>,
@@ -118,17 +118,17 @@ type UseFetch<TData, TParams> = {
 function useFetch<TData, TParams>(
   callback: ApiCallback<TData, TParams>
 ): UseFetch<TData, TParams> {
-  const [{ data, error, loading }, dispatch] = useReducer(
+  const [{data, error, loading}, dispatch] = useReducer(
     reducer as React.Reducer<State<TData | null>, Action<TData | null>>,
     initialState as State<TData>
   )
 
-  const { auth, logout, updateToken } = useAuth()
+  const {auth, logout, updateToken} = useAuth()
 
   function fetchData(params?: TParams): AbortCallback {
     const controller = new AbortController()
 
-    dispatch({ type: 'START_LOADING' })
+    dispatch({type: 'START_LOADING'})
 
     async function executeCallback() {
       const response = await callback(
@@ -155,22 +155,22 @@ function useFetch<TData, TParams>(
       }
 
       if (response.error) {
-        dispatch({ type: 'FETCH_FAILED', payload: response.error })
+        dispatch({type: 'FETCH_FAILED', payload: response.error})
         return
       }
 
-      dispatch({ type: 'FETCH_SUCCESS', payload: response.data })
+      dispatch({type: 'FETCH_SUCCESS', payload: response.data})
     }
 
     executeCallback().then()
 
     return () => {
-      dispatch({ type: 'ABORT_FETCH' })
+      dispatch({type: 'ABORT_FETCH'})
       controller.abort()
     }
   }
 
-  return { data, error, loading, fetchData }
+  return {data, error, loading, fetchData}
 }
 
 function tryNProgressDone(loadingCount: number) {

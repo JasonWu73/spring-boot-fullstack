@@ -4,14 +4,11 @@ import {
   ToastDescription,
   ToastProvider,
   ToastTitle,
-  ToastViewport
-} from '@/ui/shadcn-ui/Toast'
-import { useToast } from '@/ui/shadcn-ui/use-toast'
+  ToastViewport,
+} from "@/ui/shadcn-ui/Toast"
+import { useToast } from "@/ui/shadcn-ui/use-toast"
 
-/**
- * {@link https://ui.shadcn.com/docs/components/toast|Toast - shadcn/ui}
- */
-function Toaster() {
+export function Toaster() {
   const { toasts } = useToast()
 
   return (
@@ -34,5 +31,3 @@ function Toaster() {
     </ToastProvider>
   )
 }
-
-export { Toaster }

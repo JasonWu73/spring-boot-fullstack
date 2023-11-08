@@ -1,5 +1,5 @@
-import { type ApiResponse, type FetchPayload } from '@/hooks/use-fetch'
-import { sendAuthDummyJsonApi } from '@/services/dummyjson/auth-api'
+import {type ApiResponse, type FetchPayload} from '@/hooks/use-fetch'
+import {sendAuthDummyJsonApi} from '@/services/dummyjson/auth-api'
 
 type User = {
   id: number
@@ -30,10 +30,10 @@ async function getUsersApi(
   params?: GetUsersParams
 ): Promise<ApiResponse<UserPaginationResponse>> {
   if (!params) {
-    return { data: null, error: '未传入参数' }
+    return {data: null, error: '未传入参数'}
   }
 
-  const { pageNum, pageSize, query } = params
+  const {pageNum, pageSize, query} = params
 
   return await sendAuthDummyJsonApi<UserPaginationResponse>({
     payload,
@@ -46,4 +46,4 @@ async function getUsersApi(
   })
 }
 
-export { getUsersApi, type User }
+export {getUsersApi, type User}

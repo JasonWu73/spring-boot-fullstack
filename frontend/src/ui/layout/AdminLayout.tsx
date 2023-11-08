@@ -1,17 +1,17 @@
-import { Outlet } from 'react-router-dom'
+import {Outlet} from 'react-router-dom'
 
-import { usePanelFold } from '@/ui/layout/panel-fold/PanelFoldContext'
-import { Header } from '@/ui/layout/Header'
-import { Footer } from '@/ui/layout/Footer'
-import { Aside } from '@/ui/layout/Aside'
-import { cn } from '@/utils/helpers'
+import {usePanelFold} from '@/ui/layout/panel-fold/PanelFoldContext'
+import {Header} from '@/ui/layout/Header'
+import {Footer} from '@/ui/layout/Footer'
+import {Aside} from '@/ui/layout/Aside'
+import {cn} from '@/utils/helpers'
 
 export default function AdminLayout() {
-  const { folded } = usePanelFold()
+  const {folded} = usePanelFold()
 
   return (
     <div className="grid min-h-screen grid-cols-[auto_1fr] grid-rows-[auto_1fr]">
-      <Header showPanelFoldIcon={true} className="col-span-2 row-span-1" />
+      <Header showPanelFoldIcon={true} className="col-span-2 row-span-1"/>
 
       <Aside
         className={cn(
@@ -28,10 +28,10 @@ export default function AdminLayout() {
         })}
       >
         <div className="flex-grow p-4">
-          <Outlet />
+          <Outlet/>
         </div>
 
-        <Footer />
+        <Footer/>
       </main>
     </div>
   )

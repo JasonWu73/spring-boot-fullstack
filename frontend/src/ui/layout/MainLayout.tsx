@@ -1,18 +1,18 @@
-import { Outlet } from 'react-router-dom'
+import {Outlet} from 'react-router-dom'
 
-import { Header } from '@/ui/layout/Header'
-import { Footer } from '@/ui/layout/Footer'
+import {Header} from '@/ui/layout/Header'
+import {Footer} from '@/ui/layout/Footer'
 
 export default function MainLayout() {
   return (
     <div className="flex min-h-screen flex-col">
-      <Header />
+      <Header/>
 
       <main className="flex-grow">
-        <Outlet />
+        <Outlet/>
       </main>
 
-      <Footer />
+      <Footer/>
     </div>
   )
 }

@@ -5,13 +5,27 @@ import {CalendarIcon} from '@radix-ui/react-icons'
 
 import {FormControl, FormField, FormItem, FormLabel, FormMessage} from '@/ui/shadcn-ui/Form'
 import {Input} from '@/ui/shadcn-ui/Input'
-import {inputErrorClasses} from '@/ui/shadcn-ui/ui-config'
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/ui/shadcn-ui/Select'
 import {Popover, PopoverContent, PopoverTrigger} from '@/ui/shadcn-ui/Popover'
 import {Button} from '@/ui/shadcn-ui/Button'
 import {cn} from '@/utils/helpers'
 import {Calendar} from '@/ui/shadcn-ui/Calendar'
 import {zhCN} from 'date-fns/locale'
+
+/**
+ * 自定义的错误边框样式.
+ *
+ * @param isError - 是否为错误状态
+ * @returns {Record<string, boolean>} - 错误边框样式类对象, 用于 `cn` 函数
+ */
+function inputErrorClasses(isError: boolean): Record<string, boolean> {
+  return {
+    'border-slate-200 dark:border-slate-800 focus-visible:ring-slate-950 dark:focus-visible:ring-slate-300':
+      !isError,
+    'border-red-500 dark:border-red-600 focus-visible:ring-red-500 dark:focus-visible:ring-red-700':
+    isError
+  }
+}
 
 type FormInputProps<T extends FieldValues> = {
   control: Control<T>
@@ -26,16 +40,16 @@ type FormInputProps<T extends FieldValues> = {
 }
 
 function FormInput<T extends FieldValues>({
-                                            control,
-                                            name,
-                                            label,
-                                            labelWidth,
-                                            type = 'text',
-                                            placeholder,
-                                            disabled,
-                                            isError = false,
-                                            inputRef
-                                          }: FormInputProps<T>) {
+  control,
+  name,
+  label,
+  labelWidth,
+  type = 'text',
+  placeholder,
+  disabled,
+  isError = false,
+  inputRef
+}: FormInputProps<T>) {
   return (
     <FormField
       control={control}
@@ -86,15 +100,15 @@ type FormSelectProps<T extends FieldValues> = Omit<
  * 下拉组件不需要考虑 `placeholder`, 而应该拥有默认值.
  */
 function FormSelect<T extends FieldValues>({
-                                             control,
-                                             name,
-                                             label,
-                                             labelWidth,
-                                             options,
-                                             placeholder,
-                                             disabled,
-                                             isError = false
-                                           }: FormSelectProps<T>) {
+  control,
+  name,
+  label,
+  labelWidth,
+  options,
+  placeholder,
+  disabled,
+  isError = false
+}: FormSelectProps<T>) {
   return (
     <FormField
       control={control}
@@ -139,14 +153,14 @@ type FormCalendarProps<T extends FieldValues> = Omit<
 }
 
 function FormCalendar<T extends FieldValues>({
-                                               control,
-                                               name,
-                                               label,
-                                               labelWidth,
-                                               placeholder,
-                                               isError = false,
-                                               disabledWhen
-                                             }: FormCalendarProps<T>) {
+  control,
+  name,
+  label,
+  labelWidth,
+  placeholder,
+  isError = false,
+  disabledWhen
+}: FormCalendarProps<T>) {
   return (
     <FormField
       control={control}
@@ -200,4 +214,4 @@ function FormCalendar<T extends FieldValues>({
   )
 }
 
-export {FormInput, FormSelect, FormCalendar}
+export {FormInput, FormSelect, FormCalendar, inputErrorClasses}

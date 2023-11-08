@@ -3,7 +3,7 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 import { Form } from '@/ui/shadcn-ui/Form'
-import { FormInput } from '@/ui/CustomFormField'
+import { FormInput } from '@/ui/shadcn-ui/CustomFormField'
 import { Button } from '@/ui/shadcn-ui/Button'
 import { ReloadIcon } from '@radix-ui/react-icons'
 import { useSearchParams } from 'react-router-dom'

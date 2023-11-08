@@ -12,7 +12,7 @@ import {
   CardHeader,
   CardTitle
 } from '@/ui/shadcn-ui/Card'
-import { FormInput, FormSelect } from '@/ui/CustomFormField'
+import { FormInput, FormSelect } from '@/ui/shadcn-ui/CustomFormField'
 import { Form } from '@/ui/shadcn-ui/Form'
 import { StarRating } from '@/ui/StarRating'
 import { FormSplitBillSkeleton } from '@/features/eat-split/FormSplitBillSkeleton'

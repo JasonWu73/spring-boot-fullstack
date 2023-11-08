@@ -1,17 +1,9 @@
-import React, { useState } from 'react'
+import React, {useState} from 'react'
 
-import { useFetch } from '@/hooks/use-fetch'
-import {
-  loginApi,
-  type LoginParams,
-  type LoginResult
-} from '@/services/dummyjson/auth-api'
-import { decrypt, encrypt } from '@/utils/rsa'
-import {
-  AuthProviderContext,
-  type Auth,
-  type AuthProviderState
-} from '@/features/auth/AuthContext'
+import {useFetch} from '@/hooks/use-fetch'
+import {loginApi, type LoginParams, type LoginResult} from '@/services/dummyjson/auth-api'
+import {decrypt, encrypt} from '@/utils/rsa'
+import {type Auth, AuthProviderContext, type AuthProviderState} from '@/features/auth/AuthContext'
 
 const PUBLIC_KEY =
   'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDIMy5tyS5o94hMLYCofIBKMD0GSREDz07hJk+uJ7CRg9IsIFBpkuuxvGfHBVMMHQZe6JRfpTLW/eSEzx5A3I6vmMs5ZfdjH+QIDvCFko7SWSYh34Vr+AR7fBHli1qwHornRdvH115NKoSm3c+RLjqZb+/RXI/9D4uVrZs7c7eV+wIDAQAB'
@@ -38,10 +30,10 @@ function createInitialAuthState(): Auth | null {
   const username = decrypt(PRIVATE_KEY, encryptedAuth.username)
   const password = decrypt(PRIVATE_KEY, encryptedAuth.password)
 
-  return { ...encryptedAuth, username, password }
+  return {...encryptedAuth, username, password}
 }
 
-function AuthProvider({ children }: AuthProviderProps) {
+function AuthProvider({children}: AuthProviderProps) {
   const [auth, setAuth] = useState(createInitialAuthState)
 
   const {
@@ -51,7 +43,7 @@ function AuthProvider({ children }: AuthProviderProps) {
   } = useFetch<LoginResult, LoginParams>(async (payload, params) => {
     const response = await loginApi(payload, params)
 
-    const { data } = response
+    const {data} = response
 
     if (data) {
       const authData = {
@@ -99,7 +91,7 @@ function AuthProvider({ children }: AuthProviderProps) {
         })
       )
 
-      return { ...prev, token }
+      return {...prev, token}
     })
   }
 
@@ -107,7 +99,7 @@ function AuthProvider({ children }: AuthProviderProps) {
     auth,
     error,
     loading,
-    login: (username, password) => Login({ username, password }),
+    login: (username, password) => Login({username, password}),
     logout,
     updateToken
   }
@@ -119,4 +111,4 @@ function AuthProvider({ children }: AuthProviderProps) {
   )
 }
 
-export { AuthProvider }
+export {AuthProvider}

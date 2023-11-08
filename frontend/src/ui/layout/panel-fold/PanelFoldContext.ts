@@ -1,4 +1,4 @@
-import React, { createContext, useContext } from 'react'
+import React, {createContext, useContext} from 'react'
 
 type PanelFoldProviderState = {
   folded: boolean
@@ -16,4 +16,4 @@ function usePanelFold() {
   return useContext(PanelFoldProviderContext)
 }
 
-export { PanelFoldProviderContext, usePanelFold, type PanelFoldProviderState }
+export {PanelFoldProviderContext, usePanelFold, type PanelFoldProviderState}

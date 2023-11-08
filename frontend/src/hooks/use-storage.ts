@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, {useEffect, useState} from 'react'
 
 /**
  * 设置或读取 LocalStorage 值的自定义 Hook.
@@ -42,4 +42,4 @@ function useLocalStorageState<T>(
   return [value, setValue]
 }
 
-export { useLocalStorageState }
+export {useLocalStorageState}

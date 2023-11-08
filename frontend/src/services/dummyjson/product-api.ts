@@ -1,5 +1,5 @@
-import { type ApiResponse, type FetchPayload } from '@/hooks/use-fetch'
-import { sendAuthDummyJsonApi } from '@/services/dummyjson/auth-api'
+import {type ApiResponse, type FetchPayload} from '@/hooks/use-fetch'
+import {sendAuthDummyJsonApi} from '@/services/dummyjson/auth-api'
 
 type ProductResponse = {
   id: number
@@ -26,4 +26,4 @@ async function getRandomProductApi(
   })
 }
 
-export { getRandomProductApi, type ProductResponse }
+export {getRandomProductApi, type ProductResponse}

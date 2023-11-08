@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, {useState} from 'react'
 
-import { cn } from '@/utils/helpers'
+import {cn} from '@/utils/helpers'
 
 type Size = 'default' | 'sm' | 'lg'
 
@@ -27,7 +27,7 @@ function StarRating({
   const [tempRating, setTempRating] = useState(0)
   const sizePx = getSizePx(size)
 
-  const leftPxOffsets = Array.from({ length: maxRating * 2 }, (_, i) => {
+  const leftPxOffsets = Array.from({length: maxRating * 2}, (_, i) => {
     if (i % 2 === 0) {
       return (i / 2) * sizePx
     } else {
@@ -48,7 +48,7 @@ function StarRating({
         width: `${maxRating * sizePx}px`
       }}
     >
-      {Array.from({ length: maxRating * 2 }, (_, i) => (
+      {Array.from({length: maxRating * 2}, (_, i) => (
         <li
           key={i}
           className="absolute"
@@ -65,8 +65,8 @@ function StarRating({
               tempRating
                 ? tempRating * 2 >= i + 1
                 : rating
-                ? rating * 2 >= i + 1
-                : defaultRating / 0.5 >= i + 1
+                  ? rating * 2 >= i + 1
+                  : defaultRating / 0.5 >= i + 1
             }
             onRate={() => handleRate((i + 1) / 2)}
             onHoverIn={() => setTempRating((i + 1) / 2)}
@@ -125,9 +125,9 @@ function StarBox({
       })}
     >
       {type === 'full' ? (
-        <FullStar isFilled={isFilled} color={color} size={size} />
+        <FullStar isFilled={isFilled} color={color} size={size}/>
       ) : (
-        <HalfStart isFilled={isFilled} color={color} size={size} />
+        <HalfStart isFilled={isFilled} color={color} size={size}/>
       )}
     </span>
   )
@@ -139,7 +139,7 @@ type StarProps = {
   size?: number
 }
 
-function FullStar({ color = '#f59e0b', isFilled, size = 20 }: StarProps) {
+function FullStar({color = '#f59e0b', isFilled, size = 20}: StarProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -153,12 +153,13 @@ function FullStar({ color = '#f59e0b', isFilled, size = 20 }: StarProps) {
       strokeLinejoin="round"
       className="lucide lucide-star"
     >
-      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+      <polygon
+        points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
     </svg>
   )
 }
 
-function HalfStart({ color = '#f59e0b', isFilled, size = 20 }: StarProps) {
+function HalfStart({color = '#f59e0b', isFilled, size = 20}: StarProps) {
   const width = size / 2
 
   return (
@@ -174,7 +175,7 @@ function HalfStart({ color = '#f59e0b', isFilled, size = 20 }: StarProps) {
       strokeLinejoin="round"
       className="lucide lucide-star"
     >
-      <path d="M12 17.8 5.8 21 7 14.1 2 9.3l7-1L12 2" />
+      <path d="M12 17.8 5.8 21 7 14.1 2 9.3l7-1L12 2"/>
     </svg>
   )
 }
@@ -190,4 +191,4 @@ function getSizePx(size: Size) {
   }
 }
 
-export { StarRating }
+export {StarRating}

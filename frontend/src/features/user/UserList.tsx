@@ -1,20 +1,14 @@
-import { useState } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
-import { type ColumnDef } from '@tanstack/react-table'
-import { Button } from '@/ui/shadcn-ui/Button'
-import { MoreHorizontal } from 'lucide-react'
+import {useState} from 'react'
+import {Link, useSearchParams} from 'react-router-dom'
+import {type ColumnDef} from '@tanstack/react-table'
+import {Button} from '@/ui/shadcn-ui/Button'
+import {MoreHorizontal} from 'lucide-react'
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle
-} from '@/ui/shadcn-ui/Card'
-import { useFetch } from '@/hooks/use-fetch'
-import { getUsersApi, type User } from '@/services/dummyjson/user-api'
-import { useRefresh } from '@/hooks/use-refresh'
-import { DataTable, type Paging } from '@/ui/shadcn-ui/DataTable'
+import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/ui/shadcn-ui/Card'
+import {useFetch} from '@/hooks/use-fetch'
+import {getUsersApi, type User} from '@/services/dummyjson/user-api'
+import {useRefresh} from '@/hooks/use-refresh'
+import {DataTable, DEFAULT_PAGE_NUM, DEFAULT_PAGE_SIZE, type Paging} from '@/ui/shadcn-ui/DataTable'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,13 +17,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/ui/shadcn-ui/DropdownMenu'
-import { DataTableColumnHeader } from '@/ui/shadcn-ui/DataTableColumnHeader'
-import { useTitle } from '@/hooks/use-title'
-import { UserSearch } from '@/features/user/UserSearch'
-import { Checkbox } from '@/ui/shadcn-ui/Checkbox'
-import { Code } from '@/ui/Code'
-import { DEFAULT_PAGE_NUM, DEFAULT_PAGE_SIZE } from '@/ui/shadcn-ui/ui-config'
-import { KEY_QUERY } from '@/utils/constants'
+import {DataTableColumnHeader} from '@/ui/shadcn-ui/DataTableColumnHeader'
+import {useTitle} from '@/hooks/use-title'
+import {UserSearch} from '@/features/user/UserSearch'
+import {Checkbox} from '@/ui/shadcn-ui/Checkbox'
+import {Code} from '@/ui/Code'
+import {KEY_QUERY} from '@/utils/constants'
 
 const KEY_PAGE_NUM = 'p'
 const KEY_PAGE_SIZE = 's'
@@ -37,14 +30,14 @@ const KEY_PAGE_SIZE = 's'
 const columns: ColumnDef<User>[] = [
   {
     id: 'select',
-    header: ({ table }) => (
+    header: ({table}) => (
       <Checkbox
         checked={table.getIsAllPageRowsSelected()}
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         aria-label="全选"
       />
     ),
-    cell: ({ row }) => (
+    cell: ({row}) => (
       <Checkbox
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
@@ -57,14 +50,14 @@ const columns: ColumnDef<User>[] = [
   {
     id: 'ID',
     accessorKey: 'id',
-    header: ({ column }) => <DataTableColumnHeader column={column} title="ID" />
+    header: ({column}) => <DataTableColumnHeader column={column} title="ID"/>
   },
   {
     id: '姓名',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="姓名" />
+    header: ({column}) => (
+      <DataTableColumnHeader column={column} title="姓名"/>
     ),
-    cell: ({ row }) => {
+    cell: ({row}) => {
       const user = row.original
       return user.firstName + ' ' + user.lastName
     }
@@ -72,13 +65,13 @@ const columns: ColumnDef<User>[] = [
   {
     id: '用户名',
     accessorKey: 'username',
-    header: ({ column }) => (
+    header: ({column}) => (
       <DataTableColumnHeader column={column}>
         用户名
         <span className="ml-1 text-xs text-slate-500">（可用作登录）</span>
       </DataTableColumnHeader>
     ),
-    cell: ({ row }) => {
+    cell: ({row}) => {
       const user = row.original
 
       return <Code>{user.username}</Code>
@@ -87,13 +80,13 @@ const columns: ColumnDef<User>[] = [
   {
     id: '密码',
     accessorKey: 'password',
-    header: ({ column }) => (
+    header: ({column}) => (
       <DataTableColumnHeader column={column}>
         密码
         <span className="ml-1 text-xs text-slate-500">（可用作登录）</span>
       </DataTableColumnHeader>
     ),
-    cell: ({ row }) => {
+    cell: ({row}) => {
       const user = row.original
 
       return <Code>{user.password}</Code>
@@ -101,7 +94,7 @@ const columns: ColumnDef<User>[] = [
   },
   {
     id: '操作',
-    cell: ({ row }) => {
+    cell: ({row}) => {
       const user = row.original
 
       return (
@@ -109,7 +102,7 @@ const columns: ColumnDef<User>[] = [
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="h-8 w-8 p-0">
               <span className="sr-only"></span>
-              <MoreHorizontal className="h-4 w-4" />
+              <MoreHorizontal className="h-4 w-4"/>
             </Button>
           </DropdownMenuTrigger>
 
@@ -126,7 +119,7 @@ const columns: ColumnDef<User>[] = [
               复制密码
             </DropdownMenuItem>
 
-            <DropdownMenuSeparator />
+            <DropdownMenuSeparator/>
             <DropdownMenuItem>
               <Link to={`/users/${user.id}`} className="inline-block w-full">
                 编辑
@@ -163,7 +156,7 @@ export default function UserList() {
   } = useFetch(getUsersApi)
 
   useRefresh(() => {
-    const abort = getUsers({ pageNum, pageSize, query })
+    const abort = getUsers({pageNum, pageSize, query})
 
     return () => {
       abort()
@@ -176,11 +169,11 @@ export default function UserList() {
     searchParams.set(KEY_PAGE_NUM, String(paging.pageNum))
     searchParams.set(KEY_PAGE_SIZE, String(paging.pageSize))
 
-    setSearchParams(searchParams, { replace: true })
+    setSearchParams(searchParams, {replace: true})
   }
 
   function handleSearch(query: string) {
-    setSearchParams({ [KEY_QUERY]: query }, { replace: true })
+    setSearchParams({[KEY_QUERY]: query}, {replace: true})
   }
 
   function handleSelect(rowIndexes: number[]) {
@@ -189,8 +182,8 @@ export default function UserList() {
 
   function handleShowSelection() {
     const ids = (users?.users || [])
-      .filter((_, index) => selectedRowIndexes.includes(index))
-      .map((user) => user.id)
+    .filter((_, index) => selectedRowIndexes.includes(index))
+    .map((user) => user.id)
 
     if (ids.length === 0) {
       alert('没有选中任何一行')
@@ -209,7 +202,7 @@ export default function UserList() {
       </CardHeader>
 
       <CardContent>
-        <UserSearch onSearch={handleSearch} loading={loading} />
+        <UserSearch onSearch={handleSearch} loading={loading}/>
 
         <DataTable
           columns={columns}

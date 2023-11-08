@@ -1,6 +1,6 @@
-import { useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
-import { useCallbackRef } from '@/hooks/use-saved'
+import {useEffect} from 'react'
+import {useLocation} from 'react-router-dom'
+import {useCallbackRef} from '@/hooks/use-saved'
 
 type Cleanup = () => void
 type ReturnCleanup = void | Cleanup
@@ -28,4 +28,4 @@ function useRefresh(callback: RefreshCallback) {
   }, [location.key, callbackRef])
 }
 
-export { useRefresh }
+export {useRefresh}

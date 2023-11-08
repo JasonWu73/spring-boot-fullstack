@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import {useEffect} from 'react'
 
 /**
  * 设置页面标题的自定义 hook.
@@ -19,4 +19,4 @@ function useTitle(title: string | undefined | null) {
   }, [title])
 }
 
-export { useTitle }
+export {useTitle}

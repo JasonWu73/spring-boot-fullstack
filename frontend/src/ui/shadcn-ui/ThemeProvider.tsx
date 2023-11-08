@@ -1,6 +1,18 @@
-import React, { useEffect, useState } from 'react'
+import React, {createContext, useContext, useEffect, useState} from 'react'
 
-import { ThemeProviderContext, type Theme } from '@/ui/shadcn-ui/ThemeContext'
+type Theme = 'dark' | 'light' | 'system'
+
+type ThemeProviderState = {
+  theme: Theme
+  setTheme: (theme: Theme) => void
+}
+
+const initialState: ThemeProviderState = {
+  theme: 'system',
+  setTheme: () => null
+}
+
+const ThemeProviderContext = createContext(initialState)
 
 type ThemeProviderProps = {
   children: React.ReactNode
@@ -79,4 +91,11 @@ function handleToggleTheme(event: MediaQueryListEvent) {
   applyTheme('light')
 }
 
-export { ThemeProvider }
+/**
+ * {@link https://ui.shadcn.com/docs/dark-mode/vite | Vite - shadcn/ui}
+ */
+function useTheme() {
+  return useContext(ThemeProviderContext)
+}
+
+export {ThemeProvider, useTheme}

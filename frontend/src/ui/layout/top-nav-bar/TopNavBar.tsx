@@ -1,17 +1,17 @@
-import React, { useState } from 'react'
+import React, {useState} from 'react'
 
-import { ModeToggle } from '@/ui/shadcn-ui/ModeToggle'
-import { Logo } from '@/ui/layout/top-nav-bar/Logo'
-import { PageNav } from '@/ui/layout/top-nav-bar/PageNav'
-import { AuthButton } from '@/ui/layout/top-nav-bar/AuthButton'
-import { MenuUnfoldIcon } from '@/ui/MenuUnfoldIcon'
-import { PanelFoldIcon } from '@/ui/layout/panel-fold/PanelFoldIcon'
+import {ModeToggle} from '@/ui/shadcn-ui/ModeToggle'
+import {Logo} from '@/ui/layout/top-nav-bar/Logo'
+import {PageNav} from '@/ui/layout/top-nav-bar/PageNav'
+import {AuthButton} from '@/ui/layout/top-nav-bar/AuthButton'
+import {MenuUnfoldIcon} from '@/ui/MenuUnfoldIcon'
+import {PanelFoldIcon} from '@/ui/layout/panel-fold/PanelFoldIcon'
 
 type TopNavBarProps = {
   showPanelFoldIcon?: boolean
 }
 
-function TopNavBar({ showPanelFoldIcon = false }: TopNavBarProps) {
+function TopNavBar({showPanelFoldIcon = false}: TopNavBarProps) {
   const [isHamburgerOpen, setIsHamburgerOpen] = useState(false)
 
   function handleClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
@@ -27,16 +27,16 @@ function TopNavBar({ showPanelFoldIcon = false }: TopNavBarProps) {
       className="flex h-16 items-center justify-between gap-4 p-4"
     >
       <div className="flex items-center gap-4">
-        {showPanelFoldIcon && <PanelFoldIcon />}
+        {showPanelFoldIcon && <PanelFoldIcon/>}
 
-        <Logo />
+        <Logo/>
       </div>
 
-      <PageNav isOpen={isHamburgerOpen} />
+      <PageNav isOpen={isHamburgerOpen}/>
 
       <div className="flex gap-4">
-        <AuthButton />
-        <ModeToggle />
+        <AuthButton/>
+        <ModeToggle/>
         <MenuUnfoldIcon
           isOpen={isHamburgerOpen}
           onToggle={setIsHamburgerOpen}
@@ -46,4 +46,4 @@ function TopNavBar({ showPanelFoldIcon = false }: TopNavBarProps) {
   )
 }
 
-export { TopNavBar }
+export {TopNavBar}

@@ -1,13 +1,13 @@
-import { PanelLeftClose, PanelLeftOpen } from 'lucide-react'
+import {PanelLeftClose, PanelLeftOpen} from 'lucide-react'
 
-import { usePanelFold } from '@/ui/layout/panel-fold/PanelFoldContext'
-import { tw } from '@/utils/helpers'
+import {usePanelFold} from '@/ui/layout/panel-fold/PanelFoldContext'
+import {tw} from '@/utils/helpers'
 
 /**
  * 折叠或展开面板的图标，常用于是否折叠侧边导航栏。
  */
 function PanelFoldIcon() {
-  const { folded, setFolded } = usePanelFold()
+  const {folded, setFolded} = usePanelFold()
 
   function handleOpen() {
     return setFolded(false)
@@ -21,11 +21,11 @@ function PanelFoldIcon() {
 
   return (
     <>
-      {folded && <PanelLeftOpen className={style} onClick={handleOpen} />}
+      {folded && <PanelLeftOpen className={style} onClick={handleOpen}/>}
 
-      {!folded && <PanelLeftClose className={style} onClick={handleClose} />}
+      {!folded && <PanelLeftClose className={style} onClick={handleClose}/>}
     </>
   )
 }
 
-export { PanelFoldIcon }
+export {PanelFoldIcon}

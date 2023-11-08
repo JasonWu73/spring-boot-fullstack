@@ -1,25 +1,19 @@
-import { Navigate, useLocation } from 'react-router-dom'
-import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
-import { ReloadIcon } from '@radix-ui/react-icons'
+import {Navigate, useLocation} from 'react-router-dom'
+import {z} from 'zod'
+import {zodResolver} from '@hookform/resolvers/zod'
+import {useForm} from 'react-hook-form'
+import {ReloadIcon} from '@radix-ui/react-icons'
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle
-} from '@/ui/shadcn-ui/Card'
-import { Form } from '@/ui/shadcn-ui/Form'
-import { FormInput } from '@/ui/CustomFormField'
-import { Button } from '@/ui/shadcn-ui/Button'
-import { useToast } from '@/ui/shadcn-ui/use-toast'
-import { useTitle } from '@/hooks/use-title'
-import { useRefresh } from '@/hooks/use-refresh'
-import { useAuth } from '@/features/auth/AuthContext'
-import { useEffect, useRef } from 'react'
-import { type AbortCallback } from '@/hooks/use-fetch'
+import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/ui/shadcn-ui/Card'
+import {Form} from '@/ui/shadcn-ui/Form'
+import {FormInput} from '@/ui/shadcn-ui/CustomFormField'
+import {Button} from '@/ui/shadcn-ui/Button'
+import {useToast} from '@/ui/shadcn-ui/use-toast'
+import {useTitle} from '@/hooks/use-title'
+import {useRefresh} from '@/hooks/use-refresh'
+import {useAuth} from '@/features/auth/AuthContext'
+import {useEffect, useRef} from 'react'
+import {type AbortCallback} from '@/hooks/use-fetch'
 
 const USERNAME = 'jissetts'
 const PASSWORD = 'ePawWgrnZR8L'
@@ -42,9 +36,9 @@ export default function Login() {
     }
   })
 
-  const { toast, dismiss } = useToast()
+  const {toast, dismiss} = useToast()
 
-  const { auth, error, loading, login } = useAuth()
+  const {auth, error, loading, login} = useAuth()
 
   const abortLoginRef = useRef<AbortCallback>()
 
@@ -71,7 +65,7 @@ export default function Login() {
   const originUrl = location.state?.from || '/admin'
 
   if (auth) {
-    return <Navigate to={originUrl} replace />
+    return <Navigate to={originUrl} replace/>
   }
 
   function onSubmit(values: FormSchema) {
@@ -116,7 +110,7 @@ export default function Login() {
             />
 
             <Button type="submit" disabled={loading}>
-              {loading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
+              {loading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin"/>}
               登录
             </Button>
           </form>

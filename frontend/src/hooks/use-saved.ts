@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useRef } from 'react'
+import React, {useLayoutEffect, useRef} from 'react'
 
 /**
  * 保存回调函数的引用，以便在回调函数中使用最新状态的同时，也可作为 `useEffect`、`useMemo` 和 `useCallback` 等 Hook 的依赖项。
@@ -40,4 +40,4 @@ function useObjectRef<T>(obj: T): React.MutableRefObject<T> {
   return objRef
 }
 
-export { useCallbackRef, useObjectRef }
+export {useCallbackRef, useObjectRef}
