@@ -9,7 +9,12 @@ type CodeProps = {
 
 function Code({children, className}: CodeProps) {
   return (
-    <code className={cn('text-rose-500 dark:text-amber-500', className)}>
+    <code
+      className={cn(
+        'font-mono bg-slate-50 dark:bg-slate-200 text-slate-700 py-0.5 px-1 rounded border',
+        className
+      )}
+    >
       {children}
     </code>
   )
