@@ -6,7 +6,7 @@ import {buttonVariants} from '@/ui/shadcn-ui/Button'
 import {ButtonDeleteFriend} from '@/features/eat-split/ButtonDeleteFriend'
 import {cn, truncate} from '@/utils/helpers'
 import {type FriendResponse} from '@/services/fake/friend-api'
-import {useFriends} from '@/features/eat-split/FriendContext'
+import {useFriends} from '@/features/eat-split/FriendProvider'
 
 type FriendItemProps = {
   friend: FriendResponse

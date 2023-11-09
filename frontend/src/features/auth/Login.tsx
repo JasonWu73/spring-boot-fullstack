@@ -11,7 +11,7 @@ import {Button} from '@/ui/shadcn-ui/Button'
 import {useToast} from '@/ui/shadcn-ui/use-toast'
 import {useTitle} from '@/hooks/use-title'
 import {useRefresh} from '@/hooks/use-refresh'
-import {useAuth} from '@/features/auth/AuthContext'
+import {useAuth} from '@/features/auth/AuthProvider'
 import {useEffect, useRef} from 'react'
 import {type AbortCallback} from '@/hooks/use-fetch'
 
@@ -19,8 +19,8 @@ const USERNAME = 'jissetts'
 const PASSWORD = 'ePawWgrnZR8L'
 
 const formSchema = z.object({
-  username: z.string().nonempty('Must enter a username'),
-  password: z.string().nonempty('Must enter a password')
+  username: z.string().min(1, 'Must enter a username'),
+  password: z.string().min(1, 'Must enter a password')
 })
 
 type FormSchema = z.infer<typeof formSchema>

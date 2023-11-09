@@ -1,4 +1,4 @@
-import {cn, tw} from '@/utils/helpers'
+import {cn} from '@/utils/helpers'
 import {Button} from '@/ui/shadcn-ui/Button'
 
 type MenuUnfoldTriggerProps = {
@@ -13,7 +13,7 @@ type MenuUnfoldTriggerProps = {
  * @param onToggle - 切换展开状态
  */
 function MenuUnfoldIcon({isOpen, onToggle}: MenuUnfoldTriggerProps) {
-  const line = tw`ease my-1 h-[2px] w-[1.2rem] transform rounded-full bg-white transition duration-300 group-hover:bg-slate-800 group-hover:dark:bg-white`
+  const line = 'ease my-1 h-[2px] w-[1.2rem] transform rounded-full bg-white transition duration-300 group-hover:bg-slate-800 group-hover:dark:bg-white'
 
   return (
     <div className="flex items-center lg:hidden">

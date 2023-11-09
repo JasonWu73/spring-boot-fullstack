@@ -2,7 +2,7 @@ import React from 'react'
 import {Link} from 'react-router-dom'
 import {LayoutDashboard} from 'lucide-react'
 
-import {useAuth} from '@/features/auth/AuthContext'
+import {useAuth} from '@/features/auth/AuthProvider'
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -60,7 +60,7 @@ function NavItem({children, link}: NavItemProps) {
         to={link}
         className={cn(
           buttonVariants({variant: 'link'}),
-          'grid w-full grid-cols-[auto_1fr] gap-2'
+          'w-full grid grid-cols-[auto_1fr] gap-2'
         )}
       >
         {children}

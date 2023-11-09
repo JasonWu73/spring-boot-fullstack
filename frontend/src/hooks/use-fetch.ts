@@ -1,6 +1,6 @@
 import React, {useReducer} from 'react'
 
-import {type Auth, useAuth} from '@/features/auth/AuthContext'
+import {type Auth, useAuth} from '@/features/auth/AuthProvider'
 import {endNProgress, startNProgress} from '@/utils/nprogress'
 
 type ReLogin = {isOk: true; token: string} | {isOk: false}

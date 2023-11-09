@@ -1,25 +1,25 @@
 import React from 'react'
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
+import {useLocation, useNavigate, useSearchParams} from 'react-router-dom'
 import {
   ExclamationTriangleIcon,
   ReloadIcon,
   RocketIcon
 } from '@radix-ui/react-icons'
 
-import { Separator } from '@/ui/shadcn-ui/Separator'
-import { ScrollArea } from '@/ui/shadcn-ui/ScrollArea'
-import { Card } from '@/ui/shadcn-ui/Card'
-import { Alert, AlertDescription, AlertTitle } from '@/ui/shadcn-ui/Alert'
-import { useToast } from '@/ui/shadcn-ui/use-toast'
-import { FriendItem } from '@/features/eat-split/FriendItem'
-import { FriendSearch } from '@/features/eat-split/FriendSearch'
-import { type FriendResponse } from '@/services/fake/friend-api'
-import { useFriends } from '@/features/eat-split/FriendContext'
-import { useRefresh } from '@/hooks/use-refresh'
-import { KEY_QUERY } from '@/utils/constants'
+import {Separator} from '@/ui/shadcn-ui/Separator'
+import {ScrollArea} from '@/ui/shadcn-ui/ScrollArea'
+import {Card} from '@/ui/shadcn-ui/Card'
+import {Alert, AlertDescription, AlertTitle} from '@/ui/shadcn-ui/Alert'
+import {useToast} from '@/ui/shadcn-ui/use-toast'
+import {FriendItem} from '@/features/eat-split/FriendItem'
+import {FriendSearch} from '@/features/eat-split/FriendSearch'
+import {type FriendResponse} from '@/services/fake/friend-api'
+import {useFriends} from '@/features/eat-split/FriendProvider'
+import {useRefresh} from '@/hooks/use-refresh'
+import {KEY_QUERY} from '@/utils/constants'
 
 function FriendList() {
-  // 因为是 API，所以会导致 loading 时还是显示上次的数据，为了避免页面闪烁，所以这里需要重置一下
+  // 因为是假 API，所以会导致 loading 时还是显示上次的数据，为了避免页面闪烁，所以这里需要重置一下
   const friendsContext = useFriends()
 
   const {
@@ -29,7 +29,7 @@ function FriendList() {
     setShowAddFriend
   } = friendsContext
 
-  let { friends, errorFriends: error } = friendsContext
+  let {friends, errorFriends: error} = friendsContext
 
   if (loading) {
     error = ''
@@ -41,8 +41,8 @@ function FriendList() {
 
   const filteredFriends = nameQuery
     ? friends.filter((f) =>
-        f.name.toLowerCase().includes(nameQuery.toLowerCase())
-      )
+      f.name.toLowerCase().includes(nameQuery.toLowerCase())
+    )
     : friends
 
   const location = useLocation()
@@ -66,7 +66,7 @@ function FriendList() {
     }
   })
 
-  const { toast } = useToast()
+  const {toast} = useToast()
 
   const navigate = useNavigate()
 
@@ -80,20 +80,20 @@ function FriendList() {
 
     navigate(`/eat-split${window.location.search}`, {
       replace: true,
-      state: { noRefresh: true }
+      state: {noRefresh: true}
     })
   }
 
   return (
     <>
-      <FriendSearch />
+      <FriendSearch/>
 
       <Card>
         <ScrollArea className="h-96 w-96 md:h-[30rem] md:w-[22rem] lg:h-[24rem] lg:w-[30rem]">
           <div className="space-y-4 p-4">
             {loading && (
               <Alert>
-                <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+                <ReloadIcon className="mr-2 h-4 w-4 animate-spin"/>
                 <AlertTitle>加载中...</AlertTitle>
                 <AlertDescription>好友列表加载中</AlertDescription>
               </Alert>
@@ -101,7 +101,7 @@ function FriendList() {
 
             {error && (
               <Alert variant="destructive">
-                <ExclamationTriangleIcon className="h-4 w-4" />
+                <ExclamationTriangleIcon className="h-4 w-4"/>
                 <AlertTitle>错误</AlertTitle>
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
@@ -109,7 +109,7 @@ function FriendList() {
 
             {!loading && !error && filteredFriends.length === 0 && (
               <Alert>
-                <RocketIcon className="h-4 w-4" />
+                <RocketIcon className="h-4 w-4"/>
                 <AlertTitle>温馨提示！</AlertTitle>
                 <AlertDescription>
                   还没有好友，添加好友即可分摊账单
@@ -126,7 +126,7 @@ function FriendList() {
                       onDeleteFriend={handleDeleteFriend}
                     />
 
-                    {i < arr.length - 1 && <Separator className="my-2" />}
+                    {i < arr.length - 1 && <Separator className="my-2"/>}
                   </React.Fragment>
                 ))}
               </ul>
@@ -138,4 +138,4 @@ function FriendList() {
   )
 }
 
-export { FriendList }
+export {FriendList}

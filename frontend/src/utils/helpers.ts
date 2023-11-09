@@ -1,5 +1,5 @@
-import clsx, { type ClassValue } from 'clsx'
-import { twMerge } from 'tailwind-merge'
+import clsx, {type ClassValue} from 'clsx'
+import {twMerge} from 'tailwind-merge'
 
 /**
  * 合并类名，由 `npx shadcn-ui@latest init` 自动生成。
@@ -11,19 +11,6 @@ import { twMerge } from 'tailwind-merge'
  */
 function cn(...inputs: ClassValue[]): string {
   return twMerge(clsx(inputs))
-}
-
-/**
- * 带标签的模板字符串，用于在模板字符串中使用 prettier-plugin-tailwindcss 插件。
- *
- * {@link https://github.com/tailwindlabs/prettier-plugin-tailwindcss#sorting-classes-in-template-literals|Sorting classes in template literals - prettier-plugin-tailwindcss}
- *
- * @param strings - 字符串数组
- * @param values - 模板字符串中的变量
- * @returns {string} - 模板字符串
- */
-function tw(strings: TemplateStringsArray, ...values: unknown[]): string {
-  return String.raw({ raw: strings }, ...values)
 }
 
 /**
@@ -74,4 +61,4 @@ function debounce(callback: () => void, delay: number): Debounce {
   }
 }
 
-export { cn, tw, truncate, wait, debounce }
+export {cn, truncate, wait, debounce}

@@ -1,77 +1,66 @@
-import { useEffect } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
-import { type UseFormReturn, useForm } from 'react-hook-form'
-import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
+import {useEffect} from 'react'
+import {useNavigate, useParams} from 'react-router-dom'
+import {useForm, type UseFormReturn} from 'react-hook-form'
+import {z} from 'zod'
+import {zodResolver} from '@hookform/resolvers/zod'
 
-import { Button } from '@/ui/shadcn-ui/Button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle
-} from '@/ui/shadcn-ui/Card'
-import { FormInput, FormSelect } from '@/ui/shadcn-ui/CustomFormField'
-import { Form } from '@/ui/shadcn-ui/Form'
-import { StarRating } from '@/ui/StarRating'
-import { FormSplitBillSkeleton } from '@/features/eat-split/FormSplitBillSkeleton'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger
-} from '@/ui/shadcn-ui/Tooltip'
-import { useTitle } from '@/hooks/use-title'
-import { useFriends } from '@/features/eat-split/FriendContext'
-import { FormSplitBillError } from '@/features/eat-split/FormSplitBillError'
-import { useRefresh } from '@/hooks/use-refresh'
+import {Button} from '@/ui/shadcn-ui/Button'
+import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/ui/shadcn-ui/Card'
+import {FormInput, FormSelect} from '@/ui/shadcn-ui/CustomFormField'
+import {Form} from '@/ui/shadcn-ui/Form'
+import {StarRating} from '@/ui/StarRating'
+import {FormSplitBillSkeleton} from '@/features/eat-split/FormSplitBillSkeleton'
+import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from '@/ui/shadcn-ui/Tooltip'
+import {useTitle} from '@/hooks/use-title'
+import {useFriends} from '@/features/eat-split/FriendProvider'
+import {FormSplitBillError} from '@/features/eat-split/FormSplitBillError'
+import {useRefresh} from '@/hooks/use-refresh'
 
 const whoIsPayingOptions = [
-  { value: 'user', label: '您' },
-  { value: 'friend', label: '好友' }
+  {value: 'user', label: '您'},
+  {value: 'friend', label: '好友'}
 ]
 
 const formSchema = z
-  .object({
-    bill: z.coerce
-      .number({ invalid_type_error: '账单金额必须是数字' })
-      .min(0, '账单金额必须大于或等于 0'),
+.object({
+  bill: z.coerce
+  .number({invalid_type_error: '账单金额必须是数字'})
+  .min(0, '账单金额必须大于或等于 0'),
 
-    userExpense: z.coerce
-      .number({ invalid_type_error: '费用必须是数字' })
-      .min(0, '费用必须大于或等于 0'),
+  userExpense: z.coerce
+  .number({invalid_type_error: '费用必须是数字'})
+  .min(0, '费用必须大于或等于 0'),
 
-    friendExpense: z.coerce
-      .number({ invalid_type_error: '费用必须是数字' })
-      .min(0, '费用必须大于或等于 0'),
+  friendExpense: z.coerce
+  .number({invalid_type_error: '费用必须是数字'})
+  .min(0, '费用必须大于或等于 0'),
 
-    whoIsPaying: z.string({ required_error: '必须选择谁支付账单' }).refine(
-      (value) => {
-        return whoIsPayingOptions.map(({ value }) => value).includes(value)
-      },
-      {
-        message: '必须是有效的选项：您 或 好友'
-      }
-    )
-  })
-  .refine(({ userExpense, bill }) => userExpense <= bill, {
-    message: '您的费用必须小于或等于帐单',
-    path: ['userExpense']
-  })
-  .refine(
-    ({ userExpense, friendExpense, whoIsPaying }) => {
-      if (whoIsPaying === 'user' && userExpense > 0) {
-        return true
-      }
-
-      return whoIsPaying === 'friend' && friendExpense > 0
+  whoIsPaying: z.string({required_error: '必须选择谁支付账单'}).refine(
+    (value) => {
+      return whoIsPayingOptions.map(({value}) => value).includes(value)
     },
     {
-      message: '必须输入有效的费用',
-      path: ['userExpense']
+      message: '必须是有效的选项：您 或 好友'
     }
   )
+})
+.refine(({userExpense, bill}) => userExpense <= bill, {
+  message: '您的费用必须小于或等于帐单',
+  path: ['userExpense']
+})
+.refine(
+  ({userExpense, friendExpense, whoIsPaying}) => {
+    if (whoIsPaying === 'user' && userExpense > 0) {
+      return true
+    }
+
+    return whoIsPaying === 'friend' && friendExpense > 0
+  },
+  {
+    message: '必须输入有效的费用',
+    path: ['userExpense']
+  }
+)
 
 type FormSchema = z.infer<typeof formSchema>
 
@@ -90,7 +79,7 @@ function FormSplitBill() {
 
   useWatchExpense(form)
 
-  // 因为是 API，所以会导致 loading 时还是显示上次的数据，为了避免页面闪烁，所以这里需要重置一下
+  // 因为是假 API，所以会导致 loading 时还是显示上次的数据，为了避免页面闪烁，所以这里需要重置一下
   const friendsContext = useFriends()
 
   const {
@@ -100,7 +89,7 @@ function FormSplitBill() {
     splitBill
   } = friendsContext
 
-  let { curFriend: friend, errorFriend: error } = friendsContext
+  let {curFriend: friend, errorFriend: error} = friendsContext
 
   if (loading) {
     error = ''
@@ -113,7 +102,7 @@ function FormSplitBill() {
   useRefresh(() => {
     form.reset()
 
-    const abort = getFriend({ id })
+    const abort = getFriend({id})
 
     return () => {
       abort()
@@ -129,7 +118,7 @@ function FormSplitBill() {
     splitBill(id, expense)
 
     navigate(`/eat-split${window.location.search}`, {
-      state: { noRefresh: true }
+      state: {noRefresh: true}
     })
   }
 
@@ -138,10 +127,11 @@ function FormSplitBill() {
   }
 
   return (
-    <Card className="w-96 bg-amber-100 text-slate-700 dark:bg-amber-100 dark:text-slate-700 md:w-[22rem] lg:w-[30rem]">
-      {loading && <FormSplitBillSkeleton />}
+    <Card
+      className="w-96 bg-amber-100 text-slate-700 dark:bg-amber-100 dark:text-slate-700 md:w-[22rem] lg:w-[30rem]">
+      {loading && <FormSplitBillSkeleton/>}
 
-      {error && <FormSplitBillError message={error} />}
+      {error && <FormSplitBillError message={error}/>}
 
       {friend && (
         <>
@@ -232,18 +222,18 @@ function FormSplitBill() {
 
 // 为测试校验, 添加一个不在 options 中的值
 function getWhoIsPayingOptions(friend: string) {
-  const options = whoIsPayingOptions.map(({ value, label }) => ({
+  const options = whoIsPayingOptions.map(({value, label}) => ({
     value,
     label: value === 'friend' ? friend : label
   }))
 
-  options.push({ value: 'anonymous', label: '匿名' })
+  options.push({value: 'anonymous', label: '匿名'})
 
   return options
 }
 
 function useWatchExpense(form: UseFormReturn<FormSchema>) {
-  const { watch, setValue } = form
+  const {watch, setValue} = form
 
   const bill = watch('bill')
   const userExpense = watch('userExpense')
@@ -262,4 +252,4 @@ function useWatchExpense(form: UseFormReturn<FormSchema>) {
   }, [bill, userExpense, setValue])
 }
 
-export { FormSplitBill }
+export {FormSplitBill}
