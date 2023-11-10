@@ -7,7 +7,7 @@ type FooterProps = React.ComponentPropsWithoutRef<'footer'>
 function Footer({className, ...props}: FooterProps) {
   return (
     <footer
-      className={cn('bg-slate-100 dark:bg-night-4 dark:text-snow-1', className)}
+      className={cn('bg-slate-100 dark:bg-night-4 dark:text-snow', className)}
       {...props}
     >
       <div className="flex flex-col flex-wrap container mx-auto px-5 py-4">

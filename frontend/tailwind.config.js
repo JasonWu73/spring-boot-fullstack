@@ -15,13 +15,13 @@ export default {
     extend: {
       colors: {
         night: {
-          1: 'var(--bg-dark-color)',
-          2: 'var(--bg-dark-color-2)',
-          3: 'var(--bg-dark-color-3)',
-          4: 'var(--bg-dark-color-4)'
+          1: 'rgb(var(--color-night-1) / <alpha-value>)',
+          2: 'rgb(var(--color-night-2) / <alpha-value>)',
+          3: 'rgb(var(--color-night-3) / <alpha-value>)',
+          4: 'rgb(var(--color-night-4) / <alpha-value>)'
         },
         snow: {
-          1: 'var(--fg-dark-color)'
+          DEFAULT: 'rgb(var(--color-snow) / <alpha-value>)'
         }
       },
       keyframes: {

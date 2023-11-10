@@ -11,14 +11,14 @@ export default function LoginLayout() {
       <Header className="dark:bg-night-2"/>
 
       <main
-        className="relative flex-grow bg-night-1 bg-[url('/img/bg_login.png')] bg-[length:100%] bg-no-repeat text-snow-1"
+        className="relative flex-grow bg-night-1 bg-[url('/img/bg_login.png')] bg-[length:100%] bg-no-repeat text-snow"
       >
         <Suspense fallback={<SpinnerFullPage/>}>
           <Outlet/>
         </Suspense>
       </main>
 
-      <Footer className="border-t border-t-slate-600 bg-night-1 dark:bg-night-1 text-snow-1"/>
+      <Footer className="border-t border-t-slate-600 bg-night-1 dark:bg-night-1 text-snow"/>
     </div>
   )
 }
