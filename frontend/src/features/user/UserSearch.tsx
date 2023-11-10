@@ -1,14 +1,14 @@
-import { useForm, type UseFormSetValue } from 'react-hook-form'
-import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
+import {useForm, type UseFormSetValue} from 'react-hook-form'
+import {z} from 'zod'
+import {zodResolver} from '@hookform/resolvers/zod'
 
-import { Form } from '@/ui/shadcn-ui/Form'
-import { FormInput } from '@/ui/shadcn-ui/CustomFormField'
-import { Button } from '@/ui/shadcn-ui/Button'
-import { ReloadIcon } from '@radix-ui/react-icons'
-import { useSearchParams } from 'react-router-dom'
-import { useEffect } from 'react'
-import { KEY_QUERY } from '@/utils/constants'
+import {Form} from '@/ui/shadcn-ui/Form'
+import {FormInput} from '@/ui/shadcn-ui/CustomFormField'
+import {Button} from '@/ui/shadcn-ui/Button'
+import {ReloadIcon} from '@radix-ui/react-icons'
+import {useSearchParams} from 'react-router-dom'
+import {useEffect} from 'react'
+import {KEY_QUERY} from '@/utils/constants'
 
 const formSchema = z.object({
   query: z.string()
@@ -21,7 +21,7 @@ type UserSearchProps = {
   loading: boolean
 }
 
-function UserSearch({ onSearch, loading }: UserSearchProps) {
+function UserSearch({onSearch, loading}: UserSearchProps) {
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -37,8 +37,7 @@ function UserSearch({ onSearch, loading }: UserSearchProps) {
 
   function handleReset() {
     form.reset()
-
-    onSubmit({ query: '' })
+    onSubmit({query: ''})
   }
 
   return (
@@ -59,11 +58,11 @@ function UserSearch({ onSearch, loading }: UserSearchProps) {
           />
 
           <Button type="submit" disabled={loading}>
-            {loading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
+            {loading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin"/>}
             查询
           </Button>
           {form.getValues('query').length > 0 && (
-            <Button onClick={handleReset} type="reset" variant="outline">
+            <Button onClick={handleReset} type="reset" variant="secondary">
               重置
             </Button>
           )}
@@ -82,4 +81,4 @@ function useSyncQuery(setValue: UseFormSetValue<FormSchema>) {
   }, [query, setValue])
 }
 
-export { UserSearch }
+export {UserSearch}
