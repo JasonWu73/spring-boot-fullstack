@@ -68,9 +68,7 @@ function MenuItem({link, children}: MenuItemProps) {
         className={({isActive}) =>
           cn(
             'grid grid-cols-[16px_1fr] grid-rows-1 items-center gap-2 rounded px-4 py-2 text-sm',
-            {
-              'bg-sky-500 font-bold dark:bg-sky-600': isActive
-            }
+            isActive && 'font-bold bg-sky-500 dark:bg-sky-600'
           )
         }
       >

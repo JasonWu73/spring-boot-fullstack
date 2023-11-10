@@ -14,7 +14,7 @@ function Header({
 }: HeaderProps) {
   return (
     <header
-      className={cn('bg-slate-800 text-snow-1 dark:bg-night-1', className)}
+      className={cn('bg-slate-800 dark:bg-night-1 text-snow-1', className)}
       {...props}
     >
       <TopNavBar showPanelFoldIcon={showPanelFoldIcon}/>

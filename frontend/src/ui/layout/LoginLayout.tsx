@@ -5,7 +5,7 @@ import {Footer} from '@/ui/layout/Footer'
 
 export default function LoginLayout() {
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex flex-col min-h-screen">
       <Header className="dark:bg-night-2"/>
 
       <main
@@ -13,7 +13,7 @@ export default function LoginLayout() {
         <Outlet/>
       </main>
 
-      <Footer className="border-t border-t-slate-600 bg-night-1 text-snow-1 dark:bg-night-1"/>
+      <Footer className="border-t border-t-slate-600 bg-night-1 dark:bg-night-1 text-snow-1"/>
     </div>
   )
 }

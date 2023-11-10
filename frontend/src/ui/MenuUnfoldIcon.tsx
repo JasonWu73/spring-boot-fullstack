@@ -24,20 +24,22 @@ function MenuUnfoldIcon({isOpen, onToggle}: MenuUnfoldTriggerProps) {
         className="group flex-col"
       >
         <div
-          className={cn(line, {
-            'translate-y-[0.625rem] rotate-45': isOpen
-          })}
+          className={cn(
+            line,
+            isOpen && 'translate-y-[0.625rem] rotate-45'
+          )}
         />
         <div
-          className={cn(line, {
-            'opacity-0': isOpen,
-            'my-0': !isOpen
-          })}
+          className={cn(
+            line,
+            isOpen ? 'opacity-0' : 'my-0'
+          )}
         />
         <div
-          className={cn(line, {
-            '-translate-y-[0.625rem] -rotate-45': isOpen
-          })}
+          className={cn(
+            line,
+            isOpen && 'translate-y-[-0.625rem] -rotate-45'
+          )}
         />
       </Button>
     </div>

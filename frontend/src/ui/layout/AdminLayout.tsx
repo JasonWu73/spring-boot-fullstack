@@ -10,22 +10,21 @@ export default function AdminLayout() {
   const {folded} = usePanelFold()
 
   return (
-    <div className="grid min-h-screen grid-cols-[auto_1fr] grid-rows-[auto_1fr]">
-      <Header showPanelFoldIcon={true} className="col-span-2 row-span-1"/>
+    <div className="grid grid-rows-[auto_1fr] grid-cols-[auto_1fr] min-h-screen">
+      <Header showPanelFoldIcon={true} className="row-span-1 col-span-2"/>
 
       <Aside
         className={cn(
-          'col-span-1 row-span-1 transform transition duration-500',
-          {
-            hidden: folded
-          }
+          'row-span-1 col-span-1 transform transition duration-500',
+          folded && 'hidden'
         )}
       />
 
       <main
-        className={cn('col-span-1 row-span-1 flex flex-col', {
-          'col-span-2': folded
-        })}
+        className={cn(
+          'row-span-1 col-span-1 flex flex-col',
+          folded && 'col-span-2'
+        )}
       >
         <div className="flex-grow p-4">
           <Outlet/>

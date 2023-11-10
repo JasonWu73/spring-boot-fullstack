@@ -120,9 +120,10 @@ function StarBox({
       onClick={onRate}
       onMouseEnter={onHoverIn}
       onMouseLeave={onHoverOut}
-      className={cn('peer cursor-pointer', {
-        'border-amber-500': isFilled
-      })}
+      className={cn(
+        'peer cursor-pointer',
+        isFilled && 'border-amber-500'
+      )}
     >
       {type === 'full' ? (
         <FullStar isFilled={isFilled} color={color} size={size}/>
