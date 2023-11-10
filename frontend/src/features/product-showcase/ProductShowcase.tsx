@@ -87,12 +87,7 @@ type TitleProps = {
 
 function Title({label, isError = false}: TitleProps) {
   return (
-    <h1
-      className={cn(
-        'font-bold tracking-wider',
-        isError && 'text-red-500 dark:text-red-600'
-      )}
-    >
+    <h1 className={cn(isError && 'text-red-500 dark:text-red-600')}>
       {label}
     </h1>
   )

@@ -49,7 +49,7 @@ type MenuProps = {
 function Menu({title, children}: MenuProps) {
   return (
     <>
-      <h2 className="w-10/12 pl-4 font-semibold text-slate-400">{title}</h2>
+      <h3 className="pl-4 w-10/12 text-slate-400">{title}</h3>
       <ul className="w-10/12">{children}</ul>
     </>
   )

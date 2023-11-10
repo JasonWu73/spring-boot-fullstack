@@ -37,7 +37,7 @@ export default function UseCallback() {
       <CardContent className="space-y-4">
         <div className="flex items-center gap-4">
           <div className="space-y-2">
-            <h2 className="font-bold text-red-500">优化前</h2>
+            <h2 className="text-red-500">优化前</h2>
             <Button
               onClick={() => setShowBefore((prev) => !prev)}
               variant="destructive"
@@ -49,7 +49,7 @@ export default function UseCallback() {
           </div>
 
           <div className="space-y-2">
-            <h2 className="font-bold text-emerald-500">优化后</h2>
+            <h2 className="text-emerald-500">优化后</h2>
             <Button
               onClick={() => setShowAfter((prev) => !prev)}
               variant="destructive"

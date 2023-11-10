@@ -8,8 +8,8 @@ function HeavyComputedComponent() {
   })
 
   return (
-    <div className="rounded-md border p-4">
-      <h2 className="mb-4 font-medium leading-none">慢组件</h2>
+    <div className="p-4 border rounded-md">
+      <h2 className="mb-4 leading-none">慢组件</h2>
       <p>构建于：{new Date().toLocaleString()}</p>
       <p className="text-xs">累加值：{sum}</p>
     </div>
