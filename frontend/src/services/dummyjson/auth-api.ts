@@ -36,30 +36,25 @@ async function loginApi(
   payload: FetchPayload,
   params?: LoginParams
 ): Promise<ApiResponse<LoginResult>> {
-  if (!params) {
-    return {data: null, error: '未传入参数'}
-  }
+  if (!params) return {data: null, error: '未传入参数'}
 
   const {data, error} = await sendRequest<AuthResponse, ErrorResponse>({
     url: `${BASE_URL}/login`,
+    signal: payload.signal,
     method: 'POST',
     bodyData: {
       ...params,
       expiresInMins: EXPIRES_IN_MINS
-    },
-    signal: payload.signal
+    }
   })
 
   if (error) {
-    if (typeof error === 'string') {
-      return {data: null, error}
-    }
+    if (typeof error === 'string') return {data: null, error}
 
     return {data: null, error: error.message}
   }
 
   const result = {...data, password: params.password} as LoginResult
-
   return {data: result, error: ''}
 }
 
@@ -80,9 +75,7 @@ async function sendAuthDummyJsonApi<T>({
 }: ReLoginRequest): Promise<ApiResponse<T>> {
   const {auth, signal} = payload
 
-  if (!auth) {
-    return {data: null, error: '未登录', reLogin: {isOk: false}}
-  }
+  if (!auth) return {data: null, error: '未登录', reLogin: {isOk: false}}
 
   const token = reLogin?.isOk ? reLogin.token : auth.token
 
@@ -96,29 +89,19 @@ async function sendAuthDummyJsonApi<T>({
     signal
   })
 
-  if (!error) {
-    return {data, error: '', reLogin}
-  }
+  if (!error) return {data, error: '', reLogin}
 
-  if (typeof error === 'string') {
-    return {data: null, error}
-  }
+  if (typeof error === 'string') return {data: null, error}
 
-  const authFailed =
-    error.name === 'TokenExpiredError' || error.name === 'JsonWebTokenError'
+  const authFailed = error.name === 'TokenExpiredError'
+    || error.name === 'JsonWebTokenError'
 
   if (!reLogin && authFailed) {
     const {username, password} = auth
-
-    if (!username || !password) {
-      return {data: null, error: '未登录', reLogin: {isOk: false}}
-    }
+    if (!username || !password) return {data: null, error: '未登录', reLogin: {isOk: false}}
 
     const {data, error} = await tryReLogin(payload, {username, password})
-
-    if (error) {
-      return {data: null, error, reLogin: {isOk: false}}
-    }
+    if (error) return {data: null, error, reLogin: {isOk: false}}
 
     return sendAuthDummyJsonApi({
       payload,
@@ -136,10 +119,7 @@ async function sendAuthDummyJsonApi<T>({
 
 async function tryReLogin(payload: FetchPayload, params: LoginParams) {
   const {data, error} = await loginApi(payload, params)
-
-  if (error) {
-    return {data: null, error}
-  }
+  if (error) return {data: null, error}
 
   return {data, error: null}
 }

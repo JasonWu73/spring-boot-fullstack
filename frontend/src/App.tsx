@@ -8,12 +8,11 @@ import {Spinner} from '@/ui/Spinner'
 import {PanelFoldProvider} from '@/ui/layout/panel-fold/PanelFoldProvider'
 import {ThemeProvider} from '@/ui/shadcn-ui/ThemeProvider'
 import {AuthProvider} from '@/features/auth/AuthProvider'
-import {SpinnerFullPage} from '@/ui/SpinnerFullPage'
 import {Toaster} from '@/ui/shadcn-ui/Toaster'
+import LoginLayout from '@/ui/layout/LoginLayout'
+import MainLayout from '@/ui/layout/MainLayout'
+import AdminLayout from '@/ui/layout/AdminLayout'
 
-const MainLayout = lazy(() => import('@/ui/layout/MainLayout'))
-const AdminLayout = lazy(() => import('@/ui/layout/AdminLayout'))
-const LoginLayout = lazy(() => import('@/ui/layout/LoginLayout'))
 const Login = lazy(() => import('@/features/auth/Login'))
 const ProductShowcase = lazy(() => import('@/features/product-showcase/ProductShowcase'))
 const EatAndSplit = lazy(() => import('@/features/eat-split/EatAndSplit'))
@@ -86,10 +85,7 @@ export default function App() {
   return (
     <ThemeProvider defaultTheme="system" storageKey="demo-ui-theme">
       <AuthProvider>
-        <Suspense fallback={<SpinnerFullPage/>}>
-          <RouterProvider router={router}/>
-        </Suspense>
-
+        <RouterProvider router={router}/>
         <Toaster/>
       </AuthProvider>
     </ThemeProvider>

@@ -1,3 +1,4 @@
+import {Suspense} from 'react'
 import {Outlet} from 'react-router-dom'
 
 import {usePanelFold} from '@/ui/layout/panel-fold/PanelFoldProvider'
@@ -5,6 +6,7 @@ import {Header} from '@/ui/layout/Header'
 import {Footer} from '@/ui/layout/Footer'
 import {Aside} from '@/ui/layout/Aside'
 import {cn} from '@/utils/helpers'
+import {SpinnerFullPage} from '@/ui/SpinnerFullPage'
 
 export default function AdminLayout() {
   const {folded} = usePanelFold()
@@ -26,8 +28,10 @@ export default function AdminLayout() {
           folded && 'col-span-2'
         )}
       >
-        <div className="flex-grow p-4">
-          <Outlet/>
+        <div className="relative flex-grow p-4">
+          <Suspense fallback={<SpinnerFullPage/>}>
+            <Outlet/>
+          </Suspense>
         </div>
 
         <Footer/>

@@ -1,7 +1,9 @@
+import {Suspense} from 'react'
 import {Outlet} from 'react-router-dom'
 
 import {Header} from '@/ui/layout/Header'
 import {Footer} from '@/ui/layout/Footer'
+import {SpinnerFullPage} from '@/ui/SpinnerFullPage'
 
 export default function LoginLayout() {
   return (
@@ -9,8 +11,11 @@ export default function LoginLayout() {
       <Header className="dark:bg-night-2"/>
 
       <main
-        className="flex-grow bg-night-1 bg-[url('/img/bg_login.png')] bg-[length:100%] bg-no-repeat">
-        <Outlet/>
+        className="relative flex-grow bg-night-1 bg-[url('/img/bg_login.png')] bg-[length:100%] bg-no-repeat text-snow-1"
+      >
+        <Suspense fallback={<SpinnerFullPage/>}>
+          <Outlet/>
+        </Suspense>
       </main>
 
       <Footer className="border-t border-t-slate-600 bg-night-1 dark:bg-night-1 text-snow-1"/>

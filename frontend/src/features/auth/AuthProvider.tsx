@@ -47,16 +47,11 @@ type AuthProviderProps = {
 
 function createInitialAuthState(): Auth | null {
   const storageAuth = localStorage.getItem(STORAGE_KEY)
-
-  if (!storageAuth) {
-    return null
-  }
+  if (!storageAuth) return null
 
   const encryptedAuth = JSON.parse(storageAuth)
-
   const username = decrypt(PRIVATE_KEY, encryptedAuth.username)
   const password = decrypt(PRIVATE_KEY, encryptedAuth.password)
-
   return {...encryptedAuth, username, password}
 }
 
@@ -69,56 +64,24 @@ function AuthProvider({children}: AuthProviderProps) {
     fetchData: Login
   } = useFetch<LoginResult, LoginParams>(async (payload, params) => {
     const response = await loginApi(payload, params)
-
     const {data} = response
-
-    if (data) {
-      const authData = {
-        id: data.id,
-        username: data.username,
-        password: data.password,
-        token: data.token,
-        nickname: data.firstName + ' ' + data.lastName
-      }
-
-      localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify({
-          ...authData,
-          username: encrypt(PUBLIC_KEY, data.username),
-          password: encrypt(PUBLIC_KEY, data.password)
-        })
-      )
-
-      setAuth(authData)
-    }
-
+    data && saveAuth(data, setAuth)
     return response
   })
 
   function logout() {
     setAuth(null)
-
-    localStorage.removeItem(STORAGE_KEY)
+    deleteLocalStorageAuth()
   }
 
   function updateToken(token: string) {
-    setAuth((prev) => {
-      if (!prev) {
-        return null
-      }
+    setAuth((prevAuth) => {
+      if (!prevAuth) return null
 
-      localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify({
-          ...prev,
-          token,
-          username: encrypt(PUBLIC_KEY, prev.username),
-          password: encrypt(PUBLIC_KEY, prev.password)
-        })
-      )
+      const nextAuth = {...prevAuth, token}
 
-      return {...prev, token}
+      saveLocalStorageAuth(nextAuth)
+      return nextAuth
     })
   }
 
@@ -136,6 +99,34 @@ function AuthProvider({children}: AuthProviderProps) {
       {children}
     </AuthProviderContext.Provider>
   )
+}
+
+function saveAuth(data: LoginResult, setAuth: React.Dispatch<Auth | null>) {
+  const authData = {
+    id: data.id,
+    username: data.username,
+    password: data.password,
+    token: data.token,
+    nickname: data.firstName + ' ' + data.lastName
+  }
+
+  saveLocalStorageAuth(authData)
+  setAuth(authData)
+}
+
+function saveLocalStorageAuth(auth: Auth) {
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify({
+      ...auth,
+      username: encrypt(PUBLIC_KEY, auth.username),
+      password: encrypt(PUBLIC_KEY, auth.password)
+    })
+  )
+}
+
+function deleteLocalStorageAuth() {
+  localStorage.removeItem(STORAGE_KEY)
 }
 
 function useAuth() {

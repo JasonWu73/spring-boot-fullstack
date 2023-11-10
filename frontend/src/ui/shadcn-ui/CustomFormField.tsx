@@ -13,18 +13,12 @@ import {Calendar} from '@/ui/shadcn-ui/Calendar'
 import {zhCN} from 'date-fns/locale'
 
 /**
- * 自定义的错误边框样式.
- *
- * @param isError - 是否为错误状态
- * @returns {Record<string, boolean>} - 错误边框样式类对象, 用于 `cn` 函数
+ * 参数校验是否通过时的输入框样式。
  */
-function inputErrorClasses(isError: boolean): Record<string, boolean> {
-  return {
-    'border-slate-200 dark:border-slate-800 focus-visible:ring-slate-950 dark:focus-visible:ring-slate-300':
-      !isError,
-    'border-red-500 dark:border-red-600 focus-visible:ring-red-500 dark:focus-visible:ring-red-700':
-    isError
-  }
+function inputErrorClasses(isError: boolean) {
+  return isError
+    ? 'border-red-500 dark:border-red-600 focus-visible:ring-red-500 dark:focus-visible:ring-red-700'
+    : 'border-slate-200 dark:border-slate-800 focus-visible:ring-slate-950 dark:focus-visible:ring-slate-300'
 }
 
 type FormInputProps<T extends FieldValues> = {
@@ -55,7 +49,7 @@ function FormInput<T extends FieldValues>({
       control={control}
       name={name}
       render={({field}) => (
-        <FormItem className="grid grid-flow-row items-center gap-2 lg:grid-cols-[auto_1fr]">
+        <FormItem className="grid grid-flow-row lg:grid-cols-[auto_1fr] items-center gap-2">
           <FormLabel
             style={{width: labelWidth}}
             className="overflow-hidden text-ellipsis whitespace-nowrap"
@@ -77,7 +71,7 @@ function FormInput<T extends FieldValues>({
             />
           </FormControl>
 
-          <FormMessage className="lg:col-start-2 lg:col-end-3 lg:row-span-1"/>
+          <FormMessage className="lg:row-span-1 lg:col-start-2 lg:col-end-3"/>
         </FormItem>
       )}
     />

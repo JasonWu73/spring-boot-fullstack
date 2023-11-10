@@ -15,12 +15,14 @@ import {useAuth} from '@/features/auth/AuthProvider'
 import {useEffect, useRef} from 'react'
 import {type AbortCallback} from '@/hooks/use-fetch'
 
+const DEFAULT_REDIRECT_URL = '/admin'
+
 const USERNAME = 'jissetts'
 const PASSWORD = 'ePawWgrnZR8L'
 
 const formSchema = z.object({
-  username: z.string().min(1, 'Must enter a username'),
-  password: z.string().min(1, 'Must enter a password')
+  username: z.string().min(1, '必须输入用户名'),
+  password: z.string().min(1, '必须输入密码')
 })
 
 type FormSchema = z.infer<typeof formSchema>
@@ -37,43 +39,28 @@ export default function Login() {
   })
 
   const {toast, dismiss} = useToast()
-
   const {auth, error, loading, login} = useAuth()
-
   const abortLoginRef = useRef<AbortCallback>()
+
+  useErrorToast(error, toast)
 
   useRefresh(() => {
     form.reset()
     dismiss()
 
-    if (abortLoginRef.current) {
-      abortLoginRef.current()
-    }
+    abortLoginRef.current && abortLoginRef.current()
   })
 
-  useEffect(() => {
-    if (error) {
-      toast({
-        title: '登录失败',
-        description: error,
-        variant: 'destructive'
-      })
-    }
-  }, [error, toast])
-
   const location = useLocation()
-  const originUrl = location.state?.from || '/admin'
-
-  if (auth) {
-    return <Navigate to={originUrl} replace/>
-  }
+  const originUrl = location.state?.from || DEFAULT_REDIRECT_URL
+  if (auth) return <Navigate to={originUrl} replace/>
 
   function onSubmit(values: FormSchema) {
     abortLoginRef.current = login(values.username, values.password)
   }
 
   return (
-    <Card className="mx-auto mt-8 w-96 border-slate-200 bg-slate-200 md:w-[22rem] lg:w-[30rem]">
+    <Card className="md:w-[22rem] lg:w-[30rem] mx-auto mt-8 w-96 border-slate-200 bg-slate-200">
       <CardHeader>
         <CardTitle>登录</CardTitle>
         {error && (
@@ -110,7 +97,7 @@ export default function Login() {
             />
 
             <Button type="submit" disabled={loading}>
-              {loading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin"/>}
+              {loading && <ReloadIcon className="mr-2 w-4 h-4 animate-spin"/>}
               登录
             </Button>
           </form>
@@ -118,4 +105,16 @@ export default function Login() {
       </CardContent>
     </Card>
   )
+}
+
+function useErrorToast(error: string, toast: ReturnType<typeof useToast>['toast']) {
+  useEffect(() => {
+    if (error) {
+      toast({
+        title: '登录失败',
+        description: error,
+        variant: 'destructive'
+      })
+    }
+  }, [error, toast])
 }
