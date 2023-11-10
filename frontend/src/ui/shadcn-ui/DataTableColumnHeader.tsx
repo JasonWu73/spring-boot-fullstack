@@ -1,11 +1,6 @@
 import React from 'react'
 import {type Column} from '@tanstack/react-table'
-import {
-  ArrowDownIcon,
-  ArrowUpIcon,
-  CaretSortIcon,
-  EyeNoneIcon
-} from '@radix-ui/react-icons'
+import {ArrowDownIcon, ArrowUpIcon, CaretSortIcon, EyeNoneIcon} from '@radix-ui/react-icons'
 
 import {cn} from '@/utils/helpers'
 import {
