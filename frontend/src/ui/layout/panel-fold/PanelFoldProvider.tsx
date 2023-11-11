@@ -33,6 +33,10 @@ function PanelFoldProvider({children}: PanelFoldProviderProps) {
   )
 }
 
+function usePanelFold() {
+  return useContext(PanelFoldProviderContext)
+}
+
 function useSmallScreenFold(setFolded: React.Dispatch<React.SetStateAction<boolean>>) {
   useEffect(() => {
     const largeScreen = window.matchMedia('(max-width: 1024px)')
@@ -51,10 +55,6 @@ function useSmallScreenFold(setFolded: React.Dispatch<React.SetStateAction<boole
       largeScreen.removeEventListener('change', handleScreenChange)
     }
   }, [setFolded])
-}
-
-function usePanelFold() {
-  return useContext(PanelFoldProviderContext)
 }
 
 export {PanelFoldProvider, usePanelFold}

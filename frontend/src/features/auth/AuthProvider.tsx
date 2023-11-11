@@ -101,6 +101,10 @@ function AuthProvider({children}: AuthProviderProps) {
   )
 }
 
+function useAuth() {
+  return useContext(AuthProviderContext)
+}
+
 function saveAuth(data: LoginResult, setAuth: React.Dispatch<Auth | null>) {
   const authData = {
     id: data.id,
@@ -127,10 +131,6 @@ function saveLocalStorageAuth(auth: Auth) {
 
 function deleteLocalStorageAuth() {
   localStorage.removeItem(STORAGE_KEY)
-}
-
-function useAuth() {
-  return useContext(AuthProviderContext)
 }
 
 export {AuthProvider, useAuth, type Auth}

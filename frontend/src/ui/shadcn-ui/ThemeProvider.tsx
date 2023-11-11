@@ -50,6 +50,13 @@ function ThemeProvider({
   )
 }
 
+/**
+ * {@link https://ui.shadcn.com/docs/dark-mode/vite | Vite - shadcn/ui}
+ */
+function useTheme() {
+  return useContext(ThemeProviderContext)
+}
+
 function useApplyTheme(theme: Theme) {
   useEffect(() => {
     resetTheme()
@@ -89,13 +96,6 @@ function handleToggleTheme(event: MediaQueryListEvent) {
   }
 
   applyTheme('light')
-}
-
-/**
- * {@link https://ui.shadcn.com/docs/dark-mode/vite | Vite - shadcn/ui}
- */
-function useTheme() {
-  return useContext(ThemeProviderContext)
 }
 
 export {ThemeProvider, useTheme}

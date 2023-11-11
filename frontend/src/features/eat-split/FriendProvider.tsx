@@ -261,6 +261,10 @@ function FriendProvider({children}: FriendProviderProps) {
   )
 }
 
+function useFriends() {
+  return useContext(FriendProviderContext)
+}
+
 function getFriendsFromStorage() {
   return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]')
 }
@@ -284,10 +288,6 @@ async function fakeGetFriendApi(_: FetchPayload, params?: GetFriendParams) {
   }
 
   return {data: null, error: '未找到好友数据'}
-}
-
-function useFriends() {
-  return useContext(FriendProviderContext)
 }
 
 export {FriendProvider, useFriends}
