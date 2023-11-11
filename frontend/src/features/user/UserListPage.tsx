@@ -140,7 +140,7 @@ const columns: ColumnDef<User>[] = [
   }
 ]
 
-export default function UserList() {
+export default function UserListPage() {
   useTitle('用户列表')
 
   const [searchParams, setSearchParams] = useSearchParams()

@@ -31,7 +31,7 @@ function FriendSearch() {
   }
 
   function handleFocus() {
-    navigate(`/eat-split${window.location.search}`, {
+    navigate(`/split-bill${window.location.search}`, {
       replace: true,
       state: { noRefresh: true }
     })
@@ -43,7 +43,7 @@ function FriendSearch() {
       onChange={handleSearch}
       onFocus={handleFocus}
       ref={inputRef}
-      placeholder="Search friend..."
+      placeholder="搜索好友..."
       className="mb-4 dark:border-amber-500"
     />
   )

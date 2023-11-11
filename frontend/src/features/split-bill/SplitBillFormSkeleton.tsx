@@ -6,7 +6,7 @@ import {
 } from '@/ui/shadcn-ui/Card'
 import { Skeleton } from '@/ui/shadcn-ui/Skeleton'
 
-function FormSplitBillSkeleton() {
+function SplitBillFormSkeleton() {
   return (
     <>
       <CardHeader>
@@ -33,4 +33,4 @@ function FormSplitBillSkeleton() {
   )
 }
 
-export { FormSplitBillSkeleton }
+export { SplitBillFormSkeleton }

@@ -51,9 +51,9 @@ function UserSearch({onSearch, loading}: UserSearchProps) {
             control={form.control}
             name="query"
             type="text"
-            label="模糊查询"
+            label="模糊搜索"
             labelWidth={60}
-            placeholder="针对名字相关的模糊查询"
+            placeholder="搜索用户名..."
             isError={form.getFieldState('query')?.invalid}
           />
 

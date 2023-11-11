@@ -5,7 +5,7 @@ type ErrorProps = {
   message: string
 }
 
-function FormSplitBillError({ message }: ErrorProps) {
+function SplitBillError({ message }: ErrorProps) {
   return (
     <CardHeader>
       <CardTitle className="flex items-center gap-1 text-red-500">
@@ -17,4 +17,4 @@ function FormSplitBillError({ message }: ErrorProps) {
   )
 }
 
-export { FormSplitBillError }
+export { SplitBillError }

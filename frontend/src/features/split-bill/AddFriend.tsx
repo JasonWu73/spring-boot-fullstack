@@ -8,7 +8,7 @@ import {Card, CardContent, CardHeader, CardTitle} from '@/ui/shadcn-ui/Card'
 import {FormCalendar, FormInput} from '@/ui/shadcn-ui/CustomFormField'
 import {useTitle} from '@/hooks/use-title'
 import {type FriendResponse} from '@/services/fake/friend-api'
-import {useFriends} from '@/features/eat-split/FriendProvider'
+import {useFriends} from '@/features/split-bill/FriendProvider'
 import {format} from 'date-fns'
 
 const formSchema = z.object({
@@ -21,7 +21,7 @@ const formSchema = z.object({
 
 type FormSchema = z.infer<typeof formSchema>
 
-function FormAddFriend() {
+function AddFriend() {
   useTitle('添加好友')
 
   const form = useForm<FormSchema>({
@@ -107,4 +107,4 @@ function FormAddFriend() {
   )
 }
 
-export {FormAddFriend}
+export {AddFriend}

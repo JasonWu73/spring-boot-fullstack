@@ -1,25 +1,25 @@
-import {Suspense, lazy} from 'react'
+import {lazy, Suspense} from 'react'
 import {Outlet, useNavigate} from 'react-router-dom'
 
 import {Button} from '@/ui/shadcn-ui/Button'
 import {Spinner} from '@/ui/Spinner'
-import {FriendList} from '@/features/eat-split/FriendList'
+import {FriendList} from '@/features/split-bill/FriendList'
 import {useKeypress} from '@/hooks/use-keypress'
 import {useTitle} from '@/hooks/use-title'
 import {wait} from '@/utils/helpers'
-import {useFriends} from '@/features/eat-split/FriendProvider'
+import {useFriends} from '@/features/split-bill/FriendProvider'
 
 // ----- 开始：测试懒加载（React Split Code 技术）-----
-const FormAddFriend = lazy(() =>
+const AddFriend = lazy(() =>
   wait(2).then(() =>
-    import('@/features/eat-split/FormAddFriend').then((module) => ({
-      default: module.FormAddFriend
+    import('@/features/split-bill/AddFriend').then((module) => ({
+      default: module.AddFriend
     }))
   )
 )
 // ----- 结束：测试懒加载（React Split Code 技术）-----
 
-export default function EatAndSplit() {
+export default function SplitBillPage() {
   useTitle('Eat & Split')
 
   const {showAddFriend, setShowAddFriend} = useFriends()
@@ -29,7 +29,7 @@ export default function EatAndSplit() {
   useKeypress({key: 'Escape'}, () => {
     setShowAddFriend(false)
 
-    navigate('/eat-split', {state: {noRefresh: true}})
+    navigate('/split-bill', {state: {noRefresh: true}})
   })
 
   function handleToggleAddFriend() {
@@ -46,7 +46,7 @@ export default function EatAndSplit() {
       <div
         className="flex flex-col gap-6 self-start md:col-span-1 md:row-start-2 md:row-end-3 md:justify-self-end">
         <Suspense fallback={<Spinner/>}>
-          {showAddFriend && <FormAddFriend/>}
+          {showAddFriend && <AddFriend/>}
         </Suspense>
 
         <div className="self-end">

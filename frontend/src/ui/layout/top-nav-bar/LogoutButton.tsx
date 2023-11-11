@@ -14,9 +14,9 @@ function LogoutButton() {
     <Button
       onClick={handleLogout}
       variant="link"
-      className="grid w-full grid-cols-[auto_1fr] gap-2 text-left"
+      className="grid grid-cols-[auto_1fr] gap-2 w-full text-left"
     >
-      <LogOut className="h-4 w-4"/>
+      <LogOut className="w-4 h-4"/>
       注销
     </Button>
   )

@@ -3,10 +3,10 @@ import {Link, useParams} from 'react-router-dom'
 import {Avatar, AvatarFallback, AvatarImage} from '@/ui/shadcn-ui/Avatar'
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from '@/ui/shadcn-ui/Tooltip'
 import {buttonVariants} from '@/ui/shadcn-ui/Button'
-import {ButtonDeleteFriend} from '@/features/eat-split/ButtonDeleteFriend'
+import {DeleteFriend} from '@/features/split-bill/DeleteFriend'
 import {cn, truncate} from '@/utils/helpers'
 import {type FriendResponse} from '@/services/fake/friend-api'
-import {useFriends} from '@/features/eat-split/FriendProvider'
+import {useFriends} from '@/features/split-bill/FriendProvider'
 
 type FriendItemProps = {
   friend: FriendResponse
@@ -35,7 +35,7 @@ function FriendItem({friend, onDeleteFriend}: FriendItemProps) {
         isSelected && 'bg-amber-100 dark:text-night-1'
       )}
     >
-      <ButtonDeleteFriend onDelete={() => onDeleteFriend(friend)}/>
+      <DeleteFriend onDelete={() => onDeleteFriend(friend)}/>
 
       <Avatar>
         <AvatarImage src={friend.image} alt={name}/>
@@ -75,8 +75,8 @@ function FriendItem({friend, onDeleteFriend}: FriendItemProps) {
       <Link
         to={
           isSelected
-            ? `/eat-split${queryStr}`
-            : `/eat-split/${friend.id}${queryStr}`
+            ? `/split-bill${queryStr}`
+            : `/split-bill/${friend.id}${queryStr}`
         }
         state={{
           noRefresh: true

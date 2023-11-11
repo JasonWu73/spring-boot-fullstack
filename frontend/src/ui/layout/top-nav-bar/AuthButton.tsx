@@ -17,10 +17,7 @@ import {cn} from '@/utils/helpers'
 
 function AuthButton() {
   const {auth} = useAuth()
-
-  if (!auth) {
-    return <LoginButton/>
-  }
+  if (!auth) return <LoginButton/>
 
   return (
     <NavigationMenu>
@@ -31,9 +28,9 @@ function AuthButton() {
           </NavigationMenuTrigger>
 
           <NavigationMenuContent>
-            <ul className="grid min-w-max grid-flow-row grid-cols-1 gap-1 py-2">
+            <ul className="grid grid-flow-row grid-cols-1 gap-1 py-2 min-w-max">
               <NavItem link="/admin">
-                <LayoutDashboard className="h-4 w-4"/>
+                <LayoutDashboard className="w-4 h-4"/>
                 管理后台
               </NavItem>
 
@@ -60,7 +57,7 @@ function NavItem({children, link}: NavItemProps) {
         to={link}
         className={cn(
           buttonVariants({variant: 'link'}),
-          'w-full grid grid-cols-[auto_1fr] gap-2'
+          'grid grid-cols-[auto_1fr] gap-2 w-full'
         )}
       >
         {children}

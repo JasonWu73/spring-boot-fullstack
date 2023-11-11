@@ -3,7 +3,7 @@ import {createBrowserRouter, Navigate, RouterProvider} from 'react-router-dom'
 
 import {wait} from '@/utils/helpers'
 import {SecureRoute} from '@/features/auth/SecureRoute'
-import {FriendProvider} from '@/features/eat-split/FriendProvider'
+import {FriendProvider} from '@/features/split-bill/FriendProvider'
 import {Spinner} from '@/ui/Spinner'
 import {PanelFoldProvider} from '@/ui/layout/panel-fold/PanelFoldProvider'
 import {ThemeProvider} from '@/ui/shadcn-ui/ThemeProvider'
@@ -14,16 +14,16 @@ import MainLayout from '@/ui/layout/MainLayout'
 import AdminLayout from '@/ui/layout/AdminLayout'
 
 const LoginPage = lazy(() => import('@/features/auth/LoginPage'))
-const ProductShowcase = lazy(() => import('@/features/product-showcase/ProductShowcase'))
-const EatAndSplit = lazy(() => import('@/features/eat-split/EatAndSplit'))
-const PageNotFound = lazy(() => import('@/ui/PageNotFound'))
-const UserList = lazy(() => import('@/features/user/UserList'))
+const ProductPage = lazy(() => import('@/features/product/ProductPage'))
+const SplitBillPage = lazy(() => import('@/features/split-bill/SplitBillPage'))
+const NotFoundPage = lazy(() => import('@/ui/NotFoundPage'))
+const UserListPage = lazy(() => import('@/features/user/UserListPage'))
 
 // ----- 开始：测试 React Router 懒加载（React Split Code）-----
 const FormSplitBill = lazy(() =>
   wait(2).then(() =>
-    import('@/features/eat-split/FormSplitBill').then((module) => ({
-      default: module.FormSplitBill
+    import('@/features/split-bill/SplitBillForm').then((module) => ({
+      default: module.SplitBillForm
     }))
   )
 )
@@ -37,14 +37,14 @@ const router = createBrowserRouter([
   {
     element: <MainLayout/>,
     children: [
-      {path: '/', element: <Navigate to="/eat-split" replace/>},
+      {path: '/', element: <Navigate to="/split-bill" replace/>},
       {
         element: <SecureRoute/>,
-        children: [{path: '/fetch', element: <ProductShowcase/>}]
+        children: [{path: '/fetch', element: <ProductPage/>}]
       },
       {
-        path: '/eat-split',
-        element: <FriendProvider><EatAndSplit/></FriendProvider>,
+        path: '/split-bill',
+        element: <FriendProvider><SplitBillPage/></FriendProvider>,
         children: [
           {
             path: ':friendId',
@@ -56,7 +56,7 @@ const router = createBrowserRouter([
           }
         ]
       },
-      {path: '*', element: <PageNotFound/>}
+      {path: '*', element: <NotFoundPage/>}
     ]
   },
   {
@@ -66,8 +66,8 @@ const router = createBrowserRouter([
         element: <SecureRoute/>,
         children: [
           {path: '/admin', element: <Navigate to="/users" replace/>},
-          {path: '/users', element: <UserList/>},
-          {path: '/product', element: <ProductShowcase/>}
+          {path: '/users', element: <UserListPage/>},
+          {path: '/product', element: <ProductPage/>}
         ]
       }
     ]

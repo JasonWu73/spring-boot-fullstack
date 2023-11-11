@@ -8,7 +8,7 @@ import {useTitle} from '@/hooks/use-title'
 import {getRandomProductApi} from '@/services/dummyjson/product-api'
 import {useRefresh} from '@/hooks/use-refresh'
 
-export default function ProductShowcase() {
+export default function ProductPage() {
   useTitle('产品展示')
 
   const [count, setCount] = useState(0)
@@ -20,25 +20,18 @@ export default function ProductShowcase() {
     fetchData: getProduct
   } = useFetch(async (payload) => {
     const response = await getRandomProductApi(payload)
-
-    if (!response.error && response.data) {
-      setCount((prev) => prev + 1)
-    }
-
+    if (!response.error && response.data) setCount(prevCount => prevCount + 1)
     return response
   })
 
   useRefresh(() => {
     const abort = getProduct()
-
-    return () => {
-      abort()
-    }
+    return () => abort()
   })
 
   return (
     <div
-      className="grid grid-rows-[2rem_8rem_3rem_2rem] grid-cols-1 place-items-center gap-4 mx-auto mt-8 p-4 w-[400px] border rounded shadow-sm">
+      className="grid grid-rows-[2rem_8rem_3rem_2rem] grid-cols-1 place-items-center gap-4 mx-auto mt-8 p-4 w-[500px] border rounded shadow-sm">
       <div className="row-span-1">
         {loading && <Title label="加载中..."/>}
 
@@ -50,14 +43,15 @@ export default function ProductShowcase() {
       <div className="row-span-1">
         {!product && (
           <div
-            className="h-32 w-32 rounded-full border border-gray-300 bg-gradient-to-r from-slate-100 to-slate-300 object-cover shadow-sm"/>
+            className="h-32 w-32 border rounded-full border-gray-300 bg-gradient-to-r from-slate-100 to-slate-300 object-cover shadow-sm"
+          />
         )}
 
         {product && (
           <img
             src={product.thumbnail}
             alt={product.title}
-            className="h-32 w-32 rounded-full border border-gray-300 object-cover shadow-sm"
+            className="h-32 w-32 border rounded-full border-gray-300 object-cover shadow-sm"
           />
         )}
       </div>

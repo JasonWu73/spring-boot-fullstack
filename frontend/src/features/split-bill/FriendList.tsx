@@ -11,10 +11,10 @@ import {ScrollArea} from '@/ui/shadcn-ui/ScrollArea'
 import {Card} from '@/ui/shadcn-ui/Card'
 import {Alert, AlertDescription, AlertTitle} from '@/ui/shadcn-ui/Alert'
 import {useToast} from '@/ui/shadcn-ui/use-toast'
-import {FriendItem} from '@/features/eat-split/FriendItem'
-import {FriendSearch} from '@/features/eat-split/FriendSearch'
+import {FriendItem} from '@/features/split-bill/FriendItem'
+import {FriendSearch} from '@/features/split-bill/FriendSearch'
 import {type FriendResponse} from '@/services/fake/friend-api'
-import {useFriends} from '@/features/eat-split/FriendProvider'
+import {useFriends} from '@/features/split-bill/FriendProvider'
 import {useRefresh} from '@/hooks/use-refresh'
 import {KEY_QUERY} from '@/utils/constants'
 
@@ -78,7 +78,7 @@ function FriendList() {
       description: `成功删除好友：${friend.name}`
     })
 
-    navigate(`/eat-split${window.location.search}`, {
+    navigate(`/split-bill${window.location.search}`, {
       replace: true,
       state: {noRefresh: true}
     })

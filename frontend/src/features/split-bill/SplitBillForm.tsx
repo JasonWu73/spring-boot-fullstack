@@ -9,11 +9,11 @@ import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/ui/sh
 import {FormInput, FormSelect} from '@/ui/shadcn-ui/CustomFormField'
 import {Form} from '@/ui/shadcn-ui/Form'
 import {StarRating} from '@/ui/StarRating'
-import {FormSplitBillSkeleton} from '@/features/eat-split/FormSplitBillSkeleton'
+import {SplitBillFormSkeleton} from '@/features/split-bill/SplitBillFormSkeleton'
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from '@/ui/shadcn-ui/Tooltip'
 import {useTitle} from '@/hooks/use-title'
-import {useFriends} from '@/features/eat-split/FriendProvider'
-import {FormSplitBillError} from '@/features/eat-split/FormSplitBillError'
+import {useFriends} from '@/features/split-bill/FriendProvider'
+import {SplitBillError} from '@/features/split-bill/SplitBillError'
 import {useRefresh} from '@/hooks/use-refresh'
 
 const whoIsPayingOptions = [
@@ -64,7 +64,7 @@ const formSchema = z
 
 type FormSchema = z.infer<typeof formSchema>
 
-function FormSplitBill() {
+function SplitBillForm() {
   useTitle('分摊账单')
 
   const form = useForm<FormSchema>({
@@ -117,7 +117,7 @@ function FormSplitBill() {
 
     splitBill(id, expense)
 
-    navigate(`/eat-split${window.location.search}`, {
+    navigate(`/split-bill${window.location.search}`, {
       state: {noRefresh: true}
     })
   }
@@ -129,9 +129,9 @@ function FormSplitBill() {
   return (
     <Card
       className="w-96 bg-amber-100 text-slate-700 dark:bg-amber-100 dark:text-slate-700 md:w-[22rem] lg:w-[30rem]">
-      {loading && <FormSplitBillSkeleton/>}
+      {loading && <SplitBillFormSkeleton/>}
 
-      {error && <FormSplitBillError message={error}/>}
+      {error && <SplitBillError message={error}/>}
 
       {friend && (
         <>
@@ -252,4 +252,4 @@ function useWatchExpense(form: UseFormReturn<FormSchema>) {
   }, [bill, userExpense, setValue])
 }
 
-export {FormSplitBill}
+export {SplitBillForm}

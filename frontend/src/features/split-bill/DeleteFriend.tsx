@@ -14,7 +14,7 @@ type DeleteFriendButtonProps = {
   onDelete: () => void
 }
 
-function ButtonDeleteFriend({ onDelete }: DeleteFriendButtonProps) {
+function DeleteFriend({onDelete}: DeleteFriendButtonProps) {
   return (
     <AlertDialog>
       <AlertDialogTrigger className="absolute left-2 top-1 hidden text-xs group-hover:block">
@@ -38,4 +38,4 @@ function ButtonDeleteFriend({ onDelete }: DeleteFriendButtonProps) {
   )
 }
 
-export { ButtonDeleteFriend }
+export {DeleteFriend}
