@@ -11,7 +11,7 @@ export default function LoginLayout() {
       <Header className="dark:bg-night-2"/>
 
       <main
-        className="relative flex-grow bg-night-1 bg-[url('/img/bg_login.png')] bg-[length:100%] bg-no-repeat text-snow"
+        className="flex-grow relative bg-night-1 bg-[url('/img/bg_login.png')] bg-[length:100%] bg-no-repeat text-snow"
       >
         <Suspense fallback={<SpinnerFullPage/>}>
           <Outlet/>

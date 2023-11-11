@@ -13,11 +13,11 @@ export default function AdminLayout() {
 
   return (
     <div className="grid grid-rows-[auto_1fr] grid-cols-[auto_1fr] min-h-screen">
-      <Header showPanelFoldIcon={true} className="row-span-1 col-span-2"/>
+      <Header showPanelFold={true} className="row-span-1 col-span-2"/>
 
       <Aside
         className={cn(
-          'row-span-1 col-span-1 transform transition duration-500',
+          'row-span-1 col-span-1',
           folded && 'hidden'
         )}
       />
@@ -28,7 +28,7 @@ export default function AdminLayout() {
           folded && 'col-span-2'
         )}
       >
-        <div className="relative flex-grow p-4">
+        <div className="flex-grow relative p-4">
           <Suspense fallback={<SpinnerFullPage/>}>
             <Outlet/>
           </Suspense>

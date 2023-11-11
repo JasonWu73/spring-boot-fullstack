@@ -10,7 +10,7 @@ export default function MainLayout() {
     <div className="flex flex-col min-h-screen">
       <Header/>
 
-      <main className="relative flex-grow">
+      <main className="flex-grow relative">
         <Suspense fallback={<SpinnerFullPage/>}>
           <Outlet/>
         </Suspense>
