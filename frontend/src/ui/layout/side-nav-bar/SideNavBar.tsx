@@ -62,7 +62,7 @@ function MenuItem({link, children}: MenuItemProps) {
         className={({isActive}) =>
           cn(
             'grid grid-rows-1 grid-cols-[16px_1fr] items-center gap-2 px-4 py-2 rounded text-sm',
-            isActive && 'border rounded border-sky-500 dark:border-sky-600 bg-sky-500 dark:bg-sky-600 font-bold'
+            isActive && 'rounded border border-sky-500 dark:border-sky-600 bg-sky-500 dark:bg-sky-600 font-bold'
           )
         }
       >

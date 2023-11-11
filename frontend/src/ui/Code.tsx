@@ -11,7 +11,7 @@ function Code({children, className}: CodeProps) {
   return (
     <code
       className={cn(
-        'px-1 py-0.5 border rounded font-mono text-sm bg-slate-50 dark:bg-slate-200 text-slate-700',
+        'px-1 py-0.5 rounded border font-mono text-sm bg-slate-50 dark:bg-slate-200 text-slate-700',
         className
       )}
     >

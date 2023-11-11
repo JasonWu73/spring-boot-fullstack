@@ -31,7 +31,7 @@ export default function ProductPage() {
 
   return (
     <div
-      className="grid grid-rows-[2rem_8rem_3rem_2rem] grid-cols-1 place-items-center gap-4 mx-auto mt-8 p-4 w-[500px] border rounded shadow-sm">
+      className="grid grid-rows-[2rem_8rem_3rem_2rem] grid-cols-1 place-items-center gap-4 mx-auto mt-8 p-4 w-[500px] rounded border shadow-sm">
       <div className="row-span-1">
         {loading && <Title label="加载中..."/>}
 
@@ -43,7 +43,7 @@ export default function ProductPage() {
       <div className="row-span-1">
         {!product && (
           <div
-            className="h-32 w-32 border rounded-full border-gray-300 bg-gradient-to-r from-slate-100 to-slate-300 object-cover shadow-sm"
+            className="w-32 h-32 rounded-full border border-gray-300 bg-gradient-to-r from-slate-100 to-slate-300 object-cover shadow-sm"
           />
         )}
 
@@ -51,7 +51,7 @@ export default function ProductPage() {
           <img
             src={product.thumbnail}
             alt={product.title}
-            className="h-32 w-32 border rounded-full border-gray-300 object-cover shadow-sm"
+            className="w-32 h-32 rounded-full border border-gray-300 object-cover shadow-sm"
           />
         )}
       </div>
