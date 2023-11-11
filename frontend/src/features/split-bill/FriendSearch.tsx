@@ -1,20 +1,18 @@
-import React, { useRef } from 'react'
+import React from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
-import { Input } from '@/ui/shadcn-ui/Input'
 import { useKeypress } from '@/hooks/use-keypress'
-import { KEY_QUERY } from '@/utils/constants'
+import { Input } from '@/ui/shadcn-ui/Input'
+import { URL_QUERY_KEY_QUERY } from '@/utils/constants'
 
 function FriendSearch() {
-  const inputRef = useRef<HTMLInputElement | null>(null)
+  const inputRef = React.useRef<HTMLInputElement | null>(null)
 
   const [searchParams, setSearchParams] = useSearchParams()
-  const name = searchParams.get(KEY_QUERY) || ''
+  const name = searchParams.get(URL_QUERY_KEY_QUERY) || ''
 
   useKeypress({ key: '\\', modifiers: ['ctrlKey'] }, () => {
-    if (document.activeElement === inputRef.current) {
-      return
-    }
+    if (document.activeElement === inputRef.current) return
 
     inputRef.current?.focus()
   })
@@ -22,7 +20,7 @@ function FriendSearch() {
   const navigate = useNavigate()
 
   function handleSearch(event: React.ChangeEvent<HTMLInputElement>) {
-    searchParams.set(KEY_QUERY, event.target.value)
+    searchParams.set(URL_QUERY_KEY_QUERY, event.target.value)
 
     return setSearchParams(searchParams, {
       replace: true,

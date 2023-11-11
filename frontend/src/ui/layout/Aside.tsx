@@ -1,19 +1,19 @@
 import React from 'react'
 
-import {cn} from '@/utils/helpers'
-import {SideNavBar} from '@/ui/layout/side-nav-bar/SideNavBar'
+import { SideNavBar } from '@/ui/layout/side-nav-bar/SideNavBar'
+import { cn } from '@/utils/helpers'
 
 type AsideProps = React.ComponentPropsWithoutRef<'header'>
 
-function Aside({className, ...props}: AsideProps) {
+function Aside({ className, ...props }: AsideProps) {
   return (
     <aside
-      className={cn('p-4 bg-slate-700 dark:bg-night-2 text-snow', className)}
+      className={cn('bg-slate-700 p-4 text-snow dark:bg-night-2', className)}
       {...props}
     >
-      <SideNavBar/>
+      <SideNavBar />
     </aside>
   )
 }
 
-export {Aside}
+export { Aside }

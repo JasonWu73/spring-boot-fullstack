@@ -1,7 +1,7 @@
 import * as React from 'react'
 
-import {cn} from '@/utils/helpers'
-import {inputErrorClasses} from '@/ui/shadcn-ui/CustomFormField'
+import { inputErrorClasses } from '@/ui/shadcn-ui/CustomFormField'
+import { cn } from '@/utils/helpers'
 
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -9,7 +9,7 @@ export interface InputProps
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({isError = false, className, type, ...props}, ref) => {
+  ({ isError = false, className, type, ...props }, ref) => {
     return (
       <input
         type={type}
@@ -26,4 +26,4 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 )
 Input.displayName = 'Input'
 
-export {Input}
+export { Input }

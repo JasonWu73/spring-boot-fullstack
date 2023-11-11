@@ -1,7 +1,7 @@
-import {type ApiResponse, type FetchPayload} from '@/hooks/use-fetch'
-import {sendAuthDummyJsonApi} from '@/services/dummyjson/auth-api'
+import { type ApiResponse, type FetchPayload } from '@/hooks/use-fetch'
+import { sendAuthDummyJsonApi } from '@/services/dummyjson/auth-api'
 
-type ProductResponse = {
+type Product = {
   id: number
   title: string
   description: string
@@ -17,13 +17,13 @@ type ProductResponse = {
 
 async function getRandomProductApi(
   payload: FetchPayload
-): Promise<ApiResponse<ProductResponse>> {
+): Promise<ApiResponse<Product>> {
   const randomId = Math.floor(Math.random() * 110)
 
-  return await sendAuthDummyJsonApi<ProductResponse>({
+  return await sendAuthDummyJsonApi<Product>({
     payload,
     url: `products/${randomId}`
   })
 }
 
-export {getRandomProductApi, type ProductResponse}
+export { getRandomProductApi, type Product }

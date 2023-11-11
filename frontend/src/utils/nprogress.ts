@@ -10,21 +10,17 @@ function configureNProgress() {
 }
 
 function startNProgress(owner = '') {
-  if (usedBy && usedBy !== owner) {
-    return
-  }
+  if (usedBy && usedBy !== owner) return
 
   usedBy = owner
   NProgress.start()
 }
 
 function endNProgress(owner = '') {
-  if (usedBy && usedBy !== owner) {
-    return
-  }
+  if (usedBy && usedBy !== owner) return
 
   usedBy = ''
   NProgress.done()
 }
 
-export { configureNProgress, startNProgress, endNProgress }
+export { configureNProgress, endNProgress, startNProgress }

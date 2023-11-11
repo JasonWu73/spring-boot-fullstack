@@ -1,5 +1,6 @@
-import { CardDescription, CardHeader, CardTitle } from '@/ui/shadcn-ui/Card'
 import { ExclamationTriangleIcon } from '@radix-ui/react-icons'
+
+import { CardDescription, CardHeader, CardTitle } from '@/ui/shadcn-ui/Card'
 
 type ErrorProps = {
   message: string

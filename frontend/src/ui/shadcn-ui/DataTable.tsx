@@ -1,22 +1,29 @@
-import React, {useState} from 'react'
 import {
-  type ColumnDef,
   flexRender,
   getCoreRowModel,
   getPaginationRowModel,
   useReactTable,
+  type ColumnDef,
   type VisibilityState
 } from '@tanstack/react-table'
+import React from 'react'
 
-import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from '@/ui/shadcn-ui/Table'
-import {Skeleton} from '@/ui/shadcn-ui/Skeleton'
-import {DataTablePagination} from '@/ui/shadcn-ui/DataTablePagination'
-import {DataTableViewOptions} from '@/ui/shadcn-ui/DataTableViewOptions'
+import { DataTablePagination } from '@/ui/shadcn-ui/DataTablePagination'
+import { DataTableViewOptions } from '@/ui/shadcn-ui/DataTableViewOptions'
+import { Skeleton } from '@/ui/shadcn-ui/Skeleton'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from '@/ui/shadcn-ui/Table'
 
 const DEFAULT_PAGE_NUM = 1
 const DEFAULT_PAGE_SIZE = 10
 
-type Pagination = {pageNum: number; pageSize: number; pageCount: number}
+type Pagination = { pageNum: number; pageSize: number; pageCount: number }
 
 type Paging = Omit<Pagination, 'pageCount'>
 
@@ -54,9 +61,10 @@ function DataTable<TData, TValue>({
 
   children
 }: DataTableProps<TData, TValue>) {
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+  const [columnVisibility, setColumnVisibility] =
+    React.useState<VisibilityState>({})
 
-  const [rowSelection, setRowSelection] = useState({})
+  const [rowSelection, setRowSelection] = React.useState({})
 
   const table = useReactTable({
     state: {
@@ -81,8 +89,7 @@ function DataTable<TData, TValue>({
       const prev = table.getState().pagination
 
       if (typeof updater === 'function') {
-        const next = updater({...prev})
-
+        const next = updater({ ...prev })
         onPaginate?.({
           pageNum: next.pageIndex + 1,
           pageSize: next.pageSize
@@ -100,9 +107,7 @@ function DataTable<TData, TValue>({
     onRowSelectionChange: (updater) => {
       if (typeof updater === 'function') {
         const prev = table.getState().rowSelection
-
-        const next = updater({...prev})
-
+        const next = updater({ ...prev })
         setRowSelection(next)
 
         // 提取选中数据的索引以供外部组件使用
@@ -130,7 +135,7 @@ function DataTable<TData, TValue>({
     <>
       <div className="mb-4 flex items-center gap-4">
         {children}
-        <DataTableViewOptions table={table}/>
+        <DataTableViewOptions table={table} />
       </div>
 
       <div className="rounded-md border">
@@ -144,9 +149,9 @@ function DataTable<TData, TValue>({
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
                     </TableHead>
                   )
                 })}
@@ -156,11 +161,11 @@ function DataTable<TData, TValue>({
 
           <TableBody>
             {loading &&
-              Array.from({length: 10}, (_, i) => (
+              Array.from({ length: 10 }, (_, i) => (
                 <TableRow key={i}>
                   {columns.map((_, i) => (
                     <TableCell key={i}>
-                      <Skeleton className="h-5 w-full"/>
+                      <Skeleton className="h-5 w-full" />
                     </TableCell>
                   ))}
                 </TableRow>
@@ -184,10 +189,10 @@ function DataTable<TData, TValue>({
                 </TableRow>
               ))}
 
-            {error && <ErrorRow columnLen={columns.length} error={error}/>}
+            {error && <ErrorRow columnLen={columns.length} error={error} />}
 
             {!loading && !error && table.getRowModel().rows?.length === 0 && (
-              <ErrorRow columnLen={columns.length}/>
+              <ErrorRow columnLen={columns.length} />
             )}
           </TableBody>
         </Table>
@@ -203,9 +208,9 @@ function DataTable<TData, TValue>({
   )
 }
 
-type ErrorRowProps = {columnLen: number; error?: string}
+type ErrorRowProps = { columnLen: number; error?: string }
 
-function ErrorRow({columnLen, error}: ErrorRowProps) {
+function ErrorRow({ columnLen, error }: ErrorRowProps) {
   return (
     <TableRow>
       <TableCell colSpan={columnLen} className="h-24 text-center">
@@ -221,4 +226,4 @@ function ErrorRow({columnLen, error}: ErrorRowProps) {
   )
 }
 
-export {DataTable, DEFAULT_PAGE_NUM, DEFAULT_PAGE_SIZE, type Paging}
+export { DEFAULT_PAGE_NUM, DEFAULT_PAGE_SIZE, DataTable, type Paging }

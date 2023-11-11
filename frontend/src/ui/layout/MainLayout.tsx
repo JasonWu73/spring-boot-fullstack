@@ -1,22 +1,22 @@
-import {Suspense} from 'react'
-import {Outlet} from 'react-router-dom'
+import React from 'react'
+import { Outlet } from 'react-router-dom'
 
-import {Header} from '@/ui/layout/Header'
-import {Footer} from '@/ui/layout/Footer'
-import {SpinnerFullPage} from '@/ui/SpinnerFullPage'
+import { SpinnerFullPage } from '@/ui/SpinnerFullPage'
+import { Footer } from '@/ui/layout/Footer'
+import { Header } from '@/ui/layout/Header'
 
 export default function MainLayout() {
   return (
-    <div className="flex flex-col min-h-screen">
-      <Header/>
+    <div className="flex min-h-screen flex-col">
+      <Header />
 
-      <main className="flex-grow relative">
-        <Suspense fallback={<SpinnerFullPage/>}>
-          <Outlet/>
-        </Suspense>
+      <main className="relative flex-grow">
+        <React.Suspense fallback={<SpinnerFullPage />}>
+          <Outlet />
+        </React.Suspense>
       </main>
 
-      <Footer/>
+      <Footer />
     </div>
   )
 }

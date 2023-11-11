@@ -1,35 +1,33 @@
-import React from 'react'
-import {useLocation, useNavigate, useSearchParams} from 'react-router-dom'
 import {
   ExclamationTriangleIcon,
   ReloadIcon,
   RocketIcon
 } from '@radix-ui/react-icons'
+import React from 'react'
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 
-import {Separator} from '@/ui/shadcn-ui/Separator'
-import {ScrollArea} from '@/ui/shadcn-ui/ScrollArea'
-import {Card} from '@/ui/shadcn-ui/Card'
-import {Alert, AlertDescription, AlertTitle} from '@/ui/shadcn-ui/Alert'
-import {useToast} from '@/ui/shadcn-ui/use-toast'
-import {FriendItem} from '@/features/split-bill/FriendItem'
-import {FriendSearch} from '@/features/split-bill/FriendSearch'
-import {type FriendResponse} from '@/services/fake/friend-api'
-import {useFriends} from '@/features/split-bill/FriendProvider'
-import {useRefresh} from '@/hooks/use-refresh'
-import {KEY_QUERY} from '@/utils/constants'
+import { FriendItem } from '@/features/split-bill/FriendItem'
+import { useFriends } from '@/features/split-bill/FriendProvider'
+import { FriendSearch } from '@/features/split-bill/FriendSearch'
+import { useRefresh } from '@/hooks/use-refresh'
+import { type Friend } from '@/services/fake/friend-api'
+import { Alert, AlertDescription, AlertTitle } from '@/ui/shadcn-ui/Alert'
+import { Card } from '@/ui/shadcn-ui/Card'
+import { ScrollArea } from '@/ui/shadcn-ui/ScrollArea'
+import { Separator } from '@/ui/shadcn-ui/Separator'
+import { useToast } from '@/ui/shadcn-ui/use-toast'
+import { URL_QUERY_KEY_QUERY } from '@/utils/constants'
 
 function FriendList() {
   // 因为是假 API，所以会导致 loading 时还是显示上次的数据，为了避免页面闪烁，所以这里需要重置一下
-  const friendsContext = useFriends()
-
+  const ctx = useFriends()
   const {
     loadingFriends: loading,
     getFriends,
     deleteFriend,
     setShowAddFriend
-  } = friendsContext
-
-  let {friends, errorFriends: error} = friendsContext
+  } = ctx
+  let { friends, errorFriends: error } = ctx
 
   if (loading) {
     error = ''
@@ -37,12 +35,12 @@ function FriendList() {
   }
 
   const [searchParams] = useSearchParams()
-  const nameQuery = searchParams.get(KEY_QUERY) || ''
+  const nameQuery = searchParams.get(URL_QUERY_KEY_QUERY) || ''
 
   const filteredFriends = nameQuery
-    ? friends.filter((f) =>
-      f.name.toLowerCase().includes(nameQuery.toLowerCase())
-    )
+    ? friends.filter((friend) =>
+        friend.name.toLowerCase().includes(nameQuery.toLowerCase())
+      )
     : friends
 
   const location = useLocation()
@@ -58,19 +56,15 @@ function FriendList() {
     }
 
     setShowAddFriend(false)
-
     const abort = getFriends()
 
-    return () => {
-      abort()
-    }
+    return () => abort()
   })
 
-  const {toast} = useToast()
-
+  const { toast } = useToast()
   const navigate = useNavigate()
 
-  function handleDeleteFriend(friend: FriendResponse) {
+  function handleDeleteFriend(friend: Friend) {
     deleteFriend(friend.id)
 
     toast({
@@ -80,20 +74,20 @@ function FriendList() {
 
     navigate(`/split-bill${window.location.search}`, {
       replace: true,
-      state: {noRefresh: true}
+      state: { noRefresh: true }
     })
   }
 
   return (
     <>
-      <FriendSearch/>
+      <FriendSearch />
 
       <Card>
         <ScrollArea className="h-96 w-96 md:h-[30rem] md:w-[22rem] lg:h-[24rem] lg:w-[30rem]">
           <div className="space-y-4 p-4">
             {loading && (
               <Alert>
-                <ReloadIcon className="mr-2 h-4 w-4 animate-spin"/>
+                <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
                 <AlertTitle>加载中...</AlertTitle>
                 <AlertDescription>好友列表加载中</AlertDescription>
               </Alert>
@@ -101,7 +95,7 @@ function FriendList() {
 
             {error && (
               <Alert variant="destructive">
-                <ExclamationTriangleIcon className="h-4 w-4"/>
+                <ExclamationTriangleIcon className="h-4 w-4" />
                 <AlertTitle>错误</AlertTitle>
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
@@ -109,7 +103,7 @@ function FriendList() {
 
             {!loading && !error && filteredFriends.length === 0 && (
               <Alert>
-                <RocketIcon className="h-4 w-4"/>
+                <RocketIcon className="h-4 w-4" />
                 <AlertTitle>温馨提示！</AlertTitle>
                 <AlertDescription>
                   还没有好友，添加好友即可分摊账单
@@ -119,14 +113,14 @@ function FriendList() {
 
             {filteredFriends.length > 0 && (
               <ul>
-                {filteredFriends.map((f, i, arr) => (
-                  <React.Fragment key={f.id}>
+                {filteredFriends.map((item, index, array) => (
+                  <React.Fragment key={item.id}>
                     <FriendItem
-                      friend={f}
+                      friend={item}
                       onDeleteFriend={handleDeleteFriend}
                     />
 
-                    {i < arr.length - 1 && <Separator className="my-2"/>}
+                    {index < array.length - 1 && <Separator className="my-2" />}
                   </React.Fragment>
                 ))}
               </ul>
@@ -138,4 +132,4 @@ function FriendList() {
   )
 }
 
-export {FriendList}
+export { FriendList }

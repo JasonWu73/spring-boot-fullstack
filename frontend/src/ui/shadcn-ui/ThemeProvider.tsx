@@ -1,4 +1,4 @@
-import React, {createContext, useContext, useEffect, useState} from 'react'
+import React from 'react'
 
 type Theme = 'dark' | 'light' | 'system'
 
@@ -12,7 +12,7 @@ const initialState: ThemeProviderState = {
   setTheme: () => null
 }
 
-const ThemeProviderContext = createContext(initialState)
+const ThemeProviderContext = React.createContext(initialState)
 
 type ThemeProviderProps = {
   children: React.ReactNode
@@ -29,7 +29,7 @@ function ThemeProvider({
   storageKey = 'app-ui-theme',
   ...props
 }: ThemeProviderProps) {
-  const [theme, setTheme] = useState(
+  const [theme, setTheme] = React.useState(
     () => (localStorage.getItem(storageKey) as Theme) || defaultTheme
   )
 
@@ -54,29 +54,29 @@ function ThemeProvider({
  * {@link https://ui.shadcn.com/docs/dark-mode/vite | Vite - shadcn/ui}
  */
 function useTheme() {
-  return useContext(ThemeProviderContext)
+  return React.useContext(ThemeProviderContext)
 }
 
 function useApplyTheme(theme: Theme) {
-  useEffect(() => {
+  React.useEffect(() => {
     resetTheme()
+    if (theme !== 'system') return applyTheme(theme)
 
     const darkQuery = window.matchMedia('(prefers-color-scheme: dark)')
+    const selectedTheme = darkQuery.matches ? 'dark' : 'light'
+    applyTheme(selectedTheme)
 
-    if (theme === 'system') {
-      const selectedTheme = darkQuery.matches ? 'dark' : 'light'
+    darkQuery.addEventListener('change', handleToggleTheme)
 
-      applyTheme(selectedTheme)
-
-      darkQuery.addEventListener('change', handleToggleTheme)
-
-      return () => {
-        darkQuery.removeEventListener('change', handleToggleTheme)
-      }
-    }
-
-    applyTheme(theme)
+    return () => darkQuery.removeEventListener('change', handleToggleTheme)
   }, [theme])
+}
+
+function handleToggleTheme(darkMatchEvent: MediaQueryListEvent) {
+  resetTheme()
+  if (darkMatchEvent.matches) return applyTheme('dark')
+
+  applyTheme('light')
 }
 
 function resetTheme() {
@@ -87,15 +87,4 @@ function applyTheme(theme: Theme) {
   document.documentElement.classList.add(theme)
 }
 
-function handleToggleTheme(event: MediaQueryListEvent) {
-  resetTheme()
-
-  if (event.matches) {
-    applyTheme('dark')
-    return
-  }
-
-  applyTheme('light')
-}
-
-export {ThemeProvider, useTheme}
+export { ThemeProvider, useTheme }

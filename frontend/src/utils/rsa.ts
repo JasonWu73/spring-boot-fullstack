@@ -1,4 +1,4 @@
-import {JSEncrypt} from 'jsencrypt'
+import { JSEncrypt } from 'jsencrypt'
 
 /**
  * 使用公钥加密字符串。
@@ -18,4 +18,4 @@ function decrypt(privateKey: string, encrypted: string) {
   return encrypt.decrypt(encrypted) as string
 }
 
-export {encrypt, decrypt}
+export { decrypt, encrypt }

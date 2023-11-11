@@ -1,24 +1,36 @@
-import React, {type HTMLInputTypeAttribute} from 'react'
-import {type Control, type FieldValues, type Path} from 'react-hook-form'
-import {format} from 'date-fns'
-import {CalendarIcon} from '@radix-ui/react-icons'
+import { CalendarIcon } from '@radix-ui/react-icons'
+import { format } from 'date-fns'
+import React from 'react'
+import { type Control, type FieldValues, type Path } from 'react-hook-form'
 
-import {FormControl, FormField, FormItem, FormLabel, FormMessage} from '@/ui/shadcn-ui/Form'
-import {Input} from '@/ui/shadcn-ui/Input'
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/ui/shadcn-ui/Select'
-import {Popover, PopoverContent, PopoverTrigger} from '@/ui/shadcn-ui/Popover'
-import {Button} from '@/ui/shadcn-ui/Button'
-import {cn} from '@/utils/helpers'
-import {Calendar} from '@/ui/shadcn-ui/Calendar'
-import {zhCN} from 'date-fns/locale'
+import { Button } from '@/ui/shadcn-ui/Button'
+import { Calendar } from '@/ui/shadcn-ui/Calendar'
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
+} from '@/ui/shadcn-ui/Form'
+import { Input } from '@/ui/shadcn-ui/Input'
+import { Popover, PopoverContent, PopoverTrigger } from '@/ui/shadcn-ui/Popover'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/ui/shadcn-ui/Select'
+import { cn, tw } from '@/utils/helpers'
+import { zhCN } from 'date-fns/locale'
 
 /**
- * 参数校验是否通过时的输入框样式。
+ * 当参数校验不通过时的输入框样式。
  */
 function inputErrorClasses(isError: boolean) {
   return isError
-    ? 'border-red-500 dark:border-red-600 focus-visible:ring-red-500 dark:focus-visible:ring-red-700'
-    : 'border-slate-200 dark:border-slate-800 focus-visible:ring-slate-950 dark:focus-visible:ring-slate-300'
+    ? tw`border-red-500 focus-visible:ring-red-500 dark:border-red-600 dark:focus-visible:ring-red-700`
+    : tw`border-slate-200 focus-visible:ring-slate-950 dark:border-slate-800 dark:focus-visible:ring-slate-300`
 }
 
 type FormInputProps<T extends FieldValues> = {
@@ -26,7 +38,7 @@ type FormInputProps<T extends FieldValues> = {
   name: Path<T>
   label: string
   labelWidth: number
-  type?: HTMLInputTypeAttribute
+  type?: React.HTMLInputTypeAttribute
   placeholder?: string
   disabled?: boolean
   isError?: boolean
@@ -48,10 +60,10 @@ function FormInput<T extends FieldValues>({
     <FormField
       control={control}
       name={name}
-      render={({field}) => (
-        <FormItem className="grid grid-flow-row lg:grid-cols-[auto_1fr] items-center gap-2">
+      render={({ field }) => (
+        <FormItem className="grid grid-flow-row items-center gap-2 lg:grid-cols-[auto_1fr]">
           <FormLabel
-            style={{width: labelWidth}}
+            style={{ width: labelWidth }}
             className="overflow-hidden text-ellipsis whitespace-nowrap"
           >
             {label}
@@ -66,12 +78,15 @@ function FormInput<T extends FieldValues>({
               isError={isError}
               ref={(ref) => {
                 field.ref(ref)
-                inputRef && (inputRef.current = ref)
+
+                if (inputRef) {
+                  inputRef.current = ref
+                }
               }}
             />
           </FormControl>
 
-          <FormMessage className="lg:row-span-1 lg:col-start-2 lg:col-end-3"/>
+          <FormMessage className="lg:col-start-2 lg:col-end-3 lg:row-span-1" />
         </FormItem>
       )}
     />
@@ -91,7 +106,7 @@ type FormSelectProps<T extends FieldValues> = Omit<
 }
 
 /**
- * 下拉组件不需要考虑 `placeholder`, 而应该拥有默认值.
+ * 下拉组件不需要考虑 `placeholder`，因为应该给它默认值。
  */
 function FormSelect<T extends FieldValues>({
   control,
@@ -107,10 +122,10 @@ function FormSelect<T extends FieldValues>({
     <FormField
       control={control}
       name={name}
-      render={({field}) => (
+      render={({ field }) => (
         <FormItem className="grid grid-flow-row items-center gap-1 lg:grid-cols-[auto_1fr]">
           <FormLabel
-            style={{width: labelWidth}}
+            style={{ width: labelWidth }}
             className="overflow-hidden text-ellipsis whitespace-nowrap"
           >
             {label}
@@ -119,12 +134,12 @@ function FormSelect<T extends FieldValues>({
           <Select value={field.value} onValueChange={field.onChange}>
             <FormControl className="bg-slate-100">
               <SelectTrigger disabled={disabled} isError={isError}>
-                <SelectValue placeholder={placeholder}/>
+                <SelectValue placeholder={placeholder} />
               </SelectTrigger>
             </FormControl>
 
             <SelectContent>
-              {options.map(({value, label}) => (
+              {options.map(({ value, label }) => (
                 <SelectItem key={value} value={value}>
                   {label}
                 </SelectItem>
@@ -132,7 +147,7 @@ function FormSelect<T extends FieldValues>({
             </SelectContent>
           </Select>
 
-          <FormMessage className="lg:col-start-2 lg:col-end-3 lg:row-span-1"/>
+          <FormMessage className="lg:col-start-2 lg:col-end-3 lg:row-span-1" />
         </FormItem>
       )}
     />
@@ -159,10 +174,10 @@ function FormCalendar<T extends FieldValues>({
     <FormField
       control={control}
       name={name}
-      render={({field}) => (
+      render={({ field }) => (
         <FormItem className="grid grid-flow-row items-center gap-2 lg:grid-cols-[auto_1fr]">
           <FormLabel
-            style={{width: labelWidth}}
+            style={{ width: labelWidth }}
             className="overflow-hidden text-ellipsis whitespace-nowrap"
           >
             {label}
@@ -184,7 +199,7 @@ function FormCalendar<T extends FieldValues>({
                   ) : (
                     <span>{placeholder}</span>
                   )}
-                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50"/>
+                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                 </Button>
               </FormControl>
             </PopoverTrigger>
@@ -201,11 +216,11 @@ function FormCalendar<T extends FieldValues>({
             </PopoverContent>
           </Popover>
 
-          <FormMessage className="lg:col-start-2 lg:col-end-3 lg:row-span-1"/>
+          <FormMessage className="lg:col-start-2 lg:col-end-3 lg:row-span-1" />
         </FormItem>
       )}
     />
   )
 }
 
-export {FormInput, FormSelect, FormCalendar, inputErrorClasses}
+export { FormCalendar, FormInput, FormSelect, inputErrorClasses }

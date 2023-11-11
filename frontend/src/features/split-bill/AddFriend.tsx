@@ -1,28 +1,28 @@
-import {z} from 'zod'
-import {useForm} from 'react-hook-form'
-import {zodResolver} from '@hookform/resolvers/zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { format } from 'date-fns'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
-import {Button} from '@/ui/shadcn-ui/Button'
-import {Form} from '@/ui/shadcn-ui/Form'
-import {Card, CardContent, CardHeader, CardTitle} from '@/ui/shadcn-ui/Card'
-import {FormCalendar, FormInput} from '@/ui/shadcn-ui/CustomFormField'
-import {useTitle} from '@/hooks/use-title'
-import {type FriendResponse} from '@/services/fake/friend-api'
-import {useFriends} from '@/features/split-bill/FriendProvider'
-import {format} from 'date-fns'
+import { useFriends } from '@/features/split-bill/FriendProvider'
+import { usePageTitle } from '@/hooks/use-title'
+import { type Friend } from '@/services/fake/friend-api'
+import { Button } from '@/ui/shadcn-ui/Button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/ui/shadcn-ui/Card'
+import { FormCalendar, FormInput } from '@/ui/shadcn-ui/CustomFormField'
+import { Form } from '@/ui/shadcn-ui/Form'
 
 const formSchema = z.object({
   name: z.string().min(1, '必须输入姓名'),
-  image: z.string().url({message: '图片必须是有效的 URL'}),
+  image: z.string().url({ message: '图片必须是有效的 URL' }),
   birthday: z
-  .date({required_error: '必须选择好友生日'})
-  .max(new Date(), '生日不能是未来的日期')
+    .date({ required_error: '必须选择好友生日' })
+    .max(new Date(), '生日不能是未来的日期')
 })
 
 type FormSchema = z.infer<typeof formSchema>
 
 function AddFriend() {
-  useTitle('添加好友')
+  usePageTitle('添加好友')
 
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
@@ -32,13 +32,11 @@ function AddFriend() {
       birthday: undefined
     }
   })
-
-  const {addFriend, setShowAddFriend} = useFriends()
+  const { addFriend, setShowAddFriend } = useFriends()
 
   function onSubmit(values: FormSchema) {
     const newId = Date.now()
-
-    const newFriend: FriendResponse = {
+    const newFriend: Friend = {
       id: newId,
       name: values.name,
       image: `${values.image}?u=${newId}`,
@@ -48,13 +46,11 @@ function AddFriend() {
     }
 
     addFriend(newFriend)
-
     setShowAddFriend(false)
   }
 
   return (
-    <Card
-      className="w-96 bg-amber-100 text-slate-700 dark:bg-amber-100 dark:text-slate-700 md:w-[22rem] lg:w-[30rem]">
+    <Card className="w-96 bg-amber-100 text-slate-700 dark:bg-amber-100 dark:text-slate-700 md:w-[22rem] lg:w-[30rem]">
       <CardHeader>
         <CardTitle>添加好友</CardTitle>
       </CardHeader>
@@ -69,7 +65,7 @@ function AddFriend() {
               control={form.control}
               name="name"
               type="text"
-              label="👫 朋友名字"
+              label="👫 好友名字"
               labelWidth={100}
               placeholder="好友名字"
               isError={form.getFieldState('name')?.invalid}
@@ -107,4 +103,4 @@ function AddFriend() {
   )
 }
 
-export {AddFriend}
+export { AddFriend }

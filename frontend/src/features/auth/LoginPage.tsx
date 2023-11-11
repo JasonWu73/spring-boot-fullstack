@@ -1,19 +1,25 @@
-import {Navigate, useLocation} from 'react-router-dom'
-import {z} from 'zod'
-import {zodResolver} from '@hookform/resolvers/zod'
-import {useForm} from 'react-hook-form'
-import {ReloadIcon} from '@radix-ui/react-icons'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { ReloadIcon } from '@radix-ui/react-icons'
+import React from 'react'
+import { useForm } from 'react-hook-form'
+import { Navigate, useLocation } from 'react-router-dom'
+import { z } from 'zod'
 
-import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/ui/shadcn-ui/Card'
-import {Form} from '@/ui/shadcn-ui/Form'
-import {FormInput} from '@/ui/shadcn-ui/CustomFormField'
-import {Button} from '@/ui/shadcn-ui/Button'
-import {useToast} from '@/ui/shadcn-ui/use-toast'
-import {useTitle} from '@/hooks/use-title'
-import {useRefresh} from '@/hooks/use-refresh'
-import {useAuth} from '@/features/auth/AuthProvider'
-import {useEffect, useRef} from 'react'
-import {type AbortCallback} from '@/hooks/use-fetch'
+import { useAuth } from '@/features/auth/AuthProvider'
+import { type AbortCallback } from '@/hooks/use-fetch'
+import { useRefresh } from '@/hooks/use-refresh'
+import { usePageTitle } from '@/hooks/use-title'
+import { Button } from '@/ui/shadcn-ui/Button'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '@/ui/shadcn-ui/Card'
+import { FormInput } from '@/ui/shadcn-ui/CustomFormField'
+import { Form } from '@/ui/shadcn-ui/Form'
+import { useToast } from '@/ui/shadcn-ui/use-toast'
 
 const DEFAULT_REDIRECT_URL = '/admin'
 
@@ -28,7 +34,7 @@ const formSchema = z.object({
 type FormSchema = z.infer<typeof formSchema>
 
 export default function LoginPage() {
-  useTitle('登录')
+  usePageTitle('登录')
 
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
@@ -37,10 +43,9 @@ export default function LoginPage() {
       password: PASSWORD
     }
   })
-
-  const {toast, dismiss} = useToast()
-  const {auth, error, loading, login} = useAuth()
-  const abortLoginRef = useRef<AbortCallback>()
+  const { toast, dismiss } = useToast()
+  const { auth, error, loading, login } = useAuth()
+  const abortLoginRef = React.useRef<AbortCallback>()
 
   useErrorToast(error, toast)
 
@@ -53,14 +58,14 @@ export default function LoginPage() {
 
   const location = useLocation()
   const originUrl = location.state?.from || DEFAULT_REDIRECT_URL
-  if (auth) return <Navigate to={originUrl} replace/>
+  if (auth) return <Navigate to={originUrl} replace />
 
   function onSubmit(values: FormSchema) {
     abortLoginRef.current = login(values.username, values.password)
   }
 
   return (
-    <Card className="md:w-[22rem] lg:w-[30rem] mx-auto mt-8 w-96 border-slate-200 bg-slate-200">
+    <Card className="mx-auto mt-8 w-96 border-slate-200 bg-slate-200 md:w-[22rem] lg:w-[30rem]">
       <CardHeader>
         <CardTitle>登录</CardTitle>
         {error && (
@@ -97,7 +102,7 @@ export default function LoginPage() {
             />
 
             <Button type="submit" disabled={loading}>
-              {loading && <ReloadIcon className="mr-2 w-4 h-4 animate-spin"/>}
+              {loading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
               登录
             </Button>
           </form>
@@ -107,14 +112,16 @@ export default function LoginPage() {
   )
 }
 
-function useErrorToast(error: string, toast: ReturnType<typeof useToast>['toast']) {
-  useEffect(() => {
-    if (error) {
+function useErrorToast(
+  error: string,
+  toast: ReturnType<typeof useToast>['toast']
+) {
+  React.useEffect(() => {
+    error &&
       toast({
         title: '登录失败',
         description: error,
         variant: 'destructive'
       })
-    }
   }, [error, toast])
 }

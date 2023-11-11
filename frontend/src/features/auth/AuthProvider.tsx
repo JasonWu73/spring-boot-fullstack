@@ -1,8 +1,12 @@
-import React, {createContext, useContext, useState} from 'react'
+import React from 'react'
 
-import {type AbortCallback, useFetch} from '@/hooks/use-fetch'
-import {loginApi, type LoginParams, type LoginResult} from '@/services/dummyjson/auth-api'
-import {decrypt, encrypt} from '@/utils/rsa'
+import { useFetch, type AbortCallback } from '@/hooks/use-fetch'
+import {
+  loginApi,
+  type LoginParams,
+  type LoginResult
+} from '@/services/dummyjson/auth-api'
+import { decrypt, encrypt } from '@/utils/rsa'
 
 const PUBLIC_KEY =
   'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDIMy5tyS5o94hMLYCofIBKMD0GSREDz07hJk+uJ7CRg9IsIFBpkuuxvGfHBVMMHQZe6JRfpTLW/eSEzx5A3I6vmMs5ZfdjH+QIDvCFko7SWSYh34Vr+AR7fBHli1qwHornRdvH115NKoSm3c+RLjqZb+/RXI/9D4uVrZs7c7eV+wIDAQAB'
@@ -39,7 +43,7 @@ const initialState: AuthProviderState = {
   updateToken: () => null
 }
 
-const AuthProviderContext = createContext(initialState)
+const AuthProviderContext = React.createContext(initialState)
 
 type AuthProviderProps = {
   children: React.ReactNode
@@ -52,20 +56,21 @@ function createInitialAuthState(): Auth | null {
   const encryptedAuth = JSON.parse(storageAuth)
   const username = decrypt(PRIVATE_KEY, encryptedAuth.username)
   const password = decrypt(PRIVATE_KEY, encryptedAuth.password)
-  return {...encryptedAuth, username, password}
+  return { ...encryptedAuth, username, password }
 }
 
-function AuthProvider({children}: AuthProviderProps) {
-  const [auth, setAuth] = useState(createInitialAuthState)
-
+function AuthProvider({ children }: AuthProviderProps) {
+  const [auth, setAuth] = React.useState(createInitialAuthState)
   const {
     error,
     loading,
     fetchData: Login
   } = useFetch<LoginResult, LoginParams>(async (payload, params) => {
     const response = await loginApi(payload, params)
-    const {data} = response
+
+    const { data } = response
     data && saveAuth(data, setAuth)
+
     return response
   })
 
@@ -78,9 +83,9 @@ function AuthProvider({children}: AuthProviderProps) {
     setAuth((prevAuth) => {
       if (!prevAuth) return null
 
-      const nextAuth = {...prevAuth, token}
-
+      const nextAuth = { ...prevAuth, token }
       saveLocalStorageAuth(nextAuth)
+
       return nextAuth
     })
   }
@@ -89,7 +94,7 @@ function AuthProvider({children}: AuthProviderProps) {
     auth,
     error,
     loading,
-    login: (username, password) => Login({username, password}),
+    login: (username, password) => Login({ username, password }),
     logout,
     updateToken
   }
@@ -102,7 +107,7 @@ function AuthProvider({children}: AuthProviderProps) {
 }
 
 function useAuth() {
-  return useContext(AuthProviderContext)
+  return React.useContext(AuthProviderContext)
 }
 
 function saveAuth(data: LoginResult, setAuth: React.Dispatch<Auth | null>) {
@@ -133,4 +138,4 @@ function deleteLocalStorageAuth() {
   localStorage.removeItem(STORAGE_KEY)
 }
 
-export {AuthProvider, useAuth, type Auth}
+export { AuthProvider, useAuth, type Auth }

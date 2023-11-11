@@ -1,6 +1,6 @@
-import React, {useState} from 'react'
+import React from 'react'
 
-import {cn} from '@/utils/helpers'
+import { cn } from '@/utils/helpers'
 
 type Size = 'default' | 'sm' | 'lg'
 
@@ -23,16 +23,14 @@ function StarRating({
   isShowLabel = true,
   className
 }: StarRatingProps) {
-  const [rating, setRating] = useState(0)
-  const [tempRating, setTempRating] = useState(0)
+  const [rating, setRating] = React.useState(0)
+  const [tempRating, setTempRating] = React.useState(0)
   const sizePx = getSizePx(size)
 
-  const leftPxOffsets = Array.from({length: maxRating * 2}, (_, i) => {
-    if (i % 2 === 0) {
-      return (i / 2) * sizePx
-    } else {
-      return (i / 2) * sizePx - sizePx / 2
-    }
+  const leftPxOffsets = Array.from({ length: maxRating * 2 }, (_, index) => {
+    if (index % 2 === 0) return (index / 2) * sizePx
+
+    return (index / 2) * sizePx - sizePx / 2
   })
 
   function handleRate(rate: number) {
@@ -48,28 +46,28 @@ function StarRating({
         width: `${maxRating * sizePx}px`
       }}
     >
-      {Array.from({length: maxRating * 2}, (_, i) => (
+      {Array.from({ length: maxRating * 2 }, (_, index) => (
         <li
-          key={i}
+          key={index}
           className="absolute"
           style={{
-            left: `${leftPxOffsets[i]}px`,
-            zIndex: i % 2 === 0 ? 10 : 0
+            left: `${leftPxOffsets[index]}px`,
+            zIndex: index % 2 === 0 ? 10 : 0
           }}
         >
           <StarBox
             color={color}
             size={sizePx}
-            type={i % 2 === 0 ? 'half' : 'full'}
+            type={index % 2 === 0 ? 'half' : 'full'}
             isFilled={
               tempRating
-                ? tempRating * 2 >= i + 1
+                ? tempRating * 2 >= index + 1
                 : rating
-                  ? rating * 2 >= i + 1
-                  : defaultRating / 0.5 >= i + 1
+                ? rating * 2 >= index + 1
+                : defaultRating / 0.5 >= index + 1
             }
-            onRate={() => handleRate((i + 1) / 2)}
-            onHoverIn={() => setTempRating((i + 1) / 2)}
+            onRate={() => handleRate((index + 1) / 2)}
+            onHoverIn={() => setTempRating((index + 1) / 2)}
             onHoverOut={() => setTempRating(0)}
           />
         </li>
@@ -115,21 +113,16 @@ function StarBox({
   onHoverIn,
   onHoverOut
 }: StarBoxProps) {
+  const Component = type === 'full' ? FullStar : HalfStart
+
   return (
     <span
       onClick={onRate}
       onMouseEnter={onHoverIn}
       onMouseLeave={onHoverOut}
-      className={cn(
-        'peer cursor-pointer',
-        isFilled && 'border-amber-500'
-      )}
+      className={cn('peer cursor-pointer', isFilled && 'border-amber-500')}
     >
-      {type === 'full' ? (
-        <FullStar isFilled={isFilled} color={color} size={size}/>
-      ) : (
-        <HalfStart isFilled={isFilled} color={color} size={size}/>
-      )}
+      <Component isFilled={isFilled} color={color} size={size} />
     </span>
   )
 }
@@ -140,7 +133,7 @@ type StarProps = {
   size?: number
 }
 
-function FullStar({color = '#f59e0b', isFilled, size = 20}: StarProps) {
+function FullStar({ color = '#f59e0b', isFilled, size = 20 }: StarProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -154,13 +147,12 @@ function FullStar({color = '#f59e0b', isFilled, size = 20}: StarProps) {
       strokeLinejoin="round"
       className="lucide lucide-star"
     >
-      <polygon
-        points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
     </svg>
   )
 }
 
-function HalfStart({color = '#f59e0b', isFilled, size = 20}: StarProps) {
+function HalfStart({ color = '#f59e0b', isFilled, size = 20 }: StarProps) {
   const width = size / 2
 
   return (
@@ -176,7 +168,7 @@ function HalfStart({color = '#f59e0b', isFilled, size = 20}: StarProps) {
       strokeLinejoin="round"
       className="lucide lucide-star"
     >
-      <path d="M12 17.8 5.8 21 7 14.1 2 9.3l7-1L12 2"/>
+      <path d="M12 17.8 5.8 21 7 14.1 2 9.3l7-1L12 2" />
     </svg>
   )
 }
@@ -192,4 +184,4 @@ function getSizePx(size: Size) {
   }
 }
 
-export {StarRating}
+export { StarRating }

@@ -1,8 +1,13 @@
+import {
+  ArrowDownIcon,
+  ArrowUpIcon,
+  CaretSortIcon,
+  EyeNoneIcon
+} from '@radix-ui/react-icons'
+import { type Column } from '@tanstack/react-table'
 import React from 'react'
-import {type Column} from '@tanstack/react-table'
-import {ArrowDownIcon, ArrowUpIcon, CaretSortIcon, EyeNoneIcon} from '@radix-ui/react-icons'
 
-import {cn} from '@/utils/helpers'
+import { Button } from '@/ui/shadcn-ui/Button'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,14 +15,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/ui/shadcn-ui/DropdownMenu'
-import {Button} from '@/ui/shadcn-ui/Button'
+import { cn } from '@/utils/helpers'
 
 type DataTableColumnHeaderProps<TData, TValue> =
   React.HTMLAttributes<HTMLDivElement> & {
-  column: Column<TData, TValue>
-  title?: string
-  needsSort?: boolean
-}
+    column: Column<TData, TValue>
+    title?: string
+    needsSort?: boolean
+  }
 
 function DataTableColumnHeader<TData, TValue>({
   column,
@@ -37,15 +42,15 @@ function DataTableColumnHeader<TData, TValue>({
           >
             {children ? children : title}
 
-            {!needsSort && <CaretSortIcon className="ml-2 h-4 w-4"/>}
+            {!needsSort && <CaretSortIcon className="ml-2 h-4 w-4" />}
 
             {needsSort &&
               (column.getIsSorted() === 'desc' ? (
-                <ArrowDownIcon className="ml-2 h-4 w-4"/>
+                <ArrowDownIcon className="ml-2 h-4 w-4" />
               ) : column.getIsSorted() === 'asc' ? (
-                <ArrowUpIcon className="ml-2 h-4 w-4"/>
+                <ArrowUpIcon className="ml-2 h-4 w-4" />
               ) : (
-                <CaretSortIcon className="ml-2 h-4 w-4"/>
+                <CaretSortIcon className="ml-2 h-4 w-4" />
               ))}
           </Button>
         </DropdownMenuTrigger>
@@ -54,21 +59,21 @@ function DataTableColumnHeader<TData, TValue>({
           {needsSort && column.getCanSort() && (
             <>
               <DropdownMenuItem onClick={() => column.toggleSorting(false)}>
-                <ArrowUpIcon className="text-muted-foreground/70 mr-2 h-3.5 w-3.5"/>
+                <ArrowUpIcon className="text-muted-foreground/70 mr-2 h-3.5 w-3.5" />
                 升序
               </DropdownMenuItem>
 
               <DropdownMenuItem onClick={() => column.toggleSorting(true)}>
-                <ArrowDownIcon className="text-muted-foreground/70 mr-2 h-3.5 w-3.5"/>
+                <ArrowDownIcon className="text-muted-foreground/70 mr-2 h-3.5 w-3.5" />
                 降序
               </DropdownMenuItem>
 
-              <DropdownMenuSeparator/>
+              <DropdownMenuSeparator />
             </>
           )}
 
           <DropdownMenuItem onClick={() => column.toggleVisibility(false)}>
-            <EyeNoneIcon className="text-muted-foreground/70 mr-2 h-3.5 w-3.5"/>
+            <EyeNoneIcon className="text-muted-foreground/70 mr-2 h-3.5 w-3.5" />
             隐藏
           </DropdownMenuItem>
         </DropdownMenuContent>
@@ -77,4 +82,4 @@ function DataTableColumnHeader<TData, TValue>({
   )
 }
 
-export {DataTableColumnHeader}
+export { DataTableColumnHeader }

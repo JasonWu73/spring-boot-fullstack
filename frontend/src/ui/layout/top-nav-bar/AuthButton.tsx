@@ -1,8 +1,11 @@
+import { LayoutDashboard } from 'lucide-react'
 import React from 'react'
-import {Link} from 'react-router-dom'
-import {LayoutDashboard} from 'lucide-react'
+import { Link } from 'react-router-dom'
 
-import {useAuth} from '@/features/auth/AuthProvider'
+import { useAuth } from '@/features/auth/AuthProvider'
+import { LoginButton } from '@/ui/layout/top-nav-bar/LoginButton'
+import { LogoutButton } from '@/ui/layout/top-nav-bar/LogoutButton'
+import { buttonVariants } from '@/ui/shadcn-ui/Button'
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -10,14 +13,11 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger
 } from '@/ui/shadcn-ui/NavigationMenu'
-import {LoginButton} from '@/ui/layout/top-nav-bar/LoginButton'
-import {LogoutButton} from '@/ui/layout/top-nav-bar/LogoutButton'
-import {buttonVariants} from '@/ui/shadcn-ui/Button'
-import {cn} from '@/utils/helpers'
+import { cn } from '@/utils/helpers'
 
 function AuthButton() {
-  const {auth} = useAuth()
-  if (!auth) return <LoginButton/>
+  const { auth } = useAuth()
+  if (!auth) return <LoginButton />
 
   return (
     <NavigationMenu>
@@ -26,16 +26,15 @@ function AuthButton() {
           <NavigationMenuTrigger className="text-black dark:text-snow">
             {auth.nickname}
           </NavigationMenuTrigger>
-
           <NavigationMenuContent>
-            <ul className="grid grid-flow-row grid-cols-1 gap-1 py-2 min-w-max">
+            <ul className="grid min-w-max grid-flow-row grid-cols-1 gap-1 py-2">
               <NavItem link="/admin">
-                <LayoutDashboard className="w-4 h-4"/>
+                <LayoutDashboard className="h-4 w-4" />
                 管理后台
               </NavItem>
 
               <li>
-                <LogoutButton/>
+                <LogoutButton />
               </li>
             </ul>
           </NavigationMenuContent>
@@ -50,14 +49,14 @@ type NavItemProps = {
   link: string
 }
 
-function NavItem({children, link}: NavItemProps) {
+function NavItem({ children, link }: NavItemProps) {
   return (
     <li>
       <Link
         to={link}
         className={cn(
-          buttonVariants({variant: 'link'}),
-          'grid grid-cols-[auto_1fr] gap-2 w-full'
+          buttonVariants({ variant: 'link' }),
+          'grid w-full grid-cols-[auto_1fr] gap-2'
         )}
       >
         {children}
@@ -66,4 +65,4 @@ function NavItem({children, link}: NavItemProps) {
   )
 }
 
-export {AuthButton}
+export { AuthButton }

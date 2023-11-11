@@ -55,7 +55,7 @@ html.dark {
   @apply text-snow;
 }
 
-/* ----- 开始：nprogress ----- 样式 */
+/* ----- 开始：nprogress 样式 ----- */
 #nprogress .bar {
   background-color: var(--nprogress-color);
 }
@@ -86,4 +86,4 @@ html.dark #nprogress .spinner-icon {
   border-top-color: var(--nprogress-dark-color);
   border-left-color: var(--nprogress-dark-color);
 }
-/* ----- 结束：nprogress ----- 样式 */
+/* ----- 结束：nprogress 样式 ----- */

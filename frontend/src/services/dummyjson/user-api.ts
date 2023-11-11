@@ -1,5 +1,5 @@
-import {type ApiResponse, type FetchPayload} from '@/hooks/use-fetch'
-import {sendAuthDummyJsonApi} from '@/services/dummyjson/auth-api'
+import { type ApiResponse, type FetchPayload } from '@/hooks/use-fetch'
+import { sendAuthDummyJsonApi } from '@/services/dummyjson/auth-api'
 
 type User = {
   id: number
@@ -12,7 +12,7 @@ type User = {
   image: string
 }
 
-type UserPaginationResponse = {
+type UserPagination = {
   users: User[]
   total: number
   skip: number
@@ -28,16 +28,14 @@ type GetUsersParams = {
 async function getUsersApi(
   payload: FetchPayload,
   params?: GetUsersParams
-): Promise<ApiResponse<UserPaginationResponse>> {
-  if (!params) {
-    return {data: null, error: '未传入参数'}
-  }
+): Promise<ApiResponse<UserPagination>> {
+  if (!params) return { data: null, error: '未传入参数' }
 
-  const {pageNum, pageSize, query} = params
+  const { pageNum, pageSize, query } = params
 
-  return await sendAuthDummyJsonApi<UserPaginationResponse>({
+  return await sendAuthDummyJsonApi<UserPagination>({
     payload,
-    url: `users/search?select=id,firstName,lastName,email,username,password,birthDate,image`,
+    url: 'users/search?select=id,firstName,lastName,email,username,password,birthDate,image',
     urlData: {
       limit: pageSize,
       skip: (pageNum - 1) * pageSize,
@@ -46,4 +44,4 @@ async function getUsersApi(
   })
 }
 
-export {getUsersApi, type User}
+export { getUsersApi, type User }

@@ -1,24 +1,22 @@
-import React, {useState} from 'react'
+import React from 'react'
 
-import {ModeToggle} from '@/ui/shadcn-ui/ModeToggle'
-import {Logo} from '@/ui/layout/top-nav-bar/Logo'
-import {PageNav} from '@/ui/layout/top-nav-bar/PageNav'
-import {AuthButton} from '@/ui/layout/top-nav-bar/AuthButton'
-import {Hamburger} from '@/ui/Hamburger'
-import {PanelFold} from '@/ui/layout/panel-fold/PanelFold'
+import { Hamburger } from '@/ui/Hamburger'
+import { PanelFold } from '@/ui/layout/panel-fold/PanelFold'
+import { AuthButton } from '@/ui/layout/top-nav-bar/AuthButton'
+import { Logo } from '@/ui/layout/top-nav-bar/Logo'
+import { PageNav } from '@/ui/layout/top-nav-bar/PageNav'
+import { ModeToggle } from '@/ui/shadcn-ui/ModeToggle'
 
 type TopNavBarProps = {
-  showPanelFoldIcon?: boolean
+  showPanelFold?: boolean
 }
 
-function TopNavBar({showPanelFoldIcon = false}: TopNavBarProps) {
-  const [isHamburgerOpen, setIsHamburgerOpen] = useState(false)
+function TopNavBar({ showPanelFold = false }: TopNavBarProps) {
+  const [isHamburgerOpen, setIsHamburgerOpen] = React.useState(false)
 
   function handleClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     // 当点击页面链接后，应该自动关闭汉堡包导航菜单
-    if (e.target instanceof HTMLAnchorElement) {
-      setIsHamburgerOpen(false)
-    }
+    e.target instanceof HTMLAnchorElement && setIsHamburgerOpen(false)
   }
 
   return (
@@ -27,23 +25,19 @@ function TopNavBar({showPanelFoldIcon = false}: TopNavBarProps) {
       className="flex h-16 items-center justify-between gap-4 p-4"
     >
       <div className="flex items-center gap-4">
-        {showPanelFoldIcon && <PanelFold/>}
-
-        <Logo/>
+        {showPanelFold && <PanelFold />}
+        <Logo />
       </div>
 
-      <PageNav isOpen={isHamburgerOpen}/>
+      <PageNav isOpen={isHamburgerOpen} />
 
       <div className="flex gap-4">
-        <AuthButton/>
-        <ModeToggle/>
-        <Hamburger
-          isOpen={isHamburgerOpen}
-          onToggle={setIsHamburgerOpen}
-        />
+        <AuthButton />
+        <ModeToggle />
+        <Hamburger isOpen={isHamburgerOpen} onToggle={setIsHamburgerOpen} />
       </div>
     </nav>
   )
 }
 
-export {TopNavBar}
+export { TopNavBar }

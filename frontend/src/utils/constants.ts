@@ -1,3 +1,12 @@
-const KEY_QUERY = 'q'
+const ELLIPSIS = '…'
 
-export { KEY_QUERY }
+const URL_QUERY_KEY_QUERY = 'q'
+const URL_QUERY_KEY_PAGE_NUM = 'p'
+const URL_QUERY_KEY_PAGE_SIZE = 's'
+
+export {
+  ELLIPSIS,
+  URL_QUERY_KEY_PAGE_NUM,
+  URL_QUERY_KEY_PAGE_SIZE,
+  URL_QUERY_KEY_QUERY
+}

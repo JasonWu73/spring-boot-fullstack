@@ -113,9 +113,7 @@ function getRequestOptions({
 }: RequestConfig) {
   const mergedHeaders = getHeaders(contentType, headers)
 
-  if (method === 'GET') {
-    return { headers: mergedHeaders, signal }
-  }
+  if (method === 'GET') return { headers: mergedHeaders, signal }
 
   return {
     method,

@@ -14,7 +14,7 @@ type DeleteFriendButtonProps = {
   onDelete: () => void
 }
 
-function DeleteFriend({onDelete}: DeleteFriendButtonProps) {
+function DeleteFriend({ onDelete }: DeleteFriendButtonProps) {
   return (
     <AlertDialog>
       <AlertDialogTrigger className="absolute left-2 top-1 hidden text-xs group-hover:block">
@@ -25,7 +25,7 @@ function DeleteFriend({onDelete}: DeleteFriendButtonProps) {
         <AlertDialogHeader>
           <AlertDialogTitle>您确定删除该好友吗？</AlertDialogTitle>
           <AlertDialogDescription>
-            此操作无法撤消，这将永久删除您的朋友。
+            此操作无法撤消，这将永久删除您的好友。
           </AlertDialogDescription>
         </AlertDialogHeader>
 
@@ -38,4 +38,4 @@ function DeleteFriend({onDelete}: DeleteFriendButtonProps) {
   )
 }
 
-export {DeleteFriend}
+export { DeleteFriend }
