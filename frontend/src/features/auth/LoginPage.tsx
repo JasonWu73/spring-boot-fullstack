@@ -27,7 +27,7 @@ const formSchema = z.object({
 
 type FormSchema = z.infer<typeof formSchema>
 
-export default function Login() {
+export default function LoginPage() {
   useTitle('登录')
 
   const form = useForm<FormSchema>({

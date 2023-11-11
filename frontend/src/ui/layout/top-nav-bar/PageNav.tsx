@@ -1,7 +1,8 @@
-import {NavigationMenu, NavigationMenuItem, NavigationMenuList} from '@/ui/shadcn-ui/NavigationMenu'
-import {cn} from '@/utils/helpers'
 import React from 'react'
 import {NavLink} from 'react-router-dom'
+
+import {NavigationMenu, NavigationMenuItem, NavigationMenuList} from '@/ui/shadcn-ui/NavigationMenu'
+import {cn} from '@/utils/helpers'
 
 type PageNavProps = {
   isOpen: boolean
@@ -10,7 +11,7 @@ type PageNavProps = {
 function PageNav({isOpen}: PageNavProps) {
   return (
     <>
-      <NavigationMenu className="hidden max-w-full justify-start lg:flex">
+      <NavigationMenu className="hidden lg:flex justify-start max-w-full">
         <NavigationMenuList className="gap-4">
           <NavItemList/>
         </NavigationMenuList>
@@ -18,7 +19,7 @@ function PageNav({isOpen}: PageNavProps) {
 
       <NavigationMenu
         className={cn(
-          'absolute left-0 top-16 z-50 h-[calc(100%-4rem)] w-full max-w-full -translate-x-full transform items-start bg-slate-950 pt-4 transition duration-500 dark:bg-night-2 lg:hidden',
+          'lg:hidden absolute top-16 left-0 z-50 items-start pt-4 w-full max-w-full h-[calc(100%-4rem)] -translate-x-full duration-500 bg-slate-950 dark:bg-night-2',
           isOpen && 'translate-x-0'
         )}
       >
@@ -46,10 +47,10 @@ type NavItemProps = {
 
 function NavItem({link, children}: NavItemProps) {
   return (
-    <NavigationMenuItem className="font-bold hover:text-sky-500">
+    <NavigationMenuItem className="font-bold hover:text-sky-500 hover:dark:text-sky-600">
       <NavLink
         to={link}
-        className={({isActive}) => (isActive ? 'text-sky-500' : '')}
+        className={({isActive}) => isActive ? 'text-sky-500 dark:text-sky-600' : ''}
       >
         {children}
       </NavLink>

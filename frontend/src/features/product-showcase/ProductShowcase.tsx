@@ -38,7 +38,7 @@ export default function ProductShowcase() {
 
   return (
     <div
-      className="mx-auto mt-8 grid w-[400px] grid-cols-1 grid-rows-[2rem_8rem_3rem_2rem] place-items-center rounded border p-4 shadow-sm">
+      className="grid grid-rows-[2rem_8rem_3rem_2rem] grid-cols-1 place-items-center gap-4 mx-auto mt-8 p-4 w-[400px] border rounded shadow-sm">
       <div className="row-span-1">
         {loading && <Title label="加载中..."/>}
 
@@ -87,9 +87,9 @@ type TitleProps = {
 
 function Title({label, isError = false}: TitleProps) {
   return (
-    <h1 className={cn(isError && 'text-red-500 dark:text-red-600')}>
+    <h3 className={cn(isError && 'text-red-500 dark:text-red-600')}>
       {label}
-    </h1>
+    </h3>
   )
 }
 

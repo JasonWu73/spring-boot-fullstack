@@ -1,6 +1,6 @@
 import React from 'react'
 import {NavLink} from 'react-router-dom'
-import {Binary, Calculator, Component, FunctionSquare, UserCog2} from 'lucide-react'
+import {BugOff, ShoppingCart, UserCog2} from 'lucide-react'
 
 import {Separator} from '@/ui/shadcn-ui/Separator'
 import {cn} from '@/utils/helpers'
@@ -12,28 +12,22 @@ function SideNavBar() {
       <nav className="flex flex-col items-center gap-2">
         <Menu title="后端交互">
           <MenuItem link="/users">
-            <UserCog2 className="h-5 w-5"/>
+            <UserCog2 className="w-5 h-5"/>
             <span>用户列表</span>
+          </MenuItem>
+
+          <MenuItem link="/product">
+            <ShoppingCart className="w-4 h-4"/>
+            <span>随机商品</span>
           </MenuItem>
         </Menu>
 
         <MenuSeparator/>
-        <Menu title="React 性能优化">
-          <MenuItem link="/children">
-            <Binary className="h-4 w-4"/>
-            <span>children 属性</span>
-          </MenuItem>
-          <MenuItem link="/memo">
-            <Component className="h-4 w-4"/>
-            <span>memo 组件</span>
-          </MenuItem>
-          <MenuItem link="/use-memo">
-            <Calculator className="h-4 w-4"/>
-            <span>useMemo</span>
-          </MenuItem>
-          <MenuItem link="/use-callback">
-            <FunctionSquare className="h-4 w-4"/>
-            <span>useCallback</span>
+
+        <Menu title="测试路由">
+          <MenuItem link="/no-route">
+            <BugOff className="w-4 h-4"/>
+            <span>Not Found</span>
           </MenuItem>
         </Menu>
       </nav>
@@ -50,7 +44,7 @@ function Menu({title, children}: MenuProps) {
   return (
     <>
       <h3 className="pl-4 w-10/12 text-slate-400">{title}</h3>
-      <ul className="w-10/12">{children}</ul>
+      <ul className="flex flex-col gap-0.5 w-10/12">{children}</ul>
     </>
   )
 }
@@ -62,13 +56,13 @@ type MenuItemProps = {
 
 function MenuItem({link, children}: MenuItemProps) {
   return (
-    <li>
+    <li className="hover:rounded hover:bg-sky-500 hover:dark:bg-sky-600">
       <NavLink
         to={link}
         className={({isActive}) =>
           cn(
-            'grid grid-cols-[16px_1fr] grid-rows-1 items-center gap-2 rounded px-4 py-2 text-sm',
-            isActive && 'font-bold bg-sky-500 dark:bg-sky-600'
+            'grid grid-rows-1 grid-cols-[16px_1fr] items-center gap-2 px-4 py-2 rounded text-sm',
+            isActive && 'border rounded border-sky-500 dark:border-sky-600 bg-sky-500 dark:bg-sky-600 font-bold'
           )
         }
       >
@@ -79,7 +73,7 @@ function MenuItem({link, children}: MenuItemProps) {
 }
 
 function MenuSeparator() {
-  return <Separator className="my-2 w-4/5 dark:bg-night-3"/>
+  return <Separator className="my-2 w-4/5 dark:bg-night-4"/>
 }
 
 export {SideNavBar}

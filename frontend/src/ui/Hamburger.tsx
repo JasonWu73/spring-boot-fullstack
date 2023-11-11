@@ -7,13 +7,10 @@ type MenuUnfoldTriggerProps = {
 }
 
 /**
- * 汉堡菜单图标，常用于移动端展示顶部导航栏。
- *
- * @param isOpen - 展开状态
- * @param onToggle - 切换展开状态
+ * 汉堡菜单图标，常用于移动端展示顶部导航栏内容。
  */
-function MenuUnfoldIcon({isOpen, onToggle}: MenuUnfoldTriggerProps) {
-  const line = 'ease my-1 h-[2px] w-[1.2rem] transform rounded-full bg-white transition duration-300 group-hover:bg-slate-800 group-hover:dark:bg-white'
+function Hamburger({isOpen, onToggle}: MenuUnfoldTriggerProps) {
+  const line = 'my-1 w-[1.2rem] h-[2px] bg-white group-hover:bg-slate-800 group-hover:dark:bg-white duration-300'
 
   return (
     <div className="flex items-center lg:hidden">
@@ -38,7 +35,7 @@ function MenuUnfoldIcon({isOpen, onToggle}: MenuUnfoldTriggerProps) {
         <div
           className={cn(
             line,
-            isOpen && 'translate-y-[-0.625rem] -rotate-45'
+            isOpen && '-translate-y-[0.625rem] -rotate-45'
           )}
         />
       </Button>
@@ -46,4 +43,4 @@ function MenuUnfoldIcon({isOpen, onToggle}: MenuUnfoldTriggerProps) {
   )
 }
 
-export {MenuUnfoldIcon}
+export {Hamburger}

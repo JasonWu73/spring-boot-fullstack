@@ -13,15 +13,11 @@ import LoginLayout from '@/ui/layout/LoginLayout'
 import MainLayout from '@/ui/layout/MainLayout'
 import AdminLayout from '@/ui/layout/AdminLayout'
 
-const Login = lazy(() => import('@/features/auth/Login'))
+const LoginPage = lazy(() => import('@/features/auth/LoginPage'))
 const ProductShowcase = lazy(() => import('@/features/product-showcase/ProductShowcase'))
 const EatAndSplit = lazy(() => import('@/features/eat-split/EatAndSplit'))
 const PageNotFound = lazy(() => import('@/ui/PageNotFound'))
 const UserList = lazy(() => import('@/features/user/UserList'))
-const ChildrenProp = lazy(() => import('@/features/performance/ChildrenProp'))
-const MemoComponent = lazy(() => import('@/features/performance/MemoComponent'))
-const UseMemo = lazy(() => import('@/features/performance/UseMemo'))
-const UseCallback = lazy(() => import('@/features/performance/UseCallback'))
 
 // ----- 开始：测试 React Router 懒加载（React Split Code）-----
 const FormSplitBill = lazy(() =>
@@ -36,7 +32,7 @@ const FormSplitBill = lazy(() =>
 const router = createBrowserRouter([
   {
     element: <LoginLayout/>,
-    children: [{path: '/login', element: <Login/>}]
+    children: [{path: '/login', element: <LoginPage/>}]
   },
   {
     element: <MainLayout/>,
@@ -71,10 +67,7 @@ const router = createBrowserRouter([
         children: [
           {path: '/admin', element: <Navigate to="/users" replace/>},
           {path: '/users', element: <UserList/>},
-          {path: '/children', element: <ChildrenProp/>},
-          {path: '/memo', element: <MemoComponent/>},
-          {path: '/use-memo', element: <UseMemo/>},
-          {path: '/use-callback', element: <UseCallback/>}
+          {path: '/product', element: <ProductShowcase/>}
         ]
       }
     ]
