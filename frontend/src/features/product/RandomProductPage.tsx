@@ -8,7 +8,7 @@ import { getRandomProductApi } from '@/services/dummyjson/product-api'
 import { Button } from '@/ui/shadcn-ui/Button'
 import { cn } from '@/utils/helpers'
 
-export default function ProductPage() {
+export default function RandomProductPage() {
   usePageTitle('随机商品')
 
   const [count, setCount] = React.useState(0)

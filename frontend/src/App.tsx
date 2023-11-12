@@ -14,7 +14,9 @@ import { Spinner } from '@/ui/Spinner'
 import { wait } from '@/utils/helpers'
 
 const LoginPage = React.lazy(() => import('@/features/auth/LoginPage'))
-const ProductPage = React.lazy(() => import('@/features/product/ProductPage'))
+const RandomProductPage = React.lazy(
+  () => import('@/features/product/RandomProductPage')
+)
 const SplitBillPage = React.lazy(
   () => import('@/features/split-bill/SplitBillPage')
 )
@@ -42,7 +44,7 @@ const router = createBrowserRouter([
       { path: '/', element: <Navigate to="/split-bill" replace /> },
       {
         element: <SecureRoute />,
-        children: [{ path: '/fetch', element: <ProductPage /> }]
+        children: [{ path: '/fetch', element: <RandomProductPage /> }]
       },
       {
         path: '/split-bill',
@@ -77,7 +79,7 @@ const router = createBrowserRouter([
         children: [
           { path: '/admin', element: <Navigate to="/users" replace /> },
           { path: '/users', element: <UserListPage /> },
-          { path: '/product', element: <ProductPage /> }
+          { path: '/product', element: <RandomProductPage /> }
         ]
       }
     ]
