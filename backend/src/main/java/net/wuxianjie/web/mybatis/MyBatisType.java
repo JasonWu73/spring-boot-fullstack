@@ -1,4 +1,4 @@
-package net.wuxianjie.web.mybatis.dto;
+package net.wuxianjie.web.mybatis;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;

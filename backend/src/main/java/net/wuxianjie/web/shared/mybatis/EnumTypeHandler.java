@@ -1,19 +1,20 @@
 package net.wuxianjie.web.shared.mybatis;
 
-import java.sql.CallableStatement;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
 import org.springframework.stereotype.Component;
 
+import java.sql.CallableStatement;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.Optional;
+
 /**
- * 枚举类型与数据库 int 类型的类型转换器.
+ * 枚举类型与数据库 int 类型的类型转换器。
  */
 @Component
 @NoArgsConstructor
@@ -24,18 +25,18 @@ public class EnumTypeHandler<E extends Enum<?> & EnumType> extends BaseTypeHandl
 
   @Override
   public void setNonNullParameter(
-      final PreparedStatement ps,
-      final int i,
-      final EnumType parameter,
-      final JdbcType jdbcType
+    final PreparedStatement ps,
+    final int i,
+    final EnumType parameter,
+    final JdbcType jdbcType
   ) throws SQLException {
     ps.setInt(i, parameter.getCode());
   }
 
   @Override
   public EnumType getNullableResult(
-      final ResultSet rs,
-      final String columnName
+    final ResultSet rs,
+    final String columnName
   ) throws SQLException {
     return toEnum(enumType, rs.getInt(columnName));
   }
@@ -47,18 +48,18 @@ public class EnumTypeHandler<E extends Enum<?> & EnumType> extends BaseTypeHandl
 
   @Override
   public EnumType getNullableResult(
-      final CallableStatement cs,
-      final int columnIndex
+    final CallableStatement cs,
+    final int columnIndex
   ) throws SQLException {
     return toEnum(enumType, cs.getInt(columnIndex));
   }
 
   private E toEnum(final Class<E> enumClass, final int value) {
     return Optional.ofNullable(enumClass.getEnumConstants())
-        .flatMap(enums -> Arrays.stream(enums)
-            .filter(e -> e.getCode() == value)
-            .findFirst()
-        )
-        .orElse(null);
+      .flatMap(enums -> Arrays.stream(enums)
+        .filter(theEnum -> theEnum.getCode() == value)
+        .findFirst()
+      )
+      .orElse(null);
   }
 }

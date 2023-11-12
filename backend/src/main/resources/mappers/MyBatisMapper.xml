@@ -7,8 +7,12 @@
     VALUES (#{name}, #{type}, #{date}, #{localDateTime}, #{localDate})
   </insert>
 
-  <select id="selectAllData" resultType="net.wuxianjie.web.mybatis.dto.MyBatisData">
+  <select id="selectAllData" resultType="net.wuxianjie.web.mybatis.MyBatisData">
     SELECT id, name, type, date, local_date_time as localDateTime, local_date as localDate
     FROM mybatis
   </select>
+
+  <delete id="truncateTable">
+    truncate table mybatis
+  </delete>
 </mapper>

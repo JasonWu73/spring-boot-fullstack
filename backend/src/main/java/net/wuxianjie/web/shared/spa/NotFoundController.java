@@ -2,10 +2,6 @@ package net.wuxianjie.web.shared.spa;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.wuxianjie.web.shared.exception.ApiError;
@@ -24,8 +20,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.Optional;
+
 /**
- * 兼容 SPA 单页面应用和 REST API 服务.
+ * 兼容 SPA 单页面应用和 REST API 服务。
  */
 @Slf4j
 @Controller
@@ -34,25 +35,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class NotFoundController {
 
   /**
-   * 处理 "404 未找到" 请求的 URI.
+   * 处理“404 未找到”请求的 URI。
    */
   public static final String URI_NOT_FOUND = "/404";
 
   /**
-   * 处理 REST API 请求的 URI 前缀.
+   * 处理 REST API 请求的 URI 前缀。
    */
   public static final String URI_PREFIX_API = "/api/";
 
   /**
-   * SPA 首页.
+   * SPA 首页。
    */
   public static final String SPA_INDEX_PAGE = "classpath:/static/index.html";
 
   /**
-   * 配置 Web 服务器工厂:
+   * 配置 Web 服务器工厂：
    *
    * <ul>
-   *   <li>将 "404 未找" 到重定向至自定义 Controller {@value #URI_NOT_FOUND}</li>
+   *   <li>将“404 未找到”重定向至自定义 Controller {@value #URI_NOT_FOUND}</li>
    * </ul>
    *
    * @return 自定义配置后的 Web 服务器工厂
@@ -65,24 +66,24 @@ public class NotFoundController {
   private final ResourceLoader resourceLoader;
 
   /**
-   * 404 处理, 按规则返回 JSON 数据或页面.
+   * 404 处理，按规则返回 JSON 数据或页面。
    *
-   * <p>返回 JSON 数据:
+   * <p>返回 JSON 数据：
    *
    * <ol>
    *   <li>请求头 {@value HttpHeaders#ACCEPT} 中存在 {@value MediaType#APPLICATION_JSON_VALUE}</li>
    *   <li>请求 URI 以 {@value #URI_PREFIX_API} 开头</li>
    * </ol>
    *
-   * <p>其他情况一律返回页面, 因为前端 SPA 单页面应用已作为静态资源打包在了 Jar 中.
+   * <p>其他情况一律返回页面，因为前端 SPA 单页面应用已作为静态资源打包在了 Jar 中。
    *
-   * <p>Spring Boot 默认会将 {@code src/main/resources/static/} 中的内容作为 Web 静态资源提供.
+   * <p>Spring Boot 默认会将 {@code src/main/resources/static/} 中的内容作为 Web 静态资源提供。
    *
    * <p>约定 SPA 的页面入口：{@value #SPA_INDEX_PAGE}.
    *
    * <p><h2>扩展说明
    *
-   * <p>Spring Boot Web 静态资源查找目录, 由优先级高到低排序:
+   * <p>Spring Boot Web 静态资源查找目录，由优先级高到低排序：
    *
    * <ol>
    *   <li>{@code src/main/resources/META-INF/resources/}</li>
@@ -95,59 +96,46 @@ public class NotFoundController {
    */
   @RequestMapping(URI_NOT_FOUND)
   public ResponseEntity<?> handleNotFoundRequest(final HttpServletRequest req) {
-    // 若 API 或 JSON 数据请求, 则返回 JSON 数据
-    final String oriUri = Optional.ofNullable(
-            req.getAttribute(RequestDispatcher.FORWARD_SERVLET_PATH)
-        )
-        .map(Object::toString)
-        .orElse("");
+    // 若 API 或 JSON 数据请求，则返回 JSON 数据
+    final String origUri = Optional.ofNullable(
+        req.getAttribute(RequestDispatcher.FORWARD_SERVLET_PATH)
+      )
+      .map(Object::toString)
+      .orElse("");
 
-    if (isJsonRequest(req, oriUri)) {
+    if (isJsonRequest(req, origUri)) {
       final HttpStatus notFound = HttpStatus.NOT_FOUND;
-
       return ResponseEntity
-          .status(notFound)
-          .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-          .body(new ApiError(notFound, "未找到请求的资源", oriUri));
+        .status(notFound)
+        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+        .body(new ApiError(notFound, "未找到请求的资源", origUri));
     }
 
-    // 返回 SPA 首页, 由前端处理 404
+    // 返回 SPA 首页，由前端处理 404
     final String spaIndexHtml = getSpaIndexHtml();
-
     if (spaIndexHtml == null) {
       log.warn("未找到 SPA 首页文件 [{}]", SPA_INDEX_PAGE);
       return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     return ResponseEntity
-        .status(HttpStatus.OK)
-        .header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_HTML_VALUE)
-        .body(spaIndexHtml);
+      .status(HttpStatus.OK)
+      .header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_HTML_VALUE)
+      .body(spaIndexHtml);
   }
 
-  private boolean isJsonRequest(final HttpServletRequest req, final String oriUri) {
+  private boolean isJsonRequest(final HttpServletRequest req, final String origUri) {
     final String accept = Optional.ofNullable(req.getHeader(HttpHeaders.ACCEPT)).orElse("");
+    if (accept.contains(MediaType.APPLICATION_JSON_VALUE)) return true;
 
-    if (accept.contains(MediaType.APPLICATION_JSON_VALUE)) {
-      return true;
-    }
-
-    return oriUri.startsWith(URI_PREFIX_API);
+    return origUri.startsWith(URI_PREFIX_API);
   }
 
   private String getSpaIndexHtml() {
     final Resource resource = resourceLoader.getResource(SPA_INDEX_PAGE);
+    if (!resource.exists()) return null;
 
-    if (!resource.exists()) {
-      return null;
-    }
-
-    try (
-        final InputStreamReader reader = new InputStreamReader(
-            resource.getInputStream(),
-            StandardCharsets.UTF_8
-        )
-    ) {
+    try (final InputStreamReader reader = new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8)) {
       return FileCopyUtils.copyToString(reader);
     } catch (IOException e) {
       throw new RuntimeException(e);

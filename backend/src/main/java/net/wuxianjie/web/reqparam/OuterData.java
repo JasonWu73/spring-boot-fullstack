@@ -1,4 +1,4 @@
-package net.wuxianjie.web.demo.dto;
+package net.wuxianjie.web.reqparam;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class DemoData {
+public class OuterData {
 
   @NotNull(message = "id 不能为 null")
   Long id;
@@ -19,5 +19,5 @@ public class DemoData {
   String name;
 
   @Valid
-  DemoInnerData inner;
+  InnerData inner;
 }

@@ -1,7 +1,5 @@
 package net.wuxianjie.web.redis;
 
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.wuxianjie.web.shared.redis.RedisLock;
@@ -10,6 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @RestController
@@ -21,16 +22,20 @@ public class RedisController {
 
   private final RedisLock redisLock;
 
+  /**
+   * 测试分布式锁。
+   */
   @GetMapping("/lock")
   public ResponseEntity<Void> sendMessage() {
     new Thread(this::executeSync).start();
     new Thread(this::executeSync).start();
     new Thread(this::executeSync).start();
-
     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
   }
 
   private void executeSync() {
+    System.out.printf("[%s] 准备开始执行业务逻辑%n", Thread.currentThread().getName());
+
     // 生成锁的唯一值
     final String identifier = UUID.randomUUID().toString();
 
@@ -41,9 +46,19 @@ public class RedisController {
     doBiz(identifier);
   }
 
+  private void untilGetLock(final String identifier) {
+    while (!redisLock.lock(LOCK_KEY, identifier)) {
+      // 休眠以等待下一次获取锁
+      try {
+        TimeUnit.MILLISECONDS.sleep(800);
+      } catch (InterruptedException ignore) {
+        log.warn("获取锁休眠异常");
+      }
+    }
+  }
+
   private void doBiz(final String identifier) {
     final String threadName = Thread.currentThread().getName();
-
     System.out.printf("🔐[%s] 获取锁成功%n", threadName);
 
     try {
@@ -56,20 +71,10 @@ public class RedisController {
     }
   }
 
-  private void untilGetLock(final String identifier) {
-    while (!redisLock.lock(LOCK_KEY, identifier)) {
-      // 休眠以等待下一次获取锁
-      try {
-        TimeUnit.MILLISECONDS.sleep(800);
-      } catch (InterruptedException e) {
-        log.warn("获取锁休眠异常");
-      }
-    }
-  }
-
   private void delay() {
     try {
-      TimeUnit.SECONDS.sleep(50);
+      // 设置大于 RedisLock#LOCK_TIMEOUT_SECS 的超时时间，可以验证锁续期逻辑是否正确
+      TimeUnit.SECONDS.sleep(10);
     } catch (InterruptedException e) {
       throw new RuntimeException(e);
     }
