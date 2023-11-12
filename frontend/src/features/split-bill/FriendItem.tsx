@@ -36,7 +36,7 @@ function FriendItem({ friend, onDeleteFriend }: FriendItemProps) {
     <li
       className={cn(
         'group relative flex items-center justify-between gap-2 rounded px-4 py-2 hover:bg-amber-100 dark:hover:text-slate-700',
-        selected && 'bg-amber-100 dark:text-night-1'
+        selected && 'dark:text-night bg-amber-100'
       )}
     >
       <DeleteFriend onDelete={() => onDeleteFriend(friend)} />

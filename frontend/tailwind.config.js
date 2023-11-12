@@ -15,6 +15,7 @@ export default {
     extend: {
       colors: {
         night: {
+          DEFAULT: 'rgb(var(--color-night) / <alpha-value>)',
           1: 'rgb(var(--color-night-1) / <alpha-value>)',
           2: 'rgb(var(--color-night-2) / <alpha-value>)',
           3: 'rgb(var(--color-night-3) / <alpha-value>)',

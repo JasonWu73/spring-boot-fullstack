@@ -3,21 +3,25 @@
 @layer base {
   /* 自定义 CSS 变量 */
   :root {
-    /* night-1 */
+    /* night */
     /* For rgb(36 41 51 / <alpha-value>) */
-    --color-night-1: 36 41 51;
+    --color-night: 36 41 51;
+
+    /* night-1 */
+    /* For rgb(46 52 64 / <alpha-value>) */
+    --color-night-1: 46 52 64;
 
     /* night-2 */
-    /* For rgb(46 52 64 / <alpha-value>) */
-    --color-night-2: 46 52 64;
+    /* For rgb(59 66 82 / <alpha-value>) */
+    --color-night-2: 59 66 82;
 
     /* night-3 */
-    /* For rgb(59 66 82 / <alpha-value>) */
-    --color-night-3: 59 66 82;
+    /* For rgb(67 76 94 / <alpha-value>) */
+    --color-night-3: 67 76 94;
 
     /* night-4 */
-    /* For rgb(67 76 94 / <alpha-value>) */
-    --color-night-4: 67 76 94;
+    /* For rgb(76 86 106 / <alpha-value>) */
+    --color-night-4: 76 86 106;
 
     /* snow */
     /* For rgb(236 239 244 / <alpha-value>) */
@@ -49,9 +53,15 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 亮色主题 */
+html {
+  @apply bg-snow;
+  @apply text-night;
+}
+
 /* 暗色主题 */
 html.dark {
-  @apply bg-night-3;
+  @apply bg-night-2;
   @apply text-snow;
 }
 

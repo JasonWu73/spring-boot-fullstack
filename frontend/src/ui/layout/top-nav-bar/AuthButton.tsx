@@ -23,7 +23,7 @@ function AuthButton() {
     <NavigationMenu>
       <NavigationMenuList>
         <NavigationMenuItem>
-          <NavigationMenuTrigger className="text-black dark:text-snow">
+          <NavigationMenuTrigger className="text-night hover:text-night focus:text-night hover:bg-snow focus:bg-snow data-[active]:bg-snow data-[state=open]:bg-snow dark:text-snow dark:hover:bg-night-1 dark:hover:text-snow dark:focus:bg-night-1 dark:focus:text-snow dark:data-[active]:bg-night-1 dark:data-[state=open]:bg-night-1">
             {auth.nickname}
           </NavigationMenuTrigger>
           <NavigationMenuContent>
