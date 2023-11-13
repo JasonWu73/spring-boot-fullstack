@@ -4,7 +4,7 @@ import { useSearchParams } from 'react-router-dom'
 import { UserSearch } from '@/features/user/UserSearch'
 import { UserTable } from '@/features/user/UserTable'
 import { useFetch } from '@/hooks/use-fetch'
-import { useRefresh } from '@/hooks/use-refresh'
+import { useUrlRefresh } from '@/hooks/use-refresh'
 import { usePageTitle } from '@/hooks/use-title'
 import { getUsersApi } from '@/services/dummyjson/user-api'
 import {
@@ -42,7 +42,7 @@ export default function UserListPage() {
     fetchData: getUsers
   } = useFetch(getUsersApi)
 
-  useRefresh(() => {
+  useUrlRefresh(() => {
     const abort = getUsers({ pageNum, pageSize, query })
 
     return () => abort()
@@ -59,17 +59,16 @@ export default function UserListPage() {
     setSearchParams({ [URL_QUERY_KEY_QUERY]: query }, { replace: true })
   }
 
-  const [selectedRowIndexes, setSelectedRowIndexes] = React.useState<number[]>(
-    []
-  )
+  // 选中的行的索引
+  const [indexes, setIndexes] = React.useState<number[]>([])
 
   function handleSelect(rowIndexes: number[]) {
-    setSelectedRowIndexes(rowIndexes)
+    setIndexes(rowIndexes)
   }
 
   function handleShowSelection() {
     const ids = (users?.users || [])
-      .filter((_, index) => selectedRowIndexes.includes(index))
+      .filter((_, index) => indexes.includes(index))
       .map((user) => user.id)
     if (ids.length === 0) return alert('没有选中任何一行')
 

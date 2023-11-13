@@ -7,7 +7,7 @@ import { z } from 'zod'
 import { useFriends } from '@/features/split-bill/FriendProvider'
 import { SplitBillError } from '@/features/split-bill/SplitBillError'
 import { SplitBillFormSkeleton } from '@/features/split-bill/SplitBillFormSkeleton'
-import { useRefresh } from '@/hooks/use-refresh'
+import { useUrlRefresh } from '@/hooks/use-refresh'
 import { usePageTitle } from '@/hooks/use-title'
 import { Button } from '@/ui/shadcn-ui/Button'
 import {
@@ -101,7 +101,7 @@ function SplitBillForm() {
   const params = useParams()
   const id = Number(params.friendId)
 
-  useRefresh(() => {
+  useUrlRefresh(() => {
     form.reset()
     const abort = getFriend({ id })
 

@@ -9,11 +9,13 @@ type ReturnCleanup = void | Cleanup
 type RefreshCallback = () => ReturnCleanup
 
 /**
- * 当 URL 状态改变时（哪怕点击了相同的 React Router Link）也会触发的刷新回调。
+ * 为了模拟传统的 Web 应用，只要点击页面链接就会刷新页面，而不是像普通的 SPA，只要点击不同的 URL 才会刷新组件。
+ *
+ * <p>因为是根据 URL 状态来执行刷新，故哪怕只是 URL 参数发生了改变，同样也会触发刷新。
  *
  * @param callback - 刷新组件状态的回调函数，可返回清理函数
  */
-function useRefresh(callback: RefreshCallback) {
+function useUrlRefresh(callback: RefreshCallback) {
   const location = useLocation()
 
   const callbackRef = useCallbackRef(callback)
@@ -29,4 +31,4 @@ function useRefresh(callback: RefreshCallback) {
   }, [location.key, callbackRef])
 }
 
-export { useRefresh }
+export { useUrlRefresh }

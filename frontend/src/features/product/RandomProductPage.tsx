@@ -2,7 +2,7 @@ import { ReloadIcon } from '@radix-ui/react-icons'
 import React from 'react'
 
 import { type AbortCallback, useFetch } from '@/hooks/use-fetch'
-import { useRefresh } from '@/hooks/use-refresh'
+import { useUrlRefresh } from '@/hooks/use-refresh'
 import { usePageTitle } from '@/hooks/use-title'
 import { getRandomProductApi } from '@/services/dummyjson/product-api'
 import { Button } from '@/ui/shadcn-ui/Button'
@@ -31,7 +31,7 @@ export default function RandomProductPage() {
 
   const abortGetProductRef = React.useRef<AbortCallback | null>(null)
 
-  useRefresh(() => {
+  useUrlRefresh(() => {
     const abort = getProduct()
 
     return () => {
