@@ -51,7 +51,6 @@ export default function UserListPage() {
   function handlePaginate(paging: Paging) {
     searchParams.set(URL_QUERY_KEY_PAGE_NUM, String(paging.pageNum))
     searchParams.set(URL_QUERY_KEY_PAGE_SIZE, String(paging.pageSize))
-
     setSearchParams(searchParams, { replace: true })
   }
 
