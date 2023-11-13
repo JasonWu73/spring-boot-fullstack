@@ -21,7 +21,11 @@ function useRefresh(callback: RefreshCallback) {
   React.useEffect(() => {
     const cleanup = callbackRef.current()
 
-    return () => cleanup && cleanup()
+    return () => {
+      if (cleanup) {
+        cleanup()
+      }
+    }
   }, [location.key, callbackRef])
 }
 

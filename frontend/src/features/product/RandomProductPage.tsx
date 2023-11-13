@@ -1,7 +1,7 @@
 import { ReloadIcon } from '@radix-ui/react-icons'
 import React from 'react'
 
-import { useFetch } from '@/hooks/use-fetch'
+import { type AbortCallback, useFetch } from '@/hooks/use-fetch'
 import { useRefresh } from '@/hooks/use-refresh'
 import { usePageTitle } from '@/hooks/use-title'
 import { getRandomProductApi } from '@/services/dummyjson/product-api'
@@ -29,11 +29,23 @@ export default function RandomProductPage() {
     return response
   })
 
+  const abortGetProductRef = React.useRef<AbortCallback | null>(null)
+
   useRefresh(() => {
     const abort = getProduct()
 
-    return () => abort()
+    return () => {
+      abort()
+
+      if (abortGetProductRef.current) {
+        abortGetProductRef.current()
+      }
+    }
   })
+
+  function handleGetProduct() {
+    abortGetProductRef.current = getProduct()
+  }
 
   return (
     <div className="mx-auto mt-8 grid w-[500px] grid-cols-1 grid-rows-[2rem_8rem_3rem_2rem] place-items-center gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow dark:border-slate-800 dark:bg-slate-950">
@@ -60,11 +72,7 @@ export default function RandomProductPage() {
       </div>
 
       <div className="row-span-1">
-        <Button
-          onClick={() => getProduct()}
-          className="my-4"
-          disabled={loading}
-        >
+        <Button onClick={handleGetProduct} className="my-4" disabled={loading}>
           {loading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
           获取商品
         </Button>

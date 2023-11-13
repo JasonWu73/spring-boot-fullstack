@@ -43,17 +43,31 @@ export default function LoginPage() {
       password: PASSWORD
     }
   })
+
   const { toast, dismiss } = useToast()
   const { auth, error, loading, login } = useAuth()
-  const abortLoginRef = React.useRef<AbortCallback>()
 
-  useErrorToast(error, toast)
+  React.useEffect(() => {
+    if (!error) return
+
+    toast({
+      title: '登录失败',
+      description: error,
+      variant: 'destructive'
+    })
+  }, [error, toast])
+
+  const abortLoginRef = React.useRef<AbortCallback | null>(null)
 
   useRefresh(() => {
     form.reset()
     dismiss()
 
-    abortLoginRef.current && abortLoginRef.current()
+    return () => {
+      if (abortLoginRef.current) {
+        abortLoginRef.current()
+      }
+    }
   })
 
   const location = useLocation()
@@ -68,6 +82,7 @@ export default function LoginPage() {
     <Card className="mx-auto mt-8 w-96 border-slate-200 bg-slate-200 md:w-[22rem] lg:w-[30rem]">
       <CardHeader>
         <CardTitle>登录</CardTitle>
+
         {error && (
           <CardDescription className="text-red-500 dark:text-red-600">
             {error}
@@ -110,18 +125,4 @@ export default function LoginPage() {
       </CardContent>
     </Card>
   )
-}
-
-function useErrorToast(
-  error: string,
-  toast: ReturnType<typeof useToast>['toast']
-) {
-  React.useEffect(() => {
-    error &&
-      toast({
-        title: '登录失败',
-        description: error,
-        variant: 'destructive'
-      })
-  }, [error, toast])
 }
