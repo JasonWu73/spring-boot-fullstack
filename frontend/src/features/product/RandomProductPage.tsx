@@ -11,6 +11,7 @@ import { cn } from '@/utils/helpers'
 export default function RandomProductPage() {
   usePageTitle('随机商品')
 
+  // 成功获取商品的次数
   const [count, setCount] = React.useState(0)
 
   const {
@@ -70,7 +71,9 @@ export default function RandomProductPage() {
       </div>
 
       <div className="row-span-1">
-        <Message count={count} />
+        <p>
+          已加载 <strong>{count}</strong> 个商品
+        </p>
       </div>
     </div>
   )
@@ -83,18 +86,6 @@ type TitleProps = {
 
 function Title({ label, isError = false }: TitleProps) {
   return (
-    <h3 className={cn(isError && 'text-red-500 dark:text-red-600')}>{label}</h3>
-  )
-}
-
-type MessageProps = {
-  count: number
-}
-
-function Message({ count }: MessageProps) {
-  return (
-    <p>
-      已加载 <strong>{count}</strong> 个商品
-    </p>
+    <h1 className={cn(isError && 'text-red-500 dark:text-red-600')}>{label}</h1>
   )
 }
