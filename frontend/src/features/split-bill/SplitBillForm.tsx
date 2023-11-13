@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import React from 'react'
-import { useForm, type UseFormReturn } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
 import { z } from 'zod'
 
@@ -86,7 +86,18 @@ function SplitBillForm() {
     }
   })
 
-  useWatchExpense(form)
+  // 更新好友的花费
+  const watchedBill = form.watch('bill')
+  const watchedUserExpense = form.watch('userExpense')
+
+  React.useEffect(() => {
+    // 虽然通过 `Zod` 的校验最终从 `handleSubmit` 得到的是 `number`，但在这里的值仍然是 `string`，所以需要转换
+    const bill = Number(watchedBill)
+    const userExpense = Number(watchedUserExpense)
+    if (userExpense > bill) return
+
+    form.setValue('friendExpense', Number((bill - userExpense).toFixed(2)))
+  }, [watchedBill, watchedUserExpense, form])
 
   // 因为是假 API，所以会导致 loading 时还是显示上次的数据，为了避免页面闪烁，所以这里需要重置一下
   const ctx = useFriends()
@@ -224,25 +235,10 @@ function getWhoIsPayingOptions(friend: string) {
     value,
     label: value === 'friend' ? friend : label
   }))
+
+  // 添加一个额外选项，用于测试表单校验
   options.push({ value: 'anonymous', label: '匿名' })
   return options
-}
-
-function useWatchExpense(form: UseFormReturn<FormSchema>) {
-  const { watch, setValue } = form
-
-  const billStr = watch('bill')
-  const userExpenseStr = watch('userExpense')
-
-  React.useEffect(() => {
-    // 虽然通过 `zod` 的校验最终从 `handleSubmit` 得到的是 `number`，但在这里的值仍然是 `string`
-    // 所以需要转换一下
-    const bill = Number(billStr)
-    const userExpense = Number(userExpenseStr)
-    if (userExpense > bill) return
-
-    setValue('friendExpense', Number((bill - userExpense).toFixed(2)))
-  }, [billStr, userExpenseStr, setValue])
 }
 
 export { SplitBillForm }

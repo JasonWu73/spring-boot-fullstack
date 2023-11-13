@@ -35,8 +35,8 @@ function FriendList() {
   }
 
   const [searchParams] = useSearchParams()
-  const nameQuery = searchParams.get(URL_QUERY_KEY_QUERY) || ''
 
+  const nameQuery = searchParams.get(URL_QUERY_KEY_QUERY) || ''
   const filteredFriends = nameQuery
     ? friends.filter((friend) =>
         friend.name.toLowerCase().includes(nameQuery.toLowerCase())

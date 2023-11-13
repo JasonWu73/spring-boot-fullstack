@@ -5,22 +5,10 @@ import { type Control, type FieldValues, type Path } from 'react-hook-form'
 
 import { Button } from '@/ui/shadcn-ui/Button'
 import { Calendar } from '@/ui/shadcn-ui/Calendar'
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
-} from '@/ui/shadcn-ui/Form'
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/ui/shadcn-ui/Form'
 import { Input } from '@/ui/shadcn-ui/Input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/ui/shadcn-ui/Popover'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@/ui/shadcn-ui/Select'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/ui/shadcn-ui/Select'
 import { cn, tw } from '@/utils/helpers'
 import { zhCN } from 'date-fns/locale'
 
