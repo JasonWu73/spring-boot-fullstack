@@ -38,6 +38,7 @@ const router = createBrowserRouter([
     element: <LoginLayout />,
     children: [{ path: '/login', element: <LoginPage /> }]
   },
+
   {
     element: <MainLayout />,
     children: [
@@ -67,6 +68,7 @@ const router = createBrowserRouter([
       { path: '*', element: <NotFoundPage /> }
     ]
   },
+
   {
     element: (
       <PanelFoldProvider>
@@ -91,6 +93,7 @@ export default function App() {
     <ThemeProvider defaultTheme="system" storageKey="demo-ui-theme">
       <AuthProvider>
         <RouterProvider router={router} />
+
         <Toaster />
       </AuthProvider>
     </ThemeProvider>
