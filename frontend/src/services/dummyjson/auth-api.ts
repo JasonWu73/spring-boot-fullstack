@@ -106,7 +106,8 @@ async function sendAuthDummyJsonApi<T>({
       return { data: null, error: '未登录', reLogin: { isOk: false } }
     }
 
-    const { data, error } = await tryReLogin(payload, { username, password })
+    // 尝试重新登录，以获取新的 token
+    const { data, error } = await loginApi(payload, { username, password })
     if (error) return { data: null, error, reLogin: { isOk: false } }
 
     return sendAuthDummyJsonApi({
@@ -121,13 +122,6 @@ async function sendAuthDummyJsonApi<T>({
   }
 
   return { data: null, error: error.message }
-}
-
-async function tryReLogin(payload: FetchPayload, params: LoginParams) {
-  const { data, error } = await loginApi(payload, params)
-  if (error) return { data: null, error }
-
-  return { data, error: null }
 }
 
 export { loginApi, sendAuthDummyJsonApi, type LoginParams, type LoginResult }
