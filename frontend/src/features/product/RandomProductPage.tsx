@@ -1,15 +1,15 @@
 import { ReloadIcon } from '@radix-ui/react-icons'
 import React from 'react'
 
-import { type AbortCallback, useFetch } from '@/hooks/use-fetch'
-import { useUrlRefresh } from '@/hooks/use-refresh'
-import { usePageTitle } from '@/hooks/use-title'
+import { useFetch, type AbortCallback } from '@/hooks/use-fetch'
+import { useRefresh } from '@/hooks/use-refresh'
+import { useTitle } from '@/hooks/use-title'
 import { getRandomProductApi } from '@/services/dummyjson/product-api'
 import { Button } from '@/ui/shadcn-ui/Button'
 import { cn } from '@/utils/helpers'
 
 export default function RandomProductPage() {
-  usePageTitle('随机商品')
+  useTitle('随机商品')
 
   // 成功获取商品的次数
   const [count, setCount] = React.useState(0)
@@ -31,7 +31,7 @@ export default function RandomProductPage() {
 
   const abortGetProductRef = React.useRef<AbortCallback | null>(null)
 
-  useUrlRefresh(() => {
+  useRefresh(() => {
     const abort = getProduct()
 
     return () => {

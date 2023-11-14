@@ -4,8 +4,8 @@ import { useSearchParams } from 'react-router-dom'
 import { UserSearch } from '@/features/user/UserSearch'
 import { UserTable } from '@/features/user/UserTable'
 import { useFetch } from '@/hooks/use-fetch'
-import { useUrlRefresh } from '@/hooks/use-refresh'
-import { usePageTitle } from '@/hooks/use-title'
+import { useRefresh } from '@/hooks/use-refresh'
+import { useTitle } from '@/hooks/use-title'
 import { getUsersApi } from '@/services/dummyjson/user-api'
 import {
   Card,
@@ -26,7 +26,7 @@ import {
 } from '@/utils/constants'
 
 export default function UserListPage() {
-  usePageTitle('用户列表')
+  useTitle('用户列表')
 
   const [searchParams, setSearchParams] = useSearchParams()
   const pageNum =
@@ -42,7 +42,7 @@ export default function UserListPage() {
     fetchData: getUsers
   } = useFetch(getUsersApi)
 
-  useUrlRefresh(() => {
+  useRefresh(() => {
     const abort = getUsers({ pageNum, pageSize, query })
 
     return () => abort()

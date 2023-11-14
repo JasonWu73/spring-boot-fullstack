@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
 import { useFriends } from '@/features/split-bill/FriendProvider'
-import { usePageTitle } from '@/hooks/use-title'
+import { useTitle } from '@/hooks/use-title'
 import { type Friend } from '@/services/fake/friend-api'
 import { Button } from '@/ui/shadcn-ui/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/ui/shadcn-ui/Card'
@@ -22,7 +22,7 @@ const formSchema = z.object({
 type FormSchema = z.infer<typeof formSchema>
 
 function AddFriend() {
-  usePageTitle('添加好友')
+  useTitle('添加好友')
 
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),

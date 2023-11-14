@@ -1,33 +1,18 @@
 import React from 'react'
 
 /**
- * 保存回调函数的引用，可在回调函数中使用最新状态的同时，也可作为 `useEffect`、`useMemo` 和 `useCallback` 等 Hook 的依赖项。
+ * 保存函数或对象的引用，即在拥有最新值的同时，也可作为 `useEffect`、`useMemo` 和 `useCallback` 等 Hook 的依赖项。
  *
- * <p>注意：返回的引用是一直不变的，真正的值在 `current` 属性中。
+ * <p>这解决了因每次渲染都会创建新函数或对象，从而引发依赖项变化，导致 Hook 无限循环执行的问题。
  */
-function useCallbackRef<T>(callback: T) {
-  const callbackRef = React.useRef(callback)
+function useSavedRef<T>(obj: T) {
+  const callbackRef = React.useRef(obj)
 
   React.useLayoutEffect(() => {
-    callbackRef.current = callback
-  }, [callback])
+    callbackRef.current = obj
+  }, [obj])
 
   return callbackRef
 }
 
-/**
- * 保存对象的引用，可在对象中使用最新状态的同时，也可作为 `useEffect`、`useMemo` 和 `useCallback` 等 Hook 的依赖项。
- *
- * <p>注意：返回的引用是一直不变的，真正的值在 `current` 属性中。
- */
-function useObjectRef<T>(obj: T) {
-  const objRef = React.useRef(obj)
-
-  React.useLayoutEffect(() => {
-    objRef.current = obj
-  }, [obj])
-
-  return objRef
-}
-
-export { useCallbackRef, useObjectRef }
+export { useSavedRef }

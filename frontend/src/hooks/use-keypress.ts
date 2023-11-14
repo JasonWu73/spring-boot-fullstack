@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { useObjectRef } from '@/hooks/use-saved'
+import { useSavedRef } from '@/hooks/use-saved'
 
 type ModifierKey = 'ctrlKey' | 'shiftKey' | 'altKey' | 'metaKey'
 
@@ -17,7 +17,7 @@ type Keypress = {
  * @param callback - 回调函数
  */
 function useKeypress({ key, modifiers = [] }: Keypress, callback: () => void) {
-  const keypressRef = useObjectRef({ key, modifiers, callback })
+  const keypressRef = useSavedRef({ key, modifiers, callback })
 
   React.useEffect(() => {
     function handleKeydown(event: KeyboardEvent) {

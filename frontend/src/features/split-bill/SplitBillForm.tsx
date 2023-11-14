@@ -7,8 +7,8 @@ import { z } from 'zod'
 import { useFriends } from '@/features/split-bill/FriendProvider'
 import { SplitBillError } from '@/features/split-bill/SplitBillError'
 import { SplitBillFormSkeleton } from '@/features/split-bill/SplitBillFormSkeleton'
-import { useUrlRefresh } from '@/hooks/use-refresh'
-import { usePageTitle } from '@/hooks/use-title'
+import { useRefresh } from '@/hooks/use-refresh'
+import { useTitle } from '@/hooks/use-title'
 import { Button } from '@/ui/shadcn-ui/Button'
 import {
   Card,
@@ -74,7 +74,7 @@ const formSchema = z
 type FormSchema = z.infer<typeof formSchema>
 
 function SplitBillForm() {
-  usePageTitle('分摊账单')
+  useTitle('分摊账单')
 
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
@@ -112,7 +112,7 @@ function SplitBillForm() {
   const params = useParams()
   const id = Number(params.friendId)
 
-  useUrlRefresh(() => {
+  useRefresh(() => {
     form.reset()
     const abort = getFriend({ id })
 

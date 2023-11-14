@@ -49,7 +49,7 @@ function reducer<TData>(
       }
     }
     case 'FETCH_SUCCESS': {
-      tryNProgressDone(state.loadingCount)
+      tryEndNProgress(state.loadingCount)
 
       return {
         ...state,
@@ -60,7 +60,7 @@ function reducer<TData>(
       }
     }
     case 'FETCH_FAILED': {
-      tryNProgressDone(state.loadingCount)
+      tryEndNProgress(state.loadingCount)
 
       return {
         ...state,
@@ -71,7 +71,7 @@ function reducer<TData>(
       }
     }
     case 'ABORT_FETCH': {
-      tryNProgressDone(state.loadingCount)
+      tryEndNProgress(state.loadingCount)
 
       return {
         ...state,
@@ -129,8 +129,7 @@ function useFetch<TData, TParams>(
     const controller = new AbortController()
 
     dispatch({ type: 'START_LOADING' })
-
-    async function executeCallback() {
+    ;(async function () {
       const response = await callback(
         {
           signal: controller.signal,
@@ -140,14 +139,15 @@ function useFetch<TData, TParams>(
       )
 
       // 实现身份验证自动刷新机制
-      if (response.reLogin) {
-        if (response.reLogin.isOk) {
-          updateToken(response.reLogin.token)
-        } else {
-          logout()
-        }
+      if (response.reLogin && response.reLogin.isOk) {
+        updateToken(response.reLogin.token)
+      }
+      if (response.reLogin && !response.reLogin.isOk) {
+        logout()
       }
 
+      // 因为取消请求的方式一定是通过调用 `fetchData` 返回的 `AbortCallback` 函数实现的
+      // 而 `AbortCallback` 函数中包含了 `dispatch`，所以这里无需更新状态，直接返回即可
       if (controller.signal.aborted) return
 
       if (response.error) {
@@ -155,8 +155,7 @@ function useFetch<TData, TParams>(
       }
 
       dispatch({ type: 'FETCH_SUCCESS', payload: response.data })
-    }
-    executeCallback().then()
+    })()
 
     return () => {
       dispatch({ type: 'ABORT_FETCH' })
@@ -167,7 +166,7 @@ function useFetch<TData, TParams>(
   return { data, error, loading, fetchData }
 }
 
-function tryNProgressDone(loadingCount: number) {
+function tryEndNProgress(loadingCount: number) {
   loadingCount <= 1 && endNProgress()
 }
 

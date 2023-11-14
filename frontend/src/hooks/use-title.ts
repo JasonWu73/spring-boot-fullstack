@@ -1,12 +1,10 @@
 import React from 'react'
 
-function usePageTitle(title: string) {
+function useTitle(title: string) {
   React.useEffect(() => {
     const prevTitle = document.title
 
-    if (title) {
-      document.title = title
-    }
+    title && (document.title = title)
 
     return () => {
       document.title = prevTitle
@@ -14,4 +12,4 @@ function usePageTitle(title: string) {
   }, [title])
 }
 
-export { usePageTitle }
+export { useTitle }

@@ -7,8 +7,8 @@ import { z } from 'zod'
 
 import { useAuth } from '@/features/auth/AuthProvider'
 import { type AbortCallback } from '@/hooks/use-fetch'
-import { useUrlRefresh } from '@/hooks/use-refresh'
-import { usePageTitle } from '@/hooks/use-title'
+import { useRefresh } from '@/hooks/use-refresh'
+import { useTitle } from '@/hooks/use-title'
 import { Button } from '@/ui/shadcn-ui/Button'
 import {
   Card,
@@ -34,7 +34,7 @@ const formSchema = z.object({
 type FormSchema = z.infer<typeof formSchema>
 
 export default function LoginPage() {
-  usePageTitle('登录')
+  useTitle('登录')
 
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
@@ -59,7 +59,7 @@ export default function LoginPage() {
 
   const abortLoginRef = React.useRef<AbortCallback | null>(null)
 
-  useUrlRefresh(() => {
+  useRefresh(() => {
     form.reset()
     dismiss()
 

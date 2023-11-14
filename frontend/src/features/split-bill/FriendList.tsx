@@ -9,7 +9,7 @@ import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { FriendItem } from '@/features/split-bill/FriendItem'
 import { useFriends } from '@/features/split-bill/FriendProvider'
 import { FriendSearch } from '@/features/split-bill/FriendSearch'
-import { useUrlRefresh } from '@/hooks/use-refresh'
+import { useRefresh } from '@/hooks/use-refresh'
 import { type Friend } from '@/services/fake/friend-api'
 import { Alert, AlertDescription, AlertTitle } from '@/ui/shadcn-ui/Alert'
 import { Card } from '@/ui/shadcn-ui/Card'
@@ -45,7 +45,7 @@ function FriendList() {
 
   const location = useLocation()
 
-  useUrlRefresh(() => {
+  useRefresh(() => {
     if (location.state?.noRefresh === true) {
       // 重置为可刷新，解决 F5 刷新时，无法刷新的问题
       if (location.state) {

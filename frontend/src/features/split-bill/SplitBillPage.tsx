@@ -4,7 +4,7 @@ import { Outlet, useNavigate } from 'react-router-dom'
 import { FriendList } from '@/features/split-bill/FriendList'
 import { useFriends } from '@/features/split-bill/FriendProvider'
 import { useKeypress } from '@/hooks/use-keypress'
-import { usePageTitle } from '@/hooks/use-title'
+import { useTitle } from '@/hooks/use-title'
 import { Button } from '@/ui/shadcn-ui/Button'
 import { Spinner } from '@/ui/Spinner'
 import { wait } from '@/utils/helpers'
@@ -20,7 +20,7 @@ const AddFriend = React.lazy(() =>
 // ----- 结束：测试懒加载（React Split Code）-----
 
 export default function SplitBillPage() {
-  usePageTitle('分摊账单')
+  useTitle('分摊账单')
 
   const { showAddFriend, setShowAddFriend } = useFriends()
 
