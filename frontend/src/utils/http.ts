@@ -1,7 +1,6 @@
-type ContentType = 'JSON' | 'FORM' | 'FILE'
+type ContentType = 'JSON' | 'URLENCODED' | 'FILE'
 
 type UrlData = Record<string, string | number | boolean | undefined | null>
-type BodyData = Record<string, unknown> | FormData
 
 type Request = {
   url: string
@@ -9,18 +8,9 @@ type Request = {
   contentType?: ContentType
   headers?: Record<string, string>
   urlData?: UrlData
-  bodyData?: BodyData
+  bodyData?: Record<string, unknown> | FormData
   signal?: AbortSignal
 }
-
-type UrlInfo = Pick<Request, 'url' | 'urlData'>
-
-type RequestConfig = Pick<
-  Request,
-  'method' | 'contentType' | 'headers' | 'bodyData' | 'signal'
->
-
-type RequestBody = Pick<Request, 'contentType' | 'bodyData'>
 
 type SuccessResponse<T> = {
   data: T
@@ -61,100 +51,62 @@ async function sendRequest<TData, TError>({
 }: Request): Promise<Response<TData, TError>> {
   try {
     // 追加 URL 参数
-    const splicedUrl = appendParamsToUrl({ url, urlData })
+    const urlObj = new URL(url)
+    if (urlData) {
+      Object.keys(urlData).forEach((key) =>
+        urlObj.searchParams.append(key, urlData[key]?.toString() || '')
+      )
+    }
+
+    // 构造请求配置
+    const options: RequestInit = {
+      method,
+      signal,
+      headers: {
+        ...headers,
+        Accept: 'application/json',
+        contentType:
+          contentType === 'FILE'
+            ? '' // 不要设置 Content-Type，让浏览器自动设置
+            : contentType === 'URLENCODED'
+            ? 'application/x-www-form-urlencoded'
+            : 'application/json'
+      },
+      body:
+        contentType === 'FILE'
+          ? (bodyData as FormData)
+          : contentType === 'URLENCODED'
+          ? Object.keys(bodyData as UrlData)
+              .map(
+                (key) =>
+                  `${encodeURIComponent(key)}=${encodeURIComponent(
+                    (bodyData as UrlData)[key] || ''
+                  )}`
+              )
+              .join('&')
+          : JSON.stringify(bodyData)
+    }
 
     // 发送 HTTP 请求
-    const response = await fetch(
-      splicedUrl,
-      getRequestOptions({ method, contentType, headers, bodyData, signal })
-    )
+    const response = await fetch(urlObj, options)
 
     // 以 JSON 数据格式解析请求
     const responseData = await response.json()
 
     // 请求失败时，返回异常响应数据
-    if (!response.ok) {
-      return { data: null, error: responseData }
-    }
+    if (!response.ok) return { data: null, error: responseData }
 
     // 请求成功时，返回正常响应数据
     return { data: responseData, error: null }
   } catch (error) {
-    if (error instanceof Error) {
-      // console.log(`${error.message} [${method} ${url}]`)
-
-      // 忽略因主动取消请求而产生的非程序异常
-      if (error.name === 'AbortError') {
-        return { data: null, error: '用户主动取消了请求' }
-      }
-
-      return { data: null, error: error.message }
+    if (error instanceof Error && error.name === 'AbortError') {
+      return { data: null, error: '用户主动取消了请求' }
     }
+
+    if (error instanceof Error) return { data: null, error: error.message }
 
     return { data: null, error: String(error) }
   }
-}
-
-function appendParamsToUrl({ url, urlData }: UrlInfo) {
-  const urlObj = new URL(url)
-  urlData &&
-    Object.keys(urlData).forEach((key) =>
-      urlObj.searchParams.append(key, urlData[key]?.toString() || '')
-    )
-  return urlObj.toString()
-}
-
-function getRequestOptions({
-  method,
-  contentType = 'JSON',
-  headers = {},
-  bodyData,
-  signal
-}: RequestConfig) {
-  const mergedHeaders = getHeaders(contentType, headers)
-
-  if (method === 'GET') return { headers: mergedHeaders, signal }
-
-  return {
-    method,
-    headers: mergedHeaders,
-    body: getBody({ contentType, bodyData }),
-    signal
-  }
-}
-
-function getHeaders(
-  type: ContentType,
-  headers: Record<string, string>
-): Record<string, string> {
-  switch (type) {
-    case 'FILE':
-      return { ...headers }
-    case 'FORM':
-      return { ...headers, 'Content-Type': 'application/x-www-form-urlencoded' }
-    default:
-      return { ...headers, 'Content-Type': 'application/json' }
-  }
-}
-
-function getBody({ contentType, bodyData }: RequestBody) {
-  switch (contentType) {
-    case 'FILE':
-      return bodyData as FormData
-    case 'FORM':
-      return getUrlEncodedData(bodyData as UrlData)
-    default:
-      return JSON.stringify(bodyData)
-  }
-}
-
-function getUrlEncodedData(bodyData: UrlData) {
-  return Object.keys(bodyData)
-    .map(
-      (key) =>
-        encodeURIComponent(key) + '=' + encodeURIComponent(bodyData[key] || '')
-    )
-    .join('&')
 }
 
 export { sendRequest, type Request, type Response }

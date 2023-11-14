@@ -7,7 +7,7 @@ import { sendRequest, type Request } from '@/utils/http'
 
 const BASE_URL = 'https://dummyjson.com/auth'
 
-const EXPIRES_IN_MINS = 1
+const EXPIRES_IN_MILLISECONDS = 1
 
 type Error = {
   message: string
@@ -48,7 +48,7 @@ async function loginApi(
     method: 'POST',
     bodyData: {
       ...params,
-      expiresInMins: EXPIRES_IN_MINS
+      expiresInMins: EXPIRES_IN_MILLISECONDS
     }
   })
 

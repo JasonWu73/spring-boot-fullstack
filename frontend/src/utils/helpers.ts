@@ -22,7 +22,9 @@ function tw(strings: TemplateStringsArray, ...values: unknown[]) {
 }
 
 /**
- * 截断字符串，将长字符串的末尾替换为省略号 `…`（实际上省略号是单个 Unicode 字符，不是 `...` 这样的三个点），使其长度等于指定的最大长度。
+ * 截断字符串，使其长度等于指定的最大长度。
+ *
+ * <p>将长字符串的末尾替换为省略号 `…`（实际上省略号是单个 Unicode 字符，不是 `...` 这样的三个点）。
  */
 function truncate(str: string, maxlength: number) {
   if (str.length <= maxlength) return str
@@ -33,8 +35,8 @@ function truncate(str: string, maxlength: number) {
 /**
  * 等待指定秒数。
  */
-function wait(secs: number) {
-  return new Promise((resolve) => setTimeout(resolve, secs * 1000))
+function wait(seconds: number) {
+  return new Promise((resolve) => setTimeout(resolve, seconds * 1000))
 }
 
 export { cn, truncate, tw, wait }

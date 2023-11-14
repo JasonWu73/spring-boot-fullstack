@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @RequiredArgsConstructor
 public class RedisLock {
 
-  private static final int LOCK_TIMEOUT_SECS = 30;
+  private static final int LOCK_TIMEOUT_SECONDS = 30;
 
   private final StringRedisTemplate stringRedisTemplate;
 
@@ -37,7 +37,7 @@ public class RedisLock {
   public boolean lock(final String key, final String value) {
     // 上锁
     final Boolean isLocked = stringRedisTemplate.opsForValue()
-      .setIfAbsent(key, value, LOCK_TIMEOUT_SECS, TimeUnit.SECONDS);
+      .setIfAbsent(key, value, LOCK_TIMEOUT_SECONDS, TimeUnit.SECONDS);
     if (isLocked == null || !isLocked) return false;
 
     // 上锁成功，开启 Lock 自动续期线程
@@ -93,11 +93,11 @@ public class RedisLock {
         if (curValue == null || !curValue.equals(value)) break;
 
         // Lock 续期
-        stringRedisTemplate.expire(key, LOCK_TIMEOUT_SECS, TimeUnit.SECONDS);
+        stringRedisTemplate.expire(key, LOCK_TIMEOUT_SECONDS, TimeUnit.SECONDS);
 
         // 休眠以等待下一次续期
         try {
-          TimeUnit.SECONDS.sleep(LOCK_TIMEOUT_SECS / 2);
+          TimeUnit.SECONDS.sleep(LOCK_TIMEOUT_SECONDS / 2);
         } catch (InterruptedException ignore) {
           log.warn("Lock 自动续期: 休眠异常");
         }
