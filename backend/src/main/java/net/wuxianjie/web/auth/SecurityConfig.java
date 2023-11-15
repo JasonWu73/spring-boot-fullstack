@@ -1,0 +1,83 @@
+package net.wuxianjie.web.auth;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
+
+@Configuration
+@EnableWebSecurity
+@EnableMethodSecurity
+public class SecurityConfig {
+
+  @Bean
+  public SecurityFilterChain filterChain(final HttpSecurity http) throws Exception {
+    // 以下配置仅对 API 请求（即以 `/api/` 为前缀的 Path）生效
+    http
+      .securityMatcher("/api/**")
+      // 按顺序比较，符合则退出后续比较
+      .authorizeHttpRequests(auth -> {
+        // 开放登录 API
+        auth.requestMatchers("/api/v1/login").permitAll()
+          // 开放获取项目版本号 API
+          .requestMatchers("/api/v1/version").permitAll()
+          // TODO: 测试
+          .requestMatchers("/api/v1/mybatis").permitAll()
+          // 默认所有 API 都需要登录才能访问
+          .requestMatchers("/**").authenticated();
+      });
+
+    // 以下配置对所有请求生效
+    http
+      // 按顺序比较，符合则退出后续比较
+      .authorizeHttpRequests(auth -> {
+        // 默认所有请求所有人都可访问（保证 SPA 前端资源可用）
+        auth.requestMatchers("/**").permitAll();
+      })
+      // 支持 CORS
+      .cors(Customizer.withDefaults())
+      // 禁用 CSRF
+      .csrf(AbstractHttpConfigurer::disable)
+      // 允许浏览器在同源策略下使用 `<frame>` 或 `<iframe>`
+      .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
+      // 无状态会话，即不向客户端发送 `JSESSIONID` Cookies
+      .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+    return http.build();
+  }
+
+  /**
+   * 在 Spring Security 中集成 CORS 支持。
+   */
+  @Bean
+  CorsConfigurationSource corsConfigurationSource() {
+    final CorsConfiguration configuration = new CorsConfiguration();
+    // 以下配置缺一不可
+    configuration.setAllowedOriginPatterns(List.of("*"));
+    configuration.setAllowedMethods(List.of("*"));
+    configuration.setAllowCredentials(true);
+    configuration.setAllowedHeaders(List.of("*"));
+
+    final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", configuration);
+    return source;
+  }
+
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
+}

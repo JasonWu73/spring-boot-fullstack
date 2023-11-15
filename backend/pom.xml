@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
+<project
+  xmlns="http://maven.apache.org/POM/4.0.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd"
+>
 
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>3.1.2</version>
-    <relativePath/> <!-- lookup parent from repository -->
+    <version>3.1.5</version>
+    <relativePath /> <!-- lookup parent from repository -->
   </parent>
 
   <groupId>net.wuxianjie</groupId>
@@ -38,7 +40,7 @@
       <optional>true</optional>
     </dependency>
 
-    <!-- web 项目基础依赖 -->
+    <!-- web 项目基础依赖（Spring MVC、内嵌 Tomcat 等）-->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
@@ -48,6 +50,12 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-webflux</artifactId>
+    </dependency>
+
+    <!-- Spring Security -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-security</artifactId>
     </dependency>
 
     <!-- 参数校验 -->
@@ -62,7 +70,7 @@
       <artifactId>spring-boot-starter-aop</artifactId>
     </dependency>
 
-    <!-- 提供对自定义的配置项的 JavaDOC 支持 -->
+    <!-- 提供对自定义配置项的 Javadoc 支持 -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-configuration-processor</artifactId>
@@ -104,18 +112,54 @@
         </configuration>
       </plugin>
 
-      <!-- Jasypt Maven 插件（还需要在项目中添加 Jasypt Compile 依赖）：
-      1. 加密字符串：`mvn jasypt:encrypt-value -Djasypt.encryptor.password=wxj#secret_ -Djasypt.plugin.value=pass123`
+      <!--
+        Jasypt Maven 插件（还需要在项目中添加 Jasypt Compile 依赖）
 
-      2. 解密字符串：`mvn jasypt:decrypt-value -Djasypt.encryptor.password=wxj#secret_ -Djasypt.plugin.value=KOTlCZ7eoNB0p1NfdIyj/c+k5cA3KgVm5e+Wee0EuU4LaI6WfGOau9PCwCqJxZ0I`
+        1. 加密字符串：
 
-      3. 加密 Spring Boot 配置文件中属性值（`DEC(raw)` -> `ENC(encrypted)`）：`mvn jasypt:encrypt -Djasypt.encryptor.password=wxj#secret_`
+        ```
+        mvn \
+        jasypt:encrypt-value \
+        -Djasypt.encryptor.password=wxj#secret_ \
+        -Djasypt.plugin.value=pass123
+        ```
 
-      3.1 使用新密钥重新加密 Spring Boot 配置文件：`mvn jasypt:reencrypt -Djasypt.plugin.old.password=wxj#secret_ -Djasypt.encryptor.password=new-wxj#secret_`
+        2. 解密字符串：
 
-      3.2 解密并打印 Spring Boot 配置文件内容：`mvn jasypt:decrypt -Djasypt.encryptor.password=wxj#secret_`
+        ```
+        mvn \
+        jasypt:decrypt-value \
+        -Djasypt.encryptor.password=wxj#secret_ \
+        -Djasypt.plugin.value=KOTlCZ7eoNB0p1NfdIyj/c+k5cA3KgVm5e+Wee0EuU4LaI6WfGOau9PCwCqJxZ0I
+        ```
 
-      4. 提供密钥以运行 Spring Boot 应用程序：`java -Djasypt.encryptor.password=wxj#secret_ -jar web.jar` -->
+        3. 加密 Spring Boot 配置文件中属性值（`DEC(raw)` -> `ENC(encrypted)`）：
+
+        ```
+        mvn jasypt:encrypt -Djasypt.encryptor.password=wxj#secret_
+        ```
+
+        3.1 使用新密钥重新加密 Spring Boot 配置文件：
+
+        ```
+        mvn \
+        jasypt:reencrypt \
+        -Djasypt.plugin.old.password=wxj#secret_ \
+        -Djasypt.encryptor.password=new-wxj#secret_
+        ```
+
+        3.2 解密并打印 Spring Boot 配置文件内容：
+
+        ```
+        mvn jasypt:decrypt -Djasypt.encryptor.password=wxj#secret_
+        ```
+
+        4. 提供密钥以运行 Spring Boot 应用程序：
+
+        ```
+        java -Djasypt.encryptor.password=wxj#secret_ -jar web.jar
+        ```
+      -->
       <plugin>
         <groupId>com.github.ulisesbocchio</groupId>
         <artifactId>jasypt-maven-plugin</artifactId>

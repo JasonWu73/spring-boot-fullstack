@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Date;
 
-@CrossOrigin
 @Validated
 @RestController
 @RequestMapping("/api/v1/params")
