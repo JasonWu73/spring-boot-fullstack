@@ -5,7 +5,6 @@ import { useSavedRef } from '@/shared/hooks/use-saved'
 
 type Cleanup = () => void
 type ReturnCleanup = void | Cleanup
-
 type RefreshCallback = () => ReturnCleanup
 
 /**

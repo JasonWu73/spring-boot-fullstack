@@ -1,11 +1,9 @@
 import React from 'react'
 
-import {
-  loginApi,
-  type LoginParams,
-  type LoginResult
-} from '@/shared/apis/dummyjson/auth-api'
-import { useFetch, type AbortCallback } from '@/shared/hooks/use-fetch'
+import { loginApi } from '@/shared/apis/dummyjson/auth-api'
+import type { LoginParams, LoginResult } from '@/shared/apis/dummyjson/types'
+import type { AbortCallback, Auth } from '@/shared/hooks/types'
+import { useFetch } from '@/shared/hooks/use-fetch'
 import { decrypt, encrypt } from '@/shared/utils/rsa'
 
 const PUBLIC_KEY =
@@ -16,14 +14,6 @@ const PRIVATE_KEY =
   'MIICeAIBADANBgkqhkiG9w0BAQEFAASCAmIwggJeAgEAAoGBAMgzLm3JLmj3iEwtgKh8gEowPQZJEQPPTuEmT64nsJGD0iwgUGmS67G8Z8cFUwwdBl7olF+lMtb95ITPHkDcjq+Yyzll92Mf5AgO8IWSjtJZJiHfhWv4BHt8EeWLWrAeiudF28fXXk0qhKbdz5EuOplv79Fcj/0Pi5Wtmztzt5X7AgMBAAECgYBxFlg3s9j/ejQHs/xlME7XmYAfOM7ftA7+p8GCwvC+ghQK0QYbXN6+u4pzpdJPmWWr3v1ROeQKBck8LDMOuIfwMN4dHnmT529grJW3Q2OVUiJKxm1lEdAJVMJADOZLgYwVCRoCArFv9sRooPH807byVOBEYJOwiSfx6j4hQyShAQJBAO8Yi645WHeh+qjAcdOR5gNu9qOPmsAeCfdpeHdoCttIaNYF1D7w60lZGUku1P1ZeQP3viiCQEYYe47hpcVXOdsCQQDWWqX/D4qUwx3UdF9c4iSHkBP3cYT9qqyt0eldCfXzPXgtZrvhwnncKTTArF43NxwUiw4w30mS+3nPnW3zmR5hAkEAw3HJHI375y8dezx0z4GACGZ4bpNA6LKlav1oYBNIbJ/wMqNpMFo3uyl+JfiGWuL8rWWip/JxH9t7hPynSX1X6QJBAKmqgq3K/WQWtOvPWRRKI6Px1PwNLLkkeR30gwSTt8vaod897AUcTByJuSmwxbpqsp1IG+lvM+tVhethrwAb+MECQQCDQzRTuVZjkOgJ95Zo5bbTgXxWbFXNR1HcwSVC6fMnSckbzDL+GP5XNxuNn2tDLQPRKV9C9tR+IGlqK+QTbNN9'
 
 const STORAGE_KEY = 'demo-auth'
-
-type Auth = {
-  id: number
-  username: string
-  password: string
-  token: string
-  nickname: string
-}
 
 type AuthProviderState = {
   auth: Auth | null
@@ -136,4 +126,4 @@ function deleteLocalStorageAuth() {
   localStorage.removeItem(STORAGE_KEY)
 }
 
-export { AuthProvider, useAuth, type Auth }
+export { AuthProvider, useAuth }

@@ -1,15 +1,13 @@
 import React from 'react'
 
-import { useAuth, type Auth } from '@/auth/AuthProvider'
+import { useAuth } from '@/auth/AuthProvider'
+import type {
+  AbortCallback,
+  ApiResponse,
+  FetchPayload,
+  ReLogin
+} from '@/shared/hooks/types'
 import { endNProgress, startNProgress } from '@/shared/utils/nprogress'
-
-type ReLogin = { isOk: true; token: string } | { isOk: false }
-
-type ApiResponse<TData> = {
-  data: TData | null
-  error: string
-  reLogin?: ReLogin
-}
 
 type State<TData> = {
   data: TData | null
@@ -84,17 +82,10 @@ function reducer<TData>(state: State<TData>, action: Action<TData>): State<TData
   }
 }
 
-type FetchPayload = {
-  signal: AbortSignal
-  auth: Auth | null
-}
-
 type ApiCallback<TData, TParams> = (
   payload: FetchPayload,
   params?: TParams
 ) => Promise<ApiResponse<TData>>
-
-type AbortCallback = () => void
 
 type UseFetch<TData, TParams> = {
   data: TData | null
@@ -167,4 +158,4 @@ function tryEndNProgress(loadingCount: number) {
   loadingCount <= 1 && endNProgress()
 }
 
-export { useFetch, type AbortCallback, type ApiResponse, type FetchPayload, type ReLogin }
+export { useFetch }
