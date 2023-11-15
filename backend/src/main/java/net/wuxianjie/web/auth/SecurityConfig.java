@@ -112,6 +112,9 @@ public class SecurityConfig {
     return source;
   }
 
+  /**
+   * 密码哈希算法。
+   */
   @Bean
   public PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
