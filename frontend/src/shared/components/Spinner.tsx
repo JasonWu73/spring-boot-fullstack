@@ -9,7 +9,11 @@ type SpinnerProps = {
 
 function Spinner({ className }: SpinnerProps) {
   // NProgress 加载动画
-  useLoading()
+  React.useEffect(() => {
+    startNProgress('spinner')
+
+    return () => endNProgress('spinner')
+  }, [])
 
   return (
     <div role="status">
@@ -35,14 +39,6 @@ function Spinner({ className }: SpinnerProps) {
       <span className="sr-only">加载中...</span>
     </div>
   )
-}
-
-function useLoading() {
-  React.useEffect(() => {
-    startNProgress('spinner')
-
-    return () => endNProgress('spinner')
-  }, [])
 }
 
 export { Spinner }

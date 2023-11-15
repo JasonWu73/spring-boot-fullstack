@@ -33,7 +33,18 @@ function ThemeProvider({
     () => (localStorage.getItem(storageKey) as Theme) || defaultTheme
   )
 
-  useApplyTheme(theme)
+  React.useEffect(() => {
+    resetTheme()
+    if (theme !== 'system') return applyTheme(theme)
+
+    const darkQuery = window.matchMedia('(prefers-color-scheme: dark)')
+    const selectedTheme = darkQuery.matches ? 'dark' : 'light'
+    applyTheme(selectedTheme)
+
+    darkQuery.addEventListener('change', handleToggleTheme)
+
+    return () => darkQuery.removeEventListener('change', handleToggleTheme)
+  }, [theme])
 
   const value = {
     theme,
@@ -55,21 +66,6 @@ function ThemeProvider({
  */
 function useTheme() {
   return React.useContext(ThemeProviderContext)
-}
-
-function useApplyTheme(theme: Theme) {
-  React.useEffect(() => {
-    resetTheme()
-    if (theme !== 'system') return applyTheme(theme)
-
-    const darkQuery = window.matchMedia('(prefers-color-scheme: dark)')
-    const selectedTheme = darkQuery.matches ? 'dark' : 'light'
-    applyTheme(selectedTheme)
-
-    darkQuery.addEventListener('change', handleToggleTheme)
-
-    return () => darkQuery.removeEventListener('change', handleToggleTheme)
-  }, [theme])
 }
 
 function handleToggleTheme(darkMatchEvent: MediaQueryListEvent) {

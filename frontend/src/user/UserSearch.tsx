@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ReloadIcon } from '@radix-ui/react-icons'
 import React from 'react'
-import { useForm, type UseFormSetValue } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { useSearchParams } from 'react-router-dom'
 import { z } from 'zod'
 
@@ -29,7 +29,12 @@ function UserSearch({ onSearch, loading }: UserSearchProps) {
     }
   })
 
-  useSyncQuery(form.setValue)
+  const [searchParams] = useSearchParams()
+  const query = searchParams.get(URL_QUERY_KEY_QUERY) || ''
+
+  React.useEffect(() => {
+    form.setValue('query', query)
+  }, [query, form])
 
   function onSubmit(values: FormSchema) {
     onSearch(values.query)
@@ -68,15 +73,6 @@ function UserSearch({ onSearch, loading }: UserSearchProps) {
       </Form>
     </div>
   )
-}
-
-function useSyncQuery(setValue: UseFormSetValue<FormSchema>) {
-  const [searchParams] = useSearchParams()
-  const query = searchParams.get(URL_QUERY_KEY_QUERY) || ''
-
-  React.useEffect(() => {
-    setValue('query', query)
-  }, [query, setValue])
 }
 
 export { UserSearch }
