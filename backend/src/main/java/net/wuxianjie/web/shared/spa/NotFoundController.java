@@ -49,6 +49,8 @@ public class NotFoundController {
    */
   public static final String SPA_INDEX_PAGE = "classpath:/static/index.html";
 
+  private final ResourceLoader resourceLoader;
+
   /**
    * 配置 Web 服务器工厂：
    *
@@ -62,8 +64,6 @@ public class NotFoundController {
   public WebServerFactoryCustomizer<ConfigurableServletWebServerFactory> webServerFactoryCustomizer() {
     return factory -> factory.addErrorPages(new ErrorPage(HttpStatus.NOT_FOUND, URI_NOT_FOUND));
   }
-
-  private final ResourceLoader resourceLoader;
 
   /**
    * 404 处理，按规则返回 JSON 数据或页面。
@@ -96,14 +96,19 @@ public class NotFoundController {
    */
   @RequestMapping(URI_NOT_FOUND)
   public ResponseEntity<?> handleNotFoundRequest(final HttpServletRequest request) {
-    // 若 API 或 JSON 数据请求，则返回 JSON 数据
+    // 若为 API 或 JSON 数据请求，则返回 JSON 数据
     final String originalUri = Optional.ofNullable(
         request.getAttribute(RequestDispatcher.FORWARD_SERVLET_PATH)
       )
       .map(Object::toString)
       .orElse("");
+    final String accept = Optional.ofNullable(request.getHeader(HttpHeaders.ACCEPT))
+      .orElse("");
 
-    if (isJsonRequest(request, originalUri)) {
+    if (
+      originalUri.startsWith(URI_PREFIX_API)
+        || accept.contains(MediaType.APPLICATION_JSON_VALUE)
+    ) {
       final HttpStatus notFound = HttpStatus.NOT_FOUND;
       return ResponseEntity
         .status(notFound)
@@ -111,32 +116,21 @@ public class NotFoundController {
         .body(new ApiError(notFound, "未找到请求的资源", originalUri));
     }
 
-    // 返回 SPA 首页，由前端处理 404
-    final String spaIndexHtml = getSpaIndexHtml();
-    if (spaIndexHtml == null) {
+    // 其他情况，返回 SPA 首页内容，由前端处理 404
+    final Resource resource = resourceLoader.getResource(SPA_INDEX_PAGE);
+    if (!resource.exists()) {
       log.warn("未找到 SPA 首页文件 [{}]", SPA_INDEX_PAGE);
       return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
-    return ResponseEntity
-      .status(HttpStatus.OK)
-      .header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_HTML_VALUE)
-      .body(spaIndexHtml);
-  }
-
-  private boolean isJsonRequest(final HttpServletRequest request, final String originalUri) {
-    final String accept = Optional.ofNullable(request.getHeader(HttpHeaders.ACCEPT)).orElse("");
-    if (accept.contains(MediaType.APPLICATION_JSON_VALUE)) return true;
-
-    return originalUri.startsWith(URI_PREFIX_API);
-  }
-
-  private String getSpaIndexHtml() {
-    final Resource resource = resourceLoader.getResource(SPA_INDEX_PAGE);
-    if (!resource.exists()) return null;
-
-    try (final InputStreamReader reader = new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8)) {
-      return FileCopyUtils.copyToString(reader);
+    try (
+      final InputStreamReader reader = new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8)
+    ) {
+      final String html = FileCopyUtils.copyToString(reader);
+      return ResponseEntity
+        .status(HttpStatus.OK)
+        .header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_HTML_VALUE)
+        .body(html);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }

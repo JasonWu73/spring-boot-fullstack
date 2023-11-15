@@ -19,7 +19,8 @@ import java.util.Optional;
 @Component
 @NoArgsConstructor
 @AllArgsConstructor
-public class EnumTypeHandler<E extends Enum<?> & EnumType> extends BaseTypeHandler<EnumType> {
+public class EnumTypeHandler<E extends Enum<?> & EnumType>
+  extends BaseTypeHandler<EnumType> {
 
   private Class<E> enumType;
 
@@ -42,7 +43,8 @@ public class EnumTypeHandler<E extends Enum<?> & EnumType> extends BaseTypeHandl
   }
 
   @Override
-  public EnumType getNullableResult(final ResultSet rs, final int columnIndex) throws SQLException {
+  public EnumType getNullableResult(final ResultSet rs, final int columnIndex)
+    throws SQLException {
     return toEnum(enumType, rs.getInt(columnIndex));
   }
 

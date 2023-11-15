@@ -127,8 +127,19 @@ public class GlobalExceptionHandler {
     MissingServletRequestParameterException.class,
     MissingServletRequestPartException.class
   })
-  public ResponseEntity<ApiError> handleMissingServletRequestParameterException(final Exception e) {
-    String paramName = getParamName(e);
+  public ResponseEntity<ApiError> handleMissingServletRequestParameterException(
+    final Exception e
+  ) {
+    final String paramName;
+
+    if (e instanceof MissingServletRequestParameterException ex) {
+      paramName = ex.getParameterName();
+    } else if (e instanceof MissingServletRequestPartException ex) {
+      paramName = ex.getRequestPartName();
+    } else {
+      paramName = "未知参数";
+    }
+
     String reason = "缺少必填参数 [%s]".formatted(paramName);
     return handleApiException(new ApiException(HttpStatus.BAD_REQUEST, reason, e));
   }
@@ -153,7 +164,11 @@ public class GlobalExceptionHandler {
   public ResponseEntity<ApiError> handleHttpMessageNotReadableException(
     final HttpMessageNotReadableException e
   ) {
-    return handleApiException(new ApiException(HttpStatus.BAD_REQUEST, "无法解析请求体内容", e));
+    return handleApiException(new ApiException(
+      HttpStatus.BAD_REQUEST,
+      "无法解析请求体内容",
+      e
+    ));
   }
 
   /**
@@ -212,17 +227,5 @@ public class GlobalExceptionHandler {
 
     // 以 ERROR 级别记录服务端异常
     log.error("服务端异常: {}", e.getMessage());
-  }
-
-  private String getParamName(final Exception e) {
-    if (e instanceof MissingServletRequestParameterException ex) {
-      return ex.getParameterName();
-    }
-
-    if (e instanceof MissingServletRequestPartException ex) {
-      return ex.getRequestPartName();
-    }
-
-    return "";
   }
 }

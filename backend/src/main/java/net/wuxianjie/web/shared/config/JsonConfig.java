@@ -42,7 +42,9 @@ public class JsonConfig {
         final JsonGenerator gen,
         final SerializerProvider serializers
       ) throws IOException {
-        gen.writeString(value.format(DateTimeFormatter.ofPattern(Constants.DATE_TIME_PATTERN)));
+        gen.writeString(value.format(
+          DateTimeFormatter.ofPattern(Constants.DATE_TIME_PATTERN)
+        ));
       }
     });
 

@@ -40,8 +40,31 @@ public class RedisLock {
       .setIfAbsent(key, value, LOCK_TIMEOUT_SECONDS, TimeUnit.SECONDS);
     if (isLocked == null || !isLocked) return false;
 
-    // 上锁成功，开启 Lock 自动续期线程
-    startRenewLockThread(key, value);
+    // ----- 上锁成功，开启 Lock 自动续期线程 -----
+    // 初始化 renewFlag
+    renewFlags.put(key, new AtomicBoolean(true));
+
+    // 启动一个单独的线程或定时任务来负责 Lock 的续期。这个线程会在 Lock 快到期时，对 Lock 进行续期
+    new Thread(() -> {
+      // 使用标志变量控制线程
+      while (renewFlags.get(key).get()) {
+        // 若非当前锁的持有者，则直接退出线程
+        final String curValue = stringRedisTemplate.opsForValue().get(key);
+        if (curValue == null || !curValue.equals(value)) break;
+
+        // Lock 续期
+        stringRedisTemplate.expire(key, LOCK_TIMEOUT_SECONDS, TimeUnit.SECONDS);
+
+        // 休眠以等待下一次续期
+        try {
+          TimeUnit.SECONDS.sleep(LOCK_TIMEOUT_SECONDS / 2);
+        } catch (InterruptedException ignore) {
+          log.warn("Lock 自动续期: 休眠异常");
+        }
+      }
+    })
+      .start();
+
     return true;
   }
 
@@ -62,11 +85,6 @@ public class RedisLock {
     stopRenewLockThread(key);
   }
 
-  private void startRenewLockThread(final String key, final String value) {
-    renewFlags.put(key, new AtomicBoolean(true)); // 初始化 renewFlag
-    renewLock(key, value);
-  }
-
   private void stopRenewLockThread(final String key) {
     // 停止 renewThread 线程
     final AtomicBoolean renewFlag = renewFlags.get(key);
@@ -77,32 +95,5 @@ public class RedisLock {
 
     // 移除 renewFlag
     renewFlags.remove(key);
-  }
-
-  public void renewLock(final String key, final String value) {
-    // 获取 renewFlag
-    final AtomicBoolean renewFlag = renewFlags.get(key);
-    if (renewFlag == null) return;
-
-    // 启动一个单独的线程或定时任务来负责 Lock 的续期。这个线程会在 Lock 快到期时，对 Lock 进行续期
-    new Thread(() -> {
-      // 使用标志变量控制线程
-      while (renewFlag.get()) {
-        // 若非当前锁的持有者，则直接退出线程
-        final String curValue = stringRedisTemplate.opsForValue().get(key);
-        if (curValue == null || !curValue.equals(value)) break;
-
-        // Lock 续期
-        stringRedisTemplate.expire(key, LOCK_TIMEOUT_SECONDS, TimeUnit.SECONDS);
-
-        // 休眠以等待下一次续期
-        try {
-          TimeUnit.SECONDS.sleep(LOCK_TIMEOUT_SECONDS / 2);
-        } catch (InterruptedException ignore) {
-          log.warn("Lock 自动续期: 休眠异常");
-        }
-      }
-    })
-      .start();
   }
 }
