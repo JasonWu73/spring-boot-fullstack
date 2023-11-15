@@ -215,9 +215,13 @@ public class GlobalExceptionHandler {
   }
 
   private String getParamName(final Exception e) {
-    if (e instanceof MissingServletRequestParameterException ex) return ex.getParameterName();
+    if (e instanceof MissingServletRequestParameterException ex) {
+      return ex.getParameterName();
+    }
 
-    if (e instanceof MissingServletRequestPartException ex) return ex.getRequestPartName();
+    if (e instanceof MissingServletRequestPartException ex) {
+      return ex.getRequestPartName();
+    }
 
     return "";
   }

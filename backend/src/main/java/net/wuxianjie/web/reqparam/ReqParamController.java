@@ -35,14 +35,10 @@ public class ReqParamController {
    */
   @RequestMapping
   public OuterData getData(
-    @RequestParam
-    final String name,
-    @NotNull(message = "num 不能为 null")
-    final Integer num,
-    @EnumValidator(value = Type.class, message = "type 值不合法")
-    final Integer type,
-    @DateTimeFormat(pattern = Constants.DATE_TIME_PATTERN)
-    final LocalDateTime dateTime
+    @RequestParam final String name,
+    @NotNull(message = "num 不能为 null") final Integer num,
+    @EnumValidator(value = Type.class, message = "type 值不合法") final Integer type,
+    @DateTimeFormat(pattern = Constants.DATE_TIME_PATTERN) final LocalDateTime dateTime
   ) {
     System.out.printf("name=%s%num=%s%ntype=%s%ndateTime=%s%n", name, num, type, dateTime);
 
@@ -64,8 +60,7 @@ public class ReqParamController {
   @PostMapping("/json")
   public OuterData postJsonData(
     @RequestBody
-    @Valid
-    final OuterData data) {
+    @Valid final OuterData data) {
     return data;
   }
 
@@ -74,10 +69,8 @@ public class ReqParamController {
    */
   @PostMapping("/upload")
   public Uploaded uploadFile(
-    @NotBlank
-    final String message,
-    @RequestParam
-    final MultipartFile file
+    @NotBlank final String message,
+    @RequestParam final MultipartFile file
   ) {
     if (file == null || file.isEmpty()) return new Uploaded(false, null, message);
 
