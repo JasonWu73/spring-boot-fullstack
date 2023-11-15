@@ -1,4 +1,4 @@
-// ----- 开始：http.ts -----
+// ----- 开始：HTTP 工具方法相关类型 -----
 export type ContentType = 'JSON' | 'URLENCODED' | 'FILE'
 
 export type UrlData = Record<string, string | number | boolean | undefined | null>
@@ -24,4 +24,4 @@ export type ErrorResponse<T> = {
 }
 
 export type ApiResponse<TData, TError> = SuccessResponse<TData> | ErrorResponse<TError>
-// ----- 结束：http.ts -----
+// ----- 结束：HTTP 工具方法相关类型 -----

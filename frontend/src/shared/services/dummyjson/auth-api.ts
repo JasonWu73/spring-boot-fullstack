@@ -3,38 +3,18 @@ import {
   type FetchPayload,
   type ReLogin
 } from '@/shared/hooks/use-fetch'
-import { sendRequest, type Request } from '@/shared/utils/http'
+import type {
+  ApiError,
+  Auth,
+  LoginParams,
+  LoginResult
+} from '@/shared/services/dummyjson/types'
+import { sendRequest } from '@/shared/utils/http'
+import type { ApiRequest } from '@/shared/utils/types'
 
 const BASE_URL = 'https://dummyjson.com/auth'
 
 const EXPIRES_IN_MILLISECONDS = 1
-
-type Error = {
-  message: string
-  name?: string
-  expiredAt?: string
-}
-
-type Auth = {
-  id: number
-  username: string
-  email: string
-  firstName: string
-  lastName: string
-  gender: string
-  image: string
-  token: string
-}
-
-type LoginResult = Auth & {
-  password: string
-}
-
-type LoginParams = {
-  username: string
-  password: string
-  expiresInMins?: number
-}
 
 async function loginApi(
   payload: FetchPayload,
@@ -42,7 +22,7 @@ async function loginApi(
 ): Promise<ApiResponse<LoginResult>> {
   if (!params) return { data: null, error: '未传入参数' }
 
-  const { data, error } = await sendRequest<Auth, Error>({
+  const { data, error } = await sendRequest<Auth, ApiError>({
     url: `${BASE_URL}/login`,
     signal: payload.signal,
     method: 'POST',
@@ -62,7 +42,7 @@ async function loginApi(
   return { data: result, error: '' }
 }
 
-type ReLoginRequest = Omit<Request, 'signal'> & {
+type ReLoginRequest = Omit<ApiRequest, 'signal'> & {
   payload: FetchPayload
   reLogin?: ReLogin
 }
@@ -124,4 +104,4 @@ async function sendAuthDummyJsonApi<T>({
   return { data: null, error: error.message }
 }
 
-export { loginApi, sendAuthDummyJsonApi, type LoginParams, type LoginResult }
+export { loginApi, sendAuthDummyJsonApi }
