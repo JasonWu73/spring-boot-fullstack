@@ -16,7 +16,7 @@ type Friend = {
 async function getFriendsApi(
   payload: FetchPayload
 ): Promise<ApiResponse<Friend[]>> {
-  await wait(0.5) // simulate network delay
+  await wait(0.5) // Simulate network delay
 
   const { data, error } = await sendRequest<Friend[], string>({
     url: `http://${BASE_URL}/data/friends.json`,
