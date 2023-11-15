@@ -1,28 +1,4 @@
-type ContentType = 'JSON' | 'URLENCODED' | 'FILE'
-
-type UrlData = Record<string, string | number | boolean | undefined | null>
-
-type Request = {
-  url: string
-  method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'
-  contentType?: ContentType
-  headers?: Record<string, string>
-  urlData?: UrlData
-  bodyData?: Record<string, unknown> | FormData
-  signal?: AbortSignal
-}
-
-type SuccessResponse<T> = {
-  data: T
-  error: null
-}
-
-type ErrorResponse<T> = {
-  data: null
-  error: T | string
-}
-
-type Response<TData, TError> = SuccessResponse<TData> | ErrorResponse<TError>
+import type { ApiRequest, ApiResponse, UrlData } from '@/shared/utils/types'
 
 /**
  * 发送 HTTP 请求，并以 JSON 数据格式解析响应数据。
@@ -48,7 +24,7 @@ async function sendRequest<TData, TError>({
   urlData,
   bodyData,
   signal
-}: Request): Promise<Response<TData, TError>> {
+}: ApiRequest): Promise<ApiResponse<TData, TError>> {
   try {
     // 追加 URL 参数
     const urlObj = new URL(url)
@@ -109,4 +85,4 @@ async function sendRequest<TData, TError>({
   }
 }
 
-export { sendRequest, type Request, type Response }
+export { sendRequest }
