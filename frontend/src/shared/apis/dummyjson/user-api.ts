@@ -1,5 +1,5 @@
+import { sendAuthDummyJsonApi } from '@/shared/apis/dummyjson/auth-api'
 import { type ApiResponse, type FetchPayload } from '@/shared/hooks/use-fetch'
-import { sendAuthDummyJsonApi } from '@/shared/services/dummyjson/auth-api'
 import type { PaginationData, User } from './types'
 
 type GetUsersParams = {

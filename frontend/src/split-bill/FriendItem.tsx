@@ -1,5 +1,6 @@
 import { Link, useParams } from 'react-router-dom'
 
+import { type Friend } from '@/shared/apis/fake/friend-api'
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/components/ui/Avatar'
 import { buttonVariants } from '@/shared/components/ui/Button'
 import {
@@ -8,7 +9,6 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from '@/shared/components/ui/Tooltip'
-import { type Friend } from '@/shared/services/fake/friend-api'
 import { cn, truncate } from '@/shared/utils/helpers'
 import { DeleteFriend } from '@/split-bill/DeleteFriend'
 import { useFriends } from '@/split-bill/FriendProvider'

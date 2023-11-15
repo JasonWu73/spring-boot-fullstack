@@ -1,5 +1,5 @@
+import type { Friend } from '@/shared/apis/fake/types'
 import { type ApiResponse, type FetchPayload } from '@/shared/hooks/use-fetch'
-import type { Friend } from '@/shared/services/fake/types'
 import { wait } from '@/shared/utils/helpers'
 import { sendRequest } from '@/shared/utils/http'
 

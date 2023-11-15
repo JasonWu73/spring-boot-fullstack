@@ -1,11 +1,11 @@
 import { ReloadIcon } from '@radix-ui/react-icons'
 import React from 'react'
 
+import { getRandomProductApi } from '@/shared/apis/dummyjson/product-api'
 import { Button } from '@/shared/components/ui/Button'
 import { useFetch, type AbortCallback } from '@/shared/hooks/use-fetch'
 import { useRefresh } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
-import { getRandomProductApi } from '@/shared/services/dummyjson/product-api'
 import { cn } from '@/shared/utils/helpers'
 
 export default function RandomProductPage() {

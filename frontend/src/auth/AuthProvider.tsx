@@ -1,11 +1,11 @@
 import React from 'react'
 
-import { useFetch, type AbortCallback } from '@/shared/hooks/use-fetch'
 import {
   loginApi,
   type LoginParams,
   type LoginResult
-} from '@/shared/services/dummyjson/auth-api'
+} from '@/shared/apis/dummyjson/auth-api'
+import { useFetch, type AbortCallback } from '@/shared/hooks/use-fetch'
 import { decrypt, encrypt } from '@/shared/utils/rsa'
 
 const PUBLIC_KEY =

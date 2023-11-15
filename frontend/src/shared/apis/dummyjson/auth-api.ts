@@ -1,14 +1,14 @@
-import {
-  type ApiResponse,
-  type FetchPayload,
-  type ReLogin
-} from '@/shared/hooks/use-fetch'
 import type {
   ApiError,
   Auth,
   LoginParams,
   LoginResult
-} from '@/shared/services/dummyjson/types'
+} from '@/shared/apis/dummyjson/types'
+import {
+  type ApiResponse,
+  type FetchPayload,
+  type ReLogin
+} from '@/shared/hooks/use-fetch'
 import { sendRequest } from '@/shared/utils/http'
 import type { ApiRequest } from '@/shared/utils/types'
 

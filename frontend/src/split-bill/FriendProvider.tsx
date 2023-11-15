@@ -1,7 +1,7 @@
 import React from 'react'
 
+import { getFriendsApi, type Friend } from '@/shared/apis/fake/friend-api'
 import { useFetch, type AbortCallback, type FetchPayload } from '@/shared/hooks/use-fetch'
-import { getFriendsApi, type Friend } from '@/shared/services/fake/friend-api'
 import { wait } from '@/shared/utils/helpers'
 
 const STORAGE_KEY = 'demo-friends'

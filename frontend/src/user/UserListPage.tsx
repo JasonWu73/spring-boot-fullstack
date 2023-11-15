@@ -1,6 +1,7 @@
 import React from 'react'
 import { useSearchParams } from 'react-router-dom'
 
+import { getUsersApi } from '@/shared/apis/dummyjson/user-api'
 import {
   Card,
   CardContent,
@@ -16,7 +17,6 @@ import {
 import { useFetch } from '@/shared/hooks/use-fetch'
 import { useRefresh } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
-import { getUsersApi } from '@/shared/services/dummyjson/user-api'
 import {
   URL_QUERY_KEY_PAGE_NUM,
   URL_QUERY_KEY_PAGE_SIZE,

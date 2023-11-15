@@ -1,6 +1,6 @@
+import { sendAuthDummyJsonApi } from '@/shared/apis/dummyjson/auth-api'
+import type { Product } from '@/shared/apis/dummyjson/types'
 import { type ApiResponse, type FetchPayload } from '@/shared/hooks/use-fetch'
-import { sendAuthDummyJsonApi } from '@/shared/services/dummyjson/auth-api'
-import type { Product } from '@/shared/services/dummyjson/types'
 
 async function getRandomProductApi(payload: FetchPayload): Promise<ApiResponse<Product>> {
   const randomId = Math.floor(Math.random() * 110)

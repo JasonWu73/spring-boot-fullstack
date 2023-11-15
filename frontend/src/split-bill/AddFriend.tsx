@@ -3,12 +3,12 @@ import { format } from 'date-fns'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
+import { type Friend } from '@/shared/apis/fake/friend-api'
 import { Button } from '@/shared/components/ui/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/Card'
 import { FormCalendar, FormInput } from '@/shared/components/ui/CustomFormField'
 import { Form } from '@/shared/components/ui/Form'
 import { useTitle } from '@/shared/hooks/use-title'
-import { type Friend } from '@/shared/services/fake/friend-api'
 import { useFriends } from '@/split-bill/FriendProvider'
 
 const formSchema = z.object({
