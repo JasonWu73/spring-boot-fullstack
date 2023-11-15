@@ -95,20 +95,20 @@ public class NotFoundController {
    * @return JSON 数据或 SPA 首页
    */
   @RequestMapping(URI_NOT_FOUND)
-  public ResponseEntity<?> handleNotFoundRequest(final HttpServletRequest req) {
+  public ResponseEntity<?> handleNotFoundRequest(final HttpServletRequest request) {
     // 若 API 或 JSON 数据请求，则返回 JSON 数据
-    final String origUri = Optional.ofNullable(
-        req.getAttribute(RequestDispatcher.FORWARD_SERVLET_PATH)
+    final String originalUri = Optional.ofNullable(
+        request.getAttribute(RequestDispatcher.FORWARD_SERVLET_PATH)
       )
       .map(Object::toString)
       .orElse("");
 
-    if (isJsonRequest(req, origUri)) {
+    if (isJsonRequest(request, originalUri)) {
       final HttpStatus notFound = HttpStatus.NOT_FOUND;
       return ResponseEntity
         .status(notFound)
         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-        .body(new ApiError(notFound, "未找到请求的资源", origUri));
+        .body(new ApiError(notFound, "未找到请求的资源", originalUri));
     }
 
     // 返回 SPA 首页，由前端处理 404
@@ -124,11 +124,11 @@ public class NotFoundController {
       .body(spaIndexHtml);
   }
 
-  private boolean isJsonRequest(final HttpServletRequest req, final String origUri) {
-    final String accept = Optional.ofNullable(req.getHeader(HttpHeaders.ACCEPT)).orElse("");
+  private boolean isJsonRequest(final HttpServletRequest request, final String originalUri) {
+    final String accept = Optional.ofNullable(request.getHeader(HttpHeaders.ACCEPT)).orElse("");
     if (accept.contains(MediaType.APPLICATION_JSON_VALUE)) return true;
 
-    return origUri.startsWith(URI_PREFIX_API);
+    return originalUri.startsWith(URI_PREFIX_API);
   }
 
   private String getSpaIndexHtml() {

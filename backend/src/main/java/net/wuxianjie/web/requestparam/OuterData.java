@@ -1,4 +1,4 @@
-package net.wuxianjie.web.reqparam;
+package net.wuxianjie.web.requestparam;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;

@@ -1,4 +1,4 @@
-package net.wuxianjie.web.reqparam;
+package net.wuxianjie.web.requestparam;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 import jakarta.validation.Valid;
@@ -21,7 +21,7 @@ import java.util.Date;
 @Validated
 @RestController
 @RequestMapping("/api/v1/params")
-public class ReqParamController {
+public class RequestParamController {
 
   /**
    * 测试接收请求：

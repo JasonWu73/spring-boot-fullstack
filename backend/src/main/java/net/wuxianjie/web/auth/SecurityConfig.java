@@ -1,7 +1,10 @@
 package net.wuxianjie.web.auth;
 
+import lombok.RequiredArgsConstructor;
+import net.wuxianjie.web.shared.exception.ApiException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,16 +15,23 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.util.List;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+  private final HandlerExceptionResolver handlerExceptionResolver;
+
+  private final TokenAuth tokenAuth;
 
   @Bean
   public SecurityFilterChain filterChain(final HttpSecurity http) throws Exception {
@@ -38,7 +48,12 @@ public class SecurityConfig {
           .requestMatchers("/api/v1/mybatis").permitAll()
           // 默认所有 API 都需要登录才能访问
           .requestMatchers("/**").authenticated();
-      });
+      })
+      // 添加自定义 Token 身份验证过滤器
+      .addFilterBefore(
+        new TokenAuthFilter(handlerExceptionResolver, tokenAuth),
+        UsernamePasswordAuthenticationFilter.class
+      );
 
     // 以下配置对所有请求生效
     http
@@ -54,7 +69,28 @@ public class SecurityConfig {
       // 允许浏览器在同源策略下使用 `<frame>` 或 `<iframe>`
       .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
       // 无状态会话，即不向客户端发送 `JSESSIONID` Cookies
-      .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+      .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+      // 身份验证和权限异常处理
+      .exceptionHandling(exceptionHandling -> {
+        // 未通过身份验证，对应 401 HTTP 状态码
+        exceptionHandling.authenticationEntryPoint(
+          (request, response, e) -> handlerExceptionResolver.resolveException(
+            request,
+            response,
+            null,
+            new ApiException(HttpStatus.UNAUTHORIZED, "身份验证失败", e)
+          )
+        );
+
+        // 通过身份验证，但权限不足，对应 403 HTTP 状态码
+        exceptionHandling.accessDeniedHandler(
+          (request, response, e) -> handlerExceptionResolver.resolveException(
+            request,
+            response,
+            null,
+            new ApiException(HttpStatus.FORBIDDEN, "权限鉴权失败", e)
+          ));
+      });
 
     return http.build();
   }

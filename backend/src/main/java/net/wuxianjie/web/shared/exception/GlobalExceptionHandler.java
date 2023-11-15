@@ -9,6 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.HttpMediaTypeException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -43,12 +44,11 @@ public class GlobalExceptionHandler {
    */
   @ExceptionHandler(Throwable.class)
   public ResponseEntity<ApiError> handleFailedException(final Throwable e) {
-    // 不要处理 `org.springframework.security.access.AccessDeniedException`，否则会导致 Spring Security 无法处理 403
-   /*
-   if (e instanceof AccessDeniedException springSecurity403Exc) {
-     throw springSecurity403Exc;
-   }
-   */
+    // 不要处理 `org.springframework.security.access.AccessDeniedException`
+    // 否则会导致 Spring Security 无法处理 403
+    if (e instanceof AccessDeniedException springSecurity403Exception) {
+      throw springSecurity403Exception;
+    }
 
     final HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
     log.error("落空的服务异常: {}", e.getMessage(), e);
@@ -162,9 +162,9 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
   public ResponseEntity<ApiError> handleHttpRequestMethodNotSupportedException(
     final HttpRequestMethodNotSupportedException e,
-    final HttpServletRequest req
+    final HttpServletRequest request
   ) {
-    final String reason = "不支持的请求方法 [%s]".formatted(req.getMethod());
+    final String reason = "不支持的请求方法 [%s]".formatted(request.getMethod());
     return handleApiException(new ApiException(HttpStatus.METHOD_NOT_ALLOWED, reason, e));
   }
 
@@ -174,11 +174,11 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(HttpMediaTypeException.class)
   public ResponseEntity<ApiError> handleHttpMediaTypeException(
     final HttpMediaTypeException e,
-    final HttpServletRequest req
+    final HttpServletRequest request
   ) {
     final String reason = "不支持的媒体类型 [%s: %s]".formatted(
       HttpHeaders.CONTENT_TYPE,
-      req.getHeader(HttpHeaders.CONTENT_TYPE)
+      request.getHeader(HttpHeaders.CONTENT_TYPE)
     );
     return handleApiException(new ApiException(HttpStatus.NOT_ACCEPTABLE, reason, e));
   }
