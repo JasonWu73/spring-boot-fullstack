@@ -44,8 +44,6 @@ public class SecurityConfig {
         auth.requestMatchers("/api/v1/login").permitAll()
           // 开放获取项目版本号 API
           .requestMatchers("/api/v1/version").permitAll()
-          // TODO: 测试
-          .requestMatchers("/api/v1/mybatis").permitAll()
           // 默认所有 API 都需要登录才能访问
           .requestMatchers("/**").authenticated();
       })
