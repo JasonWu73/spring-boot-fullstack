@@ -1,32 +1,28 @@
 import React from 'react'
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
 
-import { AuthProvider } from '@/features/auth/AuthProvider'
-import { SecureRoute } from '@/features/auth/SecureRoute'
-import { FriendProvider } from '@/features/split-bill/FriendProvider'
-import AdminLayout from '@/ui/layout/AdminLayout'
-import LoginLayout from '@/ui/layout/LoginLayout'
-import MainLayout from '@/ui/layout/MainLayout'
-import { PanelFoldProvider } from '@/ui/layout/panel-fold/PanelFoldProvider'
-import { ThemeProvider } from '@/ui/shadcn-ui/ThemeProvider'
-import { Toaster } from '@/ui/shadcn-ui/Toaster'
-import { Spinner } from '@/ui/Spinner'
-import { wait } from '@/utils/helpers'
+import { AuthProvider } from '@/auth/AuthProvider'
+import { SecureRoute } from '@/auth/SecureRoute'
+import AdminLayout from '@/shared/components/layout/AdminLayout'
+import LoginLayout from '@/shared/components/layout/LoginLayout'
+import MainLayout from '@/shared/components/layout/MainLayout'
+import { PanelFoldProvider } from '@/shared/components/layout/panel-fold/PanelFoldProvider'
+import { Spinner } from '@/shared/components/Spinner'
+import { ThemeProvider } from '@/shared/components/ui/ThemeProvider'
+import { Toaster } from '@/shared/components/ui/Toaster'
+import { wait } from '@/shared/utils/helpers'
+import { FriendProvider } from '@/split-bill/FriendProvider'
 
-const LoginPage = React.lazy(() => import('@/features/auth/LoginPage'))
-const RandomProductPage = React.lazy(
-  () => import('@/features/product/RandomProductPage')
-)
-const SplitBillPage = React.lazy(
-  () => import('@/features/split-bill/SplitBillPage')
-)
-const NotFoundPage = React.lazy(() => import('@/ui/NotFoundPage'))
-const UserListPage = React.lazy(() => import('@/features/user/UserListPage'))
+const LoginPage = React.lazy(() => import('@/auth/LoginPage'))
+const RandomProductPage = React.lazy(() => import('@/product/RandomProductPage'))
+const SplitBillPage = React.lazy(() => import('@/split-bill/SplitBillPage'))
+const NotFoundPage = React.lazy(() => import('@/shared/components/NotFoundPage'))
+const UserListPage = React.lazy(() => import('@/user/UserListPage'))
 
 // ----- 开始：测试 React Router 懒加载（React Split Code）-----
 const SplitBillForm = React.lazy(() =>
   wait(2).then(() =>
-    import('@/features/split-bill/SplitBillForm').then((module) => ({
+    import('@/split-bill/SplitBillForm').then((module) => ({
       default: module.SplitBillForm
     }))
   )
