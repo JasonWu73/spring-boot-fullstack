@@ -37,9 +37,7 @@ function usePanelFold() {
   return React.useContext(PanelFoldProviderContext)
 }
 
-function useSmallScreenFold(
-  setFolded: React.Dispatch<React.SetStateAction<boolean>>
-) {
+function useSmallScreenFold(setFolded: React.Dispatch<React.SetStateAction<boolean>>) {
   React.useEffect(() => {
     const largeScreen = window.matchMedia('(max-width: 1024px)')
     largeScreen.matches && setFolded(true)
