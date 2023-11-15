@@ -1,7 +1,9 @@
 import React from 'react'
 
-import { getFriendsApi, type Friend } from '@/shared/apis/fake/friend-api'
-import { useFetch, type AbortCallback, type FetchPayload } from '@/shared/hooks/use-fetch'
+import { getFriendsApi } from '@/shared/apis/fake/friend-api'
+import type { Friend } from '@/shared/apis/fake/types'
+import type { AbortFetch, FetchPayload } from '@/shared/hooks/types'
+import { useFetch } from '@/shared/hooks/use-fetch'
 import { wait } from '@/shared/utils/helpers'
 
 const STORAGE_KEY = 'demo-friends'
@@ -16,12 +18,12 @@ type FriendProviderState = {
   friends: Friend[]
   errorFriends: string
   loadingFriends: boolean
-  getFriends: () => AbortCallback
+  getFriends: () => AbortFetch
 
   curFriend: Friend | null
   errorFriend: string
   loadingFriend: boolean
-  getFriend: (params: GetFriendParams) => AbortCallback
+  getFriend: (params: GetFriendParams) => AbortFetch
 
   addFriend: (friend: NewFriend) => void
   deleteFriend: (id: number) => void

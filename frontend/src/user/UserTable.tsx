@@ -2,7 +2,7 @@ import { type ColumnDef } from '@tanstack/react-table'
 import { MoreHorizontal } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
-import { type User } from '@/shared/apis/dummyjson/user-api'
+import type { User } from '@/shared/apis/dummyjson/types'
 import { Code } from '@/shared/components/Code'
 import { Button } from '@/shared/components/ui/Button'
 import { Checkbox } from '@/shared/components/ui/Checkbox'

@@ -17,7 +17,7 @@ import {
 import { FormInput } from '@/shared/components/ui/CustomFormField'
 import { Form } from '@/shared/components/ui/Form'
 import { useToast } from '@/shared/components/ui/use-toast'
-import { type AbortCallback } from '@/shared/hooks/use-fetch'
+import type { AbortFetch } from '@/shared/hooks/types'
 import { useRefresh } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
 
@@ -57,7 +57,7 @@ export default function LoginPage() {
     })
   }, [error, toast])
 
-  const abortLoginRef = React.useRef<AbortCallback | null>(null)
+  const abortLoginRef = React.useRef<AbortFetch | null>(null)
 
   useRefresh(() => {
     form.reset()

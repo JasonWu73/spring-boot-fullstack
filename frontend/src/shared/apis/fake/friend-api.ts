@@ -1,11 +1,11 @@
 import type { Friend } from '@/shared/apis/fake/types'
-import { type ApiResponse, type FetchPayload } from '@/shared/hooks/use-fetch'
+import type { FetchPayload, FetchResponse } from '@/shared/hooks/types'
 import { wait } from '@/shared/utils/helpers'
 import { sendRequest } from '@/shared/utils/http'
 
 const BASE_URL = window.location.host
 
-async function getFriendsApi(payload: FetchPayload): Promise<ApiResponse<Friend[]>> {
+async function getFriendsApi(payload: FetchPayload): Promise<FetchResponse<Friend[]>> {
   await wait(0.5) // Simulate network delay
 
   const { data, error } = await sendRequest<Friend[], string>({

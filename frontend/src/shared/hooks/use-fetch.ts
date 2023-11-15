@@ -2,9 +2,9 @@ import React from 'react'
 
 import { useAuth } from '@/auth/AuthProvider'
 import type {
-  AbortCallback,
-  ApiResponse,
+  AbortFetch,
   FetchPayload,
+  FetchResponse,
   ReLogin
 } from '@/shared/hooks/types'
 import { endNProgress, startNProgress } from '@/shared/utils/nprogress'
@@ -85,13 +85,13 @@ function reducer<TData>(state: State<TData>, action: Action<TData>): State<TData
 type ApiCallback<TData, TParams> = (
   payload: FetchPayload,
   params?: TParams
-) => Promise<ApiResponse<TData>>
+) => Promise<FetchResponse<TData>>
 
 type UseFetch<TData, TParams> = {
   data: TData | null
   error: string
   loading: boolean
-  fetchData: (params?: TParams) => AbortCallback
+  fetchData: (params?: TParams) => AbortFetch
 }
 
 /**
@@ -113,7 +113,7 @@ function useFetch<TData, TParams>(
 
   const { auth, logout, updateToken } = useAuth()
 
-  function fetchData(params?: TParams): AbortCallback {
+  function fetchData(params?: TParams): AbortFetch {
     const controller = new AbortController()
 
     dispatch({ type: 'START_LOADING' })

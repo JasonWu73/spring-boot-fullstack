@@ -3,7 +3,7 @@ import { format } from 'date-fns'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
-import { type Friend } from '@/shared/apis/fake/friend-api'
+import type { Friend } from '@/shared/apis/fake/types'
 import { Button } from '@/shared/components/ui/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/Card'
 import { FormCalendar, FormInput } from '@/shared/components/ui/CustomFormField'

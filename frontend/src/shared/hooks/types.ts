@@ -1,7 +1,7 @@
 // ----- 开始：Fetch 相关数据类型 -----
 export type ReLogin = { isOk: true; token: string } | { isOk: false }
 
-export type ApiResponse<T> = {
+export type FetchResponse<T> = {
   data: T | null
   error: string
   reLogin?: ReLogin
@@ -20,5 +20,5 @@ export type FetchPayload = {
   auth: Auth | null
 }
 
-export type AbortCallback = () => void
+export type AbortFetch = () => void
 // ----- 结束：Fetch 相关数据类型 -----

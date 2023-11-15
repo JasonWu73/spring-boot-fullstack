@@ -3,7 +3,8 @@ import React from 'react'
 
 import { getRandomProductApi } from '@/shared/apis/dummyjson/product-api'
 import { Button } from '@/shared/components/ui/Button'
-import { useFetch, type AbortCallback } from '@/shared/hooks/use-fetch'
+import type { AbortFetch } from '@/shared/hooks/types'
+import { useFetch } from '@/shared/hooks/use-fetch'
 import { useRefresh } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
 import { cn } from '@/shared/utils/helpers'
@@ -29,7 +30,7 @@ export default function RandomProductPage() {
     return response
   })
 
-  const abortGetProductRef = React.useRef<AbortCallback | null>(null)
+  const abortGetProductRef = React.useRef<AbortFetch | null>(null)
 
   useRefresh(() => {
     const abort = getProduct()

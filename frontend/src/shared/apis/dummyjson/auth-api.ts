@@ -4,11 +4,7 @@ import type {
   LoginParams,
   LoginResult
 } from '@/shared/apis/dummyjson/types'
-import {
-  type ApiResponse,
-  type FetchPayload,
-  type ReLogin
-} from '@/shared/hooks/use-fetch'
+import type { FetchPayload, FetchResponse, ReLogin } from '@/shared/hooks/types'
 import { sendRequest } from '@/shared/utils/http'
 import type { ApiRequest } from '@/shared/utils/types'
 
@@ -19,7 +15,7 @@ const EXPIRES_IN_MILLISECONDS = 1
 async function loginApi(
   payload: FetchPayload,
   params?: LoginParams
-): Promise<ApiResponse<LoginResult>> {
+): Promise<FetchResponse<LoginResult>> {
   if (!params) return { data: null, error: '未传入参数' }
 
   const { data, error } = await sendRequest<Auth, ApiError>({
@@ -56,7 +52,7 @@ async function sendAuthDummyJsonApi<T>({
   urlData,
   bodyData,
   reLogin
-}: ReLoginRequest): Promise<ApiResponse<T>> {
+}: ReLoginRequest): Promise<FetchResponse<T>> {
   const { auth, signal } = payload
 
   if (!auth) return { data: null, error: '未登录', reLogin: { isOk: false } }

@@ -2,7 +2,7 @@ import React from 'react'
 
 import { loginApi } from '@/shared/apis/dummyjson/auth-api'
 import type { LoginParams, LoginResult } from '@/shared/apis/dummyjson/types'
-import type { AbortCallback, Auth } from '@/shared/hooks/types'
+import type { AbortFetch, Auth } from '@/shared/hooks/types'
 import { useFetch } from '@/shared/hooks/use-fetch'
 import { decrypt, encrypt } from '@/shared/utils/rsa'
 
@@ -19,7 +19,7 @@ type AuthProviderState = {
   auth: Auth | null
   error: string
   loading: boolean
-  login: (username: string, password: string) => AbortCallback
+  login: (username: string, password: string) => AbortFetch
   logout: () => void
   updateToken: (token: string) => void
 }

@@ -12,16 +12,4 @@ export type ApiRequest = {
   bodyData?: Record<string, unknown> | FormData
   signal?: AbortSignal
 }
-
-export type SuccessResponse<T> = {
-  data: T
-  error: null
-}
-
-export type ErrorResponse<T> = {
-  data: null
-  error: T | string
-}
-
-export type ApiResponse<TData, TError> = SuccessResponse<TData> | ErrorResponse<TError>
 // ----- 结束：HTTP 工具方法相关类型 -----

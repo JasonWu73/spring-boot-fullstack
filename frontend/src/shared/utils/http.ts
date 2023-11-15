@@ -1,4 +1,16 @@
-import type { ApiRequest, ApiResponse, UrlData } from '@/shared/utils/types'
+import type { ApiRequest, UrlData } from '@/shared/utils/types'
+
+export type SuccessResponse<T> = {
+  data: T
+  error: null
+}
+
+export type ErrorResponse<T> = {
+  data: null
+  error: T | string
+}
+
+type ApiResponse<TData, TError> = SuccessResponse<TData> | ErrorResponse<TError>
 
 /**
  * 发送 HTTP 请求，并以 JSON 数据格式解析响应数据。
