@@ -1,8 +1,4 @@
-import {
-  type ApiResponse,
-  type FetchPayload,
-  type ReLogin
-} from '@/hooks/use-fetch'
+import { type ApiResponse, type FetchPayload, type ReLogin } from '@/hooks/use-fetch'
 import { sendRequest, type Request } from '@/utils/http'
 
 const BASE_URL = 'https://dummyjson.com/auth'

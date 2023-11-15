@@ -65,7 +65,7 @@ async function sendRequest<TData, TError>({
       headers: {
         ...headers,
         Accept: 'application/json',
-        contentType:
+        'content-Type':
           contentType === 'FILE'
             ? '' // 不要设置 Content-Type，让浏览器自动设置
             : contentType === 'URLENCODED'
