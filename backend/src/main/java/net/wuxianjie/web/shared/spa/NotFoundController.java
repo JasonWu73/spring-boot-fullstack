@@ -79,7 +79,7 @@ public class NotFoundController {
    *
    * <p>Spring Boot 默认会将 {@code src/main/resources/static/} 中的内容作为 Web 静态资源提供。
    *
-   * <p>约定 SPA 的页面入口：{@value #SPA_INDEX_PAGE}.
+   * <p>约定 SPA 的页面入口：{@value #SPA_INDEX_PAGE}。
    *
    * <p><h2>扩展说明
    *
@@ -124,7 +124,10 @@ public class NotFoundController {
     }
 
     try (
-      final InputStreamReader reader = new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8)
+      final InputStreamReader reader = new InputStreamReader(
+        resource.getInputStream(),
+        StandardCharsets.UTF_8
+      )
     ) {
       final String html = FileCopyUtils.copyToString(reader);
       return ResponseEntity
