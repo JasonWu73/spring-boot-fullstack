@@ -3,6 +3,7 @@ package net.wuxianjie.web.shared.auth;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,6 +19,15 @@ public class AuthController {
   @PostMapping("/login")
   public TokenResponse login(@Valid @RequestBody final LoginParams params) {
     return authService.login(params);
+  }
+
+  /**
+   * 退出。
+   */
+  @DeleteMapping("/logout")
+  public ResponseEntity<Void> logout() {
+    authService.logout();
+    return ResponseEntity.noContent().build();
   }
 
   /**

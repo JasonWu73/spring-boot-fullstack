@@ -57,10 +57,21 @@ public class TokenAuthFilter extends OncePerRequestFilter {
     final String accessToken = authorization.substring(BEARER_PREFIX.length());
 
     // 执行身份验证
-    final CachedAuth auth = tokenAuth.authenticate(accessToken);
+    final CachedAuth auth;
+    try {
+      auth = tokenAuth.authenticate(accessToken);
+    } catch (Exception e) {
+      handlerExceptionResolver.resolveException(
+        request,
+        response,
+        null,
+        new ApiException(HttpStatus.UNAUTHORIZED, "登录过期", e)
+      );
+      return;
+    }
 
     // 将登录信息写入 Spring Security Context
-    tokenAuth.setAuthenticatedContext(auth, request);
+    AuthUtils.setAuthenticatedContext(auth, request);
 
     // 继续执行过滤器链
     filterChain.doFilter(request, response);

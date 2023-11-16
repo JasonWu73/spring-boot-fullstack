@@ -13,7 +13,7 @@ function LogoutButton() {
       className="grid w-full grid-cols-[auto_1fr] gap-2 text-left"
     >
       <LogOut className="h-4 w-4" />
-      注销
+      退出
     </Button>
   )
 }
