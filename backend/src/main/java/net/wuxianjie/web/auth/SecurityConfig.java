@@ -5,6 +5,9 @@ import net.wuxianjie.web.shared.exception.ApiException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -28,6 +31,13 @@ import java.util.List;
 @EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+
+  /**
+   * 上下级权限。
+   */
+  public static final String HIERARCHY = """
+    admin > user
+    user > guest""";
 
   private final HandlerExceptionResolver handlerExceptionResolver;
 
@@ -117,4 +127,29 @@ public class SecurityConfig {
   public PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
   }
+
+  // ----- 开始：配置拥有上下级关系的功能权限 -----
+
+  /**
+   * 配置拥有上下级关系的功能权限。
+   *
+   * <p>Spring Boot 3 即 Spring Security 6 开始，还需要创建 {@link #expressionHandler()}。
+   */
+  @Bean
+  public RoleHierarchy roleHierarchy() {
+    final RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
+    roleHierarchy.setHierarchy(HIERARCHY);
+    return roleHierarchy;
+  }
+
+  /**
+   * 使用拥有上下级关系的功能权限。
+   */
+  @Bean
+  public DefaultMethodSecurityExpressionHandler expressionHandler() {
+    final DefaultMethodSecurityExpressionHandler handler = new DefaultMethodSecurityExpressionHandler();
+    handler.setRoleHierarchy(roleHierarchy());
+    return handler;
+  }
+  // ----- 结束：配置拥有上下级关系的功能权限 -----
 }

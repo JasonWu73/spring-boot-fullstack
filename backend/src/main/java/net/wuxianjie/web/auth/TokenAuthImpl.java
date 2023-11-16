@@ -15,8 +15,9 @@ public class TokenAuthImpl implements TokenAuth {
       "hashed_password",
       "管理员",
       AccountStatus.DISABLED,
-      List.of("user", "role"),
-      "740e6dba8e924c568aabeab685fa6108" // UUID.randomUUID().toString().replace("-", "")
+      List.of("admin"),
+      "740e6dba8e924c568aabeab685fa6108", // UUID.randomUUID().toString().replace("-", "")
+      "740e6dba8e924c568aabeab685fa6108"
     );
   }
 }

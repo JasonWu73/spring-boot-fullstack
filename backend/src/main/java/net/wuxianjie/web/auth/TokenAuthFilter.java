@@ -9,14 +9,15 @@ import net.wuxianjie.web.shared.exception.ApiException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 
 @RequiredArgsConstructor
 public class TokenAuthFilter extends OncePerRequestFilter {
@@ -65,13 +66,16 @@ public class TokenAuthFilter extends OncePerRequestFilter {
     final AuthData authData = tokenAuth.authenticate(accessToken);
 
     // 将登录信息写入 Spring Security Context
-    final UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
-      authData,
-      null,
-      authData == null
-        ? new ArrayList<>()
-        : AuthorityUtils.createAuthorityList(authData.getAuthorities())
-    );
+    final List<String> rawAuthorities = authData.getAuthorities();
+
+    final List<SimpleGrantedAuthority> authorities = rawAuthorities
+      .stream()
+      .filter(StringUtils::hasText)
+      .map(SimpleGrantedAuthority::new)
+      .toList();
+
+    final UsernamePasswordAuthenticationToken token =
+      new UsernamePasswordAuthenticationToken(authData, null, authorities);
 
     token.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 

@@ -42,7 +42,12 @@ public class AuthData {
   private List<String> authorities;
 
   /**
-   * 访问令牌。
+   * 访问令牌，用于访问接口时的身份验证。
    */
   private String accessToken;
+
+  /**
+   * 刷新令牌，用于刷新访问令牌。
+   */
+  private String refreshToken;
 }
