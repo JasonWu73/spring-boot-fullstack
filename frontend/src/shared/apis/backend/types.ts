@@ -12,6 +12,7 @@ export type ApiError = {
 export type Version = {
   name: string
   version: string
+  developer: string
   builtAt: string
 }
 // ----- 结束：项目版本号相关数据类型 -----

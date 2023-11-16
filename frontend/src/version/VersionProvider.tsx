@@ -8,6 +8,7 @@ type VersionProviderState = Version
 
 const initialState: VersionProviderState = {
   name: '',
+  developer: '',
   version: '',
   builtAt: ''
 }
@@ -31,6 +32,7 @@ function VersionProvider({ children }: VersionProviderProps) {
 
   const value: VersionProviderState = {
     name: version?.name || '',
+    developer: version?.developer || '',
     version: version?.version || '',
     builtAt: version?.builtAt || ''
   }

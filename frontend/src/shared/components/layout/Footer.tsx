@@ -6,7 +6,7 @@ import { useVersion } from '@/version/VersionProvider'
 type FooterProps = React.ComponentPropsWithoutRef<'footer'>
 
 function Footer({ className, ...props }: FooterProps) {
-  const { name, version, builtAt } = useVersion()
+  const { name, developer, version, builtAt } = useVersion()
 
   return (
     <footer
@@ -15,7 +15,7 @@ function Footer({ className, ...props }: FooterProps) {
     >
       <div className="container mx-auto flex flex-col flex-wrap px-5 py-4">
         <Message>
-          © {new Date().getFullYear()} 吴仙杰 {name} {version} 构建于：{builtAt}
+          © {new Date().getFullYear()} {developer} {name} {version} 构建于：{builtAt}
         </Message>
       </div>
     </footer>
