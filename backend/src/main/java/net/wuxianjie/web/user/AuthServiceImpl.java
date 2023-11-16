@@ -111,15 +111,39 @@ public class AuthServiceImpl implements AuthService {
 
   @Override
   public TokenResponse refresh(final String refreshToken) {
-    // 从 Redis 中获取登录信息
+    // 从 Spring Security Context 中获取当前登录信息
+    final CachedAuth auth = AuthUtils.getCurrentUser().orElseThrow();
 
     // 生成新的访问令牌和刷新令牌
+    final String newAccessToken = generateUuid();
+    final String newRefreshToken = generateUuid();
 
     // 保存登录信息至 Redis
+    final String authJson;
+    try {
+      authJson = objectMapper.writeValueAsString(auth);
+    } catch (JsonProcessingException e) {
+      throw new RuntimeException(e);
+    }
+
+    stringRedisTemplate.opsForValue().set(
+      KEY_PREFIX_ACCESS_TOKEN + newAccessToken,
+      authJson,
+      TOKEN_EXPIRES_IN_SECONDS,
+      TimeUnit.SECONDS
+    );
+
+    // 从 Redis 中删除旧的登录信息
+    stringRedisTemplate.delete(KEY_PREFIX_ACCESS_TOKEN + auth.accessToken());
 
     // 返回响应数据
-
-    return null;
+    return new TokenResponse(
+      newAccessToken,
+      newRefreshToken,
+      TOKEN_EXPIRES_IN_SECONDS,
+      auth.nickname(),
+      auth.authorities()
+    );
   }
 
   private String generateUuid() {
