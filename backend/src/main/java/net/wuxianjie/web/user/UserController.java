@@ -1,0 +1,30 @@
+package net.wuxianjie.web.user;
+
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import net.wuxianjie.web.shared.auth.Admin;
+import net.wuxianjie.web.shared.pagination.PaginationParams;
+import net.wuxianjie.web.shared.pagination.PaginationResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/api/v1/users")
+public class UserController {
+
+  private final UserService userService;
+
+  /**
+   * 获取用户分页列表。
+   */
+  @Admin
+  @GetMapping
+  public PaginationResult<UserItem> getUsers(
+    @Valid final PaginationParams paginationParams,
+    @Valid final GetUserParams userParams
+  ) {
+    return userService.getUsers(paginationParams, userParams);
+  }
+}
