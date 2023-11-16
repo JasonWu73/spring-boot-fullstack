@@ -50,8 +50,8 @@ public class SecurityConfig {
       .securityMatcher("/api/**")
       // 按顺序比较，符合则退出后续比较
       .authorizeHttpRequests(auth -> {
-        // 开放登录 API
-        auth.requestMatchers("/api/v1/login").permitAll()
+        // 开放身份验证相关 API（登录、刷新令牌）
+        auth.requestMatchers("/api/v1/auth/login", "/api/v1/auth/refresh").permitAll()
           // 开放获取项目版本号 API
           .requestMatchers("/api/v1/version").permitAll()
           // 默认所有 API 都需要登录才能访问

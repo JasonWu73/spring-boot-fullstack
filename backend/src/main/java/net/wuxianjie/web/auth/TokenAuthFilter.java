@@ -63,10 +63,10 @@ public class TokenAuthFilter extends OncePerRequestFilter {
     final String accessToken = authorization.substring(BEARER_PREFIX.length());
 
     // 执行身份验证
-    final AuthData authData = tokenAuth.authenticate(accessToken);
+    final CachedAuth auth = tokenAuth.authenticate(accessToken);
 
     // 将登录信息写入 Spring Security Context
-    final List<String> rawAuthorities = authData.getAuthorities();
+    final List<String> rawAuthorities = auth.authorities();
 
     final List<SimpleGrantedAuthority> authorities = rawAuthorities
       .stream()
@@ -75,7 +75,7 @@ public class TokenAuthFilter extends OncePerRequestFilter {
       .toList();
 
     final UsernamePasswordAuthenticationToken token =
-      new UsernamePasswordAuthenticationToken(authData, null, authorities);
+      new UsernamePasswordAuthenticationToken(auth, null, authorities);
 
     token.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 

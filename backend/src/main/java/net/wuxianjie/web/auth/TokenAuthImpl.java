@@ -8,13 +8,11 @@ import java.util.List;
 public class TokenAuthImpl implements TokenAuth {
 
   @Override
-  public AuthData authenticate(String accessToken) {
-    return new AuthData(
+  public CachedAuth authenticate(String accessToken) {
+    return new CachedAuth(
       100,
       "admin",
       "hashed_password",
-      "管理员",
-      AccountStatus.DISABLED,
       List.of("admin"),
       "740e6dba8e924c568aabeab685fa6108", // UUID.randomUUID().toString().replace("-", "")
       "740e6dba8e924c568aabeab685fa6108"
