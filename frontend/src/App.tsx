@@ -12,6 +12,7 @@ import { ThemeProvider } from '@/shared/components/ui/ThemeProvider'
 import { Toaster } from '@/shared/components/ui/Toaster'
 import { wait } from '@/shared/utils/helpers'
 import { FriendProvider } from '@/split-bill/FriendProvider'
+import { VersionProvider } from '@/version/VersionProvider'
 
 const LoginPage = React.lazy(() => import('@/auth/LoginPage'))
 const RandomProductPage = React.lazy(() => import('@/product/RandomProductPage'))
@@ -87,11 +88,13 @@ const router = createBrowserRouter([
 export default function App() {
   return (
     <ThemeProvider defaultTheme="system" storageKey="demo-ui-theme">
-      <AuthProvider>
-        <RouterProvider router={router} />
+      <VersionProvider>
+        <AuthProvider>
+          <RouterProvider router={router} />
 
-        <Toaster />
-      </AuthProvider>
+          <Toaster />
+        </AuthProvider>
+      </VersionProvider>
     </ThemeProvider>
   )
 }

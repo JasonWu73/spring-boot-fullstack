@@ -1,10 +1,22 @@
-// ----- 开始：身份验证相关数据类型 -----
+// ----- 开始：接口通用数据类型 -----
+
+// 错误响应数据类型
 export type ApiError = {
   message: string
   name?: string
   expiredAt?: string
 }
 
+// 分页数据类型
+export type PaginationData<T> = {
+  users: T[]
+  total: number
+  skip: number
+  limit: number
+}
+// ----- 结束：接口通用数据类型 -----
+
+// ----- 开始：身份验证相关数据类型 -----
 export type LoginParams = {
   username: string
   password: string
@@ -26,15 +38,6 @@ export type LoginResult = Auth & {
   password: string
 }
 // ----- 结束：身份验证相关数据类型 -----
-
-// ----- 开始：分页相关数据类型 -----
-export type PaginationData<T> = {
-  users: T[]
-  total: number
-  skip: number
-  limit: number
-}
-// ----- 结束：分页相关数据类型 -----
 
 // ----- 开始：商品相关数据类型 -----
 export type Product = {

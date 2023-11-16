@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @RequestMapping("/api/v1")
 public class VersionInfoController {
 
-  public static final String NAME = "Spring Boot 前后端分离 Demo 项目";
+  public static final String NAME = "Spring Boot Demo";
 
   // 请实时更新版本号
   public static final String VERSION = "v1.0.0";

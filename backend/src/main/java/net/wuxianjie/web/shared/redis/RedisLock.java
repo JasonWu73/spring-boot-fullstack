@@ -41,6 +41,7 @@ public class RedisLock {
     if (isLocked == null || !isLocked) return false;
 
     // ----- 上锁成功，开启 Lock 自动续期线程 -----
+
     // 初始化 renewFlag
     renewFlags.put(key, new AtomicBoolean(true));
 
