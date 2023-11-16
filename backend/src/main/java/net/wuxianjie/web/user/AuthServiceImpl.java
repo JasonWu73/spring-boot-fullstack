@@ -21,7 +21,17 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
+  /**
+   * 访问令牌在 Redis 中的键前缀。
+   */
   public static final String KEY_PREFIX_ACCESS_TOKEN = "access:";
+
+  /**
+   * 已登录用户在 Redis 中的键前缀。
+   *
+   * <p>用于清除旧的登录信息，防止同一个用户不停往 Redis 中写入登录信息。
+   */
+  public static final String KEY_PREFIX_LOGGED_IN_USER = "loggedIn:";
 
   private static final int TOKEN_EXPIRES_IN_SECONDS = 1800;
 
@@ -53,9 +63,9 @@ public class AuthServiceImpl implements AuthService {
     final User user = Optional.ofNullable(userMapper.selectByUsername(username))
       .orElseThrow(() -> new ApiException(HttpStatus.UNAUTHORIZED, "用户名或密码错误"));
 
-    // 检查用户状态
+    // 检查账号状态
     if (user.getStatus() == AccountStatus.DISABLED) {
-      throw new ApiException(HttpStatus.FORBIDDEN, "用户已被禁用");
+      throw new ApiException(HttpStatus.FORBIDDEN, "账号已被禁用");
     }
 
     // 比较密码是否正确
@@ -80,6 +90,15 @@ public class AuthServiceImpl implements AuthService {
     );
     AuthUtils.setAuthenticatedContext(auth, request);
 
+    // 从 Redis 中删除旧的登录信息
+    final String oldAccessToken = stringRedisTemplate.opsForValue().get(
+      KEY_PREFIX_LOGGED_IN_USER + user.getUsername()
+    );
+
+    if (oldAccessToken != null) {
+      stringRedisTemplate.delete(KEY_PREFIX_ACCESS_TOKEN + oldAccessToken);
+    }
+
     // 保存登录信息至 Redis
     final String authJson;
     try {
@@ -91,6 +110,13 @@ public class AuthServiceImpl implements AuthService {
     stringRedisTemplate.opsForValue().set(
       KEY_PREFIX_ACCESS_TOKEN + accessToken,
       authJson,
+      TOKEN_EXPIRES_IN_SECONDS,
+      TimeUnit.SECONDS
+    );
+
+    stringRedisTemplate.opsForValue().set(
+      KEY_PREFIX_LOGGED_IN_USER + user.getUsername(),
+      accessToken,
       TOKEN_EXPIRES_IN_SECONDS,
       TimeUnit.SECONDS
     );
@@ -126,9 +152,9 @@ public class AuthServiceImpl implements AuthService {
     final User user = Optional.ofNullable(userMapper.selectById(oldAuth.userId()))
       .orElseThrow(() -> new ApiException(HttpStatus.UNAUTHORIZED, "用户不存在"));
 
-    // 检查用户状态
+    // 检查账号状态
     if (user.getStatus() == AccountStatus.DISABLED) {
-      throw new ApiException(HttpStatus.FORBIDDEN, "用户已被禁用");
+      throw new ApiException(HttpStatus.FORBIDDEN, "账号已被禁用");
     }
 
     // 生成新的访问令牌和刷新令牌
@@ -157,6 +183,13 @@ public class AuthServiceImpl implements AuthService {
     stringRedisTemplate.opsForValue().set(
       KEY_PREFIX_ACCESS_TOKEN + newAccessToken,
       newAuthJson,
+      TOKEN_EXPIRES_IN_SECONDS,
+      TimeUnit.SECONDS
+    );
+
+    stringRedisTemplate.opsForValue().set(
+      KEY_PREFIX_LOGGED_IN_USER + user.getUsername(),
+      newAccessToken,
       TOKEN_EXPIRES_IN_SECONDS,
       TimeUnit.SECONDS
     );

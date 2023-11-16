@@ -6,6 +6,125 @@
 	},
 	"item": [
 		{
+			"name": "身份验证",
+			"item": [
+				{
+					"name": "登录",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.status === \"OK\") {",
+									"  const data = pm.response.json();",
+									"  pm.collectionVariables.set('accessToken', data.accessToken);",
+									"  pm.collectionVariables.set('refreshToken', data.refreshToken);",
+									"}",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"nIf+gRyBpqSxmxKk8GjBDt6OTUDdg7RvHcgfr12Jo8H2F16McYYWcOps9QQ+lBGGLm42+UPkVS0G7etDTh05pCvtSoHYtEJilJuFgR8wM2FI1je2Tdu/gnom6bCNi7QUe9YcP4aP/3G1TLUW2HUzTOUi1ok+64hWaOWvBxVMXG0=\",\n  \"password\": \"HpTcmgLTKMaxzwJHF+HkrJXR/ffnNIwp5AW51vRtRUu4ITjGUED+6g96hHk8zc9r0SdKwWIgTzE0iZPTKaO0NFSXJA6uuIyaQIqLv1PPRdOCN6UeHqgf+noUEXBl5cw5pvMVAUZMFh7fr9otL8H6i+U4G0c8xDyxVI8bBiQ3fVo=\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/auth/login",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "退出",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/auth/logout",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "刷新令牌",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.status === \"OK\") {",
+									"  const data = pm.response.json();",
+									"  pm.collectionVariables.set('accessToken', data.accessToken);",
+									"  pm.collectionVariables.set('refreshToken', data.refreshToken);",
+									"}",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/auth/refresh/{{refreshToken}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"refresh",
+								"{{refreshToken}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "MyBatis",
 			"item": [
 				{
@@ -331,6 +450,85 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "用户管理",
+			"item": [
+				{
+					"name": "获取用户分页列表",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/users?pageNum=1&pageSize=10",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users"
+							],
+							"query": [
+								{
+									"key": "pageNum",
+									"value": "1"
+								},
+								{
+									"key": "pageSize",
+									"value": "10"
+								},
+								{
+									"key": "username",
+									"value": "u e",
+									"disabled": true
+								},
+								{
+									"key": "nickname",
+									"value": "用",
+									"disabled": true
+								},
+								{
+									"key": "status",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "authority",
+									"value": "user",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "获取项目版本号",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_URL}}/api/v1/version",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"version"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"event": [
@@ -358,6 +556,14 @@
 			"key": "BASE_URL",
 			"value": "http://localhost:8080",
 			"type": "default"
+		},
+		{
+			"key": "accessToken",
+			"value": ""
+		},
+		{
+			"key": "refreshToken",
+			"value": ""
 		}
 	]
 }
