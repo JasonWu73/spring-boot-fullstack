@@ -164,6 +164,9 @@ public class UserService {
     // 更新数据库中的用户数据
     user.setUpdatedAt(LocalDateTime.now());
     userMapper.updateById(user);
+
+    // 在密码更新后，需要重新登录
+    authService.logout();
   }
 
   public void updateUserStatus(final long userId, final UpdateUserStatusParams params) {
