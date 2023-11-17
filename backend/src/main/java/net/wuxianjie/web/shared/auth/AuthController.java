@@ -2,6 +2,7 @@ package net.wuxianjie.web.shared.auth;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import net.wuxianjie.web.shared.operationlog.Operation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +16,7 @@ public class AuthController {
   /**
    * 登录。
    */
+  @Operation("登录")
   @PostMapping("/login")
   public Token login(@Valid @RequestBody final LoginParams params) {
     return authService.login(params);
