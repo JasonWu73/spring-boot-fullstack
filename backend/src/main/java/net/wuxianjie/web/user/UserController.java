@@ -3,6 +3,7 @@ package net.wuxianjie.web.user;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import net.wuxianjie.web.shared.auth.Admin;
+import net.wuxianjie.web.shared.auth.Root;
 import net.wuxianjie.web.shared.pagination.PaginationParams;
 import net.wuxianjie.web.shared.pagination.PaginationResult;
 import org.springframework.http.ResponseEntity;
@@ -76,6 +77,19 @@ public class UserController {
     @Valid @RequestBody final UpdateUserParams params
   ) {
     userService.updateUser(userId, params);
+    return ResponseEntity.noContent().build();
+  }
+
+  /**
+   * 重置用户密码。
+   */
+  @Root
+  @PutMapping("/{userId}/password")
+  public ResponseEntity<Void> resetPassword(
+    @PathVariable final long userId,
+    @Valid @RequestBody final ResetPasswordParams params
+  ) {
+    userService.resetPassword(userId, params);
     return ResponseEntity.noContent().build();
   }
 }

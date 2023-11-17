@@ -153,6 +153,19 @@ public class UserService {
     userMapper.updateById(user);
   }
 
+  public void resetPassword(final long userId, final ResetPasswordParams params) {
+    // 从数据库中查询用户数据
+    final User user = Optional.ofNullable(userMapper.selectById(userId))
+      .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "用户不存在"));
+
+    // 将明文密码进行 Hash 计算后再保存
+    user.setHashedPassword(passwordEncoder.encode(params.getPassword()));
+
+    // 更新数据库中的用户数据
+    user.setUpdatedAt(LocalDateTime.now());
+    userMapper.updateById(user);
+  }
+
   private String toAuthorities(List<String> authorities) {
     if (authorities == null || authorities.isEmpty()) return null;
 

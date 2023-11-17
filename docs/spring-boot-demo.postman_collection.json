@@ -682,6 +682,48 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "重置用户密码",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"password\": \"pass123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/users/:userId/password",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								":userId",
+								"password"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "11"
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
