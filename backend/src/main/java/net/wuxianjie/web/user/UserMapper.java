@@ -22,5 +22,7 @@ public interface UserMapper {
 
   long countByQuery(@Param("q") GetUserParams userParams);
 
+  void insert(User user);
+
   void updateById(User user);
 }

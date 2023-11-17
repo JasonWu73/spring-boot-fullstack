@@ -2,6 +2,7 @@ package net.wuxianjie.web.user;
 
 import lombok.RequiredArgsConstructor;
 import net.wuxianjie.web.shared.auth.AuthUtils;
+import net.wuxianjie.web.shared.auth.Authority;
 import net.wuxianjie.web.shared.auth.CachedAuth;
 import net.wuxianjie.web.shared.exception.ApiException;
 import net.wuxianjie.web.shared.pagination.PaginationParams;
@@ -15,6 +16,7 @@ import org.springframework.util.StringUtils;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -101,9 +103,69 @@ public class UserService {
     );
   }
 
-  public UserInfo getUserDetails(final long userId) {
+  public UserInfo getUserInfo(final long userId) {
     // 从数据库中查询用户详情并返回
     return Optional.ofNullable(userMapper.selectInfoById(userId))
       .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "用户不存在"));
+  }
+
+  public void addUser(final AddUserParams params) {
+    // 检查用户名是否已存在
+    final boolean usernameExists = Optional.ofNullable(
+        userMapper.selectByUsername(params.getUsername())
+      )
+      .isPresent();
+    if (usernameExists) {
+      throw new ApiException(HttpStatus.CONFLICT, "用户名已存在");
+    }
+
+    // 保存至数据库
+    final User user = new User();
+    user.setCreatedAt(LocalDateTime.now());
+    user.setUpdatedAt(LocalDateTime.now());
+    user.setRemark(params.getRemark());
+    user.setUsername(params.getUsername());
+    user.setNickname(params.getNickname());
+
+    // 将明文密码进行 Hash 计算后再保存
+    user.setHashedPassword(passwordEncoder.encode(params.getPassword()));
+
+    // 设置用户状态
+    user.setStatus(AccountStatus.ENABLED);
+
+    // 保存用户功能权限
+    if (params.getAuthorities() != null && !params.getAuthorities().isEmpty()) {
+      user.setAuthorities(
+        params.getAuthorities().
+          stream()
+          .distinct()
+          .filter(auth -> {
+            if (StringUtils.hasText(auth)) {
+              final Optional<Authority> authOpt = Authority.resolve(auth);
+              if (authOpt.isEmpty()) {
+                throw new ApiException(
+                  HttpStatus.BAD_REQUEST,
+                  "权限 [%s] 不存在".formatted(auth)
+                );
+              }
+
+              if (authOpt.get() == Authority.ROOT) {
+                throw new ApiException(
+                  HttpStatus.FORBIDDEN,
+                  "权限 [%s] 不能直接分配".formatted(auth)
+                );
+              }
+
+              return true;
+            }
+
+            return false;
+          })
+          .map(String::trim)
+          .collect(Collectors.joining(","))
+      );
+    }
+
+    userMapper.insert(user);
   }
 }

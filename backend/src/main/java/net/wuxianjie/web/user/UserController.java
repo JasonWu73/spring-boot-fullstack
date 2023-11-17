@@ -52,7 +52,17 @@ public class UserController {
    */
   @Admin
   @GetMapping("/{userId}")
-  public UserInfo getUserDetails(@PathVariable final long userId) {
-    return userService.getUserDetails(userId);
+  public UserInfo getUserInfo(@PathVariable final long userId) {
+    return userService.getUserInfo(userId);
+  }
+
+  /**
+   * 新增用户。
+   */
+  @Admin
+  @PostMapping
+  public ResponseEntity<Void> addUser(@Valid @RequestBody final AddUserParams params) {
+    userService.addUser(params);
+    return ResponseEntity.noContent().build();
   }
 }

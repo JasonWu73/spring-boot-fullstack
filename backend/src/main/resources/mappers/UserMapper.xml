@@ -100,6 +100,25 @@
     </where>
   </sql>
 
+  <insert id="insert">
+    INSERT INTO user (created_at,
+                      updated_at,
+                      remark,
+                      username,
+                      nickname,
+                      hashed_password,
+                      status,
+                      authorities)
+    VALUES (#{createdAt},
+            #{updatedAt},
+            #{remark},
+            #{username},
+            #{nickname},
+            #{hashedPassword},
+            #{status},
+            #{authorities})
+  </insert>
+
   <update id="updateById">
     UPDATE user
     SET updated_at      = #{updatedAt},

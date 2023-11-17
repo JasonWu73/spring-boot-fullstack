@@ -607,6 +607,40 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "新增用户",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"test6\", // 用户名，必填\n  \"nickname\": \"测试用户\", // 昵称，必填\n  \"password\": \"pass123\", // 密码，必填\n  \"authorities\": [\"admin\"], // 功能权限列表\n  \"remark\": \"测试账号，用完即删\" // 备注\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/users",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
