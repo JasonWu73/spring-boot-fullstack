@@ -1,4 +1,4 @@
-// ----- 开始：HTTP 工具方法相关类型 -----
+// ----- HTTP 工具方法相关类型 -----
 export type ContentType = 'JSON' | 'URLENCODED' | 'FILE'
 
 export type UrlData = Record<string, string | number | boolean | undefined | null>
@@ -12,4 +12,3 @@ export type ApiRequest = {
   bodyData?: Record<string, unknown> | FormData
   signal?: AbortSignal
 }
-// ----- 结束：HTTP 工具方法相关类型 -----

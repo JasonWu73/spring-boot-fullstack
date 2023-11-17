@@ -1,5 +1,4 @@
-// ----- 开始：接口通用数据类型 -----
-
+// ----- 接口通用数据类型 -----
 // 错误响应数据类型
 export type ApiError = {
   message: string
@@ -14,9 +13,8 @@ export type PaginationData<T> = {
   skip: number
   limit: number
 }
-// ----- 结束：接口通用数据类型 -----
 
-// ----- 开始：身份验证相关数据类型 -----
+// ----- 身份验证相关数据类型 -----
 export type LoginParams = {
   username: string
   password: string
@@ -37,9 +35,8 @@ export type Auth = {
 export type LoginResult = Auth & {
   password: string
 }
-// ----- 结束：身份验证相关数据类型 -----
 
-// ----- 开始：商品相关数据类型 -----
+// ----- 商品相关数据类型 -----
 export type Product = {
   id: number
   title: string
@@ -53,9 +50,8 @@ export type Product = {
   thumbnail: string
   images: string[]
 }
-// ----- 结束：商品相关数据类型 -----
 
-// ----- 开始：用户相关数据类型 -----
+// ----- 用户相关数据类型 -----
 export type User = {
   id: number
   firstName: string
@@ -66,4 +62,3 @@ export type User = {
   birthDate: string
   image: string
 }
-// ----- 结束：用户相关数据类型 -----

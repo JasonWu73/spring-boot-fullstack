@@ -1,4 +1,4 @@
-// ----- 开始：Fetch 相关数据类型 -----
+// ----- Fetch 相关数据类型 -----
 export type ReLogin = { isOk: true; token: string } | { isOk: false }
 
 export type FetchResponse<T> = {
@@ -21,4 +21,3 @@ export type FetchPayload = {
 }
 
 export type AbortFetch = () => void
-// ----- 结束：Fetch 相关数据类型 -----

@@ -1,4 +1,4 @@
-// ----- 开始：好友相关数据类型 -----
+// ----- 好友相关数据类型 -----
 export type Friend = {
   id: number
   name: string
@@ -7,4 +7,3 @@ export type Friend = {
   creditRating: number
   birthday: string
 }
-// ----- 结束：好友相关数据类型 -----

@@ -130,8 +130,6 @@ public class SecurityConfig {
     return new BCryptPasswordEncoder();
   }
 
-  // ----- 开始：配置拥有上下级关系的功能权限 -----
-
   /**
    * 配置拥有上下级关系的功能权限。
    *
@@ -153,5 +151,4 @@ public class SecurityConfig {
     handler.setRoleHierarchy(roleHierarchy());
     return handler;
   }
-  // ----- 结束：配置拥有上下级关系的功能权限 -----
 }

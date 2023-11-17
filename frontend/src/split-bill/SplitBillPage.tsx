@@ -9,7 +9,7 @@ import { wait } from '@/shared/utils/helpers'
 import { FriendList } from '@/split-bill/FriendList'
 import { useFriends } from '@/split-bill/FriendProvider'
 
-// ----- 开始：测试懒加载（React Split Code）-----
+// ----- 测试懒加载（React Split Code）-----
 const AddFriend = React.lazy(() =>
   wait(2).then(() =>
     import('@/split-bill/AddFriend').then((module) => ({
@@ -17,7 +17,6 @@ const AddFriend = React.lazy(() =>
     }))
   )
 )
-// ----- 结束：测试懒加载（React Split Code）-----
 
 export default function SplitBillPage() {
   useTitle('分摊账单')

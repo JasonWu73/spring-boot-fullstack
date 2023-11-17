@@ -20,7 +20,7 @@ const SplitBillPage = React.lazy(() => import('@/split-bill/SplitBillPage'))
 const NotFoundPage = React.lazy(() => import('@/shared/components/NotFoundPage'))
 const UserListPage = React.lazy(() => import('@/user/UserListPage'))
 
-// ----- 开始：测试 React Router 懒加载（React Split Code）-----
+// 测试 React Router 懒加载（React Split Code）
 const SplitBillForm = React.lazy(() =>
   wait(2).then(() =>
     import('@/split-bill/SplitBillForm').then((module) => ({
@@ -28,7 +28,6 @@ const SplitBillForm = React.lazy(() =>
     }))
   )
 )
-// ----- 结束：测试 React Router 懒加载（React Split Code）-----
 
 const router = createBrowserRouter([
   {
