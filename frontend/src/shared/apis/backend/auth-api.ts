@@ -1,41 +1,29 @@
-import type {
-  ApiError,
-  Auth,
-  LoginParams,
-  LoginResult
-} from '@/shared/apis/dummyjson/types'
+import { BASE_URL } from '@/shared/apis/backend/constants'
+import type { ApiError, Auth, LoginParams } from '@/shared/apis/backend/types'
 import type { FetchPayload, FetchResponse, ReLogin } from '@/shared/hooks/types'
 import { sendRequest } from '@/shared/utils/http'
 import type { ApiRequest } from '@/shared/utils/types'
 
-const BASE_URL = 'https://dummyjson.com/auth'
-
-const EXPIRES_IN_MILLISECONDS = 1
-
 async function loginApi(
   payload: FetchPayload,
   params?: LoginParams
-): Promise<FetchResponse<LoginResult>> {
+): Promise<FetchResponse<Auth>> {
   if (!params) return { data: null, error: '未传入参数' }
 
   const { data, error } = await sendRequest<Auth, ApiError>({
-    url: `${BASE_URL}/login`,
+    url: `${BASE_URL}/api/v1/auth/login`,
     signal: payload.signal,
     method: 'POST',
-    bodyData: {
-      ...params,
-      expiresInMins: EXPIRES_IN_MILLISECONDS
-    }
+    bodyData: params
   })
 
   if (error) {
     if (typeof error === 'string') return { data: null, error }
 
-    return { data: null, error: error.message }
+    return { data: null, error: error.error }
   }
 
-  const result = { ...data, password: params.password } as LoginResult
-  return { data: result, error: '' }
+  return { data, error: '' }
 }
 
 type ReLoginRequest = Omit<ApiRequest, 'signal'> & {
@@ -43,7 +31,7 @@ type ReLoginRequest = Omit<ApiRequest, 'signal'> & {
   reLogin?: ReLogin
 }
 
-async function sendAuthDummyJsonApi<T>({
+async function sendAuthApi<T>({
   payload,
   url,
   method = 'GET',
@@ -57,13 +45,13 @@ async function sendAuthDummyJsonApi<T>({
 
   if (!auth) return { data: null, error: '未登录', reLogin: { isOk: false } }
 
-  const token = reLogin?.isOk ? reLogin.token : auth.token
+  const accessToken = reLogin?.isOk ? reLogin.auth.accessToken : auth.accessToken
 
-  const { data, error } = await sendRequest<T, Error>({
+  const { data, error } = await sendRequest<T, ApiError>({
     url: `${BASE_URL}/${url}`,
     method,
     contentType,
-    headers: { ...headers, Authorization: `Bearer ${token}` },
+    headers: { ...headers, Authorization: `Bearer ${accessToken}` },
     urlData,
     bodyData,
     signal
@@ -73,31 +61,35 @@ async function sendAuthDummyJsonApi<T>({
 
   if (typeof error === 'string') return { data: null, error }
 
-  const authFailed =
-    error.name === 'TokenExpiredError' || error.name === 'JsonWebTokenError'
-
-  if (!reLogin && authFailed) {
-    const { username, password } = auth
-    if (!username || !password) {
+  if (!reLogin && error.error === 'TokenExpiredError') {
+    const { refreshToken } = auth
+    if (!refreshToken) {
       return { data: null, error: '未登录', reLogin: { isOk: false } }
     }
 
-    // 尝试重新登录，以获取新的 token
-    const { data, error } = await loginApi(payload, { username, password })
-    if (error) return { data: null, error, reLogin: { isOk: false } }
+    // 尝试重新登录，以获取新的访问令牌
+    const { data, error } = await sendRequest<Auth, ApiError>({
+      url: `${BASE_URL}/api/v1/auth/refresh:${refreshToken}`,
+      method: 'POST'
+    })
+    if (error) {
+      if (typeof error === 'string') return { data: null, error }
 
-    return sendAuthDummyJsonApi({
+      return { data: null, error: error.error }
+    }
+
+    return sendAuthApi({
       payload,
       url,
       method,
       contentType,
       urlData,
       bodyData,
-      reLogin: { isOk: true, token: data!.token }
+      reLogin: { isOk: true, auth: data! }
     })
   }
 
-  return { data: null, error: error.message }
+  return { data: null, error: error.error }
 }
 
-export { loginApi, sendAuthDummyJsonApi }
+export { loginApi, sendAuthApi }

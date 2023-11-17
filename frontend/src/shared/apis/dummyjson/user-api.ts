@@ -1,6 +1,6 @@
-import { sendAuthDummyJsonApi } from '@/shared/apis/dummyjson/auth-api'
-import type { PaginationData, User } from '@/shared/apis/dummyjson/types'
+import type { ApiError, PaginationData, User } from '@/shared/apis/dummyjson/types'
 import type { FetchPayload, FetchResponse } from '@/shared/hooks/types'
+import { sendRequest } from '@/shared/utils/http'
 
 type GetUsersParams = {
   pageNum: number
@@ -16,15 +16,23 @@ async function getUsersApi(
 
   const { pageNum, pageSize, query } = params
 
-  return await sendAuthDummyJsonApi<PaginationData<User>>({
-    payload,
-    url: 'users/search?select=id,firstName,lastName,email,username,password,birthDate,image',
+  const { data, error } = await sendRequest<PaginationData<User>, ApiError>({
+    url: 'https://dummyjson.com/users/search?select=id,firstName,lastName,email,username,password,birthDate,image',
+    signal: payload.signal,
     urlData: {
       limit: pageSize,
       skip: (pageNum - 1) * pageSize,
       q: query
     }
   })
+
+  if (error) {
+    if (typeof error === 'string') return { data: null, error }
+
+    return { data: null, error: error.message }
+  }
+
+  return { data, error: '' }
 }
 
 export { getUsersApi }

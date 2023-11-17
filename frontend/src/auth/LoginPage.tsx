@@ -23,9 +23,6 @@ import { useTitle } from '@/shared/hooks/use-title'
 
 const DEFAULT_REDIRECT_URL = '/admin'
 
-const USERNAME = 'jissetts'
-const PASSWORD = 'ePawWgrnZR8L'
-
 const formSchema = z.object({
   username: z.string().min(1, '必须输入用户名'),
   password: z.string().min(1, '必须输入密码')
@@ -39,8 +36,8 @@ export default function LoginPage() {
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: USERNAME,
-      password: PASSWORD
+      username: '',
+      password: ''
     }
   })
 

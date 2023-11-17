@@ -14,28 +14,6 @@ export type PaginationData<T> = {
   limit: number
 }
 
-// ----- 身份验证相关数据类型 -----
-export type LoginParams = {
-  username: string
-  password: string
-  expiresInMins?: number
-}
-
-export type Auth = {
-  id: number
-  username: string
-  email: string
-  firstName: string
-  lastName: string
-  gender: string
-  image: string
-  token: string
-}
-
-export type LoginResult = Auth & {
-  password: string
-}
-
 // ----- 商品相关数据类型 -----
 export type Product = {
   id: number

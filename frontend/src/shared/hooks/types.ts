@@ -1,5 +1,5 @@
 // ----- Fetch 相关数据类型 -----
-export type ReLogin = { isOk: true; token: string } | { isOk: false }
+export type ReLogin = { isOk: true; auth: Auth } | { isOk: false }
 
 export type FetchResponse<T> = {
   data: T | null
@@ -8,11 +8,10 @@ export type FetchResponse<T> = {
 }
 
 export type Auth = {
-  id: number
-  username: string
-  password: string
-  token: string
+  accessToken: string
+  refreshToken: string
   nickname: string
+  authorities: string[]
 }
 
 export type FetchPayload = {

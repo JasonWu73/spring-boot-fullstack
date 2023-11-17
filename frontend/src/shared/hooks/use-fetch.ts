@@ -111,7 +111,7 @@ function useFetch<TData, TParams>(
     initialState as State<TData>
   )
 
-  const { auth, logout, updateToken } = useAuth()
+  const { auth, logout, refreshAuth } = useAuth()
 
   function fetchData(params?: TParams): AbortFetch {
     const controller = new AbortController()
@@ -128,7 +128,7 @@ function useFetch<TData, TParams>(
 
       // 实现身份验证自动刷新机制
       if (response.reLogin && response.reLogin.isOk) {
-        updateToken(response.reLogin.token)
+        refreshAuth(response.reLogin.auth)
       }
       if (response.reLogin && !response.reLogin.isOk) {
         logout()

@@ -7,6 +7,20 @@ export type ApiError = {
   path: string
 }
 
+// ----- 登录相关数据类型 -----
+export type LoginParams = {
+  username: string
+  password: string
+}
+
+export type Auth = {
+  accessToken: string
+  refreshToken: string
+  expiresInSeconds: number
+  nickname: string
+  authorities: string[]
+}
+
 // ----- 项目版本号相关数据类型 -----
 export type Version = {
   name: string
