@@ -43,7 +43,7 @@
     </constructor>
   </resultMap>
 
-  <select id="selectBaseInfoById" resultMap="userBaseMap">
+  <select id="selectInfoById" resultMap="userBaseMap">
     SELECT id,
            created_at,
            updated_at,

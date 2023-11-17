@@ -34,6 +34,8 @@ public class SecurityConfig {
 
   /**
    * 上下级权限。
+   *
+   * <p>{@code root} 作为超级权限，不但意味着能访问系统所有功能，也会忽略所有关于数据权限的限制。
    */
   public static final String HIERARCHY = """
     root > admin

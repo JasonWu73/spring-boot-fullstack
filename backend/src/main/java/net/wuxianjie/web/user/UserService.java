@@ -25,7 +25,7 @@ public class UserService {
     final long userId = auth.userId();
 
     // 从数据库中查询当前用户的基本信息并返回
-    return Optional.ofNullable(userMapper.selectBaseInfoById(userId))
+    return Optional.ofNullable(userMapper.selectInfoById(userId))
       .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "用户不存在"));
   }
 
@@ -50,5 +50,11 @@ public class UserService {
       total,
       list
     );
+  }
+
+  public UserInfo getUserDetails(final long userId) {
+    // 从数据库中查询用户详情并返回
+    return Optional.ofNullable(userMapper.selectInfoById(userId))
+      .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "用户不存在"));
   }
 }
