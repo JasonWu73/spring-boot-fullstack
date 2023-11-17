@@ -36,8 +36,8 @@ public class SecurityConfig {
    * 上下级权限。
    */
   public static final String HIERARCHY = """
-    admin > user
-    user > guest""";
+    root > admin
+    admin > user""";
 
   private final HandlerExceptionResolver handlerExceptionResolver;
 
