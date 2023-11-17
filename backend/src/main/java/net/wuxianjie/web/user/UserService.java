@@ -166,6 +166,18 @@ public class UserService {
     userMapper.updateById(user);
   }
 
+  public void updateUserStatus(final long userId, final UpdateUserStatusParams params) {
+    // 从数据库中查询用户数据
+    final User user = Optional.ofNullable(userMapper.selectById(userId))
+      .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "用户不存在"));
+
+    // 更新数据库中的用户数据
+    user.setUpdatedAt(LocalDateTime.now());
+    user.setStatus(AccountStatus.resolve(params.getStatus()).orElseThrow());
+
+    userMapper.updateById(user);
+  }
+
   private String toAuthorities(List<String> authorities) {
     if (authorities == null || authorities.isEmpty()) return null;
 

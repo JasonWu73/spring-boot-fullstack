@@ -92,4 +92,17 @@ public class UserController {
     userService.resetPassword(userId, params);
     return ResponseEntity.noContent().build();
   }
+
+  /**
+   * 禁用/启用用户。
+   */
+  @Admin
+  @PutMapping("/{userId}/status")
+  public ResponseEntity<Void> updateUserStatus(
+    @PathVariable final long userId,
+    @Valid @RequestBody final UpdateUserStatusParams params
+  ) {
+    userService.updateUserStatus(userId, params);
+    return ResponseEntity.noContent().build();
+  }
 }
