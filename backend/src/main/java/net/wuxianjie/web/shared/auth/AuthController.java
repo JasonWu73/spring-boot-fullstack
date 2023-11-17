@@ -1,7 +1,6 @@
 package net.wuxianjie.web.shared.auth;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,10 +33,7 @@ public class AuthController {
    * 刷新令牌。
    */
   @PostMapping("/refresh/{refreshToken}")
-  public Token refresh(
-    @NotBlank(message = "刷新令牌不能为空")
-    @PathVariable final String refreshToken
-  ) {
+  public Token refresh(@PathVariable final String refreshToken) {
     return authService.refresh(refreshToken);
   }
 }

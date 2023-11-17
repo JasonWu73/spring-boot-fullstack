@@ -5,10 +5,8 @@ import lombok.RequiredArgsConstructor;
 import net.wuxianjie.web.shared.auth.Admin;
 import net.wuxianjie.web.shared.pagination.PaginationParams;
 import net.wuxianjie.web.shared.pagination.PaginationResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,6 +23,16 @@ public class UserController {
   @GetMapping("/me")
   public UserInfo getMe() {
     return userService.getMe();
+  }
+
+  /**
+   * 修改当前用户信息。
+   */
+  @PutMapping("/me")
+  public ResponseEntity<Void> updateMe(
+    @Valid @RequestBody final UpdateMeParams params) {
+    userService.updateMe(params);
+    return ResponseEntity.noContent().build();
   }
 
   /**

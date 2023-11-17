@@ -21,4 +21,6 @@ public interface UserMapper {
   );
 
   long countByQuery(@Param("q") GetUserParams userParams);
+
+  void updateById(User user);
 }

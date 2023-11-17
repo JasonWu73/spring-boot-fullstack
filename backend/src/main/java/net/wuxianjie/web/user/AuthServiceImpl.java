@@ -96,7 +96,7 @@ public class AuthServiceImpl implements AuthService {
     );
 
     if (oldAccessToken != null) {
-      stringRedisTemplate.delete(KEY_PREFIX_ACCESS_TOKEN + oldAccessToken);
+      deleteLoginCache(oldAccessToken, user.getUsername());
     }
 
     // 保存登录信息至 Redis
@@ -107,19 +107,7 @@ public class AuthServiceImpl implements AuthService {
       throw new RuntimeException(e);
     }
 
-    stringRedisTemplate.opsForValue().set(
-      KEY_PREFIX_ACCESS_TOKEN + accessToken,
-      authJson,
-      TOKEN_EXPIRES_IN_SECONDS,
-      TimeUnit.SECONDS
-    );
-
-    stringRedisTemplate.opsForValue().set(
-      KEY_PREFIX_LOGGED_IN_USER + user.getUsername(),
-      accessToken,
-      TOKEN_EXPIRES_IN_SECONDS,
-      TimeUnit.SECONDS
-    );
+    saveLoginCache(accessToken, authJson, user.getUsername());
 
     // 返回响应数据
     return new Token(
@@ -137,7 +125,7 @@ public class AuthServiceImpl implements AuthService {
     final CachedAuth auth = AuthUtils.getCurrentUser().orElseThrow();
 
     // 从 Redis 中删除登录信息
-    stringRedisTemplate.delete(KEY_PREFIX_ACCESS_TOKEN + auth.accessToken());
+    deleteLoginCache(auth.accessToken(), auth.username());
   }
 
   @Override
@@ -145,8 +133,13 @@ public class AuthServiceImpl implements AuthService {
     // 从 Spring Security Context 中获取当前登录信息
     final CachedAuth oldAuth = AuthUtils.getCurrentUser().orElseThrow();
 
+    // 检查刷新令牌是否正确
+    if (!oldAuth.refreshToken().equals(refreshToken)) {
+      throw new ApiException(HttpStatus.UNAUTHORIZED, "刷新令牌错误");
+    }
+
     // 从 Redis 中删除旧的登录信息
-    stringRedisTemplate.delete(KEY_PREFIX_ACCESS_TOKEN + oldAuth.accessToken());
+    deleteLoginCache(oldAuth.accessToken(), oldAuth.username());
 
     // 从数据库中查询用户信息
     final User user = Optional.ofNullable(userMapper.selectById(oldAuth.userId()))
@@ -180,19 +173,7 @@ public class AuthServiceImpl implements AuthService {
       throw new RuntimeException(e);
     }
 
-    stringRedisTemplate.opsForValue().set(
-      KEY_PREFIX_ACCESS_TOKEN + newAccessToken,
-      newAuthJson,
-      TOKEN_EXPIRES_IN_SECONDS,
-      TimeUnit.SECONDS
-    );
-
-    stringRedisTemplate.opsForValue().set(
-      KEY_PREFIX_LOGGED_IN_USER + user.getUsername(),
-      newAccessToken,
-      TOKEN_EXPIRES_IN_SECONDS,
-      TimeUnit.SECONDS
-    );
+    saveLoginCache(newAccessToken, newAuthJson, user.getUsername());
 
     // 返回响应数据
     return new Token(
@@ -201,6 +182,37 @@ public class AuthServiceImpl implements AuthService {
       TOKEN_EXPIRES_IN_SECONDS,
       newAuth.nickname(),
       newAuth.authorities()
+    );
+  }
+
+  /**
+   * 从 Redis 中删除登录信息。
+   */
+  private void deleteLoginCache(final String accessToken, final String username) {
+    stringRedisTemplate.delete(KEY_PREFIX_ACCESS_TOKEN + accessToken);
+    stringRedisTemplate.delete(KEY_PREFIX_LOGGED_IN_USER + username);
+  }
+
+  /**
+   * 保存登录信息至 Redis。
+   */
+  private void saveLoginCache(
+    final String accessToken,
+    final String authJson,
+    final String username
+  ) {
+    stringRedisTemplate.opsForValue().set(
+      KEY_PREFIX_ACCESS_TOKEN + accessToken,
+      authJson,
+      TOKEN_EXPIRES_IN_SECONDS,
+      TimeUnit.SECONDS
+    );
+
+    stringRedisTemplate.opsForValue().set(
+      KEY_PREFIX_LOGGED_IN_USER + username,
+      accessToken,
+      TOKEN_EXPIRES_IN_SECONDS,
+      TimeUnit.SECONDS
     );
   }
 }

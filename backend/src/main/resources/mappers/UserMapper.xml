@@ -99,4 +99,15 @@
       </if>
     </where>
   </sql>
+
+  <update id="updateById">
+    UPDATE user
+    SET updated_at      = #{updatedAt},
+        remark          = #{remark},
+        nickname        = #{nickname},
+        hashed_password = #{hashedPassword},
+        status          = #{status},
+        authorities     = #{authorities}
+    WHERE id = #{id}
+  </update>
 </mapper>

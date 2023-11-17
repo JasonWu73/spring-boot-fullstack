@@ -20,22 +20,9 @@ public class JsonConfig {
   @Bean
   public ObjectMapper objectMapper() {
     // 配置 Java 8 `LocalDateTime` 与 `LocalDate` 的 JSON 序列化与反序列化
-    final JavaTimeModule timeModule = configureDateTimeModule();
+    final JavaTimeModule timeModule = new JavaTimeModule();
 
-    return JsonMapper.builder()
-      // 对 Java 8 `LocalDateTime` 与 `LocalDate` 有效
-      .addModule(timeModule)
-      // 仅对 `java.util.Date` 有效
-      .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
-      .build()
-      // 仅对 `java.util.Date` 有效
-      .setDateFormat(new SimpleDateFormat(Constants.DATE_TIME_PATTERN));
-  }
-
-  private JavaTimeModule configureDateTimeModule() {
-    final JavaTimeModule module = new JavaTimeModule();
-
-    module.addSerializer(LocalDateTime.class, new JsonSerializer<>() {
+    timeModule.addSerializer(LocalDateTime.class, new JsonSerializer<>() {
       @Override
       public void serialize(
         final LocalDateTime value,
@@ -48,7 +35,7 @@ public class JsonConfig {
       }
     });
 
-    module.addDeserializer(LocalDateTime.class, new JsonDeserializer<>() {
+    timeModule.addDeserializer(LocalDateTime.class, new JsonDeserializer<>() {
       @Override
       public LocalDateTime deserialize(
         final JsonParser p,
@@ -59,6 +46,15 @@ public class JsonConfig {
       }
     });
 
-    return module;
+    return JsonMapper.builder()
+      // 忽略未知的 JSON 字段
+      .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+      // 对 Java 8 `LocalDateTime` 与 `LocalDate` 有效
+      .addModule(timeModule)
+      // 仅对 `java.util.Date` 有效
+      .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
+      .build()
+      // 仅对 `java.util.Date` 有效
+      .setDateFormat(new SimpleDateFormat(Constants.DATE_TIME_PATTERN));
   }
 }

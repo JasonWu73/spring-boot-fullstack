@@ -107,7 +107,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/auth/refresh/{{refreshToken}}",
+							"raw": "{{BASE_URL}}/api/v1/auth/refresh/:refreshToken",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -116,7 +116,13 @@
 								"v1",
 								"auth",
 								"refresh",
-								"{{refreshToken}}"
+								":refreshToken"
+							],
+							"variable": [
+								{
+									"key": "refreshToken",
+									"value": "{{refreshToken}}"
+								}
 							]
 						}
 					},
@@ -465,6 +471,41 @@
 								"type": "default"
 							}
 						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/users/me",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "修改当前用户信息",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nickname\": \"吴仙杰\",\n  \"oldPassword\": \"pass123\",\n  \"newPassword\": \"12\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "{{BASE_URL}}/api/v1/users/me",
 							"host": [
