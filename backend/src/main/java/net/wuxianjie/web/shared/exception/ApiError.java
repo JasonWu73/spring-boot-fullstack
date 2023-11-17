@@ -26,7 +26,8 @@ public record ApiError(LocalDateTime timestamp, int status, String error, String
   }
 
   private static String getRequestPath() {
-    final ServletRequestAttributes sra = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+    final ServletRequestAttributes sra =
+      (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
     return Objects.requireNonNull(sra).getRequest().getRequestURI();
   }
 }
