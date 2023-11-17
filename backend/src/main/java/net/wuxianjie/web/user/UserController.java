@@ -105,4 +105,14 @@ public class UserController {
     userService.updateUserStatus(userId, params);
     return ResponseEntity.noContent().build();
   }
+
+  /**
+   * 删除用户。
+   */
+  @Root
+  @DeleteMapping("/{userId}")
+  public ResponseEntity<Void> deleteUser(@PathVariable final long userId) {
+    userService.deleteUser(userId);
+    return ResponseEntity.noContent().build();
+  }
 }

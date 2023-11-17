@@ -178,6 +178,15 @@ public class UserService {
     userMapper.updateById(user);
   }
 
+  public void deleteUser(final long userId) {
+    // 从数据库中查询用户数据
+    final User user = Optional.ofNullable(userMapper.selectById(userId))
+      .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "用户不存在"));
+
+    // 删除用户
+    userMapper.deleteById(user.getId());
+  }
+
   private String toAuthorities(List<String> authorities) {
     if (authorities == null || authorities.isEmpty()) return null;
 

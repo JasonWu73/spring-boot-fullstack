@@ -766,6 +766,38 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "删除用户",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/users/:userId",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								":userId"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "11"
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
