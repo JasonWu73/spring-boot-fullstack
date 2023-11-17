@@ -2,11 +2,11 @@ package net.wuxianjie.web.user;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import net.wuxianjie.web.shared.SuccessOrNot;
 import net.wuxianjie.web.shared.auth.Admin;
 import net.wuxianjie.web.shared.auth.Root;
 import net.wuxianjie.web.shared.pagination.PaginationParams;
 import net.wuxianjie.web.shared.pagination.PaginationResult;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -30,10 +30,10 @@ public class UserController {
    * 修改当前用户信息。
    */
   @PutMapping("/me")
-  public ResponseEntity<Void> updateMe(
+  public SuccessOrNot updateMe(
     @Valid @RequestBody final UpdateMeParams params) {
     userService.updateMe(params);
-    return ResponseEntity.noContent().build();
+    return new SuccessOrNot(true);
   }
 
   /**
@@ -62,9 +62,9 @@ public class UserController {
    */
   @Admin
   @PostMapping
-  public ResponseEntity<Void> addUser(@Valid @RequestBody final AddUserParams params) {
+  public SuccessOrNot addUser(@Valid @RequestBody final AddUserParams params) {
     userService.addUser(params);
-    return ResponseEntity.noContent().build();
+    return new SuccessOrNot(true);
   }
 
   /**
@@ -72,12 +72,12 @@ public class UserController {
    */
   @Admin
   @PutMapping("/{userId}")
-  public ResponseEntity<Void> updateUser(
+  public SuccessOrNot updateUser(
     @PathVariable final long userId,
     @Valid @RequestBody final UpdateUserParams params
   ) {
     userService.updateUser(userId, params);
-    return ResponseEntity.noContent().build();
+    return new SuccessOrNot(true);
   }
 
   /**
@@ -85,12 +85,12 @@ public class UserController {
    */
   @Root
   @PutMapping("/{userId}/password")
-  public ResponseEntity<Void> resetPassword(
+  public SuccessOrNot resetPassword(
     @PathVariable final long userId,
     @Valid @RequestBody final ResetPasswordParams params
   ) {
     userService.resetPassword(userId, params);
-    return ResponseEntity.noContent().build();
+    return new SuccessOrNot(true);
   }
 
   /**
@@ -98,12 +98,12 @@ public class UserController {
    */
   @Admin
   @PutMapping("/{userId}/status")
-  public ResponseEntity<Void> updateUserStatus(
+  public SuccessOrNot updateUserStatus(
     @PathVariable final long userId,
     @Valid @RequestBody final UpdateUserStatusParams params
   ) {
     userService.updateUserStatus(userId, params);
-    return ResponseEntity.noContent().build();
+    return new SuccessOrNot(true);
   }
 
   /**
@@ -111,8 +111,8 @@ public class UserController {
    */
   @Root
   @DeleteMapping("/{userId}")
-  public ResponseEntity<Void> deleteUser(@PathVariable final long userId) {
+  public SuccessOrNot deleteUser(@PathVariable final long userId) {
     userService.deleteUser(userId);
-    return ResponseEntity.noContent().build();
+    return new SuccessOrNot(true);
   }
 }

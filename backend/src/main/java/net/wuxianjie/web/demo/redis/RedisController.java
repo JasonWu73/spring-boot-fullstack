@@ -2,9 +2,8 @@ package net.wuxianjie.web.demo.redis;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.wuxianjie.web.shared.SuccessOrNot;
 import net.wuxianjie.web.shared.redis.RedisLock;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,11 +25,11 @@ public class RedisController {
    * 测试分布式锁。
    */
   @GetMapping("/lock")
-  public ResponseEntity<Void> sendMessage() {
+  public SuccessOrNot sendMessage() {
     new Thread(this::executeSync).start();
     new Thread(this::executeSync).start();
     new Thread(this::executeSync).start();
-    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    return new SuccessOrNot(true);
   }
 
   private void executeSync() {
