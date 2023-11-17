@@ -14,7 +14,7 @@ public class UpdateUserStatusParams {
   /**
    * 账号状态，必填。
    */
-  @NotNull(message = "账号状态不能为空")
+  @NotNull(message = "账号状态不能为 null")
   @EnumValidator(value = AccountStatus.class, message = "账号状态不合法")
   private Integer status;
 }

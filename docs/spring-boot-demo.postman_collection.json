@@ -802,6 +802,64 @@
 			]
 		},
 		{
+			"name": "操作日志",
+			"item": [
+				{
+					"name": "获取操作日志分页列表",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/operation-logs?pageNum=1&pageSize=10&startAt=2023-11-17&endAt=2023-11-17",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"operation-logs"
+							],
+							"query": [
+								{
+									"key": "pageNum",
+									"value": "1"
+								},
+								{
+									"key": "pageSize",
+									"value": "10"
+								},
+								{
+									"key": "startAt",
+									"value": "2023-11-17"
+								},
+								{
+									"key": "endAt",
+									"value": "2023-11-17"
+								},
+								{
+									"key": "status",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "authority",
+									"value": "user",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "获取项目版本号",
 			"request": {
 				"method": "GET",

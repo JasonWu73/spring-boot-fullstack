@@ -6,4 +6,41 @@
     INSERT INTO operation_log (requested_at, client_ip, username, message)
     VALUES (#{requestedAt}, #{clientIp}, #{username}, #{message})
   </insert>
+
+  <select
+    id="selectByQueryLimit"
+    resultType="net.wuxianjie.web.shared.operationlog.OperationLog"
+  >
+    SELECT id,
+    requested_at as requestedAt,
+    client_ip as clientIp,
+    username,
+    message
+    FROM operation_log
+    <include refid="whereQuery" />
+    ORDER BY requested_at DESC
+    LIMIT #{p.offset}, #{p.pageSize}
+  </select>
+
+  <select id="countByQuery" resultType="long">
+    SELECT COUNT(1)
+    FROM operation_log
+    <include refid="whereQuery" />
+  </select>
+
+  <sql id="whereQuery">
+    <where>
+      requested_at &gt;= CONCAT(#{q.startAt}, ' 00:00:00')
+      AND requested_at &lt;= CONCAT(#{q.endAt}, ' 23:59:59')
+      <if test="q.clientIp != null">
+        AND client_ip LIKE #{q.clientIp}
+      </if>
+      <if test="q.username != null">
+        AND username LIKE #{q.username}
+      </if>
+      <if test="q.message != null">
+        AND message LIKE #{q.message}
+      </if>
+    </where>
+  </sql>
 </mapper>

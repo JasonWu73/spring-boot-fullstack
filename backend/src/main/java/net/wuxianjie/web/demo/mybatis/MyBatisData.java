@@ -18,7 +18,7 @@ public class MyBatisData {
 
   private Long id;
 
-  @NotNull(message = "名称不能为空")
+  @NotNull(message = "名称不能为 null")
   private String name;
 
   private MyBatisType type;
