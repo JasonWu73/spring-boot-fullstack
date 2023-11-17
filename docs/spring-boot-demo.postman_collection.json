@@ -131,333 +131,6 @@
 			]
 		},
 		{
-			"name": "MyBatis",
-			"item": [
-				{
-					"name": "测试数据库清空表",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/atom+xml",
-								"type": "default",
-								"disabled": true
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"name\": \"测试数据\", // 名称不能为空\n  \"date\": \"2023-11-12 18:25:41\", // date 不能为 null\n  \"localDateTime\": \"2023-11-12 18:25:41\", // localDateTime 不能为 null\n  \"localDate\": \"2023-11-12\" // localDate 不能为 null\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{BASE_URL}}/api/v1/mybatis",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"mybatis"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "测试数据库查询",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{BASE_URL}}/api/v1/mybatis",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"mybatis"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "测试数据库新增",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/atom+xml",
-								"type": "default",
-								"disabled": true
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"name\": \"测试数据\", // 名称不能为空\n  \"date\": \"2023-11-12 18:25:41\", // date 不能为 null\n  \"localDateTime\": \"2023-11-12 18:25:41\", // localDateTime 不能为 null\n  \"localDate\": \"2023-11-12\" // localDate 不能为 null\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{BASE_URL}}/api/v1/mybatis",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"mybatis"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Redis",
-			"item": [
-				{
-					"name": "测试分布式锁",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{BASE_URL}}/api/v1/redis/lock",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"redis",
-								"lock"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "请求传参",
-			"item": [
-				{
-					"name": "测试 GET 传参",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{BASE_URL}}/api/v1/params?name=GET 传参&num=0&type=1&dateTime=2023-02-28 11:11:11",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"params"
-							],
-							"query": [
-								{
-									"key": "name",
-									"value": "GET 传参"
-								},
-								{
-									"key": "num",
-									"value": "0"
-								},
-								{
-									"key": "type",
-									"value": "1"
-								},
-								{
-									"key": "dateTime",
-									"value": "2023-02-28 11:11:11"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "测试 POST x-www-form-urlencoded 请求",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "name",
-									"value": "POST x-www-form-urlencoded 请求",
-									"type": "text"
-								},
-								{
-									"key": "num",
-									"value": "0",
-									"type": "text"
-								},
-								{
-									"key": "type",
-									"value": "1",
-									"type": "text"
-								},
-								{
-									"key": "dateTime",
-									"value": "2023-02-28 11:11:11",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{BASE_URL}}/api/v1/params",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"params"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "测试 POST form-data 请求",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "name",
-									"value": "POST form-data 请求",
-									"type": "text"
-								},
-								{
-									"key": "num",
-									"value": "0",
-									"type": "text"
-								},
-								{
-									"key": "type",
-									"value": "1",
-									"type": "text"
-								},
-								{
-									"key": "dateTime",
-									"value": "2023-02-28 11:11:11",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{BASE_URL}}/api/v1/params",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"params"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "测试 POST JSON 请求",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/atom+xml",
-								"type": "default",
-								"disabled": true
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"id\": 100,\n  \"name\": \"POST JSON 请求\",\n  \"inner\": {\n    \"date\": \"2023-01-01 12:00:30\",\n    \"localDate\": \"2023-01-01\",\n    \"dateTime\": \"2023-01-01 12:00:30\"\n  }\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{BASE_URL}}/api/v1/params/json",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"params",
-								"json"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "测试上传文件",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "default",
-								"disabled": true
-							}
-						],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "message",
-									"value": "测试文件",
-									"type": "text"
-								},
-								{
-									"key": "file",
-									"type": "file",
-									"src": "/Users/wxj/Workspace/部署的服务/独立音频/独立音频备份系统部署手册.pdf"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{BASE_URL}}/api/v1/params/upload",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"params",
-								"upload"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
 			"name": "用户管理",
 			"item": [
 				{
@@ -856,6 +529,338 @@
 						}
 					},
 					"response": []
+				}
+			]
+		},
+		{
+			"name": "测试",
+			"item": [
+				{
+					"name": "MyBatis",
+					"item": [
+						{
+							"name": "测试数据库清空表",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/atom+xml",
+										"type": "default",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"测试数据\", // 名称不能为空\n  \"date\": \"2023-11-12 18:25:41\", // date 不能为 null\n  \"localDateTime\": \"2023-11-12 18:25:41\", // localDateTime 不能为 null\n  \"localDate\": \"2023-11-12\" // localDate 不能为 null\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/mybatis",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"mybatis"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "测试数据库查询",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/mybatis",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"mybatis"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "测试数据库新增",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/atom+xml",
+										"type": "default",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"测试数据\", // 名称不能为空\n  \"date\": \"2023-11-12 18:25:41\", // date 不能为 null\n  \"localDateTime\": \"2023-11-12 18:25:41\", // localDateTime 不能为 null\n  \"localDate\": \"2023-11-12\" // localDate 不能为 null\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/mybatis",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"mybatis"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Redis",
+					"item": [
+						{
+							"name": "测试分布式锁",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/redis/lock",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"redis",
+										"lock"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "请求传参",
+					"item": [
+						{
+							"name": "测试 GET 传参",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/params?name=GET 传参&num=0&type=1&dateTime=2023-02-28 11:11:11",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"params"
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": "GET 传参"
+										},
+										{
+											"key": "num",
+											"value": "0"
+										},
+										{
+											"key": "type",
+											"value": "1"
+										},
+										{
+											"key": "dateTime",
+											"value": "2023-02-28 11:11:11"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "测试 POST x-www-form-urlencoded 请求",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "name",
+											"value": "POST x-www-form-urlencoded 请求",
+											"type": "text"
+										},
+										{
+											"key": "num",
+											"value": "0",
+											"type": "text"
+										},
+										{
+											"key": "type",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "dateTime",
+											"value": "2023-02-28 11:11:11",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/params",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"params"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "测试 POST form-data 请求",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name",
+											"value": "POST form-data 请求",
+											"type": "text"
+										},
+										{
+											"key": "num",
+											"value": "0",
+											"type": "text"
+										},
+										{
+											"key": "type",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "dateTime",
+											"value": "2023-02-28 11:11:11",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/params",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"params"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "测试 POST JSON 请求",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/atom+xml",
+										"type": "default",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"id\": 100,\n  \"name\": \"POST JSON 请求\",\n  \"inner\": {\n    \"date\": \"2023-01-01 12:00:30\",\n    \"localDate\": \"2023-01-01\",\n    \"dateTime\": \"2023-01-01 12:00:30\"\n  }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/params/json",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"params",
+										"json"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "测试上传文件",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "default",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "message",
+											"value": "测试文件",
+											"type": "text"
+										},
+										{
+											"key": "file",
+											"type": "file",
+											"src": "/Users/wxj/Workspace/部署的服务/独立音频/独立音频备份系统部署手册.pdf"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/params/upload",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"params",
+										"upload"
+									]
+								}
+							},
+							"response": []
+						}
+					]
 				}
 			]
 		},
