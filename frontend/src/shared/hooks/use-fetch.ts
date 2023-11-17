@@ -1,12 +1,7 @@
 import React from 'react'
 
 import { useAuth } from '@/auth/AuthProvider'
-import type {
-  AbortFetch,
-  FetchPayload,
-  FetchResponse,
-  ReLogin
-} from '@/shared/hooks/types'
+import type { Auth, FetchResponse, ReLogin } from '@/shared/hooks/types'
 import { endNProgress, startNProgress } from '@/shared/utils/nprogress'
 
 type State<TData> = {
@@ -83,22 +78,22 @@ function reducer<TData>(state: State<TData>, action: Action<TData>): State<TData
 }
 
 type ApiCallback<TData, TParams> = (
-  payload: FetchPayload,
-  params?: TParams
+  params?: TParams,
+  auth?: Auth
 ) => Promise<FetchResponse<TData>>
 
 type UseFetch<TData, TParams> = {
   data: TData | null
   error: string
   loading: boolean
-  fetchData: (params?: TParams) => AbortFetch
+  fetchData: (params?: TParams) => Promise<FetchResponse<TData>>
 }
 
 /**
  * 获取数据（包含了身份验证自动刷新机制）的自定义 Hook。
  *
  * @template TData - 返回的数据类型
- * @template TParams - 请求参数类型
+ * @template TParams - 请求参数类型，当包含 `AbortSignal` 属性时可触发请求取消
  *
  * @param callback - 获取数据的回调函数
  * @returns {UseFetch} - 数据、错误信息、加载状态、获取数据的回调函数
@@ -111,44 +106,41 @@ function useFetch<TData, TParams>(
     initialState as State<TData>
   )
 
-  const { auth, logout, refreshAuth } = useAuth()
+  const { auth, deleteLoginCache, refreshAuth } = useAuth()
 
-  function fetchData(params?: TParams): AbortFetch {
-    const controller = new AbortController()
-
+  async function fetchData(params?: TParams) {
     dispatch({ type: 'START_LOADING' })
-    ;(async function () {
-      const response = await callback(
-        {
-          signal: controller.signal,
-          auth
-        },
-        params
-      )
 
-      // 实现身份验证自动刷新机制
-      if (response.reLogin && response.reLogin.isOk) {
+    const response = await callback(params, auth || undefined)
+
+    // 实现身份验证自动刷新及退出机制
+    if (response.reLogin) {
+      if (response.reLogin.success) {
         refreshAuth(response.reLogin.auth)
+      } else {
+        deleteLoginCache()
       }
-      if (response.reLogin && !response.reLogin.isOk) {
-        logout()
-      }
-
-      // 因为取消请求的方式一定是通过调用 `fetchData` 返回的 `AbortCallback` 函数实现的
-      // 而 `AbortCallback` 函数中包含了 `dispatch`，所以这里无需更新状态，直接返回即可
-      if (controller.signal.aborted) return
-
-      if (response.error) {
-        return dispatch({ type: 'FETCH_FAILED', payload: response.error })
-      }
-
-      dispatch({ type: 'FETCH_SUCCESS', payload: response.data })
-    })()
-
-    return () => {
-      dispatch({ type: 'ABORT_FETCH' })
-      controller.abort()
     }
+
+    // 检查参数值中是否包含了 AbortSignal 属性
+    // 如果包含了 `AbortSignal` 属性，且该属性的 `aborted` 属性为 `true`，则取消请求
+    if (
+      params &&
+      typeof params === 'object' &&
+      Object.prototype.hasOwnProperty.call(params, 'abortSignal') &&
+      (params as { abortSignal?: AbortSignal }).abortSignal?.aborted
+    ) {
+      dispatch({ type: 'ABORT_FETCH' })
+      return response
+    }
+
+    if (response.error) {
+      dispatch({ type: 'FETCH_FAILED', payload: response.error })
+      return response
+    }
+
+    dispatch({ type: 'FETCH_SUCCESS', payload: response.data })
+    return response
   }
 
   return { data, error, loading, fetchData }

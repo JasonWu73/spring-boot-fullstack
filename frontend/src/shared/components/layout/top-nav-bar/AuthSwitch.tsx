@@ -15,7 +15,7 @@ import {
 } from '@/shared/components/ui/NavigationMenu'
 import { cn } from '@/shared/utils/helpers'
 
-function AuthButton() {
+function AuthSwitch() {
   const { auth } = useAuth()
   if (!auth) return <LoginButton />
 
@@ -65,4 +65,4 @@ function NavItem({ children, link }: NavItemProps) {
   )
 }
 
-export { AuthButton }
+export { AuthSwitch }

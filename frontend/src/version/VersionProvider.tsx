@@ -25,9 +25,10 @@ function VersionProvider({ children }: VersionProviderProps) {
   const getVersionRef = useSavedRef(getVersion)
 
   React.useEffect(() => {
-    const abort = getVersionRef.current()
+    const controller = new AbortController()
+    getVersionRef.current({ abortSignal: controller.signal })
 
-    return () => abort()
+    return () => controller.abort()
   }, [getVersionRef])
 
   const value: VersionProviderState = {

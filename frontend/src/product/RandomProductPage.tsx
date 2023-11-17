@@ -3,11 +3,14 @@ import React from 'react'
 
 import { getRandomProductApi } from '@/shared/apis/dummyjson/product-api'
 import { Button } from '@/shared/components/ui/Button'
-import type { AbortFetch } from '@/shared/hooks/types'
 import { useFetch } from '@/shared/hooks/use-fetch'
 import { useRefresh } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
 import { cn } from '@/shared/utils/helpers'
+
+type Params = {
+  abortSignal?: AbortSignal
+}
 
 export default function RandomProductPage() {
   useTitle('随机商品')
@@ -20,8 +23,8 @@ export default function RandomProductPage() {
     loading,
     error,
     fetchData: getProduct
-  } = useFetch(async (payload) => {
-    const response = await getRandomProductApi(payload)
+  } = useFetch(async (params?: Params) => {
+    const response = await getRandomProductApi(params)
 
     if (!response.error && response.data) {
       setCount((prevCount) => prevCount + 1)
@@ -30,22 +33,26 @@ export default function RandomProductPage() {
     return response
   })
 
-  const abortGetProductRef = React.useRef<AbortFetch | null>(null)
+  const abortGetProductRef = React.useRef<AbortController | null>(null)
 
   useRefresh(() => {
-    const abort = getProduct()
+    const controller = new AbortController()
+    getProduct({ abortSignal: controller.signal }).then()
 
     return () => {
-      abort()
+      controller.abort()
 
       if (abortGetProductRef.current) {
-        abortGetProductRef.current()
+        abortGetProductRef.current.abort()
+        abortGetProductRef.current = null
       }
     }
   })
 
-  function handleGetProduct() {
-    abortGetProductRef.current = getProduct()
+  async function handleGetProduct() {
+    const controller = new AbortController()
+    abortGetProductRef.current = controller
+    await getProduct({ abortSignal: controller.signal })
   }
 
   return (

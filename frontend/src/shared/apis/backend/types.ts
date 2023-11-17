@@ -11,6 +11,7 @@ export type ApiError = {
 export type LoginParams = {
   username: string
   password: string
+  abortSignal?: AbortSignal
 }
 
 export type Auth = {

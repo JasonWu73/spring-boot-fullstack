@@ -1,5 +1,5 @@
 // ----- Fetch 相关数据类型 -----
-export type ReLogin = { isOk: true; auth: Auth } | { isOk: false }
+export type ReLogin = { success: true; auth: Auth } | { success: false }
 
 export type FetchResponse<T> = {
   data: T | null
@@ -13,10 +13,3 @@ export type Auth = {
   nickname: string
   authorities: string[]
 }
-
-export type FetchPayload = {
-  signal: AbortSignal
-  auth: Auth | null
-}
-
-export type AbortFetch = () => void
