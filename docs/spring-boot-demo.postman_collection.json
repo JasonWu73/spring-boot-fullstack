@@ -31,7 +31,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"username\": \"nIf+gRyBpqSxmxKk8GjBDt6OTUDdg7RvHcgfr12Jo8H2F16McYYWcOps9QQ+lBGGLm42+UPkVS0G7etDTh05pCvtSoHYtEJilJuFgR8wM2FI1je2Tdu/gnom6bCNi7QUe9YcP4aP/3G1TLUW2HUzTOUi1ok+64hWaOWvBxVMXG0=\",\n  \"password\": \"HpTcmgLTKMaxzwJHF+HkrJXR/ffnNIwp5AW51vRtRUu4ITjGUED+6g96hHk8zc9r0SdKwWIgTzE0iZPTKaO0NFSXJA6uuIyaQIqLv1PPRdOCN6UeHqgf+noUEXBl5cw5pvMVAUZMFh7fr9otL8H6i+U4G0c8xDyxVI8bBiQ3fVo=\"\n}",
+							"raw": "{\n  \"username\": \"ReaCrG0FkzBqmB51NTRJNzGcc5z4OwTRtgEzUcr7nfJIg/+//+iKC23a+cXmO8ewQXhgRjM6pcX22Fw8gXktbaXQOX8FgHJQFQ2nvq/9TLkFYB8jlsRKDamTenL1u2nE5zNICwSwJaFUn3Q++pvHfoKi4v80arP3rqfpy/zWp/8=\",\n  \"password\": \"HpTcmgLTKMaxzwJHF+HkrJXR/ffnNIwp5AW51vRtRUu4ITjGUED+6g96hHk8zc9r0SdKwWIgTzE0iZPTKaO0NFSXJA6uuIyaQIqLv1PPRdOCN6UeHqgf+noUEXBl5cw5pvMVAUZMFh7fr9otL8H6i+U4G0c8xDyxVI8bBiQ3fVo=\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -454,6 +454,32 @@
 		{
 			"name": "用户管理",
 			"item": [
+				{
+					"name": "获取当前用户数据",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/users/me",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
 				{
 					"name": "获取用户分页列表",
 					"request": {

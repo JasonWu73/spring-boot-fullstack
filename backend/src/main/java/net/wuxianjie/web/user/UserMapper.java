@@ -13,7 +13,9 @@ public interface UserMapper {
 
   User selectByUsername(String username);
 
-  List<UserItem> selectByQueryLimit(
+  UserInfo selectBaseInfoById(long userId);
+
+  List<UserInfo> selectByQueryLimit(
     @Param("p") PaginationParams paginationParams,
     @Param("q") GetUserParams userParams
   );

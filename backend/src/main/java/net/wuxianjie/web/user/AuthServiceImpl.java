@@ -48,7 +48,7 @@ public class AuthServiceImpl implements AuthService {
   private final UserMapper userMapper;
 
   @Override
-  public TokenResponse login(final LoginParams params) {
+  public Token login(final LoginParams params) {
     // 解密用户名和密码
     final String username;
     final String password;
@@ -122,7 +122,7 @@ public class AuthServiceImpl implements AuthService {
     );
 
     // 返回响应数据
-    return new TokenResponse(
+    return new Token(
       accessToken,
       refreshToken,
       TOKEN_EXPIRES_IN_SECONDS,
@@ -141,7 +141,7 @@ public class AuthServiceImpl implements AuthService {
   }
 
   @Override
-  public TokenResponse refresh(final String refreshToken) {
+  public Token refresh(final String refreshToken) {
     // 从 Spring Security Context 中获取当前登录信息
     final CachedAuth oldAuth = AuthUtils.getCurrentUser().orElseThrow();
 
@@ -195,7 +195,7 @@ public class AuthServiceImpl implements AuthService {
     );
 
     // 返回响应数据
-    return new TokenResponse(
+    return new Token(
       newAccessToken,
       newRefreshToken,
       TOKEN_EXPIRES_IN_SECONDS,

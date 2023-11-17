@@ -17,11 +17,21 @@ public class UserController {
   private final UserService userService;
 
   /**
+   * 获取当前用户数据。
+   *
+   * <p>主要用于用户查看自己的个人信息。
+   */
+  @GetMapping("/me")
+  public UserInfo getMe() {
+    return userService.getMe();
+  }
+
+  /**
    * 获取用户分页列表。
    */
   @Admin
   @GetMapping
-  public PaginationResult<UserItem> getUsers(
+  public PaginationResult<UserInfo> getUsers(
     @Valid final PaginationParams paginationParams,
     @Valid final GetUserParams userParams
   ) {

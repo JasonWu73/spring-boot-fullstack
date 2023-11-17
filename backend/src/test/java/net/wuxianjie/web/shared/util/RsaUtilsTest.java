@@ -18,8 +18,8 @@ class RsaUtilsTest {
     Assertions.assertThat(rsaKeyPair.publicKey()).isNotBlank().isBase64();
     Assertions.assertThat(rsaKeyPair.privateKey()).isNotBlank().isBase64();
 
-    System.out.println("公钥: " + rsaKeyPair.publicKey());
-    System.out.println("私钥: " + rsaKeyPair.privateKey());
+    // System.out.println("公钥: " + rsaKeyPair.publicKey());
+    // System.out.println("私钥: " + rsaKeyPair.privateKey());
   }
 
   @Test

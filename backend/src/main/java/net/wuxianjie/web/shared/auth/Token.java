@@ -11,7 +11,7 @@ import java.util.List;
  * @param nickname         昵称
  * @param authorities      功能权限列表
  */
-public record TokenResponse(
+public record Token(
   String accessToken,
   String refreshToken,
   int expiresInSeconds,

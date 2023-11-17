@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserItem {
+public class UserInfo {
 
   /**
    * 用户 id。
@@ -53,7 +53,7 @@ public class UserItem {
   private List<String> authorities;
 
   // 用于 MyBatis 的构造函数
-  public UserItem(
+  public UserInfo(
     final Long id,
     final LocalDateTime createdAt,
     final LocalDateTime updatedAt,
