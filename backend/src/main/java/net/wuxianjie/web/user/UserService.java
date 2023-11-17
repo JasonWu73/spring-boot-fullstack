@@ -134,38 +134,54 @@ public class UserService {
     user.setStatus(AccountStatus.ENABLED);
 
     // 保存用户功能权限
-    if (params.getAuthorities() != null && !params.getAuthorities().isEmpty()) {
-      user.setAuthorities(
-        params.getAuthorities().
-          stream()
-          .distinct()
-          .filter(auth -> {
-            if (StringUtils.hasText(auth)) {
-              final Optional<Authority> authOpt = Authority.resolve(auth);
-              if (authOpt.isEmpty()) {
-                throw new ApiException(
-                  HttpStatus.BAD_REQUEST,
-                  "权限 [%s] 不存在".formatted(auth)
-                );
-              }
-
-              if (authOpt.get() == Authority.ROOT) {
-                throw new ApiException(
-                  HttpStatus.FORBIDDEN,
-                  "权限 [%s] 不能直接分配".formatted(auth)
-                );
-              }
-
-              return true;
-            }
-
-            return false;
-          })
-          .map(String::trim)
-          .collect(Collectors.joining(","))
-      );
-    }
+    user.setAuthorities(toAuthorities(params.getAuthorities()));
 
     userMapper.insert(user);
+  }
+
+  public void updateUser(final long userId, final UpdateUserParams params) {
+    // 从数据库中查询用户数据
+    final User user = Optional.ofNullable(userMapper.selectById(userId))
+      .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "用户不存在"));
+
+    // 更新数据库中的用户数据
+    user.setUpdatedAt(LocalDateTime.now());
+    user.setNickname(params.getNickname());
+    user.setAuthorities(toAuthorities(params.getAuthorities()));
+    user.setRemark(params.getRemark());
+
+    userMapper.updateById(user);
+  }
+
+  private String toAuthorities(List<String> authorities) {
+    if (authorities == null || authorities.isEmpty()) return null;
+
+    return authorities.
+      stream()
+      .distinct()
+      .filter(auth -> {
+        if (StringUtils.hasText(auth)) {
+          final Optional<Authority> authOpt = Authority.resolve(auth);
+          if (authOpt.isEmpty()) {
+            throw new ApiException(
+              HttpStatus.BAD_REQUEST,
+              "权限 [%s] 不存在".formatted(auth)
+            );
+          }
+
+          if (authOpt.get() == Authority.ROOT) {
+            throw new ApiException(
+              HttpStatus.FORBIDDEN,
+              "权限 [%s] 不能直接分配".formatted(auth)
+            );
+          }
+
+          return true;
+        }
+
+        return false;
+      })
+      .map(String::trim)
+      .collect(Collectors.joining(","));
   }
 }

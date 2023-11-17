@@ -65,4 +65,17 @@ public class UserController {
     userService.addUser(params);
     return ResponseEntity.noContent().build();
   }
+
+  /**
+   * 更新用户。
+   */
+  @Admin
+  @PutMapping("/{userId}")
+  public ResponseEntity<Void> updateUser(
+    @PathVariable final long userId,
+    @Valid @RequestBody final UpdateUserParams params
+  ) {
+    userService.updateUser(userId, params);
+    return ResponseEntity.noContent().build();
+  }
 }
