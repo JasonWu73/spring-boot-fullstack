@@ -2,11 +2,14 @@ import { BugOff, ShoppingCart, UserCog2 } from 'lucide-react'
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 
+import { useAuth } from '@/auth/AuthProvider'
 import { ScrollArea } from '@/shared/components/ui/ScrollArea'
 import { Separator } from '@/shared/components/ui/Separator'
 import { cn } from '@/shared/utils/helpers'
 
 function SideNavBar() {
+  const { isRoot } = useAuth()
+
   return (
     <ScrollArea className="h-[calc(100vh-6rem)] w-48">
       <nav className="flex flex-col items-center gap-2">
@@ -15,10 +18,13 @@ function SideNavBar() {
             <UserCog2 className="h-5 w-5" />
             <span>用户管理</span>
           </MenuItem>
-          <MenuItem link="/product">
-            <ShoppingCart className="h-4 w-4" />
-            <span>随机商品</span>
-          </MenuItem>
+
+          {isRoot && (
+            <MenuItem link="/product">
+              <ShoppingCart className="h-4 w-4" />
+              <span>随机商品</span>
+            </MenuItem>
+          )}
         </Menu>
 
         <MenuSeparator />

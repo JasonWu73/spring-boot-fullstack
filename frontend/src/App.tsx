@@ -40,7 +40,7 @@ const router = createBrowserRouter([
     children: [
       { path: '/', element: <Navigate to="/split-bill" replace /> },
       {
-        element: <SecureRoute />,
+        element: <SecureRoute authority="user" />,
         children: [{ path: '/fetch', element: <RandomProductPage /> }]
       },
       {
@@ -73,12 +73,15 @@ const router = createBrowserRouter([
     ),
     children: [
       {
-        element: <SecureRoute />,
+        element: <SecureRoute authority="admin" />,
         children: [
           { path: '/admin', element: <Navigate to="/users" replace /> },
-          { path: '/users', element: <UserListPage /> },
-          { path: '/product', element: <RandomProductPage /> }
+          { path: '/users', element: <UserListPage /> }
         ]
+      },
+      {
+        element: <SecureRoute authority="root" />,
+        children: [{ path: '/product', element: <RandomProductPage /> }]
       }
     ]
   }

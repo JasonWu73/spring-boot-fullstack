@@ -30,6 +30,10 @@ type AuthProviderState = {
   logout: () => IgnoreFetch
 
   requestApi: <T>(request: ApiRequest) => Promise<FetchResponse<T>>
+
+  isRoot: boolean
+  isAdmin: boolean
+  isUser: boolean
 }
 
 const AuthProviderContext = React.createContext(undefined as unknown as AuthProviderState)
@@ -126,6 +130,12 @@ function AuthProvider({ children }: AuthProviderProps) {
     return { data: data ?? undefined }
   }
 
+  const isRoot = auth?.authorities.includes('root') ?? false
+
+  const isAdmin = isRoot || (auth?.authorities.includes('admin') ?? false)
+
+  const isUser = isRoot || isAdmin || (auth?.authorities.includes('user') ?? false)
+
   const value: AuthProviderState = {
     auth,
     loginError,
@@ -136,7 +146,11 @@ function AuthProvider({ children }: AuthProviderProps) {
     logoutLoading,
     logout,
 
-    requestApi
+    requestApi,
+
+    isRoot,
+    isAdmin,
+    isUser
   }
 
   return (

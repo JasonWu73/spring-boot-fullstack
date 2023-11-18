@@ -16,7 +16,8 @@ import {
 import { cn } from '@/shared/utils/helpers'
 
 function AuthSwitch() {
-  const { auth } = useAuth()
+  const { auth, isAdmin } = useAuth()
+
   if (!auth) return <LoginButton />
 
   return (
@@ -27,11 +28,13 @@ function AuthSwitch() {
             {auth.nickname}
           </NavigationMenuTrigger>
           <NavigationMenuContent>
-            <ul className="grid min-w-max grid-flow-row grid-cols-1 gap-1 py-2">
-              <NavItem link="/admin">
-                <LayoutDashboard className="h-4 w-4" />
-                管理后台
-              </NavItem>
+            <ul className="grid min-w-max grid-flow-row grid-cols-1 py-1">
+              {isAdmin && (
+                <NavItem link="/admin">
+                  <LayoutDashboard className="h-4 w-4" />
+                  管理后台
+                </NavItem>
+              )}
 
               <li>
                 <LogoutButton />
