@@ -57,18 +57,17 @@ export default function LoginPage() {
   const resetLogin = React.useRef<IgnoreFetch>()
 
   useRefresh(() => {
-    return () => {
-      form.reset()
-      dismiss()
+    form.reset()
+    dismiss()
 
-      if (resetLogin.current) {
-        resetLogin.current()
-      }
+    if (resetLogin.current) {
+      resetLogin.current()
     }
   })
 
   const location = useLocation()
   const originUrl = location.state?.from || DEFAULT_REDIRECT_URL
+
   if (auth) return <Navigate to={originUrl} replace />
 
   function onSubmit(values: FormSchema) {

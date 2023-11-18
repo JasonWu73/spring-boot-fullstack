@@ -33,12 +33,12 @@ export default function RandomProductPage() {
   useRefresh(() => {
     const ignore = getProduct()
 
+    if (resetGetProduct.current) {
+      resetGetProduct.current()
+    }
+
     return () => {
       ignore()
-
-      if (resetGetProduct.current) {
-        resetGetProduct.current()
-      }
     }
   })
 

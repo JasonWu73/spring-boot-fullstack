@@ -110,10 +110,10 @@ function SplitBillForm() {
   const id = Number(params.friendId)
 
   useRefresh(() => {
+    form.reset()
     const ignore = getFriend({ id })
 
     return () => {
-      form.reset()
       ignore()
     }
   })
