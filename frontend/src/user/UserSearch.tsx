@@ -70,58 +70,64 @@ function UserSearch({ onSearch, loading }: UserSearchProps) {
   }
 
   return (
-    <div className="flex items-center py-4">
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="flex items-center gap-4">
-          <FormInput
-            control={form.control}
-            name="username"
-            type="text"
-            label="用户名"
-            labelWidth={45}
-            placeholder="用户名"
-            isError={form.getFieldState('username')?.invalid}
-          />
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="mb-8 flex flex-wrap items-center gap-4"
+      >
+        <FormInput
+          control={form.control}
+          name="username"
+          type="text"
+          label="用户名"
+          labelWidth={45}
+          placeholder="用户名"
+          isError={form.getFieldState('username')?.invalid}
+        />
 
-          <FormInput
-            control={form.control}
-            name="nickname"
-            type="text"
-            label="昵称"
-            labelWidth={45}
-            placeholder="昵称"
-            isError={form.getFieldState('nickname')?.invalid}
-          />
+        <FormInput
+          control={form.control}
+          name="nickname"
+          type="text"
+          label="昵称"
+          labelWidth={45}
+          placeholder="昵称"
+          isError={form.getFieldState('nickname')?.invalid}
+        />
 
-          <FormSelect
-            control={form.control}
-            name="status"
-            label="状态"
-            labelWidth={45}
-            options={statusOptions}
-            isError={form.getFieldState('status')?.invalid}
-          />
+        <FormSelect
+          control={form.control}
+          name="status"
+          label="状态"
+          labelWidth={45}
+          options={statusOptions}
+          isError={form.getFieldState('status')?.invalid}
+        />
 
-          <FormSelect
-            control={form.control}
-            name="authority"
-            label="权限"
-            labelWidth={45}
-            options={authorityOptions}
-            isError={form.getFieldState('authority')?.invalid}
-          />
+        <FormSelect
+          control={form.control}
+          name="authority"
+          label="权限"
+          labelWidth={45}
+          options={authorityOptions}
+          isError={form.getFieldState('authority')?.invalid}
+        />
 
-          <Button type="submit" disabled={loading}>
-            {loading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
-            查询
-          </Button>
+        <Button type="submit" disabled={loading} className="self-end">
+          {loading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
+          查询
+        </Button>
 
-          <Button onClick={handleReset} type="reset" variant="secondary">
-            重置
-          </Button>
-        </form>
-      </Form>
-    </div>
+        <Button
+          onClick={handleReset}
+          type="reset"
+          variant="secondary"
+          className="self-end"
+        >
+          重置
+        </Button>
+      </form>
+    </Form>
   )
 }
 

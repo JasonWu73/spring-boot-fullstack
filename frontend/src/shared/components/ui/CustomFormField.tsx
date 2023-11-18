@@ -120,7 +120,7 @@ function FormSelect<T extends FieldValues>({
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className="grid grid-flow-row items-center gap-1 lg:grid-cols-[auto_1fr]">
+        <FormItem className="grid grid-flow-row items-center gap-2 lg:grid-cols-[auto_1fr]">
           <FormLabel
             style={{ width: labelWidth }}
             className="overflow-hidden text-ellipsis whitespace-nowrap"
@@ -129,7 +129,7 @@ function FormSelect<T extends FieldValues>({
           </FormLabel>
 
           <Select value={field.value} onValueChange={field.onChange}>
-            <FormControl className="bg-slate-100 text-slate-700">
+            <FormControl className="bg-slate-100 py-0 text-slate-700">
               <SelectTrigger disabled={disabled} isError={isError}>
                 <SelectValue placeholder={placeholder} />
               </SelectTrigger>
@@ -179,7 +179,7 @@ function FormCalendar<T extends FieldValues>({
 
           <Popover>
             <PopoverTrigger asChild>
-              <FormControl className="bg-slate-100">
+              <FormControl className="bg-slate-100 text-slate-700">
                 <Button
                   variant="outline"
                   className={cn(
