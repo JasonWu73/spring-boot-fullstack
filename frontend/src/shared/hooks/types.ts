@@ -13,3 +13,5 @@ export type Auth = {
   nickname: string
   authorities: string[]
 }
+
+export type IgnoreFetch = () => void

@@ -5,17 +5,15 @@ type GetUsersParams = {
   pageNum: number
   pageSize: number
   query: string
-  abortSignal?: AbortSignal
 }
 
 async function getUsersApi(params?: GetUsersParams) {
-  if (!params) return { data: null, error: '未传入参数' }
+  if (!params) return { data: null, error: '参数缺失' }
 
   const { pageNum, pageSize, query } = params
 
   const { data, error } = await sendRequest<PaginationData<User>, ApiError>({
     url: 'https://dummyjson.com/users/search?select=id,firstName,lastName,email,username,password,birthDate,image',
-    signal: params.abortSignal,
     urlData: {
       limit: pageSize,
       skip: (pageNum - 1) * pageSize,

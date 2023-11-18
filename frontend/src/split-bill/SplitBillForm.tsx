@@ -112,10 +112,9 @@ function SplitBillForm() {
   useRefresh(() => {
     form.reset()
 
-    const controller = new AbortController()
-    getFriend({ id, abortSignal: controller.signal }).then()
+    const ignore = getFriend({ id })
 
-    return () => controller.abort()
+    return () => ignore()
   })
 
   const navigate = useNavigate()

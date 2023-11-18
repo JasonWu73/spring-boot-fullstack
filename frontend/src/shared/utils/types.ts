@@ -10,5 +10,4 @@ export type ApiRequest = {
   headers?: Record<string, string>
   urlData?: UrlData
   bodyData?: Record<string, unknown> | FormData
-  signal?: AbortSignal
 }

@@ -47,10 +47,9 @@ function FriendList() {
     }
 
     setShowAddFriend(false)
-    const controller = new AbortController()
-    getFriends({ abortSignal: controller.signal }).then()
+    const ignore = getFriends()
 
-    return () => controller.abort()
+    return () => ignore()
   })
 
   const { toast } = useToast()

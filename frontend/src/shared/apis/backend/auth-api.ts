@@ -11,7 +11,6 @@ import type { ApiRequest } from '@/shared/utils/types'
 async function loginApi(params: LoginParams) {
   return await requestApi<AuthResponse>({
     url: '/api/v1/auth/login',
-    signal: params.abortSignal,
     method: 'POST',
     bodyData: params
   })
@@ -40,7 +39,7 @@ async function requestApi<T>(request: ApiRequest): Promise<FetchResponse<T>> {
   return { data, error: '' }
 }
 
-type ReLoginRequest = Omit<ApiRequest, 'signal'> & {
+type ReLoginRequest = ApiRequest & {
   auth: Auth
   reLogin?: ReLogin
 }

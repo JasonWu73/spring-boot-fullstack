@@ -6,14 +6,9 @@ import React from 'react'
 
 type VersionProviderState = Version
 
-const initialState: VersionProviderState = {
-  name: '',
-  developer: '',
-  version: '',
-  builtAt: ''
-}
-
-const VersionProviderContext = React.createContext(initialState)
+const VersionProviderContext = React.createContext(
+  undefined as unknown as VersionProviderState
+)
 
 type VersionProviderProps = {
   children: React.ReactNode
@@ -25,10 +20,9 @@ function VersionProvider({ children }: VersionProviderProps) {
   const getVersionRef = useSavedRef(getVersion)
 
   React.useEffect(() => {
-    const controller = new AbortController()
-    getVersionRef.current({ abortSignal: controller.signal })
+    const ignore = getVersionRef.current()
 
-    return () => controller.abort()
+    return () => ignore()
   }, [getVersionRef])
 
   const value: VersionProviderState = {
@@ -46,7 +40,11 @@ function VersionProvider({ children }: VersionProviderProps) {
 }
 
 function useVersion() {
-  return React.useContext(VersionProviderContext)
+  const context = React.useContext(VersionProviderContext)
+  if (context === undefined) {
+    throw new Error('useVersion 必须在 VersionProvider 中使用')
+  }
+  return context
 }
 
 export { VersionProvider, useVersion }

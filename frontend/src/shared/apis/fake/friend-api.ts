@@ -4,16 +4,11 @@ import { sendRequest } from '@/shared/utils/http'
 
 const BASE_URL = window.location.host
 
-type Params = {
-  abortSignal?: AbortSignal
-}
-
-async function getFriendsApi(params?: Params) {
+async function getFriendsApi() {
   await wait(0.5) // Simulate network delay
 
   const { data, error } = await sendRequest<Friend[], string>({
-    url: `http://${BASE_URL}/data/friends.json`,
-    signal: params?.abortSignal
+    url: `http://${BASE_URL}/data/friends.json`
   })
 
   if (error) return { data: null, error }

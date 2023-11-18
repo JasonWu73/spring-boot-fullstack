@@ -2,7 +2,7 @@ import React from 'react'
 
 import { loginApi, logoutApi } from '@/shared/apis/backend/auth-api'
 import type { LoginParams } from '@/shared/apis/backend/types'
-import type { Auth } from '@/shared/hooks/types'
+import type { Auth, IgnoreFetch } from '@/shared/hooks/types'
 import { useFetch } from '@/shared/hooks/use-fetch'
 import { encrypt } from '@/shared/utils/rsa'
 
@@ -11,42 +11,20 @@ const PUBLIC_KEY =
 
 const STORAGE_KEY = 'demo-auth'
 
-type IsOK =
-  | {
-      success: true
-    }
-  | {
-      success: false
-      error: string
-    }
-
 type AuthProviderState = {
   auth: Auth | null
   loginError: string
   loginLoading: boolean
-  login: (username: string, password: string, abortSignal?: AbortSignal) => Promise<IsOK>
+  login: (username: string, password: string) => IgnoreFetch
 
   logoutLoading: boolean
-  logout: () => Promise<IsOK>
+  logout: () => IgnoreFetch
   deleteLoginCache: () => void
 
   refreshAuth: (auth: Auth) => void
 }
 
-const initialState: AuthProviderState = {
-  auth: null,
-  loginError: '',
-  loginLoading: false,
-  login: () => Promise.resolve({ success: true }),
-
-  logoutLoading: false,
-  logout: () => Promise.resolve({ success: true }),
-  deleteLoginCache: () => null,
-
-  refreshAuth: () => null
-}
-
-const AuthProviderContext = React.createContext(initialState)
+const AuthProviderContext = React.createContext(undefined as unknown as AuthProviderState)
 
 type AuthProviderProps = {
   children: React.ReactNode
@@ -67,12 +45,11 @@ function AuthProvider({ children }: AuthProviderProps) {
     loading: loginLoading,
     fetchData: login
   } = useFetch(async (params?: LoginParams) => {
-    if (!params) return { data: null, error: '参数错误' }
+    if (!params) return { data: null, error: '参数缺失' }
 
     const response = await loginApi({
       username: encrypt(PUBLIC_KEY, params.username),
-      password: encrypt(PUBLIC_KEY, params.password),
-      abortSignal: params.abortSignal
+      password: encrypt(PUBLIC_KEY, params.password)
     })
 
     const { data } = response
@@ -106,22 +83,10 @@ function AuthProvider({ children }: AuthProviderProps) {
     auth,
     loginError,
     loginLoading,
-    login: async (username, password, abortSignal) => {
-      const { data, error } = await login({ username, password, abortSignal })
-
-      if (data) return { success: true }
-
-      return { success: false, error }
-    },
+    login: (username, password) => login({ username, password }),
 
     logoutLoading,
-    logout: async () => {
-      const { error } = await logout(auth!)
-
-      if (!error) return { success: true }
-
-      return { success: false, error }
-    },
+    logout: () => logout(auth!),
     deleteLoginCache,
 
     refreshAuth: (auth) => {
@@ -136,7 +101,11 @@ function AuthProvider({ children }: AuthProviderProps) {
 }
 
 function useAuth() {
-  return React.useContext(AuthProviderContext)
+  const context = React.useContext(AuthProviderContext)
+  if (context === undefined) {
+    throw new Error('useAuth 必须在 AuthProvider 中使用')
+  }
+  return context
 }
 
 export { AuthProvider, useAuth }

@@ -2,7 +2,7 @@ import React from 'react'
 
 import { getFriendsApi } from '@/shared/apis/fake/friend-api'
 import type { Friend } from '@/shared/apis/fake/types'
-import type { FetchResponse } from '@/shared/hooks/types'
+import type { IgnoreFetch } from '@/shared/hooks/types'
 import { useFetch } from '@/shared/hooks/use-fetch'
 import { wait } from '@/shared/utils/helpers'
 
@@ -10,25 +10,20 @@ const STORAGE_KEY = 'demo-friends'
 
 type NewFriend = Omit<Friend, 'id'>
 
-type Params = {
-  abortSignal?: AbortSignal
-}
-
 type GetFriendParams = {
   id: number
-  abortSignal?: AbortSignal
 }
 
 type FriendProviderState = {
   friends: Friend[]
   errorFriends: string
   loadingFriends: boolean
-  getFriends: (params: Params) => Promise<FetchResponse<Friend[]>>
+  getFriends: () => IgnoreFetch
 
   curFriend: Friend | null
   errorFriend: string
   loadingFriend: boolean
-  getFriend: (params: GetFriendParams) => Promise<FetchResponse<Friend>>
+  getFriend: (params: GetFriendParams) => IgnoreFetch
 
   addFriend: (friend: NewFriend) => void
   deleteFriend: (id: number) => void
@@ -40,28 +35,9 @@ type FriendProviderState = {
   setCredit: (id: number, creditRating: number) => void
 }
 
-const initialState: FriendProviderState = {
-  friends: [],
-  errorFriends: '',
-  loadingFriends: false,
-  getFriends: () => Promise.resolve({ data: [], error: '' }),
-
-  curFriend: null,
-  errorFriend: '',
-  loadingFriend: false,
-  getFriend: () => Promise.resolve({ data: null, error: '' }),
-
-  addFriend: () => null,
-  deleteFriend: () => null,
-
-  showAddFriend: false,
-  setShowAddFriend: () => null,
-
-  splitBill: () => null,
-  setCredit: () => null
-}
-
-const FriendProviderContext = React.createContext(initialState)
+const FriendProviderContext = React.createContext(
+  undefined as unknown as FriendProviderState
+)
 
 type FriendProviderProps = {
   children: React.ReactNode
@@ -178,8 +154,8 @@ function FriendProvider({ children }: FriendProviderProps) {
     error: errorFriends,
     loading: loadingFriends,
     fetchData: getFriends
-  } = useFetch(async (params?: Params) => {
-    const response = await getFriendsApi(params)
+  } = useFetch(async () => {
+    const response = await getFriendsApi()
 
     if (response.error) {
       dispatch({ type: 'GET_FRIENDS_FAILED' })
@@ -197,6 +173,8 @@ function FriendProvider({ children }: FriendProviderProps) {
     loading: loadingFriend,
     fetchData: getFriend
   } = useFetch(async (params?: GetFriendParams) => {
+    if (!params) return { data: null, error: '参数缺失' }
+
     const response = await fakeGetFriendApi(params)
 
     if (response.error) {
@@ -262,16 +240,18 @@ function FriendProvider({ children }: FriendProviderProps) {
 }
 
 function useFriends() {
-  return React.useContext(FriendProviderContext)
+  const context = React.useContext(FriendProviderContext)
+  if (context === undefined) {
+    throw new Error('useFriends 必须在 FriendProvider 中使用')
+  }
+  return context
 }
 
 function getFriendsFromStorage() {
   return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]')
 }
 
-async function fakeGetFriendApi(params?: GetFriendParams) {
-  if (!params) return { data: null, error: '未传入参数' }
-
+async function fakeGetFriendApi(params: GetFriendParams) {
   // 仅为了模拟查看骨架屏的效果
   await wait(2)
 

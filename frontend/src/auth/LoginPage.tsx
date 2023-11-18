@@ -17,6 +17,7 @@ import {
 import { FormInput } from '@/shared/components/ui/CustomFormField'
 import { Form } from '@/shared/components/ui/Form'
 import { useToast } from '@/shared/components/ui/use-toast'
+import type { IgnoreFetch } from '@/shared/hooks/types'
 import { useRefresh } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
 
@@ -43,36 +44,31 @@ export default function LoginPage() {
   const { auth, loginError: error, loginLoading: loading, login } = useAuth()
   const { toast, dismiss } = useToast()
 
-  const abortLoginRef = React.useRef<AbortController | null>(null)
+  React.useEffect(() => {
+    toast({
+      title: '登录失败',
+      description: error,
+      variant: 'destructive'
+    })
+  }, [error, toast])
+
+  const resetLogin = React.useRef<IgnoreFetch>()
 
   useRefresh(() => {
     form.reset()
     dismiss()
 
-    return () => {
-      if (abortLoginRef.current) {
-        abortLoginRef.current.abort()
-        abortLoginRef.current = null
-      }
+    if (resetLogin.current) {
+      resetLogin.current()
     }
   })
 
   const location = useLocation()
   const originUrl = location.state?.from || DEFAULT_REDIRECT_URL
-
   if (auth) return <Navigate to={originUrl} replace />
 
-  async function onSubmit(values: FormSchema) {
-    const controller = new AbortController()
-    abortLoginRef.current = controller
-    const response = await login(values.username, values.password, controller.signal)
-    if (response.success) return <Navigate to={originUrl} replace />
-
-    toast({
-      title: '登录失败',
-      description: response.error,
-      variant: 'destructive'
-    })
+  function onSubmit(values: FormSchema) {
+    resetLogin.current = login(values.username, values.password)
   }
 
   return (

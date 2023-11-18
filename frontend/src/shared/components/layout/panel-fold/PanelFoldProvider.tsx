@@ -5,12 +5,9 @@ type PanelFoldProviderState = {
   setFolded: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const initialState: PanelFoldProviderState = {
-  folded: false,
-  setFolded: () => null
-}
-
-const PanelFoldProviderContext = React.createContext(initialState)
+const PanelFoldProviderContext = React.createContext(
+  undefined as unknown as PanelFoldProviderState
+)
 
 type PanelFoldProviderProps = {
   children: React.ReactNode
@@ -45,7 +42,11 @@ function PanelFoldProvider({ children }: PanelFoldProviderProps) {
 }
 
 function usePanelFold() {
-  return React.useContext(PanelFoldProviderContext)
+  const context = React.useContext(PanelFoldProviderContext)
+  if (context === undefined) {
+    throw new Error('usePanelFold 必须在 PanelFoldProvider 中使用')
+  }
+  return context
 }
 
 export { PanelFoldProvider, usePanelFold }

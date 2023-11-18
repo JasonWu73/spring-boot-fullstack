@@ -8,10 +8,6 @@ import { useRefresh } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
 import { cn } from '@/shared/utils/helpers'
 
-type Params = {
-  abortSignal?: AbortSignal
-}
-
 export default function RandomProductPage() {
   useTitle('随机商品')
 
@@ -23,36 +19,22 @@ export default function RandomProductPage() {
     loading,
     error,
     fetchData: getProduct
-  } = useFetch(async (params?: Params) => {
-    const response = await getRandomProductApi(params)
+  } = useFetch(getRandomProductApi)
 
-    if (!response.error && response.data) {
+  React.useEffect(() => {
+    if (product) {
       setCount((prevCount) => prevCount + 1)
     }
-
-    return response
-  })
-
-  const abortGetProductRef = React.useRef<AbortController | null>(null)
+  }, [product])
 
   useRefresh(() => {
-    const controller = new AbortController()
-    getProduct({ abortSignal: controller.signal }).then()
+    const ignore = getProduct()
 
-    return () => {
-      controller.abort()
-
-      if (abortGetProductRef.current) {
-        abortGetProductRef.current.abort()
-        abortGetProductRef.current = null
-      }
-    }
+    return () => ignore()
   })
 
-  async function handleGetProduct() {
-    const controller = new AbortController()
-    abortGetProductRef.current = controller
-    await getProduct({ abortSignal: controller.signal })
+  function handleGetProduct() {
+    getProduct()
   }
 
   return (

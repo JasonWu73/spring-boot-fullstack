@@ -7,12 +7,9 @@ type ThemeProviderState = {
   setTheme: (theme: Theme) => void
 }
 
-const initialState: ThemeProviderState = {
-  theme: 'system',
-  setTheme: () => null
-}
-
-const ThemeProviderContext = React.createContext(initialState)
+const ThemeProviderContext = React.createContext(
+  undefined as unknown as ThemeProviderState
+)
 
 type ThemeProviderProps = {
   children: React.ReactNode
@@ -65,7 +62,11 @@ function ThemeProvider({
  * {@link https://ui.shadcn.com/docs/dark-mode/vite | Vite - shadcn/ui}
  */
 function useTheme() {
-  return React.useContext(ThemeProviderContext)
+  const context = React.useContext(ThemeProviderContext)
+  if (context === undefined) {
+    throw new Error('useTheme 必须在 ThemeProvider 中使用')
+  }
+  return context
 }
 
 function handleToggleTheme(darkMatchEvent: MediaQueryListEvent) {

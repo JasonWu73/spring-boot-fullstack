@@ -36,10 +36,9 @@ export default function UserListPage() {
   const { data: users, error, loading, fetchData: getUsers } = useFetch(getUsersApi)
 
   useRefresh(() => {
-    const controller = new AbortController()
-    getUsers({ pageNum, pageSize, query, abortSignal: controller.signal }).then()
+    const ignore = getUsers({ pageNum, pageSize, query })
 
-    return () => controller.abort()
+    return () => ignore()
   })
 
   function handlePaginate(paging: Paging) {

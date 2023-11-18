@@ -15,6 +15,9 @@ type ApiResponse<TData, TError> = SuccessResponse<TData> | ErrorResponse<TError>
 /**
  * 发送 HTTP 请求，并以 JSON 数据格式解析响应数据。
  *
+ * <p>不建议使用 `signal` 实现主动取消请求，因为这只会不易于前端 F12 调试（看不到内容），而后端仍然会处理请求。
+ * <br>前端要做的事应该只是忽略请求的结果，而非取消请求。
+ *
  * @template TData - 成功响应时的数据类型
  * @template TError - 错误响应时的数据类型
  *
@@ -25,7 +28,6 @@ type ApiResponse<TData, TError> = SuccessResponse<TData> | ErrorResponse<TError>
  * @param Request.headers - HTTP 请求头
  * @param Request.urlData - URL 参数
  * @param Request.bodyData - 请求体数据
- * @param Request.signal - `AbortController` 实例的 `signal` 属性，用于主动取消请求
  * @returns {Promise<Response<TData, TError>>} - 以 JSON 数据格式解析后的正常或异常响应数据
  */
 async function sendRequest<TData, TError>({
@@ -34,8 +36,7 @@ async function sendRequest<TData, TError>({
   contentType = 'JSON',
   headers = {},
   urlData,
-  bodyData,
-  signal
+  bodyData
 }: ApiRequest): Promise<ApiResponse<TData, TError>> {
   try {
     // 追加 URL 参数
@@ -49,7 +50,6 @@ async function sendRequest<TData, TError>({
     // 构造请求配置
     const options: RequestInit = {
       method,
-      signal,
       headers: {
         ...headers,
         Accept: 'application/json',

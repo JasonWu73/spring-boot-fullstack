@@ -1,29 +1,26 @@
 import React from 'react'
 
-import { useAuth } from '@/auth/AuthProvider'
-import type { Auth, FetchResponse, ReLogin } from '@/shared/hooks/types'
+import type { Auth, FetchResponse, IgnoreFetch, ReLogin } from '@/shared/hooks/types'
 import { endNProgress, startNProgress } from '@/shared/utils/nprogress'
 
 type State<TData> = {
   data: TData | null
   error: string
   loading: boolean
-  loadingCount: number
   reLogin?: ReLogin
 }
 
 const initialState: State<unknown> = {
   data: null,
   error: '',
-  loading: false,
-  loadingCount: 0
+  loading: false
 }
 
 type Action<TData> =
   | { type: 'START_LOADING' }
   | { type: 'FETCH_SUCCESS'; payload: TData }
   | { type: 'FETCH_FAILED'; payload: string }
-  | { type: 'ABORT_FETCH' }
+  | { type: 'IGNORE_FETCH' } // 只是忽略请求的结果，而非取消请求；取消请求只会不易于前端调试，因为后端仍然会处理请求
 
 function reducer<TData>(state: State<TData>, action: Action<TData>): State<TData> {
   switch (action.type) {
@@ -34,41 +31,37 @@ function reducer<TData>(state: State<TData>, action: Action<TData>): State<TData
         ...state,
         data: null,
         error: '',
-        loading: true,
-        loadingCount: state.loadingCount + 1
+        loading: true
       }
     }
     case 'FETCH_SUCCESS': {
-      tryEndNProgress(state.loadingCount)
+      endNProgress()
 
       return {
         ...state,
         data: action.payload,
         error: '',
-        loading: state.loadingCount > 1,
-        loadingCount: state.loadingCount - 1
+        loading: false
       }
     }
     case 'FETCH_FAILED': {
-      tryEndNProgress(state.loadingCount)
+      endNProgress()
 
       return {
         ...state,
         data: null,
         error: action.payload,
-        loading: state.loadingCount > 1,
-        loadingCount: state.loadingCount - 1
+        loading: false
       }
     }
-    case 'ABORT_FETCH': {
-      tryEndNProgress(state.loadingCount)
+    case 'IGNORE_FETCH': {
+      endNProgress()
 
       return {
         ...state,
         data: null,
         error: '',
-        loading: state.loadingCount > 1,
-        loadingCount: state.loadingCount - 1
+        loading: false
       }
     }
     default: {
@@ -86,14 +79,14 @@ type UseFetch<TData, TParams> = {
   data: TData | null
   error: string
   loading: boolean
-  fetchData: (params?: TParams) => Promise<FetchResponse<TData>>
+  fetchData: (params?: TParams) => IgnoreFetch
 }
 
 /**
  * 获取数据（包含了身份验证自动刷新机制）的自定义 Hook。
  *
  * @template TData - 返回的数据类型
- * @template TParams - 请求参数类型，当包含 `AbortSignal` 属性时可触发请求取消
+ * @template TParams - 请求参数类型
  *
  * @param callback - 获取数据的回调函数
  * @returns {UseFetch} - 数据、错误信息、加载状态、获取数据的回调函数
@@ -106,48 +99,35 @@ function useFetch<TData, TParams>(
     initialState as State<TData>
   )
 
-  const { auth, deleteLoginCache, refreshAuth } = useAuth()
+  function fetchData(params?: TParams) {
+    // 前端应该只是忽略请求结果，而非使用 AbortController 取消请求
+    // 后者会导致 F12 中丢失响应信息，不易于前端调试
+    let ignoreResult = false
 
-  async function fetchData(params?: TParams) {
     dispatch({ type: 'START_LOADING' })
+    ;(async () => {
+      const response = await callback(params)
 
-    const response = await callback(params, auth || undefined)
+      // 如果在请求过程中，用户已经点击了路由，那么就忽略请求结果
+      if (ignoreResult) return
 
-    // 实现身份验证自动刷新及退出机制
-    if (response.reLogin) {
-      if (response.reLogin.success) {
-        refreshAuth(response.reLogin.auth)
-      } else {
-        deleteLoginCache()
+      if (response.error) {
+        dispatch({ type: 'FETCH_FAILED', payload: response.error })
+        return
       }
-    }
 
-    // 检查参数值中是否包含了 AbortSignal 属性
-    // 如果包含了 `AbortSignal` 属性，且该属性的 `aborted` 属性为 `true`，则取消请求
-    if (
-      params &&
-      typeof params === 'object' &&
-      Object.prototype.hasOwnProperty.call(params, 'abortSignal') &&
-      (params as { abortSignal?: AbortSignal }).abortSignal?.aborted
-    ) {
-      dispatch({ type: 'ABORT_FETCH' })
-      return response
-    }
+      dispatch({ type: 'FETCH_SUCCESS', payload: response.data })
+    })()
 
-    if (response.error) {
-      dispatch({ type: 'FETCH_FAILED', payload: response.error })
-      return response
+    return () => {
+      ignoreResult = true
+      // 因为 `dispatch` 是异步的，所以必须在此处忽略请求结果
+      // 如果放在 IIFE 内则可能会覆盖掉后续的 `dispatch` 结果
+      dispatch({ type: 'IGNORE_FETCH' })
     }
-
-    dispatch({ type: 'FETCH_SUCCESS', payload: response.data })
-    return response
   }
 
   return { data, error, loading, fetchData }
-}
-
-function tryEndNProgress(loadingCount: number) {
-  loadingCount <= 1 && endNProgress()
 }
 
 export { useFetch }
