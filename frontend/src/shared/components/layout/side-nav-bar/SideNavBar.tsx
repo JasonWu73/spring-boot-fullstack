@@ -10,10 +10,10 @@ function SideNavBar() {
   return (
     <ScrollArea className="h-[calc(100vh-6rem)] w-48">
       <nav className="flex flex-col items-center gap-2">
-        <Menu title="后端交互">
+        <Menu title="系统管理">
           <MenuItem link="/users">
             <UserCog2 className="h-5 w-5" />
-            <span>用户列表</span>
+            <span>用户管理</span>
           </MenuItem>
           <MenuItem link="/product">
             <ShoppingCart className="h-4 w-4" />

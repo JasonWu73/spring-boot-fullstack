@@ -6,18 +6,32 @@ import { useSearchParams } from 'react-router-dom'
 import { z } from 'zod'
 
 import { Button } from '@/shared/components/ui/Button'
-import { FormInput } from '@/shared/components/ui/CustomFormField'
+import { FormInput, FormSelect } from '@/shared/components/ui/CustomFormField'
 import { Form } from '@/shared/components/ui/Form'
-import { URL_QUERY_KEY_QUERY } from '@/shared/utils/constants'
+
+const statusOptions = [
+  { value: '', label: '全部' },
+  { value: '0', label: '禁用' },
+  { value: '1', label: '启用' }
+]
+
+const authorityOptions = [
+  { value: '', label: '全部' },
+  { value: 'admin', label: '管理员' },
+  { value: 'user', label: '用户' }
+]
 
 const formSchema = z.object({
-  query: z.string()
+  username: z.string(),
+  nickname: z.string(),
+  status: z.string(),
+  authority: z.string()
 })
 
 type FormSchema = z.infer<typeof formSchema>
 
 type UserSearchProps = {
-  onSearch: (query: string) => void
+  onSearch: (values: FormSchema) => void
   loading: boolean
 }
 
@@ -25,24 +39,34 @@ function UserSearch({ onSearch, loading }: UserSearchProps) {
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      query: ''
+      username: '',
+      nickname: '',
+      status: '',
+      authority: ''
     }
   })
 
   const [searchParams] = useSearchParams()
-  const query = searchParams.get(URL_QUERY_KEY_QUERY) || ''
 
   React.useEffect(() => {
-    form.setValue('query', query)
-  }, [query, form])
+    const username = searchParams.get('user') || ''
+    const nickname = searchParams.get('nick') || ''
+    const status = searchParams.get('status') || ''
+    const authority = searchParams.get('auth') || ''
+
+    form.setValue('username', username)
+    form.setValue('nickname', nickname)
+    form.setValue('status', status)
+    form.setValue('authority', authority)
+  }, [searchParams, form])
 
   function onSubmit(values: FormSchema) {
-    onSearch(values.query)
+    onSearch(values)
   }
 
   function handleReset() {
     form.reset()
-    onSubmit({ query: '' })
+    onSubmit({ username: '', nickname: '', status: '', authority: '' })
   }
 
   return (
@@ -51,12 +75,40 @@ function UserSearch({ onSearch, loading }: UserSearchProps) {
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex items-center gap-4">
           <FormInput
             control={form.control}
-            name="query"
+            name="username"
             type="text"
-            label="模糊搜索"
-            labelWidth={60}
-            placeholder="搜索用户名..."
-            isError={form.getFieldState('query')?.invalid}
+            label="用户名"
+            labelWidth={45}
+            placeholder="用户名"
+            isError={form.getFieldState('username')?.invalid}
+          />
+
+          <FormInput
+            control={form.control}
+            name="nickname"
+            type="text"
+            label="昵称"
+            labelWidth={45}
+            placeholder="昵称"
+            isError={form.getFieldState('nickname')?.invalid}
+          />
+
+          <FormSelect
+            control={form.control}
+            name="status"
+            label="状态"
+            labelWidth={45}
+            options={statusOptions}
+            isError={form.getFieldState('status')?.invalid}
+          />
+
+          <FormSelect
+            control={form.control}
+            name="authority"
+            label="权限"
+            labelWidth={45}
+            options={authorityOptions}
+            isError={form.getFieldState('authority')?.invalid}
           />
 
           <Button type="submit" disabled={loading}>
@@ -64,11 +116,9 @@ function UserSearch({ onSearch, loading }: UserSearchProps) {
             查询
           </Button>
 
-          {form.getValues('query').length > 0 && (
-            <Button onClick={handleReset} type="reset" variant="secondary">
-              重置
-            </Button>
-          )}
+          <Button onClick={handleReset} type="reset" variant="secondary">
+            重置
+          </Button>
         </form>
       </Form>
     </div>

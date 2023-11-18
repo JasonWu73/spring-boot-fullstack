@@ -129,7 +129,7 @@ function FormSelect<T extends FieldValues>({
           </FormLabel>
 
           <Select value={field.value} onValueChange={field.onChange}>
-            <FormControl className="bg-slate-100">
+            <FormControl className="bg-slate-100 text-slate-700">
               <SelectTrigger disabled={disabled} isError={isError}>
                 <SelectValue placeholder={placeholder} />
               </SelectTrigger>

@@ -1,7 +1,8 @@
 import React from 'react'
 import { useSearchParams } from 'react-router-dom'
 
-import { getUsersApi } from '@/shared/apis/dummyjson/user-api'
+import { useAuth } from '@/auth/AuthProvider'
+import type { Pagination } from '@/shared/apis/backend/types'
 import {
   Card,
   CardContent,
@@ -17,26 +18,46 @@ import {
 import { useFetch } from '@/shared/hooks/use-fetch'
 import { useRefresh } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
-import {
-  URL_QUERY_KEY_PAGE_NUM,
-  URL_QUERY_KEY_PAGE_SIZE,
-  URL_QUERY_KEY_QUERY
-} from '@/shared/utils/constants'
+import { URL_QUERY_KEY_PAGE_NUM, URL_QUERY_KEY_PAGE_SIZE } from '@/shared/utils/constants'
 import { UserSearch } from '@/user/UserSearch'
 import { UserTable } from '@/user/UserTable'
+import type { User } from '@/user/types'
 
 export default function UserListPage() {
   useTitle('用户列表')
 
   const [searchParams, setSearchParams] = useSearchParams()
+
   const pageNum = Number(searchParams.get(URL_QUERY_KEY_PAGE_NUM)) || DEFAULT_PAGE_NUM
   const pageSize = Number(searchParams.get(URL_QUERY_KEY_PAGE_SIZE)) || DEFAULT_PAGE_SIZE
-  const query = searchParams.get(URL_QUERY_KEY_QUERY) || ''
+  const username = searchParams.get('user') || ''
+  const nickname = searchParams.get('nick') || ''
+  const status = searchParams.get('status') || ''
+  const authority = searchParams.get('auth') || ''
 
-  const { data: users, error, loading, fetchData: getUsers } = useFetch(getUsersApi)
+  const { requestApi } = useAuth()
+
+  const {
+    data,
+    error,
+    loading,
+    fetchData: getUsers
+  } = useFetch(async () => {
+    return await requestApi<Pagination<User>>({
+      url: '/api/v1/users',
+      urlData: {
+        pageNum,
+        pageSize,
+        username,
+        nickname,
+        status,
+        authority
+      }
+    })
+  })
 
   useRefresh(() => {
-    const ignore = getUsers({ pageNum, pageSize, query })
+    const ignore = getUsers({ pageNum, pageSize, query: username })
 
     return () => ignore()
   })
@@ -48,8 +69,21 @@ export default function UserListPage() {
     setSearchParams(searchParams, { replace: true })
   }
 
-  function handleSearch(query: string) {
-    setSearchParams({ [URL_QUERY_KEY_QUERY]: query }, { replace: true })
+  function handleSearch(values: {
+    username: string
+    nickname: string
+    status: string
+    authority: string
+  }) {
+    setSearchParams(
+      {
+        user: values.username,
+        nick: values.nickname,
+        status: values.status,
+        auth: values.authority
+      },
+      { replace: true }
+    )
   }
 
   // 选中的行的索引
@@ -60,9 +94,10 @@ export default function UserListPage() {
   }
 
   function handleShowSelection() {
-    const ids = (users?.users || [])
+    const ids = (data?.list || [])
       .filter((_, index) => indexes.includes(index))
       .map((user) => user.id)
+
     if (ids.length === 0) return alert('没有选中任何一行')
 
     alert(`被选中的行 ID(s)：${ids.join(', ')}`)
@@ -72,19 +107,19 @@ export default function UserListPage() {
     <Card className="mx-auto h-full w-full">
       <CardHeader>
         <CardTitle>用户列表</CardTitle>
-        <CardDescription>来自 dummyJSON 的用户数据</CardDescription>
+        <CardDescription>可登录系统的所有账号信息</CardDescription>
       </CardHeader>
 
       <CardContent>
         <UserSearch onSearch={handleSearch} loading={loading} />
 
         <UserTable
-          users={users?.users || []}
+          users={data?.list || []}
           error={error}
           loading={loading}
           pageNum={pageNum}
           pageSize={pageSize}
-          pageCount={Math.ceil((users?.total || 0) / pageSize)}
+          total={data?.total || 0}
           onPaginate={handlePaginate}
           onSelect={handleSelect}
           onShowSelection={handleShowSelection}

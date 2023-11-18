@@ -88,7 +88,11 @@ export default function LoginPage() {
 
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            autoComplete="off"
+            className="flex flex-col gap-4"
+          >
             <FormInput
               control={form.control}
               name="username"

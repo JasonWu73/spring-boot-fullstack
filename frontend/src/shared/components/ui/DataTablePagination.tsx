@@ -16,11 +16,13 @@ import {
 } from '@/shared/components/ui/Select'
 
 type DataTablePaginationProps<TData> = {
+  total: number
   table: Table<TData>
   needsSelection?: boolean
 }
 
 function DataTablePagination<TData>({
+  total,
   table,
   needsSelection = false
 }: DataTablePaginationProps<TData>) {
@@ -58,7 +60,8 @@ function DataTablePagination<TData>({
         </div>
 
         <div className="flex items-center justify-center text-sm font-medium">
-          第 {table.getState().pagination.pageIndex + 1} 页，共 {table.getPageCount()} 页
+          第 {table.getState().pagination.pageIndex + 1} / {table.getPageCount()} 页，共{' '}
+          {total} 条
         </div>
 
         <div className="flex items-center space-x-2">

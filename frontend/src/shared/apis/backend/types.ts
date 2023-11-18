@@ -7,6 +7,14 @@ export type ApiError = {
   path: string
 }
 
+// 分页数据类型
+export type Pagination<T> = {
+  pageNum: number
+  pageSize: number
+  total: number
+  list: T[]
+}
+
 // ----- 登录相关数据类型 -----
 export type LoginParams = {
   username: string

@@ -23,9 +23,9 @@ import {
 const DEFAULT_PAGE_NUM = 1
 const DEFAULT_PAGE_SIZE = 10
 
-type Pagination = { pageNum: number; pageSize: number; pageCount: number }
+type Pagination = { pageNum: number; pageSize: number; total: number }
 
-type Paging = Omit<Pagination, 'pageCount'>
+type Paging = Omit<Pagination, 'pageCount' | 'total'>
 
 type DataTableProps<TData, TValue> = {
   columns: ColumnDef<TData, TValue>[]
@@ -83,7 +83,7 @@ function DataTable<TData, TValue>({
 
     getPaginationRowModel: getPaginationRowModel(),
     manualPagination, // 是否手动分页
-    pageCount: pagination?.pageCount || -1, // 手动分页需要设置的总页数
+    pageCount: Math.ceil((pagination?.total || 0) / (pagination?.pageSize || 1)), // 手动分页需要设置的总页数
     onPaginationChange: (updater) => {
       const prev = table.getState().pagination
 
@@ -189,7 +189,11 @@ function DataTable<TData, TValue>({
       </div>
 
       {!loading && !error && (
-        <DataTablePagination table={table} needsSelection={enableRowSelection} />
+        <DataTablePagination
+          total={pagination?.total || 0}
+          table={table}
+          needsSelection={enableRowSelection}
+        />
       )}
     </>
   )

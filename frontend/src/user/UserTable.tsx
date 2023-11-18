@@ -2,7 +2,6 @@ import { type ColumnDef } from '@tanstack/react-table'
 import { MoreHorizontal } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
-import type { User } from '@/shared/apis/dummyjson/types'
 import { Code } from '@/shared/components/Code'
 import { Button } from '@/shared/components/ui/Button'
 import { Checkbox } from '@/shared/components/ui/Checkbox'
@@ -16,6 +15,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/shared/components/ui/DropdownMenu'
+import type { User } from '@/user/types'
 
 const columns: ColumnDef<User>[] = [
   {
@@ -47,7 +47,7 @@ const columns: ColumnDef<User>[] = [
     header: ({ column }) => <DataTableColumnHeader column={column} title="姓名" />,
     cell: ({ row }) => {
       const user = row.original
-      return user.firstName + ' ' + user.lastName
+      return user.nickname
     }
   },
   {
@@ -77,7 +77,7 @@ const columns: ColumnDef<User>[] = [
     cell: ({ row }) => {
       const user = row.original
 
-      return <Code>{user.password}</Code>
+      return <Code>{user.createdAt}</Code>
     }
   },
   {
@@ -102,7 +102,7 @@ const columns: ColumnDef<User>[] = [
               复制用户名
             </DropdownMenuItem>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(user.password)}
+              onClick={() => navigator.clipboard.writeText(user.createdAt)}
             >
               复制密码
             </DropdownMenuItem>
@@ -131,7 +131,7 @@ type UserTableProps = {
   loading: boolean
   pageNum: number
   pageSize: number
-  pageCount: number
+  total: number
   onPaginate: (paging: Paging) => void
   onSelect: (rowIndexes: number[]) => void
   onShowSelection: () => void
@@ -143,7 +143,7 @@ function UserTable({
   loading,
   pageNum,
   pageSize,
-  pageCount,
+  total,
   onPaginate,
   onSelect,
   onShowSelection
@@ -157,7 +157,7 @@ function UserTable({
       pagination={{
         pageNum,
         pageSize,
-        pageCount
+        total
       }}
       onPaginate={onPaginate}
       enableRowSelection

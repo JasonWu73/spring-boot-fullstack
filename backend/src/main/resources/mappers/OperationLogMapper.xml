@@ -32,13 +32,13 @@
     <where>
       requested_at &gt;= CONCAT(#{q.startAt}, ' 00:00:00')
       AND requested_at &lt;= CONCAT(#{q.endAt}, ' 23:59:59')
-      <if test="q.clientIp != null">
+      <if test="q.clientIp != null and q.clientIp != ''">
         AND client_ip LIKE #{q.clientIp}
       </if>
-      <if test="q.username != null">
+      <if test="q.username != null and q.username != ''">
         AND username LIKE #{q.username}
       </if>
-      <if test="q.message != null">
+      <if test="q.message != null and q.message != ''">
         AND message LIKE #{q.message}
       </if>
     </where>

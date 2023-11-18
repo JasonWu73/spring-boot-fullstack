@@ -80,16 +80,16 @@
 
   <sql id="whereQuery">
     <where>
-      <if test="q.username != null">
+      <if test="q.username != null and q.username != ''">
         AND username LIKE #{q.username}
       </if>
-      <if test="q.nickname != null">
+      <if test="q.nickname != null and q.nickname != ''">
         AND nickname LIKE #{q.nickname}
       </if>
-      <if test="q.status != null">
+      <if test="q.status != null and q.status != ''">
         AND status = #{q.status}
       </if>
-      <if test="q.authority != null">
+      <if test="q.authority != null and q.authority != ''">
         AND (
         authorities = #{q.authority}
         OR authorities LIKE CONCAT(#{q.authority}, ',%')

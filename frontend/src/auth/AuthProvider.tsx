@@ -89,10 +89,17 @@ function AuthProvider({ children }: AuthProviderProps) {
   async function requestApi<T>(request: ApiRequest): Promise<FetchResponse<T>> {
     if (!auth) return { error: '未登录' }
 
-    // 判断是否需要先刷新访问令牌
     const { expiresAt, accessToken, refreshToken } = auth
 
-    // 这里为了方便模拟，故意设置离过期时间有 29 分钟时就刷新访问令牌
+    // 发送请求
+    const response = await sendRequest<T, ApiError>({
+      ...request,
+      url: `${BASE_URL}${request.url}`,
+      headers: { ...request.headers, Authorization: `Bearer ${accessToken}` }
+    })
+
+    // 检查是否需要刷新访问令牌
+    // 这里为了测试目的，故意设置离过期时间有 29 分钟时就刷新访问令牌
     if (expiresAt - Date.now() <= 29 * 60 * 1000) {
       const { data, error } = await refreshApi(accessToken, refreshToken)
 
@@ -108,18 +115,15 @@ function AuthProvider({ children }: AuthProviderProps) {
       }
     }
 
-    // 发送请求
-    const { data, error } = await sendRequest<T, ApiError>({
-      ...request,
-      url: `${BASE_URL}${request.url}`,
-      headers: { ...request.headers, Authorization: `Bearer ${accessToken}` }
-    })
+    const { data, error } = response
 
-    if (!error) return { data: data ?? undefined }
+    if (error) {
+      if (typeof error === 'string') return { error }
 
-    if (typeof error === 'string') return { error }
+      return { error: error.error }
+    }
 
-    return { error: error.error }
+    return { data: data ?? undefined }
   }
 
   const value: AuthProviderState = {
