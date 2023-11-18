@@ -45,6 +45,8 @@ export default function LoginPage() {
   const { toast, dismiss } = useToast()
 
   React.useEffect(() => {
+    if (!error) return
+
     toast({
       title: '登录失败',
       description: error,
@@ -55,11 +57,13 @@ export default function LoginPage() {
   const resetLogin = React.useRef<IgnoreFetch>()
 
   useRefresh(() => {
-    form.reset()
-    dismiss()
+    return () => {
+      form.reset()
+      dismiss()
 
-    if (resetLogin.current) {
-      resetLogin.current()
+      if (resetLogin.current) {
+        resetLogin.current()
+      }
     }
   })
 

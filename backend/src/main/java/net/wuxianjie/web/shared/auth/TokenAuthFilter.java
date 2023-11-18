@@ -25,13 +25,6 @@ public class TokenAuthFilter extends OncePerRequestFilter {
    */
   public static final String BEARER_PREFIX = "Bearer ";
 
-  /**
-   * 登录过期错误码。
-   *
-   * <p>前端可识别该错误码，然后触发自动刷新访问令牌的逻辑。
-   */
-  private static final String LOGIN_EXPIRED_CODE = "TokenExpiredError";
-
   private final HandlerExceptionResolver handlerExceptionResolver;
   private final TokenAuth tokenAuth;
 
@@ -72,7 +65,7 @@ public class TokenAuthFilter extends OncePerRequestFilter {
         request,
         response,
         null,
-        new ApiException(HttpStatus.UNAUTHORIZED, LOGIN_EXPIRED_CODE, e)
+        new ApiException(HttpStatus.UNAUTHORIZED, "登录过期", e)
       );
       return;
     }

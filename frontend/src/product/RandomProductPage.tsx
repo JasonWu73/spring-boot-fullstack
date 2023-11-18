@@ -3,6 +3,7 @@ import React from 'react'
 
 import { getRandomProductApi } from '@/shared/apis/dummyjson/product-api'
 import { Button } from '@/shared/components/ui/Button'
+import type { IgnoreFetch } from '@/shared/hooks/types'
 import { useFetch } from '@/shared/hooks/use-fetch'
 import { useRefresh } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
@@ -27,14 +28,22 @@ export default function RandomProductPage() {
     }
   }, [product])
 
+  const resetGetProduct = React.useRef<IgnoreFetch>()
+
   useRefresh(() => {
     const ignore = getProduct()
 
-    return () => ignore()
+    return () => {
+      ignore()
+
+      if (resetGetProduct.current) {
+        resetGetProduct.current()
+      }
+    }
   })
 
   function handleGetProduct() {
-    getProduct()
+    resetGetProduct.current = getProduct()
   }
 
   return (

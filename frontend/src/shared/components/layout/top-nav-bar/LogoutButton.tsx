@@ -1,28 +1,28 @@
 import { ReloadIcon } from '@radix-ui/react-icons'
 import { LogOut } from 'lucide-react'
+import React from 'react'
 
 import { useAuth } from '@/auth/AuthProvider'
 import { Button } from '@/shared/components/ui/Button'
 import { useToast } from '@/shared/components/ui/use-toast'
 
 function LogoutButton() {
-  const { logoutLoading: loading, logout, deleteLoginCache } = useAuth()
+  const { logoutError: error, logoutLoading: loading, logout } = useAuth()
   const { toast } = useToast()
 
-  async function handleLogout() {
-    const response = await logout()
-    if (response.success) return deleteLoginCache()
+  React.useEffect(() => {
+    if (!error) return
 
     toast({
       title: '退出失败',
-      description: response.error,
+      description: error,
       variant: 'destructive'
     })
-  }
+  }, [error, toast])
 
   return (
     <Button
-      onClick={handleLogout}
+      onClick={() => logout()}
       variant="link"
       className="grid w-full grid-cols-[auto_1fr] gap-2 text-left"
       disabled={loading}

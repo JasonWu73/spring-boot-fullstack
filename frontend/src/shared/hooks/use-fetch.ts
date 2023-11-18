@@ -1,13 +1,12 @@
 import React from 'react'
 
-import type { Auth, FetchResponse, IgnoreFetch, ReLogin } from '@/shared/hooks/types'
+import type { FetchResponse, IgnoreFetch } from '@/shared/hooks/types'
 import { endNProgress, startNProgress } from '@/shared/utils/nprogress'
 
 type State<TData> = {
   data: TData | null
   error: string
   loading: boolean
-  reLogin?: ReLogin
 }
 
 const initialState: State<unknown> = {
@@ -18,7 +17,7 @@ const initialState: State<unknown> = {
 
 type Action<TData> =
   | { type: 'START_LOADING' }
-  | { type: 'FETCH_SUCCESS'; payload: TData }
+  | { type: 'FETCH_SUCCESS'; payload: TData | null }
   | { type: 'FETCH_FAILED'; payload: string }
   | { type: 'IGNORE_FETCH' } // 只是忽略请求的结果，而非取消请求；取消请求只会不易于前端调试，因为后端仍然会处理请求
 
@@ -70,10 +69,7 @@ function reducer<TData>(state: State<TData>, action: Action<TData>): State<TData
   }
 }
 
-type ApiCallback<TData, TParams> = (
-  params?: TParams,
-  auth?: Auth
-) => Promise<FetchResponse<TData>>
+type ApiCallback<TData, TParams> = (params?: TParams) => Promise<FetchResponse<TData>>
 
 type UseFetch<TData, TParams> = {
   data: TData | null
@@ -116,7 +112,7 @@ function useFetch<TData, TParams>(
         return
       }
 
-      dispatch({ type: 'FETCH_SUCCESS', payload: response.data })
+      dispatch({ type: 'FETCH_SUCCESS', payload: response.data ?? null })
     })()
 
     return () => {
