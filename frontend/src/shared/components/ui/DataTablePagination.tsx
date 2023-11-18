@@ -60,7 +60,7 @@ function DataTablePagination<TData>({
         </div>
 
         <div className="flex items-center justify-center text-sm font-medium">
-          第 {table.getState().pagination.pageIndex + 1} / {table.getPageCount()} 页，共{' '}
+          第 {table.getState().pagination.pageIndex + 1} / {table.getPageCount()} 页 共{' '}
           {total} 条
         </div>
 
