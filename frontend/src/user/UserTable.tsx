@@ -15,6 +15,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/shared/components/ui/DropdownMenu'
+import { Switch } from '@/shared/components/ui/Switch'
 import type { User } from '@/user/types'
 
 const columns: ColumnDef<User>[] = [
@@ -56,7 +57,7 @@ const columns: ColumnDef<User>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column}>
         用户名
-        <span className="ml-1 text-xs text-slate-700">（可用作登录）</span>
+        <span className="ml-1 text-xs text-slate-500">（可用作登录）</span>
       </DataTableColumnHeader>
     ),
     cell: ({ row }) => {
@@ -65,26 +66,18 @@ const columns: ColumnDef<User>[] = [
     }
   },
   {
-    id: '状态',
+    id: '是否启用',
     accessorKey: 'password',
     header: ({ column }) => (
       <DataTableColumnHeader column={column}>
-        状态
-        <span className="ml-1 text-xs text-slate-700">（禁用后不可登录）</span>
+        是否启用
+        <span className="ml-1 text-xs text-slate-500">（禁用后不可登录）</span>
       </DataTableColumnHeader>
     ),
     cell: ({ row }) => {
       const user = row.original
 
-      if (user.status === 0) {
-        return <span className="text-red-500">禁用</span>
-      }
-
-      if (user.status === 1) {
-        return <span className="text-green-500">启用</span>
-      }
-
-      return <span className="text-slate-500">未知</span>
+      return <Switch checked={user.status === 1} onCheckedChange={handleChangeStatus} />
     }
   },
   {
@@ -96,18 +89,34 @@ const columns: ColumnDef<User>[] = [
         <div className="space-x-1">
           {user.authorities.map((authority) => {
             if (authority === 'root') {
-              return <Code className="font-semibold text-red-500">超级管理员</Code>
+              return (
+                <Code key={authority} className="font-semibold text-red-500">
+                  超级管理员
+                </Code>
+              )
             }
 
             if (authority === 'admin') {
-              return <Code className="text-red-500">管理员</Code>
+              return (
+                <Code key={authority} className="text-red-500">
+                  管理员
+                </Code>
+              )
             }
 
             if (authority === 'user') {
-              return <Code className="text-green-500">用户</Code>
+              return (
+                <Code key={authority} className="text-green-500">
+                  用户
+                </Code>
+              )
             }
 
-            return <Code className="text-slate-500">未知</Code>
+            return (
+              <Code key={authority} className="text-slate-500">
+                未知
+              </Code>
+            )
           })}
         </div>
       )
@@ -203,6 +212,10 @@ function UserTable({
       </div>
     </DataTable>
   )
+}
+
+function handleChangeStatus() {
+  console.log('handleChangeStatus')
 }
 
 export { UserTable }
