@@ -78,22 +78,16 @@ async function sendRequest<TData, TError>({
     // 发送 HTTP 请求
     const response = await fetch(urlObj, options)
 
-    // 先以文本数据格式解析响应数据，以便检查响应数据是否为 JSON 数据格式
-    const responseText = await response.text()
+    // 如果 HTTP 状态码为 204，表示请求成功，但无响应数据
+    if (response.status === 204) return { data: null, error: null }
 
     // 以 JSON 数据格式解析请求
-    // 注意：响应数据可能为空字符串
-    if (responseText.length > 0) {
-      const responseData = JSON.parse(responseText)
+    const responseData = await response.json()
 
-      // 请求失败时，返回异常响应数据
-      if (!response.ok) return { data: null, error: responseData }
+    // 请求失败时，返回异常响应数据
+    if (!response.ok) return { data: null, error: responseData }
 
-      return { data: responseData, error: null }
-    }
-
-    // 请求成功时，但无响应数据
-    return { data: null, error: null }
+    return { data: responseData, error: null }
   } catch (error) {
     if (error instanceof Error && error.name === 'AbortError') {
       return { data: null, error: '用户主动取消了请求' }
