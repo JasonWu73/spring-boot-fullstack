@@ -24,8 +24,6 @@ type Action<TData> =
 function reducer<TData>(state: State<TData>, action: Action<TData>): State<TData> {
   switch (action.type) {
     case 'START_LOADING': {
-      startNProgress()
-
       return {
         ...state,
         data: null,
@@ -34,8 +32,6 @@ function reducer<TData>(state: State<TData>, action: Action<TData>): State<TData
       }
     }
     case 'FETCH_SUCCESS': {
-      endNProgress()
-
       return {
         ...state,
         data: action.payload,
@@ -44,8 +40,6 @@ function reducer<TData>(state: State<TData>, action: Action<TData>): State<TData
       }
     }
     case 'FETCH_FAILED': {
-      endNProgress()
-
       return {
         ...state,
         data: null,
@@ -54,8 +48,6 @@ function reducer<TData>(state: State<TData>, action: Action<TData>): State<TData
       }
     }
     case 'IGNORE_FETCH': {
-      endNProgress()
-
       return {
         ...state,
         data: null,
@@ -100,12 +92,15 @@ function useFetch<TData, TParams>(
     // 后者会导致 F12 中丢失响应信息，不易于前端调试
     let ignoreResult = false
 
+    startNProgress()
     dispatch({ type: 'START_LOADING' })
-    ;(async () => {
+    ;(async function () {
       const response = await callback(params)
 
       // 如果在请求过程中，用户已经点击了路由，那么就忽略请求结果
       if (ignoreResult) return
+
+      endNProgress()
 
       if (response.error) {
         dispatch({ type: 'FETCH_FAILED', payload: response.error })
@@ -117,6 +112,9 @@ function useFetch<TData, TParams>(
 
     return () => {
       ignoreResult = true
+      // 因为 `dispatch` 是异步的，所以必须在此处结束进度条
+      // 否则当组件被登录过期而跳转到登录页时，进度条并不会被结束
+      endNProgress()
       // 因为 `dispatch` 是异步的，所以必须在此处忽略请求结果
       // 如果放在 IIFE 内则可能会覆盖掉后续的 `dispatch` 结果
       dispatch({ type: 'IGNORE_FETCH' })
