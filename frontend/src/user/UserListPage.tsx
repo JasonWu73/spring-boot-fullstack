@@ -23,6 +23,18 @@ import { UserSearch } from '@/user/UserSearch'
 import { UserTable } from '@/user/UserTable'
 import type { User } from '@/user/types'
 
+type GetUserParams = {
+  username?: string
+  nickname?: string
+  status?: string
+  authority?: string
+}
+
+type GetUsersParams = GetUserParams & {
+  pageNum: number
+  pageSize: number
+}
+
 export default function UserListPage() {
   useTitle('用户列表')
 
@@ -30,10 +42,10 @@ export default function UserListPage() {
 
   const pageNum = Number(searchParams.get(URL_QUERY_KEY_PAGE_NUM)) || DEFAULT_PAGE_NUM
   const pageSize = Number(searchParams.get(URL_QUERY_KEY_PAGE_SIZE)) || DEFAULT_PAGE_SIZE
-  const username = searchParams.get('user') || ''
-  const nickname = searchParams.get('nick') || ''
-  const status = searchParams.get('status') || ''
-  const authority = searchParams.get('auth') || ''
+  const username = searchParams.get('user')
+  const nickname = searchParams.get('nick')
+  const status = searchParams.get('status')
+  const authority = searchParams.get('auth')
 
   const { requestApi } = useAuth()
 
@@ -43,21 +55,20 @@ export default function UserListPage() {
     loading,
     fetchData: getUsers
   } = useFetch(async () => {
+    const params: GetUsersParams = { pageNum, pageSize }
+    if (username) params['username'] = username
+    if (nickname) params['nickname'] = nickname
+    if (status) params['status'] = status
+    if (authority) params['authority'] = authority
+
     return await requestApi<Pagination<User>>({
       url: '/api/v1/users',
-      urlData: {
-        pageNum,
-        pageSize,
-        username,
-        nickname,
-        status,
-        authority
-      }
+      urlParams: params
     })
   })
 
   useRefresh(() => {
-    const ignore = getUsers({ pageNum, pageSize, query: username })
+    const ignore = getUsers()
 
     return () => ignore()
   })
@@ -69,21 +80,14 @@ export default function UserListPage() {
     setSearchParams(searchParams, { replace: true })
   }
 
-  function handleSearch(values: {
-    username: string
-    nickname: string
-    status: string
-    authority: string
-  }) {
-    setSearchParams(
-      {
-        user: values.username,
-        nick: values.nickname,
-        status: values.status,
-        auth: values.authority
-      },
-      { replace: true }
-    )
+  function handleSearch(values: GetUserParams) {
+    const params: GetUserParams = {}
+    if (values.username) params['username'] = values.username
+    if (values.nickname) params['nickname'] = values.nickname
+    if (values.status) params['status'] = values.status
+    if (values.authority) params['authority'] = values.authority
+
+    setSearchParams(params, { replace: true })
   }
 
   // 选中的行的索引

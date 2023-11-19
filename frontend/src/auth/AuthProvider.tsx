@@ -102,20 +102,25 @@ function AuthProvider({ children }: AuthProviderProps) {
       headers: { ...request.headers, Authorization: `Bearer ${accessToken}` }
     })
 
+    // 检查是否需要重新登录
+    if (response.status === 401) {
+      setAuthCache(null)
+      return { error: '登录过期' }
+    }
+
     // 检查是否需要刷新访问令牌
     // 这里为了测试目的，故意设置离过期时间有 29 分钟时就刷新访问令牌
     if (expiresAt - Date.now() <= 29 * 60 * 1000) {
       const { data, error } = await refreshApi(accessToken, refreshToken)
 
       if (error) {
-        setStorageAuth(null)
+        setAuthCache(null)
+        return { error: error }
       }
 
       if (data) {
         const auth = toStorageAuth(data)
-
-        setAuth(auth)
-        setStorageAuth(auth)
+        setAuthCache(auth)
       }
     }
 
@@ -128,6 +133,11 @@ function AuthProvider({ children }: AuthProviderProps) {
     }
 
     return { data: data ?? undefined }
+  }
+
+  function setAuthCache(auth: Auth | null) {
+    setAuth(auth)
+    setStorageAuth(auth)
   }
 
   const isRoot = auth?.authorities.includes('root') ?? false

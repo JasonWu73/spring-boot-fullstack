@@ -1,11 +1,13 @@
-import type { ApiRequest, UrlData } from '@/shared/utils/types'
+import type { ApiRequest, UrlParams } from '@/shared/utils/types'
 
 export type SuccessResponse<T> = {
+  status: number
   data: T | null
   error: null
 }
 
 export type ErrorResponse<T> = {
+  status: number
   data: null
   error: T | string
 }
@@ -26,7 +28,7 @@ type ApiResponse<TData, TError> = SuccessResponse<TData> | ErrorResponse<TError>
  * @param Request.method - 请求方法，默认为 `GET`
  * @param Request.contentType - 请求体的内容类型，默认为 `JSON`
  * @param Request.headers - HTTP 请求头
- * @param Request.urlData - URL 参数
+ * @param Request.urlParams - URL 参数
  * @param Request.bodyData - 请求体数据
  * @returns {Promise<Response<TData, TError>>} - 以 JSON 数据格式解析后的正常或异常响应数据
  */
@@ -35,15 +37,15 @@ async function sendRequest<TData, TError>({
   method = 'GET',
   contentType = 'JSON',
   headers = {},
-  urlData,
+  urlParams,
   bodyData
 }: ApiRequest): Promise<ApiResponse<TData, TError>> {
   try {
     // 追加 URL 参数
     const urlObj = new URL(url)
-    if (urlData) {
-      Object.keys(urlData).forEach((key) =>
-        urlObj.searchParams.append(key, urlData[key]?.toString() || '')
+    if (urlParams) {
+      Object.keys(urlParams).forEach((key) =>
+        urlObj.searchParams.append(key, urlParams[key]?.toString() || '')
       )
     }
 
@@ -64,11 +66,11 @@ async function sendRequest<TData, TError>({
         contentType === 'FILE'
           ? (bodyData as FormData)
           : contentType === 'URLENCODED'
-          ? Object.keys(bodyData as UrlData)
+          ? Object.keys(bodyData as UrlParams)
               .map(
                 (key) =>
                   `${encodeURIComponent(key)}=${encodeURIComponent(
-                    (bodyData as UrlData)[key] || ''
+                    (bodyData as UrlParams)[key] || ''
                   )}`
               )
               .join('&')
@@ -79,23 +81,24 @@ async function sendRequest<TData, TError>({
     const response = await fetch(urlObj, options)
 
     // 如果 HTTP 状态码为 204，表示请求成功，但无响应数据
-    if (response.status === 204) return { data: null, error: null }
+    if (response.status === 204)
+      return { status: response.status, data: null, error: null }
 
     // 以 JSON 数据格式解析请求
     const responseData = await response.json()
 
     // 请求失败时，返回异常响应数据
-    if (!response.ok) return { data: null, error: responseData }
+    if (!response.ok) return { status: response.status, data: null, error: responseData }
 
-    return { data: responseData, error: null }
+    return { status: response.status, data: responseData, error: null }
   } catch (error) {
     if (error instanceof Error && error.name === 'AbortError') {
-      return { data: null, error: '用户主动取消了请求' }
+      return { status: 999, data: null, error: '用户主动取消了请求' }
     }
 
-    if (error instanceof Error) return { data: null, error: error.message }
+    if (error instanceof Error) return { status: 999, data: null, error: error.message }
 
-    return { data: null, error: String(error) }
+    return { status: 999, data: null, error: String(error) }
   }
 }
 

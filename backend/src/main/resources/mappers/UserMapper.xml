@@ -86,7 +86,8 @@
       <if test="q.nickname != null and q.nickname != ''">
         AND nickname LIKE #{q.nickname}
       </if>
-      <if test="q.status != null and q.status != ''">
+      <!-- 不要使用 `<if test="q.status != null and q.status != ''">`，因为 `0` 会被认识为空 -->
+      <if test="q.status != null">
         AND status = #{q.status}
       </if>
       <if test="q.authority != null and q.authority != ''">

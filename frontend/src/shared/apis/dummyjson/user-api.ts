@@ -14,7 +14,7 @@ async function getUsersApi(params?: GetUsersParams) {
 
   const { data, error } = await sendRequest<PaginationData<User>, ApiError>({
     url: 'https://dummyjson.com/users/search?select=id,firstName,lastName,email,username,password,birthDate,image',
-    urlData: {
+    urlParams: {
       limit: pageSize,
       skip: (pageNum - 1) * pageSize,
       q: query
