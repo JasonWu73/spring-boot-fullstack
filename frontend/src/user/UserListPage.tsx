@@ -42,10 +42,10 @@ export default function UserListPage() {
 
   const pageNum = Number(searchParams.get(URL_QUERY_KEY_PAGE_NUM)) || DEFAULT_PAGE_NUM
   const pageSize = Number(searchParams.get(URL_QUERY_KEY_PAGE_SIZE)) || DEFAULT_PAGE_SIZE
-  const username = searchParams.get('user')
-  const nickname = searchParams.get('nick')
+  const username = searchParams.get('username')
+  const nickname = searchParams.get('nickname')
   const status = searchParams.get('status')
-  const authority = searchParams.get('auth')
+  const authority = searchParams.get('authority')
 
   const { requestApi } = useAuth()
 

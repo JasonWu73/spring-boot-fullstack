@@ -49,15 +49,15 @@ function UserSearch({ onSearch, loading }: UserSearchProps) {
   const [searchParams] = useSearchParams()
 
   React.useEffect(() => {
-    const username = searchParams.get('user')
-    const nickname = searchParams.get('nick')
-    const status = searchParams.get('status')
-    const authority = searchParams.get('auth')
+    const username = searchParams.get('username') || ''
+    const nickname = searchParams.get('nickname') || ''
+    const status = searchParams.get('status') || ''
+    const authority = searchParams.get('authority') || ''
 
-    if (username) form.setValue('username', username)
-    if (nickname) form.setValue('nickname', nickname)
-    if (status) form.setValue('status', status)
-    if (authority) form.setValue('authority', authority)
+    form.setValue('username', username)
+    form.setValue('nickname', nickname)
+    form.setValue('status', status)
+    form.setValue('authority', authority)
   }, [searchParams, form])
 
   function onSubmit(values: FormSchema) {
