@@ -43,8 +43,8 @@ const columns: ColumnDef<User>[] = [
     header: ({ column }) => <DataTableColumnHeader column={column} title="ID" />
   },
   {
-    id: '姓名',
-    header: ({ column }) => <DataTableColumnHeader column={column} title="姓名" />,
+    id: '昵称',
+    header: ({ column }) => <DataTableColumnHeader column={column} title="昵称" />,
     cell: ({ row }) => {
       const user = row.original
       return user.nickname
@@ -56,28 +56,61 @@ const columns: ColumnDef<User>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column}>
         用户名
-        <span className="ml-1 text-xs text-slate-500">（可用作登录）</span>
+        <span className="ml-1 text-xs text-slate-700">（可用作登录）</span>
       </DataTableColumnHeader>
     ),
     cell: ({ row }) => {
       const user = row.original
-
       return <Code>{user.username}</Code>
     }
   },
   {
-    id: '密码',
+    id: '状态',
     accessorKey: 'password',
     header: ({ column }) => (
       <DataTableColumnHeader column={column}>
-        密码
-        <span className="ml-1 text-xs text-slate-500">（可用作登录）</span>
+        状态
+        <span className="ml-1 text-xs text-slate-700">（禁用后不可登录）</span>
       </DataTableColumnHeader>
     ),
     cell: ({ row }) => {
       const user = row.original
 
-      return <Code>{user.createdAt}</Code>
+      if (user.status === 0) {
+        return <span className="text-red-500">禁用</span>
+      }
+
+      if (user.status === 1) {
+        return <span className="text-green-500">启用</span>
+      }
+
+      return <span className="text-slate-500">未知</span>
+    }
+  },
+  {
+    id: '权限',
+    header: ({ column }) => <DataTableColumnHeader column={column} title="权限" />,
+    cell: ({ row }) => {
+      const user = row.original
+      return (
+        <div className="space-x-1">
+          {user.authorities.map((authority) => {
+            if (authority === 'root') {
+              return <Code className="font-semibold text-red-500">超级管理员</Code>
+            }
+
+            if (authority === 'admin') {
+              return <Code className="text-red-500">管理员</Code>
+            }
+
+            if (authority === 'user') {
+              return <Code className="text-green-500">用户</Code>
+            }
+
+            return <Code className="text-slate-500">未知</Code>
+          })}
+        </div>
+      )
     }
   },
   {
