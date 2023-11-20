@@ -72,12 +72,12 @@ function UserTable({
         enableHiding: false
       },
       {
-        id: 'id',
+        id: 'ID',
         accessorKey: 'id',
         header: ({ column }) => <DataTableColumnHeader column={column} title="ID" />
       },
       {
-        id: 'nickname',
+        id: '昵称',
         header: ({ column }) => <DataTableColumnHeader column={column} title="昵称" />,
         cell: ({ row }) => {
           const user = row.original
@@ -86,7 +86,7 @@ function UserTable({
         }
       },
       {
-        id: 'username',
+        id: '用户名',
         accessorKey: 'username',
         header: ({ column }) => (
           <DataTableColumnHeader column={column}>
@@ -101,7 +101,7 @@ function UserTable({
         }
       },
       {
-        id: 'status',
+        id: '是否启用',
         header: ({ column }) => (
           <DataTableColumnHeader column={column}>
             是否启用
@@ -138,7 +138,7 @@ function UserTable({
         }
       },
       {
-        id: 'authorities',
+        id: '权限',
         header: ({ column }) => <DataTableColumnHeader column={column} title="权限" />,
         cell: ({ row }) => {
           const user = row.original
@@ -181,21 +181,21 @@ function UserTable({
         }
       },
       {
-        id: 'createdAt',
+        id: '创建时间',
         accessorKey: 'createdAt',
         header: ({ column }) => (
           <DataTableColumnHeader sortable column={column} title="创建时间" />
         )
       },
       {
-        id: 'updatedAt',
+        id: '修改时间',
         accessorKey: 'updatedAt',
         header: ({ column }) => (
           <DataTableColumnHeader sortable column={column} title="修改时间" />
         )
       },
       {
-        id: 'remark',
+        id: '备注',
         accessorKey: 'remark',
         header: ({ column }) => <DataTableColumnHeader column={column} title="备注" />
       },
@@ -261,14 +261,17 @@ function UserTable({
       }}
       onPaginate={onPaginate}
       orderBy={{
-        id: searchParams.get(URL_QUERY_KEY_ORDER_BY) || 'createdAt',
+        id:
+          searchParams.get(URL_QUERY_KEY_ORDER_BY) === 'updatedAt'
+            ? '修改时间'
+            : '创建时间',
         desc: searchParams.get(URL_QUERY_KEY_ORDER) !== 'asc'
       }}
       onSorting={(sorting) => {
         searchParams.delete('createdAt')
         searchParams.delete('updatedAt')
 
-        const orderBy = sorting[0]?.id
+        const orderBy = sorting[0]?.id === '修改时间' ? 'updatedAt' : 'createdAt'
         const order = sorting[0]?.desc === true ? 'desc' : 'asc'
 
         if (!orderBy) return

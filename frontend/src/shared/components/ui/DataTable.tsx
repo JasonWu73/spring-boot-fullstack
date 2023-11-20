@@ -109,10 +109,6 @@ function DataTable<TData, TValue>({
           pageSize: next.pageSize
         })
       }
-
-      // 为了提升用户体验，跳转其他页后应该重置行选中状态
-      setRowSelection({})
-      onSelect?.([])
     },
 
     getSortedRowModel: getSortedRowModel(),
@@ -139,15 +135,6 @@ function DataTable<TData, TValue>({
 
         // 提取选中数据的索引以供外部组件使用
         const rowIndexes = Object.keys(next).map((key) => Number(key))
-
-        // 判断若是从全选状态再取消全选，则应该重置所有行的选中状态，而非只是当前页
-        const prevSelectedAll = table.getIsAllPageRowsSelected()
-
-        if (prevSelectedAll && rowIndexes.length >= data.length) {
-          setRowSelection({})
-          onSelect?.([])
-          return
-        }
 
         onSelect?.(rowIndexes)
       }
