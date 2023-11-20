@@ -1,5 +1,7 @@
 import type { ApiRequest, UrlParams } from '@/shared/utils/types'
 
+const CUSTOM_HTTP_STATUS_ERROR_CODE = 999
+
 export type SuccessResponse<T> = {
   status: number
   data: T | null
@@ -81,8 +83,9 @@ async function sendRequest<TData, TError>({
     const response = await fetch(urlObj, options)
 
     // 如果 HTTP 状态码为 204，表示请求成功，但无响应数据
-    if (response.status === 204)
+    if (response.status === 204) {
       return { status: response.status, data: null, error: null }
+    }
 
     // 以 JSON 数据格式解析请求
     const responseData = await response.json()
@@ -93,12 +96,17 @@ async function sendRequest<TData, TError>({
     return { status: response.status, data: responseData, error: null }
   } catch (error) {
     if (error instanceof Error && error.name === 'AbortError') {
-      return { status: 999, data: null, error: '用户主动取消了请求' }
+      return {
+        status: CUSTOM_HTTP_STATUS_ERROR_CODE,
+        data: null,
+        error: '用户主动取消了请求'
+      }
     }
 
-    if (error instanceof Error) return { status: 999, data: null, error: error.message }
+    if (error instanceof Error)
+      return { status: CUSTOM_HTTP_STATUS_ERROR_CODE, data: null, error: error.message }
 
-    return { status: 999, data: null, error: String(error) }
+    return { status: CUSTOM_HTTP_STATUS_ERROR_CODE, data: null, error: String(error) }
   }
 }
 
