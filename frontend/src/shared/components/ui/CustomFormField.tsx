@@ -69,7 +69,7 @@ function FormInput<T extends FieldValues>({
             {label}
           </FormLabel>
 
-          <FormControl className="bg-slate-100 text-slate-700">
+          <FormControl className="bg-slate-50 text-slate-700">
             <Input
               type={type}
               placeholder={placeholder}
@@ -129,7 +129,7 @@ function FormSelect<T extends FieldValues>({
           </FormLabel>
 
           <Select value={field.value} onValueChange={field.onChange}>
-            <FormControl className="bg-slate-100 py-0 text-slate-700">
+            <FormControl className="bg-slate-50 py-0 text-slate-700">
               <SelectTrigger disabled={disabled} isError={isError}>
                 <SelectValue placeholder={placeholder} />
               </SelectTrigger>
@@ -179,7 +179,7 @@ function FormCalendar<T extends FieldValues>({
 
           <Popover>
             <PopoverTrigger asChild>
-              <FormControl className="bg-slate-100 text-slate-700">
+              <FormControl className="bg-slate-50 text-slate-700">
                 <Button
                   variant="outline"
                   className={cn(
