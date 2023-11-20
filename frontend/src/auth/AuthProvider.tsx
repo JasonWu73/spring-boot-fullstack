@@ -38,6 +38,7 @@ type AuthProviderProps = {
 function AuthProvider({ children }: AuthProviderProps) {
   const [auth, setAuth] = React.useState(getStorageAuth)
   const [loading, setLoading] = React.useState(false)
+  const refreshable = React.useRef(true)
 
   /**
    * 需要使用访问令牌的 API 请求。
@@ -69,7 +70,9 @@ function AuthProvider({ children }: AuthProviderProps) {
     }
 
     // 检查是否需要刷新访问令牌
-    if (needsRefreshAuth) {
+    if (needsRefreshAuth && refreshable.current) {
+      refreshable.current = false
+
       const { status, data, error } = await refreshApi(accessToken, refreshToken)
 
       setLoading(false)
@@ -83,6 +86,12 @@ function AuthProvider({ children }: AuthProviderProps) {
         const auth = toStorageAuth(data)
         setAuthCache(auth)
       }
+
+      // 刷新访问令牌后，至少间隔 5 分钟后才能再次触发
+      // 主要为了防止 `React.StrictMode` 模式下执行两次刷新，导致退出登录
+      setTimeout(() => {
+        refreshable.current = true
+      }, 5_000)
     } else {
       setLoading(false)
     }
