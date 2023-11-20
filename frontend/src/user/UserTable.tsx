@@ -50,6 +50,7 @@ function getColumns(isRoot: boolean) {
       header: ({ column }) => <DataTableColumnHeader column={column} title="昵称" />,
       cell: ({ row }) => {
         const user = row.original
+
         return user.nickname
       }
     },
@@ -64,6 +65,7 @@ function getColumns(isRoot: boolean) {
       ),
       cell: ({ row }) => {
         const user = row.original
+
         return <Code>{user.username}</Code>
       }
     },
@@ -87,6 +89,7 @@ function getColumns(isRoot: boolean) {
       header: ({ column }) => <DataTableColumnHeader column={column} title="权限" />,
       cell: ({ row }) => {
         const user = row.original
+
         return (
           <div className="space-x-1">
             {user.authorities.map((authority) => {
@@ -157,11 +160,14 @@ function getColumns(isRoot: boolean) {
                   编辑
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Link to={`/users/${user.id}/delete`} className="inline-block w-full">
-                  删除
-                </Link>
-              </DropdownMenuItem>
+
+              {isRoot && (
+                <DropdownMenuItem>
+                  <Link to={`/users/${user.id}/delete`} className="inline-block w-full">
+                    删除
+                  </Link>
+                </DropdownMenuItem>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
         )
