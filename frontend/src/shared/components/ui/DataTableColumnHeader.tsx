@@ -20,7 +20,7 @@ import { cn } from '@/shared/utils/helpers'
 type DataTableColumnHeaderProps<TData, TValue> = React.HTMLAttributes<HTMLDivElement> & {
   column: Column<TData, TValue>
   title?: string
-  needsSort?: boolean
+  sortable?: boolean
 }
 
 function DataTableColumnHeader<TData, TValue>({
@@ -28,7 +28,7 @@ function DataTableColumnHeader<TData, TValue>({
   title = '',
   className,
   children,
-  needsSort = false
+  sortable = false
 }: DataTableColumnHeaderProps<TData, TValue>) {
   return (
     <div className={cn('flex items-center space-x-2', className)}>
@@ -41,9 +41,9 @@ function DataTableColumnHeader<TData, TValue>({
           >
             {children ? children : title}
 
-            {!needsSort && <CaretSortIcon className="ml-2 h-4 w-4" />}
+            {!sortable && <CaretSortIcon className="ml-2 h-4 w-4" />}
 
-            {needsSort &&
+            {sortable &&
               (column.getIsSorted() === 'desc' ? (
                 <ArrowDownIcon className="ml-2 h-4 w-4" />
               ) : column.getIsSorted() === 'asc' ? (
@@ -55,7 +55,7 @@ function DataTableColumnHeader<TData, TValue>({
         </DropdownMenuTrigger>
 
         <DropdownMenuContent align="start">
-          {needsSort && column.getCanSort() && (
+          {sortable && column.getCanSort() && (
             <>
               <DropdownMenuItem onClick={() => column.toggleSorting(false)}>
                 <ArrowUpIcon className="text-muted-foreground/70 mr-2 h-3.5 w-3.5" />

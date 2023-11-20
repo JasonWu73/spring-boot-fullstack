@@ -8,7 +8,6 @@ import { z } from 'zod'
 import { Button } from '@/shared/components/ui/Button'
 import { FormInput, FormSelect } from '@/shared/components/ui/CustomFormField'
 import { Form } from '@/shared/components/ui/Form'
-import type { GetUserParams } from '@/user/types'
 
 const statusOptions = [
   { value: '', label: '全部' },
@@ -35,15 +34,17 @@ type UserSearchProps = {
   loading: boolean
 }
 
+const defaultValues = {
+  username: '',
+  nickname: '',
+  status: '',
+  authority: ''
+}
+
 function UserSearch({ loading }: UserSearchProps) {
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      username: '',
-      nickname: '',
-      status: '',
-      authority: ''
-    }
+    defaultValues
   })
 
   const [searchParams, setSearchParams] = useSearchParams()
@@ -61,18 +62,22 @@ function UserSearch({ loading }: UserSearchProps) {
   }, [searchParams, form])
 
   function onSubmit(values: FormSchema) {
-    const params: GetUserParams = {}
-    if (values.username) params['username'] = values.username
-    if (values.nickname) params['nickname'] = values.nickname
-    if (values.status) params['status'] = values.status
-    if (values.authority) params['authority'] = values.authority
+    searchParams.delete('username')
+    searchParams.delete('nickname')
+    searchParams.delete('status')
+    searchParams.delete('authority')
 
-    setSearchParams(params, { replace: true })
+    if (values.username) searchParams.set('username', values.username)
+    if (values.nickname) searchParams.set('nickname', values.nickname)
+    if (values.status) searchParams.set('status', values.status)
+    if (values.authority) searchParams.set('authority', values.authority)
+
+    setSearchParams(searchParams, { replace: true })
   }
 
   function handleReset() {
     form.reset()
-    onSubmit({ username: '', nickname: '', status: '', authority: '' })
+    onSubmit(defaultValues)
   }
 
   return (

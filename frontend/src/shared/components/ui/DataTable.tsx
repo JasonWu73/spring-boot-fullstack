@@ -2,8 +2,11 @@ import {
   flexRender,
   getCoreRowModel,
   getPaginationRowModel,
+  getSortedRowModel,
   useReactTable,
   type ColumnDef,
+  type ColumnSort,
+  type SortingState,
   type VisibilityState
 } from '@tanstack/react-table'
 import React from 'react'
@@ -37,6 +40,10 @@ type DataTableProps<TData, TValue> = {
   pagination?: Pagination
   onPaginate?: (paging: Paging) => void
 
+  manualSorting?: boolean
+  orderBy?: ColumnSort
+  onSorting?: (sorting: SortingState) => void
+
   enableRowSelection?: boolean
   onSelect?: (rowIndexes: number[]) => void
 
@@ -56,11 +63,17 @@ function DataTable<TData, TValue>({
   pagination,
   onPaginate,
 
+  manualSorting = true,
+  orderBy,
+  onSorting,
+
   enableRowSelection = false,
   onSelect,
 
   children
 }: DataTableProps<TData, TValue>) {
+  const [sorting, setSorting] = React.useState<SortingState>(orderBy ? [orderBy] : [])
+
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
 
   const [rowSelection, setRowSelection] = React.useState({})
@@ -71,6 +84,8 @@ function DataTable<TData, TValue>({
         pageIndex: (pagination?.pageNum || DEFAULT_PAGE_NUM) - 1,
         pageSize: pagination?.pageSize || DEFAULT_PAGE_SIZE
       },
+
+      sorting: sorting,
 
       columnVisibility,
 
@@ -85,19 +100,31 @@ function DataTable<TData, TValue>({
     manualPagination, // 是否手动分页
     pageCount: Math.ceil((pagination?.total || 0) / (pagination?.pageSize || 1)), // 手动分页需要设置的总页数
     onPaginationChange: (updater) => {
-      const prev = table.getState().pagination
-
       if (typeof updater === 'function') {
+        const prev = table.getState().pagination
         const next = updater({ ...prev })
+
         onPaginate?.({
           pageNum: next.pageIndex + 1,
           pageSize: next.pageSize
         })
       }
 
-      // 为了提升用户体验，分页后应该重置行选中状态
+      // 为了提升用户体验，跳转其他页后应该重置行选中状态
       setRowSelection({})
       onSelect?.([])
+    },
+
+    getSortedRowModel: getSortedRowModel(),
+    manualSorting,
+    onSortingChange: (updater) => {
+      if (typeof updater === 'function') {
+        const prev = table.getState().sorting
+        const next = updater([...prev])
+
+        setSorting(next)
+        onSorting?.(next)
+      }
     },
 
     onColumnVisibilityChange: setColumnVisibility,

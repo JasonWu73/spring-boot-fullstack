@@ -8,6 +8,13 @@ export type ApiError = {
 }
 
 // 分页数据类型
+export type PaginationParams = {
+  pageNum: number
+  pageSize: number
+  orderBy?: string
+  order?: 'asc' | 'desc'
+}
+
 export type Pagination<T> = {
   pageNum: number
   pageSize: number

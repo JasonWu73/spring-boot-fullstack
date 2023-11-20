@@ -2,7 +2,7 @@ import React from 'react'
 import { useSearchParams } from 'react-router-dom'
 
 import { useAuth } from '@/auth/AuthProvider'
-import type { Pagination } from '@/shared/apis/backend/types'
+import type { Pagination, PaginationParams } from '@/shared/apis/backend/types'
 import {
   Card,
   CardContent,
@@ -18,14 +18,21 @@ import {
 import { useFetch } from '@/shared/hooks/use-fetch'
 import { useRefresh } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
-import { URL_QUERY_KEY_PAGE_NUM, URL_QUERY_KEY_PAGE_SIZE } from '@/shared/utils/constants'
+import {
+  URL_QUERY_KEY_ORDER,
+  URL_QUERY_KEY_ORDER_BY,
+  URL_QUERY_KEY_PAGE_NUM,
+  URL_QUERY_KEY_PAGE_SIZE
+} from '@/shared/utils/constants'
 import { UserSearch } from '@/user/UserSearch'
 import { UserTable } from '@/user/UserTable'
-import type { GetUserParams, User } from '@/user/types'
+import type { User } from '@/user/types'
 
-type GetUsersParams = GetUserParams & {
-  pageNum: number
-  pageSize: number
+type GetUsersParams = PaginationParams & {
+  username?: string
+  nickname?: string
+  status?: string
+  authority?: string
 }
 
 export default function UserListPage() {
@@ -35,6 +42,8 @@ export default function UserListPage() {
 
   const pageNum = Number(searchParams.get(URL_QUERY_KEY_PAGE_NUM)) || DEFAULT_PAGE_NUM
   const pageSize = Number(searchParams.get(URL_QUERY_KEY_PAGE_SIZE)) || DEFAULT_PAGE_SIZE
+  const orderBy = searchParams.get(URL_QUERY_KEY_ORDER_BY) || 'createdAt'
+  const order = searchParams.get(URL_QUERY_KEY_ORDER) || 'desc'
   const username = searchParams.get('username')
   const nickname = searchParams.get('nickname')
   const status = searchParams.get('status')
@@ -49,6 +58,8 @@ export default function UserListPage() {
     fetchData: getUsers
   } = useFetch(async () => {
     const params: GetUsersParams = { pageNum, pageSize }
+    if (orderBy) params['orderBy'] = orderBy
+    if (order) params['order'] = order === 'asc' ? 'asc' : 'desc'
     if (username) params['username'] = username
     if (nickname) params['nickname'] = nickname
     if (status) params['status'] = status

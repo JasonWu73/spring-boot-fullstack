@@ -68,7 +68,7 @@
     authorities
     FROM user
     <include refid="whereQuery" />
-    ORDER BY updated_at DESC
+    ORDER BY created_at DESC
     LIMIT #{p.offset}, #{p.pageSize}
   </select>
 

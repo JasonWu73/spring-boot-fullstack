@@ -8,10 +8,3 @@ export type User = {
   status: number
   authorities: string[]
 }
-
-export type GetUserParams = {
-  username?: string
-  nickname?: string
-  status?: string
-  authority?: string
-}

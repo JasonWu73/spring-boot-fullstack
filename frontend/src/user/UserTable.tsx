@@ -20,6 +20,7 @@ import {
 import { Switch } from '@/shared/components/ui/Switch'
 import { useToast } from '@/shared/components/ui/use-toast'
 import { useFetch } from '@/shared/hooks/use-fetch'
+import { URL_QUERY_KEY_ORDER, URL_QUERY_KEY_ORDER_BY } from '@/shared/utils/constants'
 import { CUSTOM_HTTP_STATUS_ERROR_CODE } from '@/shared/utils/http'
 import type { User } from '@/user/types'
 
@@ -109,12 +110,12 @@ function UserTable({
         enableHiding: false
       },
       {
-        id: 'ID',
+        id: 'id',
         accessorKey: 'id',
         header: ({ column }) => <DataTableColumnHeader column={column} title="ID" />
       },
       {
-        id: '昵称',
+        id: 'nickname',
         header: ({ column }) => <DataTableColumnHeader column={column} title="昵称" />,
         cell: ({ row }) => {
           const user = row.original
@@ -123,7 +124,7 @@ function UserTable({
         }
       },
       {
-        id: '用户名',
+        id: 'username',
         accessorKey: 'username',
         header: ({ column }) => (
           <DataTableColumnHeader column={column}>
@@ -138,8 +139,7 @@ function UserTable({
         }
       },
       {
-        id: '是否启用',
-        accessorKey: 'password',
+        id: 'status',
         header: ({ column }) => (
           <DataTableColumnHeader column={column}>
             是否启用
@@ -164,7 +164,7 @@ function UserTable({
         }
       },
       {
-        id: '权限',
+        id: 'authorities',
         header: ({ column }) => <DataTableColumnHeader column={column} title="权限" />,
         cell: ({ row }) => {
           const user = row.original
@@ -205,6 +205,25 @@ function UserTable({
             </div>
           )
         }
+      },
+      {
+        id: 'createdAt',
+        accessorKey: 'createdAt',
+        header: ({ column }) => (
+          <DataTableColumnHeader sortable column={column} title="创建时间" />
+        )
+      },
+      {
+        id: 'updatedAt',
+        accessorKey: 'updatedAt',
+        header: ({ column }) => (
+          <DataTableColumnHeader sortable column={column} title="修改时间" />
+        )
+      },
+      {
+        id: 'remark',
+        accessorKey: 'remark',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="备注" />
       },
       {
         id: '操作',
@@ -267,6 +286,24 @@ function UserTable({
         total
       }}
       onPaginate={onPaginate}
+      orderBy={{
+        id: searchParams.get(URL_QUERY_KEY_ORDER_BY) || 'createdAt',
+        desc: searchParams.get(URL_QUERY_KEY_ORDER) !== 'asc'
+      }}
+      onSorting={(sorting) => {
+        searchParams.delete('createdAt')
+        searchParams.delete('updatedAt')
+
+        const orderBy = sorting[0]?.id
+        const order = sorting[0]?.desc === true ? 'desc' : 'asc'
+
+        if (!orderBy) return
+
+        searchParams.set(URL_QUERY_KEY_ORDER_BY, orderBy)
+        searchParams.set(URL_QUERY_KEY_ORDER, order)
+
+        setSearchParams(searchParams)
+      }}
       enableRowSelection
       onSelect={onSelect}
     >
