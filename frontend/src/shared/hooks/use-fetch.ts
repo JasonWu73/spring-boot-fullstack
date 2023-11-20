@@ -1,7 +1,6 @@
 import React from 'react'
 
 import type { FetchResponse, IgnoreFetch } from '@/shared/hooks/types'
-import { endNProgress, startNProgress } from '@/shared/utils/nprogress'
 
 type State<TData> = {
   status: number // HTTP 响应状态码
@@ -78,7 +77,9 @@ type UseFetch<TData, TParams> = {
 }
 
 /**
- * 获取数据（包含了身份验证自动刷新机制）的自定义 Hook。
+ * 获取数据的自定义 Hook。
+ *
+ * <p>主要用于页面初始化时获取数据。
  *
  * @template TData - 返回的数据类型
  * @template TParams - 请求参数类型
@@ -99,15 +100,12 @@ function useFetch<TData, TParams>(
     // 后者会导致 F12 中丢失响应信息，不易于前端调试
     let ignoreResult = false
 
-    startNProgress()
     dispatch({ type: 'START_LOADING' })
     ;(async function () {
       const response = await callback(params)
 
       // 如果在请求过程中，用户已经点击了路由，那么就忽略请求结果
       if (ignoreResult) return
-
-      endNProgress()
 
       if (response.error) {
         dispatch({
@@ -125,9 +123,6 @@ function useFetch<TData, TParams>(
 
     return () => {
       ignoreResult = true
-      // 因为 `dispatch` 是异步的，所以必须在此处结束进度条
-      // 否则当组件被登录过期而跳转到登录页时，进度条并不会被结束
-      endNProgress()
       // 因为 `dispatch` 是异步的，所以必须在此处忽略请求结果
       // 如果放在 IIFE 内则可能会覆盖掉后续的 `dispatch` 结果
       dispatch({

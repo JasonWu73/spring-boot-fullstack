@@ -11,6 +11,7 @@ import type {
 import type { FetchResponse, IgnoreFetch } from '@/shared/hooks/types'
 import { useFetch } from '@/shared/hooks/use-fetch'
 import { CUSTOM_HTTP_STATUS_ERROR_CODE, sendRequest } from '@/shared/utils/http'
+import { endNProgress, startNProgress } from '@/shared/utils/nprogress'
 import { encrypt } from '@/shared/utils/rsa'
 import type { ApiRequest } from '@/shared/utils/types'
 
@@ -98,6 +99,11 @@ function AuthProvider({ children }: AuthProviderProps) {
 
     const { expiresAt, accessToken, refreshToken } = auth
 
+    // 这里为了测试目的，故意设置离过期时间有 29 分钟时就刷新访问令牌
+    const needsRefreshAuth = expiresAt - Date.now() <= 29 * 60 * 1000
+
+    startNProgress()
+
     // 发送请求
     const response = await sendRequest<T, ApiError>({
       ...request,
@@ -107,14 +113,16 @@ function AuthProvider({ children }: AuthProviderProps) {
 
     // 检查是否需要重新登录
     if (response.status === 401) {
+      endNProgress()
       setAuthCache(null)
       return { status: response.status, error: '登录过期' }
     }
 
     // 检查是否需要刷新访问令牌
-    // 这里为了测试目的，故意设置离过期时间有 29 分钟时就刷新访问令牌
-    if (expiresAt - Date.now() <= 29 * 60 * 1000) {
+    if (needsRefreshAuth) {
       const { status, data, error } = await refreshApi(accessToken, refreshToken)
+
+      endNProgress()
 
       if (error) {
         setAuthCache(null)
@@ -125,6 +133,8 @@ function AuthProvider({ children }: AuthProviderProps) {
         const auth = toStorageAuth(data)
         setAuthCache(auth)
       }
+    } else {
+      endNProgress()
     }
 
     const { status, data, error } = response

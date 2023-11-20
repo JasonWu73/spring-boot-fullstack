@@ -6,6 +6,7 @@ import type {
 } from '@/shared/apis/backend/types'
 import type { FetchResponse } from '@/shared/hooks/types'
 import { sendRequest } from '@/shared/utils/http'
+import { endNProgress, startNProgress } from '@/shared/utils/nprogress'
 import type { ApiRequest } from '@/shared/utils/types'
 
 async function loginApi(params: LoginParams) {
@@ -38,10 +39,14 @@ async function refreshApi(accessToken: string, refreshToken: string) {
  * <p>需要访问令牌请使用 {@link AuthProvider#requestApi}。
  */
 async function requestApi<T>(request: ApiRequest): Promise<FetchResponse<T>> {
+  startNProgress()
+
   const { status, data, error } = await sendRequest<T, ApiError>({
     ...request,
     url: `${BASE_URL}${request.url}`
   })
+
+  endNProgress()
 
   if (error) {
     if (typeof error === 'string') return { status, error }

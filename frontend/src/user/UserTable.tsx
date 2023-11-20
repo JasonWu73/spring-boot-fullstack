@@ -1,6 +1,5 @@
 import { type ColumnDef } from '@tanstack/react-table'
 import { MoreHorizontal } from 'lucide-react'
-import React from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 
 import { useAuth } from '@/auth/AuthProvider'
@@ -19,9 +18,7 @@ import {
 } from '@/shared/components/ui/DropdownMenu'
 import { Switch } from '@/shared/components/ui/Switch'
 import { useToast } from '@/shared/components/ui/use-toast'
-import { useFetch } from '@/shared/hooks/use-fetch'
 import { URL_QUERY_KEY_ORDER, URL_QUERY_KEY_ORDER_BY } from '@/shared/utils/constants'
-import { CUSTOM_HTTP_STATUS_ERROR_CODE } from '@/shared/utils/http'
 import type { User } from '@/user/types'
 
 type UserTableProps = {
@@ -52,41 +49,6 @@ function UserTable({
   const [searchParams, setSearchParams] = useSearchParams()
 
   const columns = getColumns(isRoot)
-
-  const {
-    status: changeStatusHttpStatus,
-    error: changeStatusError,
-    fetchData: changeStatus
-  } = useFetch(async (params?: { userId: number; status: number }) => {
-    if (!params) return { status: CUSTOM_HTTP_STATUS_ERROR_CODE, error: '参数缺失' }
-
-    const { userId, status } = params
-
-    return await requestApi({
-      url: `/api/v1/users/${userId}/status`,
-      method: 'PUT',
-      bodyData: { status }
-    })
-  })
-
-  React.useEffect(() => {
-    if (changeStatusHttpStatus === 204) {
-      toast({
-        title: '修改用户状态成功'
-      })
-
-      setSearchParams(searchParams)
-      return
-    }
-
-    if (!changeStatusError) return
-
-    toast({
-      title: '修改用户状态失败',
-      description: changeStatusError,
-      variant: 'destructive'
-    })
-  }, [changeStatusHttpStatus, changeStatusError, toast, searchParams, setSearchParams])
 
   function getColumns(isRoot: boolean) {
     const columns: ColumnDef<User>[] = [
@@ -153,12 +115,24 @@ function UserTable({
           return (
             <Switch
               checked={enabled}
-              onCheckedChange={() =>
-                changeStatus({
-                  userId: user.id,
-                  status: enabled ? 0 : 1
+              onCheckedChange={async () => {
+                const response = await requestApi({
+                  url: `/api/v1/users/${user.id}/status`,
+                  method: 'PUT',
+                  bodyData: { status: enabled ? 0 : 1 }
                 })
-              }
+
+                if (response.status === 204) {
+                  setSearchParams(searchParams)
+                  return
+                }
+
+                toast({
+                  title: '修改用户状态失败',
+                  description: response.error,
+                  variant: 'destructive'
+                })
+              }}
             />
           )
         }
