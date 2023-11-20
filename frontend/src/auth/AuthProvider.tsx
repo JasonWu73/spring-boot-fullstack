@@ -99,11 +99,11 @@ function AuthProvider({ children }: AuthProviderProps) {
         setAuthCache(auth)
       }
 
-      // 刷新访问令牌后，至少间隔 5 分钟后才能再次触发
+      // 刷新访问令牌后，至少间隔 10 分钟后才能再次触发
       // 主要为了防止 `React.StrictMode` 模式下执行两次刷新，导致退出登录
       setTimeout(() => {
         refreshable.current = true
-      }, 5_000)
+      }, 600_000)
     } else {
       setLoading(false)
     }
