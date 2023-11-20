@@ -206,7 +206,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/users?pageNum=1&pageSize=10",
+							"raw": "{{BASE_URL}}/api/v1/users?pageNum=1&pageSize=10&orderBy=createdAt&order=desc",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -225,6 +225,14 @@
 									"value": "10"
 								},
 								{
+									"key": "orderBy",
+									"value": "createdAt"
+								},
+								{
+									"key": "order",
+									"value": "desc"
+								},
+								{
 									"key": "username",
 									"value": "u e",
 									"disabled": true
@@ -241,7 +249,7 @@
 								},
 								{
 									"key": "authority",
-									"value": "user",
+									"value": "admin",
 									"disabled": true
 								}
 							]
@@ -391,7 +399,7 @@
 							"variable": [
 								{
 									"key": "userId",
-									"value": "11"
+									"value": "1"
 								}
 							]
 						}
@@ -489,7 +497,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/operation-logs?pageNum=1&pageSize=10&startAt=2023-11-17&endAt=2023-11-17",
+							"raw": "{{BASE_URL}}/api/v1/operation-logs?pageNum=1&pageSize=10&orderBy=requestedAt&order=desc&startAt=2023-11-17&endAt=2023-11-17",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -506,6 +514,14 @@
 								{
 									"key": "pageSize",
 									"value": "10"
+								},
+								{
+									"key": "orderBy",
+									"value": "requestedAt"
+								},
+								{
+									"key": "order",
+									"value": "desc"
 								},
 								{
 									"key": "startAt",

@@ -18,7 +18,9 @@
     message
     FROM operation_log
     <include refid="whereQuery" />
-    ORDER BY requested_at DESC
+    <if test="p.orderBy != null and p.orderBy == 'requestedAt'">
+      ORDER BY ${p.orderBy} ${p.order}
+    </if>
     LIMIT #{p.offset}, #{p.pageSize}
   </select>
 

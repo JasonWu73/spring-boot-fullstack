@@ -33,8 +33,8 @@
   <resultMap id="userBaseMap" type="net.wuxianjie.web.user.UserInfo">
     <constructor>
       <idArg column="id" javaType="long" />
-      <arg column="created_at" javaType="java.time.LocalDateTime" />
-      <arg column="updated_at" javaType="java.time.LocalDateTime" />
+      <arg column="createdAt" javaType="java.time.LocalDateTime" />
+      <arg column="updatedAt" javaType="java.time.LocalDateTime" />
       <arg column="remark" javaType="string" />
       <arg column="username" javaType="string" />
       <arg column="nickname" javaType="string" />
@@ -45,8 +45,8 @@
 
   <select id="selectInfoById" resultMap="userBaseMap">
     SELECT id,
-           created_at,
-           updated_at,
+           created_at AS createdAt,
+           updated_at AS updatedAt,
            remark,
            username,
            nickname,
@@ -59,8 +59,8 @@
   <select id="selectByQueryLimit" resultMap="userBaseMap">
     SELECT
     id,
-    created_at,
-    updated_at,
+    created_at AS createdAt,
+    updated_at AS updatedAt,
     remark,
     username,
     nickname,
@@ -68,7 +68,9 @@
     authorities
     FROM user
     <include refid="whereQuery" />
-    ORDER BY created_at DESC
+    <if test="p.orderBy != null and p.orderBy == 'createdAt' or p.orderBy == 'updatedAt'">
+      ORDER BY ${p.orderBy} ${p.order}
+    </if>
     LIMIT #{p.offset}, #{p.pageSize}
   </select>
 
