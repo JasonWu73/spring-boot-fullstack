@@ -18,6 +18,7 @@ import { Form } from '@/shared/components/ui/Form'
 import { useToast } from '@/shared/components/ui/use-toast'
 import { useRefresh } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
+import { ShieldPlus } from 'lucide-react'
 
 const DEFAULT_REDIRECT_URL = '/admin'
 
@@ -71,8 +72,9 @@ export default function LoginPage() {
     <Card className="mx-auto mt-8 w-96 md:w-[22rem] lg:w-[30rem]">
       <CardHeader>
         <CardTitle>登录</CardTitle>
-        <CardDescription className="text-green-500 dark:text-green-600">
-          密文传输，且不在本机保存用户名和密码
+        <CardDescription className="flex items-center text-green-500 dark:text-green-600">
+          <ShieldPlus className="mr-2 h-4 w-4" />
+          支持用户名和密码加密传输
         </CardDescription>
       </CardHeader>
 
