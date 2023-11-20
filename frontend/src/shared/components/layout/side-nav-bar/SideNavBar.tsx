@@ -28,6 +28,7 @@ function SideNavBar() {
         </Menu>
 
         <MenuSeparator />
+
         <Menu title="测试路由">
           <MenuItem link="/no-route">
             <BugOff className="h-4 w-4" />

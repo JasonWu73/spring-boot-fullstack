@@ -2,7 +2,7 @@ package net.wuxianjie.web.demo.mybatis;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import net.wuxianjie.web.shared.SuccessOrNot;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,9 +20,10 @@ public class MyBatisController {
    * 测试数据库清空表。
    */
   @DeleteMapping
-  public SuccessOrNot deleteAllData() {
+  public ResponseEntity<Void> deleteAllData() {
     myBatisMapper.truncateTable();
-    return new SuccessOrNot(true);
+
+    return ResponseEntity.noContent().build();
   }
 
   /**
@@ -39,7 +40,9 @@ public class MyBatisController {
   @PostMapping
   public MyBatisData addData(@RequestBody @Valid final MyBatisData data) {
     data.setType(MyBatisType.TYPE_2);
+
     myBatisMapper.insertData(data);
+
     return data;
   }
 }

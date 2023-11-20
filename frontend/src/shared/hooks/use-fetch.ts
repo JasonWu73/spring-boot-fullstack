@@ -4,12 +4,14 @@ import type { FetchResponse, IgnoreFetch } from '@/shared/hooks/types'
 import { endNProgress, startNProgress } from '@/shared/utils/nprogress'
 
 type State<TData> = {
+  status: number // HTTP 响应状态码
   data: TData | null
   error: string
   loading: boolean
 }
 
 const initialState: State<unknown> = {
+  status: 0,
   data: null,
   error: '',
   loading: false
@@ -17,8 +19,8 @@ const initialState: State<unknown> = {
 
 type Action<TData> =
   | { type: 'START_LOADING' }
-  | { type: 'FETCH_SUCCESS'; payload: TData | null }
-  | { type: 'FETCH_FAILED'; payload: string }
+  | { type: 'FETCH_SUCCESS'; payload: { status: number; data: TData | null } }
+  | { type: 'FETCH_FAILED'; payload: { status: number; error: string } }
   | { type: 'IGNORE_FETCH' } // 只是忽略请求的结果，而非取消请求；取消请求只会不易于前端调试，因为后端仍然会处理请求
 
 function reducer<TData>(state: State<TData>, action: Action<TData>): State<TData> {
@@ -26,6 +28,7 @@ function reducer<TData>(state: State<TData>, action: Action<TData>): State<TData
     case 'START_LOADING': {
       return {
         ...state,
+        status: 0,
         data: null,
         error: '',
         loading: true
@@ -34,7 +37,8 @@ function reducer<TData>(state: State<TData>, action: Action<TData>): State<TData
     case 'FETCH_SUCCESS': {
       return {
         ...state,
-        data: action.payload,
+        status: action.payload.status,
+        data: action.payload.data,
         error: '',
         loading: false
       }
@@ -43,13 +47,15 @@ function reducer<TData>(state: State<TData>, action: Action<TData>): State<TData
       return {
         ...state,
         data: null,
-        error: action.payload,
+        status: action.payload.status,
+        error: action.payload.error,
         loading: false
       }
     }
     case 'IGNORE_FETCH': {
       return {
         ...state,
+        status: 0,
         data: null,
         error: '',
         loading: false
@@ -64,6 +70,7 @@ function reducer<TData>(state: State<TData>, action: Action<TData>): State<TData
 type ApiCallback<TData, TParams> = (params?: TParams) => Promise<FetchResponse<TData>>
 
 type UseFetch<TData, TParams> = {
+  status: number
   data: TData | null
   error: string
   loading: boolean
@@ -82,7 +89,7 @@ type UseFetch<TData, TParams> = {
 function useFetch<TData, TParams>(
   callback: ApiCallback<TData, TParams>
 ): UseFetch<TData, TParams> {
-  const [{ data, error, loading }, dispatch] = React.useReducer(
+  const [{ status, data, error, loading }, dispatch] = React.useReducer(
     reducer as React.Reducer<State<TData | null>, Action<TData | null>>,
     initialState as State<TData>
   )
@@ -103,11 +110,17 @@ function useFetch<TData, TParams>(
       endNProgress()
 
       if (response.error) {
-        dispatch({ type: 'FETCH_FAILED', payload: response.error })
+        dispatch({
+          type: 'FETCH_FAILED',
+          payload: { status: response.status, error: response.error }
+        })
         return
       }
 
-      dispatch({ type: 'FETCH_SUCCESS', payload: response.data ?? null })
+      dispatch({
+        type: 'FETCH_SUCCESS',
+        payload: { status: response.status, data: response.data ?? null }
+      })
     })()
 
     return () => {
@@ -117,11 +130,13 @@ function useFetch<TData, TParams>(
       endNProgress()
       // 因为 `dispatch` 是异步的，所以必须在此处忽略请求结果
       // 如果放在 IIFE 内则可能会覆盖掉后续的 `dispatch` 结果
-      dispatch({ type: 'IGNORE_FETCH' })
+      dispatch({
+        type: 'IGNORE_FETCH'
+      })
     }
   }
 
-  return { data, error, loading, fetchData }
+  return { status, data, error, loading, fetchData }
 }
 
 export { useFetch }

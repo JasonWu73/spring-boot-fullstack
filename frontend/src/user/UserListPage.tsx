@@ -21,14 +21,7 @@ import { useTitle } from '@/shared/hooks/use-title'
 import { URL_QUERY_KEY_PAGE_NUM, URL_QUERY_KEY_PAGE_SIZE } from '@/shared/utils/constants'
 import { UserSearch } from '@/user/UserSearch'
 import { UserTable } from '@/user/UserTable'
-import type { User } from '@/user/types'
-
-type GetUserParams = {
-  username?: string
-  nickname?: string
-  status?: string
-  authority?: string
-}
+import type { GetUserParams, User } from '@/user/types'
 
 type GetUsersParams = GetUserParams & {
   pageNum: number
@@ -80,16 +73,6 @@ export default function UserListPage() {
     setSearchParams(searchParams, { replace: true })
   }
 
-  function handleSearch(values: GetUserParams) {
-    const params: GetUserParams = {}
-    if (values.username) params['username'] = values.username
-    if (values.nickname) params['nickname'] = values.nickname
-    if (values.status) params['status'] = values.status
-    if (values.authority) params['authority'] = values.authority
-
-    setSearchParams(params, { replace: true })
-  }
-
   // 选中的行的索引
   const [indexes, setIndexes] = React.useState<number[]>([])
 
@@ -115,7 +98,7 @@ export default function UserListPage() {
       </CardHeader>
 
       <CardContent>
-        <UserSearch onSearch={handleSearch} loading={loading} />
+        <UserSearch loading={loading} />
 
         <UserTable
           users={data?.list || []}

@@ -8,6 +8,7 @@ import { z } from 'zod'
 import { Button } from '@/shared/components/ui/Button'
 import { FormInput, FormSelect } from '@/shared/components/ui/CustomFormField'
 import { Form } from '@/shared/components/ui/Form'
+import type { GetUserParams } from '@/user/types'
 
 const statusOptions = [
   { value: '', label: '全部' },
@@ -31,11 +32,10 @@ const formSchema = z.object({
 type FormSchema = z.infer<typeof formSchema>
 
 type UserSearchProps = {
-  onSearch: (values: FormSchema) => void
   loading: boolean
 }
 
-function UserSearch({ onSearch, loading }: UserSearchProps) {
+function UserSearch({ loading }: UserSearchProps) {
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -46,7 +46,7 @@ function UserSearch({ onSearch, loading }: UserSearchProps) {
     }
   })
 
-  const [searchParams] = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams()
 
   React.useEffect(() => {
     const username = searchParams.get('username') || ''
@@ -61,7 +61,13 @@ function UserSearch({ onSearch, loading }: UserSearchProps) {
   }, [searchParams, form])
 
   function onSubmit(values: FormSchema) {
-    onSearch(values)
+    const params: GetUserParams = {}
+    if (values.username) params['username'] = values.username
+    if (values.nickname) params['nickname'] = values.nickname
+    if (values.status) params['status'] = values.status
+    if (values.authority) params['authority'] = values.authority
+
+    setSearchParams(params, { replace: true })
   }
 
   function handleReset() {

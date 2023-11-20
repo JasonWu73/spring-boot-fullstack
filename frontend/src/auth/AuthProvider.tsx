@@ -10,7 +10,7 @@ import type {
 } from '@/shared/apis/backend/types'
 import type { FetchResponse, IgnoreFetch } from '@/shared/hooks/types'
 import { useFetch } from '@/shared/hooks/use-fetch'
-import { sendRequest } from '@/shared/utils/http'
+import { CUSTOM_HTTP_STATUS_ERROR_CODE, sendRequest } from '@/shared/utils/http'
 import { encrypt } from '@/shared/utils/rsa'
 import type { ApiRequest } from '@/shared/utils/types'
 
@@ -50,7 +50,7 @@ function AuthProvider({ children }: AuthProviderProps) {
     loading: loginLoading,
     fetchData: login
   } = useFetch(async (params?: LoginParams) => {
-    if (!params) return { error: '参数缺失' }
+    if (!params) return { status: CUSTOM_HTTP_STATUS_ERROR_CODE, error: '参数缺失' }
 
     const response = await loginApi({
       username: encrypt(PUBLIC_KEY, params.username),
@@ -80,14 +80,12 @@ function AuthProvider({ children }: AuthProviderProps) {
     setAuth(null)
     setStorageAuth(null)
 
-    if (!auth) return { error: '未登录' }
+    if (!auth) return { status: CUSTOM_HTTP_STATUS_ERROR_CODE, error: '未登录' }
 
-    await requestApi({
+    return await requestApi({
       url: '/api/v1/auth/logout',
       method: 'DELETE'
     })
-
-    return {}
   })
 
   /**
@@ -96,7 +94,7 @@ function AuthProvider({ children }: AuthProviderProps) {
    * <p>不需要访问令牌请使用 {@link @/shared/apis/backend/auth-api#requestApi}。
    */
   async function requestApi<T>(request: ApiRequest): Promise<FetchResponse<T>> {
-    if (!auth) return { error: '未登录' }
+    if (!auth) return { status: CUSTOM_HTTP_STATUS_ERROR_CODE, error: '未登录' }
 
     const { expiresAt, accessToken, refreshToken } = auth
 
@@ -110,17 +108,17 @@ function AuthProvider({ children }: AuthProviderProps) {
     // 检查是否需要重新登录
     if (response.status === 401) {
       setAuthCache(null)
-      return { error: '登录过期' }
+      return { status: response.status, error: '登录过期' }
     }
 
     // 检查是否需要刷新访问令牌
     // 这里为了测试目的，故意设置离过期时间有 29 分钟时就刷新访问令牌
     if (expiresAt - Date.now() <= 29 * 60 * 1000) {
-      const { data, error } = await refreshApi(accessToken, refreshToken)
+      const { status, data, error } = await refreshApi(accessToken, refreshToken)
 
       if (error) {
         setAuthCache(null)
-        return { error: error }
+        return { status, error: error }
       }
 
       if (data) {
@@ -129,15 +127,15 @@ function AuthProvider({ children }: AuthProviderProps) {
       }
     }
 
-    const { data, error } = response
+    const { status, data, error } = response
 
     if (error) {
-      if (typeof error === 'string') return { error }
+      if (typeof error === 'string') return { status, error }
 
-      return { error: error.error }
+      return { status, error: error.error }
     }
 
-    return { data: data ?? undefined }
+    return { status, data: data ?? undefined }
   }
 
   function setAuthCache(auth: Auth | null) {

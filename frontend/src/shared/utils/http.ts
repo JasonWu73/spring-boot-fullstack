@@ -2,13 +2,13 @@ import type { ApiRequest, UrlParams } from '@/shared/utils/types'
 
 const CUSTOM_HTTP_STATUS_ERROR_CODE = 999
 
-export type SuccessResponse<T> = {
+type SuccessResponse<T> = {
   status: number
   data: T | null
   error: null
 }
 
-export type ErrorResponse<T> = {
+type ErrorResponse<T> = {
   status: number
   data: null
   error: T | string
@@ -110,4 +110,4 @@ async function sendRequest<TData, TError>({
   }
 }
 
-export { sendRequest }
+export { CUSTOM_HTTP_STATUS_ERROR_CODE, sendRequest }

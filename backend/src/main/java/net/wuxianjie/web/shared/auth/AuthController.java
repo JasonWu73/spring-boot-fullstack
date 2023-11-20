@@ -2,8 +2,8 @@ package net.wuxianjie.web.shared.auth;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import net.wuxianjie.web.shared.SuccessOrNot;
 import net.wuxianjie.web.shared.operationlog.Operation;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -26,9 +26,10 @@ public class AuthController {
    * 退出。
    */
   @DeleteMapping("/logout")
-  public SuccessOrNot logout() {
+  public ResponseEntity<Void> logout() {
     authService.logout();
-    return new SuccessOrNot(true);
+
+    return ResponseEntity.noContent().build();
   }
 
   /**

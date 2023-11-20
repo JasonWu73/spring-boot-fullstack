@@ -17,19 +17,19 @@ async function loginApi(params: LoginParams) {
 }
 
 async function refreshApi(accessToken: string, refreshToken: string) {
-  const { data, error } = await sendRequest<AuthResponse, ApiError>({
+  const { status, data, error } = await sendRequest<AuthResponse, ApiError>({
     url: `${BASE_URL}/api/v1/auth/refresh/${refreshToken}`,
     method: 'POST',
     headers: { Authorization: `Bearer ${accessToken}` }
   })
 
   if (error) {
-    if (typeof error === 'string') return { error }
+    if (typeof error === 'string') return { status, error }
 
-    return { error: error.error }
+    return { status, error: error.error }
   }
 
-  return { data: data ?? undefined }
+  return { status, data: data ?? undefined }
 }
 
 /**
@@ -38,18 +38,18 @@ async function refreshApi(accessToken: string, refreshToken: string) {
  * <p>需要访问令牌请使用 {@link AuthProvider#requestApi}。
  */
 async function requestApi<T>(request: ApiRequest): Promise<FetchResponse<T>> {
-  const { data, error } = await sendRequest<T, ApiError>({
+  const { status, data, error } = await sendRequest<T, ApiError>({
     ...request,
     url: `${BASE_URL}${request.url}`
   })
 
   if (error) {
-    if (typeof error === 'string') return { error }
+    if (typeof error === 'string') return { status, error }
 
-    return { error: error.error }
+    return { status, error: error.error }
   }
 
-  return { data: data ?? undefined }
+  return { status, data: data ?? undefined }
 }
 
 export { loginApi, refreshApi, requestApi }
