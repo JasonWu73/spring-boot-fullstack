@@ -116,14 +116,17 @@ function UserTable({
             <Switch
               checked={enabled}
               onCheckedChange={async () => {
+                const newStatus = enabled ? 0 : 1
+
                 const response = await requestApi({
                   url: `/api/v1/users/${user.id}/status`,
                   method: 'PUT',
-                  bodyData: { status: enabled ? 0 : 1 }
+                  bodyData: { status: newStatus }
                 })
 
                 if (response.status === 204) {
-                  setSearchParams(searchParams)
+                  users.filter((prevUser) => prevUser.id === user.id)[0].status =
+                    newStatus
                   return
                 }
 
