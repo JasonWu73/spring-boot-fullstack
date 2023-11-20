@@ -23,8 +23,8 @@ const UserListPage = React.lazy(() => import('@/user/UserListPage'))
 // 测试 React Router 懒加载（React Split Code）
 const SplitBillForm = React.lazy(() =>
   wait(2).then(() =>
-    import('@/split-bill/SplitBillForm').then((module) => ({
-      default: module.SplitBillForm
+    import('@/split-bill/SplitBill').then((module) => ({
+      default: module.SplitBill
     }))
   )
 )

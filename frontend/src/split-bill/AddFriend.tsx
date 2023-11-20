@@ -66,6 +66,7 @@ function AddFriend() {
               labelWidth={100}
               placeholder="好友名字"
               isError={form.getFieldState('name')?.invalid}
+              className="bg-slate-50"
             />
 
             <FormInput
@@ -76,6 +77,7 @@ function AddFriend() {
               labelWidth={100}
               placeholder="图片网址"
               isError={form.getFieldState('image')?.invalid}
+              className="bg-slate-50"
             />
 
             <FormCalendar
@@ -86,6 +88,7 @@ function AddFriend() {
               placeholder="选择好友生日"
               disabledWhen={(date) => date > new Date() || date < new Date('1900-01-01')}
               isError={form.getFieldState('birthday')?.invalid}
+              className="bg-slate-50"
             />
 
             <Button type="submit" className="self-end">

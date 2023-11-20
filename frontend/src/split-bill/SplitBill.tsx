@@ -25,7 +25,7 @@ import { useRefresh } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
 import { useFriends } from '@/split-bill/FriendProvider'
 import { SplitBillError } from '@/split-bill/SplitBillError'
-import { SplitBillFormSkeleton } from '@/split-bill/SplitBillFormSkeleton'
+import { SplitBillSkeleton } from '@/split-bill/SplitBillSkeleton'
 
 const whoIsPayingOptions = [
   { value: 'user', label: '您' },
@@ -70,7 +70,7 @@ const formSchema = z
 
 type FormSchema = z.infer<typeof formSchema>
 
-function SplitBillForm() {
+function SplitBill() {
   useTitle('分摊账单')
 
   const form = useForm<FormSchema>({
@@ -137,7 +137,7 @@ function SplitBillForm() {
 
   return (
     <Card className="w-96 bg-amber-100 text-slate-700 dark:bg-amber-100 dark:text-slate-700 md:w-[22rem] lg:w-[30rem]">
-      {loading && <SplitBillFormSkeleton />}
+      {loading && <SplitBillSkeleton />}
 
       {error && <SplitBillError message={error} />}
 
@@ -183,6 +183,7 @@ function SplitBillForm() {
                   labelWidth={160}
                   placeholder="账单金额"
                   isError={form.getFieldState('bill')?.invalid}
+                  className="bg-slate-50"
                 />
 
                 <FormInput
@@ -193,6 +194,7 @@ function SplitBillForm() {
                   labelWidth={160}
                   placeholder="您的费用"
                   isError={form.getFieldState('userExpense')?.invalid}
+                  className="bg-slate-50"
                 />
 
                 <FormInput
@@ -202,6 +204,7 @@ function SplitBillForm() {
                   label={`👫 ${friend.name} 的费用`}
                   labelWidth={160}
                   placeholder={`${friend.name} 的费用`}
+                  className="bg-slate-50"
                   disabled
                 />
 
@@ -212,6 +215,7 @@ function SplitBillForm() {
                   labelWidth={160}
                   options={getWhoIsPayingOptions(friend.name)}
                   isError={form.getFieldState('whoIsPaying')?.invalid}
+                  className="bg-slate-50"
                 />
 
                 <Button type="submit" className="self-end">
@@ -238,4 +242,4 @@ function getWhoIsPayingOptions(friend: string) {
   return options
 }
 
-export { SplitBillForm }
+export { SplitBill }

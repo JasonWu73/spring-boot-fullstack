@@ -11,7 +11,7 @@ function Code({ children, className }: CodeProps) {
   return (
     <code
       className={cn(
-        'rounded border bg-slate-50 px-1 py-0.5 font-mono text-sm text-slate-700 dark:bg-slate-200',
+        'rounded border bg-slate-50 px-1 py-0.5 font-mono text-sm text-slate-500 dark:bg-slate-200',
         className
       )}
     >

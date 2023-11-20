@@ -43,6 +43,7 @@ type FormInputProps<T extends FieldValues> = {
   disabled?: boolean
   isError?: boolean
   inputRef?: React.MutableRefObject<HTMLInputElement | null>
+  className?: string
 }
 
 function FormInput<T extends FieldValues>({
@@ -54,7 +55,8 @@ function FormInput<T extends FieldValues>({
   placeholder,
   disabled,
   isError = false,
-  inputRef
+  inputRef,
+  className
 }: FormInputProps<T>) {
   return (
     <FormField
@@ -69,7 +71,7 @@ function FormInput<T extends FieldValues>({
             {label}
           </FormLabel>
 
-          <FormControl className="bg-slate-50 text-slate-700">
+          <FormControl className={cn(className)}>
             <Input
               type={type}
               placeholder={placeholder}
@@ -113,7 +115,8 @@ function FormSelect<T extends FieldValues>({
   options,
   placeholder,
   disabled,
-  isError = false
+  isError = false,
+  className
 }: FormSelectProps<T>) {
   return (
     <FormField
@@ -129,7 +132,7 @@ function FormSelect<T extends FieldValues>({
           </FormLabel>
 
           <Select value={field.value} onValueChange={field.onChange}>
-            <FormControl className="bg-slate-50 py-0 text-slate-700">
+            <FormControl className={cn('py-0', className)}>
               <SelectTrigger disabled={disabled} isError={isError}>
                 <SelectValue placeholder={placeholder} />
               </SelectTrigger>
@@ -162,7 +165,8 @@ function FormCalendar<T extends FieldValues>({
   labelWidth,
   placeholder,
   isError = false,
-  disabledWhen
+  disabledWhen,
+  className
 }: FormCalendarProps<T>) {
   return (
     <FormField
@@ -179,7 +183,7 @@ function FormCalendar<T extends FieldValues>({
 
           <Popover>
             <PopoverTrigger asChild>
-              <FormControl className="bg-slate-50 text-slate-700">
+              <FormControl className={cn(className)}>
                 <Button
                   variant="outline"
                   className={cn(

@@ -6,7 +6,7 @@ import {
 } from '@/shared/components/ui/Card'
 import { Skeleton } from '@/shared/components/ui/Skeleton'
 
-function SplitBillFormSkeleton() {
+function SplitBillSkeleton() {
   return (
     <>
       <CardHeader>
@@ -33,4 +33,4 @@ function SplitBillFormSkeleton() {
   )
 }
 
-export { SplitBillFormSkeleton }
+export { SplitBillSkeleton }
