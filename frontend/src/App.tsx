@@ -90,13 +90,13 @@ const router = createBrowserRouter([
 export default function App() {
   return (
     <ThemeProvider defaultTheme="system" storageKey="demo-ui-theme">
-      <VersionProvider>
-        <AuthProvider>
+      <AuthProvider>
+        <VersionProvider>
           <RouterProvider router={router} />
 
           <Toaster />
-        </AuthProvider>
-      </VersionProvider>
+        </VersionProvider>
+      </AuthProvider>
     </ThemeProvider>
   )
 }

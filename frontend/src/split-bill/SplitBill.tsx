@@ -21,7 +21,7 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from '@/shared/components/ui/Tooltip'
-import { useRefresh } from '@/shared/hooks/use-refresh'
+import { useRefresh } from '@/shared/hooks/use-router'
 import { useTitle } from '@/shared/hooks/use-title'
 import { useFriends } from '@/split-bill/FriendProvider'
 import { SplitBillError } from '@/split-bill/SplitBillError'

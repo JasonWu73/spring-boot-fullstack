@@ -1,9 +1,8 @@
 import React from 'react'
 
 import type { Auth } from '@/auth/types'
-import { loginApi, refreshApi } from '@/shared/apis/backend/auth-api'
 import { BASE_URL } from '@/shared/apis/backend/constants'
-import type { ApiError, Auth as AuthResponse } from '@/shared/apis/backend/types'
+import type { ApiError } from '@/shared/apis/backend/types'
 import type { FetchResponse } from '@/shared/hooks/types'
 import { CUSTOM_HTTP_STATUS_ERROR_CODE, sendRequest } from '@/shared/utils/http'
 import { encrypt } from '@/shared/utils/rsa'
@@ -13,6 +12,14 @@ const PUBLIC_KEY =
   'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCmWWFyJSaS/SMYr7hmCSXcwAvPF+aGPbbQFOt3rJXjDVKL2GhumWXH2y+dC5/DoaCtDz3dFTyzuoYyiuTHzbpsQ7ari8LoRunOJ81Hx0szpdKbOYJ5WnUr3mr7qEIwY5Verh1dgknNxuzeeTNlmAeLQj067+B+7m9+xp2WU+VSawIDAQAB'
 
 const STORAGE_KEY = 'demo-auth'
+
+type AuthResponse = {
+  accessToken: string
+  refreshToken: string
+  expiresInSeconds: number
+  nickname: string
+  authorities: string[]
+}
 
 type AuthProviderState = {
   auth: Auth | null
@@ -42,12 +49,14 @@ function AuthProvider({ children }: AuthProviderProps) {
 
   /**
    * 需要使用访问令牌的 API 请求。
-   *
-   * <p>不需要访问令牌请使用 {@link @/shared/apis/backend/auth-api#requestApi}。
    */
   async function requestApi<T>(request: ApiRequest): Promise<FetchResponse<T>> {
-    if (!auth) return { status: CUSTOM_HTTP_STATUS_ERROR_CODE, error: '未登录' }
+    // 请求无需拥有访问令牌的开放 API
+    if (!auth) {
+      return requestPublicApi(request)
+    }
 
+    // 请求需要访问令牌的 API（涉及自动刷新机制）
     const { expiresAt, accessToken, refreshToken } = auth
 
     // 这里为了测试目的，故意设置离过期时间有 29 分钟时就刷新访问令牌
@@ -56,9 +65,8 @@ function AuthProvider({ children }: AuthProviderProps) {
     setLoading(true)
 
     // 发送请求
-    const response = await sendRequest<T, ApiError>({
+    const response = await requestPrivateApi<T>({
       ...request,
-      url: `${BASE_URL}${request.url}`,
       headers: { ...request.headers, Authorization: `Bearer ${accessToken}` }
     })
 
@@ -73,7 +81,11 @@ function AuthProvider({ children }: AuthProviderProps) {
     if (needsRefreshAuth && refreshable.current) {
       refreshable.current = false
 
-      const { status, data, error } = await refreshApi(accessToken, refreshToken)
+      const { status, data, error } = await requestPrivateApi<AuthResponse>({
+        url: `/api/v1/auth/refresh/${refreshToken}`,
+        method: 'POST',
+        headers: { Authorization: `Bearer ${accessToken}` }
+      })
 
       setLoading(false)
 
@@ -96,15 +108,7 @@ function AuthProvider({ children }: AuthProviderProps) {
       setLoading(false)
     }
 
-    const { status, data, error } = response
-
-    if (error) {
-      if (typeof error === 'string') return { status, error }
-
-      return { status, error: error.error }
-    }
-
-    return { status, data: data ?? undefined }
+    return response
   }
 
   function setAuthCache(auth: Auth | null) {
@@ -124,19 +128,19 @@ function AuthProvider({ children }: AuthProviderProps) {
     login: async (username, password) => {
       setLoading(true)
 
-      const response = await loginApi({
-        username: encrypt(PUBLIC_KEY, username),
-        password: encrypt(PUBLIC_KEY, password)
+      const response = await requestPublicApi<AuthResponse>({
+        url: '/api/v1/auth/login',
+        method: 'POST',
+        bodyData: {
+          username: encrypt(PUBLIC_KEY, username),
+          password: encrypt(PUBLIC_KEY, password)
+        }
       })
 
       setLoading(false)
 
-      const { data, error } = response
-
-      if (error) return response
-
-      if (data) {
-        const auth = toStorageAuth(data)
+      if (response.data) {
+        const auth = toStorageAuth(response.data)
         setAuth(auth)
         setStorageAuth(auth)
       }
@@ -212,6 +216,42 @@ function toStorageAuth(data: AuthResponse) {
   }
 
   return auth
+}
+
+/**
+ * 不需要访问令牌的 API 请求。
+ */
+async function requestPublicApi<T>(request: ApiRequest): Promise<FetchResponse<T>> {
+  const { status, data, error } = await sendRequest<T, ApiError>({
+    ...request,
+    url: `${BASE_URL}${request.url}`
+  })
+
+  if (error) {
+    if (typeof error === 'string') return { status, error }
+
+    return { status, error: error.error }
+  }
+
+  return { status, data: data ?? undefined }
+}
+
+/**
+ * 需要访问令牌的 API 请求。
+ */
+async function requestPrivateApi<T>(request: ApiRequest): Promise<FetchResponse<T>> {
+  const { status, data, error } = await sendRequest<T, ApiError>({
+    ...request,
+    url: `${BASE_URL}${request.url}`
+  })
+
+  if (error) {
+    if (typeof error === 'string') return { status, error }
+
+    return { status, error: error.error }
+  }
+
+  return { status, data: data ?? undefined }
 }
 
 export { AuthProvider, useAuth }

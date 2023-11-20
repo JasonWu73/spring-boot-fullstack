@@ -26,4 +26,19 @@ function useRefresh(callback: RefreshCallback) {
   }, [location.key, callbackRef])
 }
 
-export { useRefresh }
+/**
+ * 仅首次加载时执行。
+ *
+ * @param callback - 刷新组件状态的回调函数，该回调函数可再返回清理函数
+ */
+function useLoaded(callback: RefreshCallback) {
+  const callbackRef = useSavedRef(callback)
+
+  React.useEffect(() => {
+    const cleanup = callbackRef.current()
+
+    return () => cleanup && cleanup()
+  }, [callbackRef])
+}
+
+export { useLoaded, useRefresh }

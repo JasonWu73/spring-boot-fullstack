@@ -2,7 +2,7 @@ import React from 'react'
 import { useSearchParams } from 'react-router-dom'
 
 import { useAuth } from '@/auth/AuthProvider'
-import type { Pagination, PaginationParams } from '@/shared/apis/backend/types'
+import type { PaginationData, PaginationParams } from '@/shared/apis/backend/types'
 import {
   Card,
   CardContent,
@@ -16,7 +16,7 @@ import {
   type Paging
 } from '@/shared/components/ui/DataTable'
 import { useFetch } from '@/shared/hooks/use-fetch'
-import { useRefresh } from '@/shared/hooks/use-refresh'
+import { useRefresh } from '@/shared/hooks/use-router'
 import { useTitle } from '@/shared/hooks/use-title'
 import {
   URL_QUERY_KEY_ORDER,
@@ -65,7 +65,7 @@ export default function UserListPage() {
     if (status) params['status'] = status
     if (authority) params['authority'] = authority
 
-    return await requestApi<Pagination<User>>({
+    return await requestApi<PaginationData<User>>({
       url: '/api/v1/users',
       urlParams: params
     })

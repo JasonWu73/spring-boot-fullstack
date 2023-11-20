@@ -16,7 +16,7 @@ import {
 import { FormInput } from '@/shared/components/ui/CustomFormField'
 import { Form } from '@/shared/components/ui/Form'
 import { useToast } from '@/shared/components/ui/use-toast'
-import { useRefresh } from '@/shared/hooks/use-refresh'
+import { useRefresh } from '@/shared/hooks/use-router'
 import { useTitle } from '@/shared/hooks/use-title'
 import { ShieldPlus } from 'lucide-react'
 

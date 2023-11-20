@@ -6,14 +6,6 @@ export type ApiError = {
   expiredAt?: string
 }
 
-// 分页数据类型
-export type PaginationData<T> = {
-  users: T[]
-  total: number
-  skip: number
-  limit: number
-}
-
 // ----- 商品相关数据类型 -----
 export type Product = {
   id: number
@@ -27,16 +19,4 @@ export type Product = {
   category: string
   thumbnail: string
   images: string[]
-}
-
-// ----- 用户相关数据类型 -----
-export type User = {
-  id: number
-  firstName: string
-  lastName: string
-  email: string
-  username: string
-  password: string
-  birthDate: string
-  image: string
 }

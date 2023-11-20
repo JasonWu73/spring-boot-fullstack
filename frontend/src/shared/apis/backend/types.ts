@@ -15,31 +15,9 @@ export type PaginationParams = {
   order?: 'asc' | 'desc'
 }
 
-export type Pagination<T> = {
+export type PaginationData<T> = {
   pageNum: number
   pageSize: number
   total: number
   list: T[]
-}
-
-// ----- 登录相关数据类型 -----
-export type LoginParams = {
-  username: string
-  password: string
-}
-
-export type Auth = {
-  accessToken: string
-  refreshToken: string
-  expiresInSeconds: number
-  nickname: string
-  authorities: string[]
-}
-
-// ----- 项目版本号相关数据类型 -----
-export type Version = {
-  name: string
-  version: string
-  developer: string
-  builtAt: string
 }
