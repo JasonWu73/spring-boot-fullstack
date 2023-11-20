@@ -107,6 +107,7 @@ function DataTable<TData, TValue>({
       if (typeof updater === 'function') {
         const prev = table.getState().rowSelection
         const next = updater({ ...prev })
+
         setRowSelection(next)
 
         // 提取选中数据的索引以供外部组件使用
@@ -115,11 +116,7 @@ function DataTable<TData, TValue>({
         // 判断若是从全选状态再取消全选，则应该重置所有行的选中状态，而非只是当前页
         const prevSelectedAll = table.getIsAllPageRowsSelected()
 
-        const currentPageUpdatedAll = rowIndexes.length === 0
-        const searchedPageUpdatedAll = rowIndexes.length === data.length
-        const isDeselectedAll = currentPageUpdatedAll || searchedPageUpdatedAll
-
-        if (prevSelectedAll && isDeselectedAll) {
+        if (prevSelectedAll && rowIndexes.length >= data.length) {
           setRowSelection({})
           onSelect?.([])
           return
