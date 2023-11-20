@@ -73,9 +73,7 @@ function DataTable<TData, TValue>({
   children
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
-
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
-
   const [rowSelection, setRowSelection] = React.useState({})
 
   const table = useReactTable({

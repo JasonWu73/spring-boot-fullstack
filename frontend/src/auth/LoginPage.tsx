@@ -40,16 +40,17 @@ export default function LoginPage() {
     }
   })
 
+  const location = useLocation()
+
   const { loading, login, auth } = useAuth()
   const { toast, dismiss } = useToast()
+
+  const originUrl = location.state?.from || DEFAULT_REDIRECT_URL
 
   useRefresh(() => {
     form.reset()
     dismiss()
   })
-
-  const location = useLocation()
-  const originUrl = location.state?.from || DEFAULT_REDIRECT_URL
 
   if (auth) return <Navigate to={originUrl} replace />
 

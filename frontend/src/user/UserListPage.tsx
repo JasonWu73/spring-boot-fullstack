@@ -40,6 +40,8 @@ export default function UserListPage() {
   useTitle('用户列表')
 
   const [searchParams, setSearchParams] = useSearchParams()
+  const { requestApi } = useAuth()
+  const { toast } = useToast()
 
   const pageNum = Number(searchParams.get(URL_QUERY_KEY_PAGE_NUM)) || DEFAULT_PAGE_NUM
   const pageSize = Number(searchParams.get(URL_QUERY_KEY_PAGE_SIZE)) || DEFAULT_PAGE_SIZE
@@ -49,10 +51,6 @@ export default function UserListPage() {
   const nickname = searchParams.get('nickname')
   const status = searchParams.get('status')
   const authority = searchParams.get('authority')
-
-  const { requestApi } = useAuth()
-
-  const { toast } = useToast()
 
   const {
     data,

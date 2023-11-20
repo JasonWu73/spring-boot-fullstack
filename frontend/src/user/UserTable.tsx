@@ -44,9 +44,9 @@ function UserTable({
   onSelect,
   onShowSelection
 }: UserTableProps) {
+  const [searchParams, setSearchParams] = useSearchParams()
   const { isRoot, requestApi } = useAuth()
   const { toast } = useToast()
-  const [searchParams, setSearchParams] = useSearchParams()
 
   const columns = getColumns(isRoot)
 
