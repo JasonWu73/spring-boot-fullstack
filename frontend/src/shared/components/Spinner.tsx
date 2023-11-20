@@ -10,9 +10,9 @@ type SpinnerProps = {
 function Spinner({ className }: SpinnerProps) {
   // NProgress 加载动画
   React.useEffect(() => {
-    startNProgress('spinner')
+    startNProgress()
 
-    return () => endNProgress('spinner')
+    return () => endNProgress()
   }, [])
 
   return (

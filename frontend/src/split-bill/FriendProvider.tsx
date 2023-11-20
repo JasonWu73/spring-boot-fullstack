@@ -5,6 +5,8 @@ import type { Friend } from '@/shared/apis/fake/types'
 import type { IgnoreFetch } from '@/shared/hooks/types'
 import { useFetch } from '@/shared/hooks/use-fetch'
 import { wait } from '@/shared/utils/helpers'
+import { CUSTOM_HTTP_STATUS_ERROR_CODE } from '@/shared/utils/http'
+import { endNProgress, startNProgress } from '@/shared/utils/nprogress'
 
 const STORAGE_KEY = 'demo-friends'
 
@@ -173,7 +175,9 @@ function FriendProvider({ children }: FriendProviderProps) {
     loading: loadingFriend,
     fetchData: getFriend
   } = useFetch(async (params?: GetFriendParams) => {
-    if (!params) return { data: null, error: '参数缺失' }
+    if (!params) {
+      return { status: CUSTOM_HTTP_STATUS_ERROR_CODE, data: null, error: '参数缺失' }
+    }
 
     const response = await fakeGetFriendApi(params)
 
@@ -252,14 +256,19 @@ function getFriendsFromStorage() {
 }
 
 async function fakeGetFriendApi(params: GetFriendParams) {
+  startNProgress()
+
   // 仅为了模拟查看骨架屏的效果
   await wait(2)
 
   const friends = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]') as Friend[]
   const friend = friends.find((friend) => friend.id === params.id)
-  if (friend) return { data: friend, error: '' }
 
-  return { data: null, error: '未找到好友数据' }
+  endNProgress()
+
+  if (friend) return { status: 200, data: friend, error: '' }
+
+  return { status: 404, data: null, error: '未找到好友数据' }
 }
 
 export { FriendProvider, useFriends }

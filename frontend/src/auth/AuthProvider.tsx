@@ -3,15 +3,9 @@ import React from 'react'
 import type { Auth } from '@/auth/types'
 import { loginApi, refreshApi } from '@/shared/apis/backend/auth-api'
 import { BASE_URL } from '@/shared/apis/backend/constants'
-import type {
-  ApiError,
-  Auth as AuthResponse,
-  LoginParams
-} from '@/shared/apis/backend/types'
-import type { FetchResponse, IgnoreFetch } from '@/shared/hooks/types'
-import { useFetch } from '@/shared/hooks/use-fetch'
+import type { ApiError, Auth as AuthResponse } from '@/shared/apis/backend/types'
+import type { FetchResponse } from '@/shared/hooks/types'
 import { CUSTOM_HTTP_STATUS_ERROR_CODE, sendRequest } from '@/shared/utils/http'
-import { endNProgress, startNProgress } from '@/shared/utils/nprogress'
 import { encrypt } from '@/shared/utils/rsa'
 import type { ApiRequest } from '@/shared/utils/types'
 
@@ -22,13 +16,11 @@ const STORAGE_KEY = 'demo-auth'
 
 type AuthProviderState = {
   auth: Auth | null
-  loginError: string
-  loginLoading: boolean
-  login: (username: string, password: string) => IgnoreFetch
+  loading: boolean
 
-  logoutError: string
-  logoutLoading: boolean
-  logout: () => IgnoreFetch
+  login: (username: string, password: string) => Promise<FetchResponse<AuthResponse>>
+
+  logout: () => Promise<FetchResponse<void>>
 
   requestApi: <T>(request: ApiRequest) => Promise<FetchResponse<T>>
 
@@ -45,49 +37,7 @@ type AuthProviderProps = {
 
 function AuthProvider({ children }: AuthProviderProps) {
   const [auth, setAuth] = React.useState(getStorageAuth)
-
-  const {
-    error: loginError,
-    loading: loginLoading,
-    fetchData: login
-  } = useFetch(async (params?: LoginParams) => {
-    if (!params) return { status: CUSTOM_HTTP_STATUS_ERROR_CODE, error: '参数缺失' }
-
-    const response = await loginApi({
-      username: encrypt(PUBLIC_KEY, params.username),
-      password: encrypt(PUBLIC_KEY, params.password)
-    })
-
-    const { data, error } = response
-
-    if (error) return response
-
-    if (data) {
-      const auth = toStorageAuth(data)
-
-      setAuth(auth)
-      setStorageAuth(auth)
-    }
-
-    return response
-  })
-
-  const {
-    error: logoutError,
-    loading: logoutLoading,
-    fetchData: logout
-  } = useFetch(async () => {
-    // 不论后端退出登录是否成功，前端都要退出登录
-    setAuth(null)
-    setStorageAuth(null)
-
-    if (!auth) return { status: CUSTOM_HTTP_STATUS_ERROR_CODE, error: '未登录' }
-
-    return await requestApi({
-      url: '/api/v1/auth/logout',
-      method: 'DELETE'
-    })
-  })
+  const [loading, setLoading] = React.useState(false)
 
   /**
    * 需要使用访问令牌的 API 请求。
@@ -102,7 +52,7 @@ function AuthProvider({ children }: AuthProviderProps) {
     // 这里为了测试目的，故意设置离过期时间有 29 分钟时就刷新访问令牌
     const needsRefreshAuth = expiresAt - Date.now() <= 29 * 60 * 1000
 
-    startNProgress()
+    setLoading(true)
 
     // 发送请求
     const response = await sendRequest<T, ApiError>({
@@ -113,7 +63,7 @@ function AuthProvider({ children }: AuthProviderProps) {
 
     // 检查是否需要重新登录
     if (response.status === 401) {
-      endNProgress()
+      setLoading(false)
       setAuthCache(null)
       return { status: response.status, error: '登录过期' }
     }
@@ -122,7 +72,7 @@ function AuthProvider({ children }: AuthProviderProps) {
     if (needsRefreshAuth) {
       const { status, data, error } = await refreshApi(accessToken, refreshToken)
 
-      endNProgress()
+      setLoading(false)
 
       if (error) {
         setAuthCache(null)
@@ -134,7 +84,7 @@ function AuthProvider({ children }: AuthProviderProps) {
         setAuthCache(auth)
       }
     } else {
-      endNProgress()
+      setLoading(false)
     }
 
     const { status, data, error } = response
@@ -161,13 +111,48 @@ function AuthProvider({ children }: AuthProviderProps) {
 
   const value: AuthProviderState = {
     auth,
-    loginError,
-    loginLoading,
-    login: (username, password) => login({ username, password }),
+    loading,
+    login: async (username, password) => {
+      setLoading(true)
 
-    logoutError,
-    logoutLoading,
-    logout,
+      const response = await loginApi({
+        username: encrypt(PUBLIC_KEY, username),
+        password: encrypt(PUBLIC_KEY, password)
+      })
+
+      setLoading(false)
+
+      const { data, error } = response
+
+      if (error) return response
+
+      if (data) {
+        const auth = toStorageAuth(data)
+        setAuth(auth)
+        setStorageAuth(auth)
+      }
+
+      return response
+    },
+
+    logout: async () => {
+      if (!auth) return { status: CUSTOM_HTTP_STATUS_ERROR_CODE, error: '未登录' }
+
+      setLoading(true)
+
+      const response = await requestApi<void>({
+        url: '/api/v1/auth/logout',
+        method: 'DELETE'
+      })
+
+      setLoading(false)
+
+      // 不论后端退出登录是否成功，前端都要退出登录
+      setAuth(null)
+      setStorageAuth(null)
+
+      return response
+    },
 
     requestApi,
 

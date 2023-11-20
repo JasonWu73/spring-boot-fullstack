@@ -1,3 +1,4 @@
+import { endNProgress, startNProgress } from '@/shared/utils/nprogress'
 import type { ApiRequest, UrlParams } from '@/shared/utils/types'
 
 const CUSTOM_HTTP_STATUS_ERROR_CODE = 999
@@ -79,6 +80,8 @@ async function sendRequest<TData, TError>({
           : JSON.stringify(bodyData)
     }
 
+    startNProgress()
+
     // 发送 HTTP 请求
     const response = await fetch(urlObj, options)
 
@@ -107,6 +110,8 @@ async function sendRequest<TData, TError>({
       return { status: CUSTOM_HTTP_STATUS_ERROR_CODE, data: null, error: error.message }
 
     return { status: CUSTOM_HTTP_STATUS_ERROR_CODE, data: null, error: String(error) }
+  } finally {
+    endNProgress()
   }
 }
 

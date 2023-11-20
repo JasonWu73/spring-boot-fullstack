@@ -1,7 +1,5 @@
 import type { Version } from '@/shared/apis/backend/types'
 import { getVersionApi } from '@/shared/apis/backend/version-api'
-import { useFetch } from '@/shared/hooks/use-fetch'
-import { useSavedRef } from '@/shared/hooks/use-saved'
 import React from 'react'
 
 type VersionProviderState = Version
@@ -15,15 +13,14 @@ type VersionProviderProps = {
 }
 
 function VersionProvider({ children }: VersionProviderProps) {
-  const { data: version, fetchData: getVersion } = useFetch(getVersionApi)
-
-  const getVersionRef = useSavedRef(getVersion)
+  const [version, setVersion] = React.useState<Version>()
 
   React.useEffect(() => {
-    const ignore = getVersionRef.current()
-
-    return () => ignore()
-  }, [getVersionRef])
+    ;(async function () {
+      const { data } = await getVersionApi()
+      setVersion(data)
+    })()
+  }, [])
 
   const value: VersionProviderState = {
     name: version?.name || '',

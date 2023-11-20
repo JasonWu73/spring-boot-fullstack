@@ -1,7 +1,7 @@
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 
-let usedBy = ''
+let counter = 0
 
 function configureNProgress() {
   NProgress.configure({
@@ -9,17 +9,17 @@ function configureNProgress() {
   })
 }
 
-function startNProgress(owner = '') {
-  if (usedBy && usedBy !== owner) return
-
-  usedBy = owner
+function startNProgress() {
+  counter++
   NProgress.start()
 }
 
-function endNProgress(owner = '') {
-  if (usedBy && usedBy !== owner) return
+function endNProgress() {
+  counter--
 
-  usedBy = ''
+  if (counter > 0) return
+
+  counter = 0
   NProgress.done()
 }
 

@@ -1,6 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ReloadIcon } from '@radix-ui/react-icons'
-import React from 'react'
 import { useForm } from 'react-hook-form'
 import { Navigate, useLocation } from 'react-router-dom'
 import { z } from 'zod'
@@ -17,7 +16,6 @@ import {
 import { FormInput } from '@/shared/components/ui/CustomFormField'
 import { Form } from '@/shared/components/ui/Form'
 import { useToast } from '@/shared/components/ui/use-toast'
-import type { IgnoreFetch } from '@/shared/hooks/types'
 import { useRefresh } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
 
@@ -41,28 +39,12 @@ export default function LoginPage() {
     }
   })
 
-  const { auth, loginError: error, loginLoading: loading, login } = useAuth()
+  const { loading, login, auth } = useAuth()
   const { toast, dismiss } = useToast()
-
-  React.useEffect(() => {
-    if (!error) return
-
-    toast({
-      title: '登录失败',
-      description: error,
-      variant: 'destructive'
-    })
-  }, [error, toast])
-
-  const resetLogin = React.useRef<IgnoreFetch>()
 
   useRefresh(() => {
     form.reset()
     dismiss()
-
-    if (resetLogin.current) {
-      resetLogin.current()
-    }
   })
 
   const location = useLocation()
@@ -70,20 +52,28 @@ export default function LoginPage() {
 
   if (auth) return <Navigate to={originUrl} replace />
 
-  function onSubmit(values: FormSchema) {
-    resetLogin.current = login(values.username, values.password)
+  async function onSubmit(values: FormSchema) {
+    const { error } = await login(values.username, values.password)
+
+    if (error) {
+      toast({
+        title: '登录失败',
+        description: error,
+        variant: 'destructive'
+      })
+      return
+    }
+
+    return <Navigate to={originUrl} replace />
   }
 
   return (
     <Card className="mx-auto mt-8 w-96 border-slate-200 bg-slate-200 md:w-[22rem] lg:w-[30rem]">
       <CardHeader>
         <CardTitle>登录</CardTitle>
-
-        {error && (
-          <CardDescription className="text-red-500 dark:text-red-600">
-            {error}
-          </CardDescription>
-        )}
+        <CardDescription className="text-green-500 dark:text-green-600">
+          密文传输，且不在本机保存用户名和密码
+        </CardDescription>
       </CardHeader>
 
       <CardContent>

@@ -7,13 +7,13 @@ const BASE_URL = window.location.host
 async function getFriendsApi() {
   await wait(0.5) // Simulate network delay
 
-  const { data, error } = await sendRequest<Friend[], string>({
+  const { status, data, error } = await sendRequest<Friend[], string>({
     url: `http://${BASE_URL}/data/friends.json`
   })
 
-  if (error) return { data: null, error }
+  if (error) return { status, data: null, error }
 
-  return { data, error: '' }
+  return { status, data, error: '' }
 }
 
 export { getFriendsApi }

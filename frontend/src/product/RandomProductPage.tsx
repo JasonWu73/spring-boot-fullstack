@@ -3,7 +3,6 @@ import React from 'react'
 
 import { getRandomProductApi } from '@/shared/apis/dummyjson/product-api'
 import { Button } from '@/shared/components/ui/Button'
-import type { IgnoreFetch } from '@/shared/hooks/types'
 import { useFetch } from '@/shared/hooks/use-fetch'
 import { useRefresh } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
@@ -28,23 +27,13 @@ export default function RandomProductPage() {
     }
   }, [product])
 
-  const resetGetProduct = React.useRef<IgnoreFetch>()
-
   useRefresh(() => {
     const ignore = getProduct()
-
-    if (resetGetProduct.current) {
-      resetGetProduct.current()
-    }
 
     return () => {
       ignore()
     }
   })
-
-  function handleGetProduct() {
-    resetGetProduct.current = getProduct()
-  }
 
   return (
     <div className="mx-auto mt-8 grid w-[500px] grid-cols-1 grid-rows-[2rem_8rem_3rem_2rem] place-items-center gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow dark:border-slate-800 dark:bg-slate-950">
@@ -71,7 +60,7 @@ export default function RandomProductPage() {
       </div>
 
       <div className="row-span-1">
-        <Button onClick={handleGetProduct} className="my-4" disabled={loading}>
+        <Button onClick={getProduct} className="my-4" disabled={loading}>
           {loading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
           获取商品
         </Button>
