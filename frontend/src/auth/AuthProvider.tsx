@@ -90,6 +90,11 @@ function AuthProvider({ children }: AuthProviderProps) {
     return {}
   })
 
+  /**
+   * 需要使用访问令牌的 API 请求。
+   *
+   * <p>不需要访问令牌请使用 {@link @/shared/apis/backend/auth-api#requestApi}。
+   */
   async function requestApi<T>(request: ApiRequest): Promise<FetchResponse<T>> {
     if (!auth) return { error: '未登录' }
 

@@ -32,6 +32,11 @@ async function refreshApi(accessToken: string, refreshToken: string) {
   return { data: data ?? undefined }
 }
 
+/**
+ * 不需要访问令牌的 API 请求。
+ *
+ * <p>需要访问令牌请使用 {@link AuthProvider#requestApi}。
+ */
 async function requestApi<T>(request: ApiRequest): Promise<FetchResponse<T>> {
   const { data, error } = await sendRequest<T, ApiError>({
     ...request,
