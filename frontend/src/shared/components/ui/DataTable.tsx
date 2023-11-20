@@ -72,7 +72,7 @@ function DataTable<TData, TValue>({
 
   children
 }: DataTableProps<TData, TValue>) {
-  const [sorting, setSorting] = React.useState<SortingState>(orderBy ? [orderBy] : [])
+  const [sorting, setSorting] = React.useState<SortingState>([])
 
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
 
@@ -85,7 +85,7 @@ function DataTable<TData, TValue>({
         pageSize: pagination?.pageSize || DEFAULT_PAGE_SIZE
       },
 
-      sorting: sorting,
+      sorting: orderBy ? [orderBy] : sorting,
 
       columnVisibility,
 
