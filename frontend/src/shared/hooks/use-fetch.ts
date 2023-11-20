@@ -45,8 +45,8 @@ function reducer<TData>(state: State<TData>, action: Action<TData>): State<TData
     case 'FETCH_FAILED': {
       return {
         ...state,
-        data: null,
         status: action.payload.status,
+        data: null,
         error: action.payload.error,
         loading: false
       }
