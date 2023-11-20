@@ -42,7 +42,7 @@ export default function RandomProductPage() {
 
         {error && <Title label={error} isError />}
 
-        {product && <Title label={product.title} />}
+        {product && <Title label={`${product.id} - ${product.title}`} />}
       </div>
 
       <div className="row-span-1">
