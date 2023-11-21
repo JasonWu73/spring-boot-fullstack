@@ -1,8 +1,8 @@
 import React from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
 
-import { Spinner } from '@/shared/components/Spinner'
 import { Button } from '@/shared/components/ui/Button'
+import { Spinner } from '@/shared/components/ui/Spinner'
 import { useKeypress } from '@/shared/hooks/use-keypress'
 import { useTitle } from '@/shared/hooks/use-title'
 import { wait } from '@/shared/utils/helpers'

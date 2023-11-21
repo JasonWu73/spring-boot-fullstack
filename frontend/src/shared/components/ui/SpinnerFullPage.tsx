@@ -1,4 +1,4 @@
-import { Spinner } from '@/shared/components/Spinner'
+import { Spinner } from '@/shared/components/ui/Spinner'
 
 function SpinnerFullPage() {
   return (

@@ -7,7 +7,7 @@ import AdminLayout from '@/shared/components/layout/AdminLayout'
 import LoginLayout from '@/shared/components/layout/LoginLayout'
 import MainLayout from '@/shared/components/layout/MainLayout'
 import { PanelFoldProvider } from '@/shared/components/layout/panel-fold/PanelFoldProvider'
-import { Spinner } from '@/shared/components/Spinner'
+import { Spinner } from '@/shared/components/ui/Spinner'
 import { ThemeProvider } from '@/shared/components/ui/ThemeProvider'
 import { Toaster } from '@/shared/components/ui/Toaster'
 import { wait } from '@/shared/utils/helpers'
@@ -17,7 +17,7 @@ import { VersionProvider } from '@/version/VersionProvider'
 const LoginPage = React.lazy(() => import('@/auth/LoginPage'))
 const RandomProductPage = React.lazy(() => import('@/product/RandomProductPage'))
 const SplitBillPage = React.lazy(() => import('@/split-bill/SplitBillPage'))
-const NotFoundPage = React.lazy(() => import('@/shared/components/NotFoundPage'))
+const NotFoundPage = React.lazy(() => import('@/shared/components/ui/NotFoundPage'))
 const UserListPage = React.lazy(() => import('@/user/UserListPage'))
 
 // 测试 React Router 懒加载（React Split Code）

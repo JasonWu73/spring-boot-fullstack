@@ -1,11 +1,11 @@
 import React from 'react'
 import { Outlet } from 'react-router-dom'
 
-import { SpinnerFullPage } from '@/shared/components/SpinnerFullPage'
 import { Aside } from '@/shared/components/layout/Aside'
 import { Footer } from '@/shared/components/layout/Footer'
 import { Header } from '@/shared/components/layout/Header'
 import { usePanelFold } from '@/shared/components/layout/panel-fold/PanelFoldProvider'
+import { SpinnerFullPage } from '@/shared/components/ui/SpinnerFullPage'
 import { cn } from '@/shared/utils/helpers'
 
 export default function AdminLayout() {

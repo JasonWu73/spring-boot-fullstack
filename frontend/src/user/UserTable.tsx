@@ -4,9 +4,10 @@ import React from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 
 import { useAuth, type PaginationData } from '@/auth/AuthProvider'
-import { Code } from '@/shared/components/Code'
 import { Button } from '@/shared/components/ui/Button'
 import { Checkbox } from '@/shared/components/ui/Checkbox'
+import { Code } from '@/shared/components/ui/Code'
+import { ConfirmDialog } from '@/shared/components/ui/ConfirmDialog'
 import { DataTable, type Paging } from '@/shared/components/ui/DataTable'
 import { DataTableColumnHeader } from '@/shared/components/ui/DataTableColumnHeader'
 import {
@@ -122,48 +123,7 @@ function UserTable({
             <Switch
               checked={enabled}
               disabled={loadingApi?.type === loadingType && loadingApi.isLoading}
-              onCheckedChange={async () => {
-                const newStatus = enabled ? 0 : 1
-
-                const response = await requestApi(
-                  {
-                    url: `/api/v1/users/${user.id}/status`,
-                    method: 'PUT',
-                    bodyData: { status: newStatus }
-                  },
-                  loadingType
-                )
-
-                if (response.status === 204) {
-                  const newUsers = users.map((prevUser) => {
-                    if (prevUser.id === user.id) prevUser.status = newStatus
-
-                    return prevUser
-                  })
-
-                  dispatch({
-                    type: 'FETCH_SUCCESS',
-                    payload: {
-                      status: 200,
-                      data: {
-                        list: newUsers,
-                        pageNum,
-                        pageSize,
-                        total
-                      }
-                    }
-                  })
-
-                  toast({ title: '修改用户状态成功' })
-                  return
-                }
-
-                toast({
-                  title: '修改用户状态失败',
-                  description: response.error,
-                  variant: 'destructive'
-                })
-              }}
+              onCheckedChange={() => handleChangeStatus(user.id, enabled, loadingType)}
             />
           )
         }
@@ -246,13 +206,6 @@ function UserTable({
 
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>操作</DropdownMenuLabel>
-                <DropdownMenuItem
-                  onClick={() => navigator.clipboard.writeText(user.username)}
-                >
-                  复制用户名
-                </DropdownMenuItem>
-
-                <DropdownMenuSeparator />
 
                 <DropdownMenuItem>
                   <Link to={`/users/${user.id}`} className="inline-block w-full">
@@ -261,44 +214,24 @@ function UserTable({
                 </DropdownMenuItem>
 
                 {isRoot && (
-                  <DropdownMenuItem
-                    onClick={async () => {
-                      const response = await requestApi({
-                        url: `/api/v1/users/${user.id}`,
-                        method: 'DELETE'
-                      })
+                  <>
+                    <DropdownMenuSeparator />
 
-                      if (response.status === 204) {
-                        const newUsers = users.filter(
-                          (prevUser) => prevUser.id !== user.id
-                        )
-
-                        dispatch({
-                          type: 'FETCH_SUCCESS',
-                          payload: {
-                            status: 200,
-                            data: {
-                              list: newUsers,
-                              pageNum,
-                              pageSize,
-                              total
-                            }
-                          }
-                        })
-
-                        toast({ title: '删除用户成功' })
-                        return
+                    <ConfirmDialog
+                      action={
+                        <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                          <div className="inline-block w-full cursor-pointer">删除</div>
+                        </DropdownMenuItem>
                       }
-
-                      toast({
-                        title: '删除用户失败',
-                        description: response.error,
-                        variant: 'destructive'
-                      })
-                    }}
-                  >
-                    删除
-                  </DropdownMenuItem>
+                      title={
+                        <>
+                          您确定要删除用户<Code className="mx-1">{user.username}</Code>
+                          吗？
+                        </>
+                      }
+                      onConfirm={() => handleDeleteUser(user.id)}
+                    />
+                  </>
                 )}
               </DropdownMenuContent>
             </DropdownMenu>
@@ -312,50 +245,132 @@ function UserTable({
     return columns.filter((column) => column.id !== '选择')
   }
 
+  async function handleChangeStatus(
+    userId: number,
+    enabled: boolean,
+    loadingType: string
+  ) {
+    const newStatus = enabled ? 0 : 1
+
+    const response = await requestApi(
+      {
+        url: `/api/v1/users/${userId}/status`,
+        method: 'PUT',
+        bodyData: { status: newStatus }
+      },
+      loadingType
+    )
+
+    if (response.status === 204) {
+      const newUsers = users.map((prevUser) => {
+        if (prevUser.id === userId) prevUser.status = newStatus
+
+        return prevUser
+      })
+
+      dispatch({
+        type: 'FETCH_SUCCESS',
+        payload: {
+          status: 200,
+          data: {
+            list: newUsers,
+            pageNum,
+            pageSize,
+            total
+          }
+        }
+      })
+
+      toast({ title: '修改用户状态成功' })
+      return
+    }
+
+    toast({
+      title: '修改用户状态失败',
+      description: response.error,
+      variant: 'destructive'
+    })
+  }
+
+  async function handleDeleteUser(userId: number) {
+    const response = await requestApi({
+      url: `/api/v1/users/${userId}`,
+      method: 'DELETE'
+    })
+
+    if (response.status === 204) {
+      const newUsers = users.filter((prevUser) => prevUser.id !== userId)
+
+      dispatch({
+        type: 'FETCH_SUCCESS',
+        payload: {
+          status: 200,
+          data: {
+            list: newUsers,
+            pageNum,
+            pageSize,
+            total
+          }
+        }
+      })
+
+      toast({ title: '删除用户成功' })
+      return
+    }
+
+    toast({
+      title: '删除用户失败',
+      description: response.error,
+      variant: 'destructive'
+    })
+  }
+
   return (
-    <DataTable
-      columns={columns}
-      data={users}
-      error={error}
-      loading={loading}
-      pagination={{
-        pageNum,
-        pageSize,
-        total
-      }}
-      onPaginate={onPaginate}
-      orderBy={{
-        id:
-          searchParams.get(URL_QUERY_KEY_ORDER_BY) === 'updatedAt'
-            ? '修改时间'
-            : '创建时间',
-        desc: searchParams.get(URL_QUERY_KEY_ORDER) !== 'asc'
-      }}
-      onSorting={(sorting) => {
-        searchParams.delete('createdAt')
-        searchParams.delete('updatedAt')
+    <>
+      <DataTable
+        columns={columns}
+        data={users}
+        error={error}
+        loading={loading}
+        pagination={{
+          pageNum,
+          pageSize,
+          total
+        }}
+        onPaginate={onPaginate}
+        orderBy={{
+          id:
+            searchParams.get(URL_QUERY_KEY_ORDER_BY) === 'updatedAt'
+              ? '修改时间'
+              : '创建时间',
+          desc: searchParams.get(URL_QUERY_KEY_ORDER) !== 'asc'
+        }}
+        onSorting={(sorting) => {
+          searchParams.delete('createdAt')
+          searchParams.delete('updatedAt')
 
-        const orderBy = sorting[0]?.id === '修改时间' ? 'updatedAt' : 'createdAt'
-        const order = sorting[0]?.desc === true ? 'desc' : 'asc'
+          const orderBy = sorting[0]?.id === '修改时间' ? 'updatedAt' : 'createdAt'
+          const order = sorting[0]?.desc === true ? 'desc' : 'asc'
 
-        if (!orderBy) return
+          if (!orderBy) return
 
-        searchParams.set(URL_QUERY_KEY_ORDER_BY, orderBy)
-        searchParams.set(URL_QUERY_KEY_ORDER, order)
+          searchParams.set(URL_QUERY_KEY_ORDER_BY, orderBy)
+          searchParams.set(URL_QUERY_KEY_ORDER, order)
 
-        setSearchParams(searchParams)
-      }}
-      enableRowSelection
-      onSelect={onSelect}
-    >
-      {isRoot && (
-        <div>
-          <Button onClick={onShowSelection} variant="destructive" size="sm">
-            查看被选中的行
-          </Button>
-        </div>
-      )}
-    </DataTable>
+          setSearchParams(searchParams)
+        }}
+        enableRowSelection
+        onSelect={onSelect}
+      >
+        {isRoot && (
+          <div>
+            <Button onClick={onShowSelection} variant="destructive" size="sm">
+              查看被选中的行
+            </Button>
+          </div>
+        )}
+      </DataTable>
+    </>
   )
 }
 

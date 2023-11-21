@@ -1,9 +1,9 @@
 import React from 'react'
 import { Outlet } from 'react-router-dom'
 
-import { SpinnerFullPage } from '@/shared/components/SpinnerFullPage'
 import { Footer } from '@/shared/components/layout/Footer'
 import { Header } from '@/shared/components/layout/Header'
+import { SpinnerFullPage } from '@/shared/components/ui/SpinnerFullPage'
 
 export default function LoginLayout() {
   return (

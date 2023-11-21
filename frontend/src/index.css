@@ -53,12 +53,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* 亮色主题 */
-html {
-  @apply bg-snow;
-  @apply text-night;
-}
-
 /* 暗色主题 */
 html.dark {
   @apply bg-night-2;

@@ -75,7 +75,7 @@ export default function LoginPage() {
       <CardHeader>
         <CardTitle>登录</CardTitle>
         <CardDescription className="flex items-center text-green-500 dark:text-green-600">
-          <ShieldPlus className="mr-2 h-4 w-4" />
+          <ShieldPlus className="mr-1 h-4 w-4" />
           支持用户名和密码加密传输
         </CardDescription>
       </CardHeader>

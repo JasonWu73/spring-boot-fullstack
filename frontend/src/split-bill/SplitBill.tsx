@@ -4,7 +4,6 @@ import { useForm } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
 import { z } from 'zod'
 
-import { StarRating } from '@/shared/components/StarRating'
 import { Button } from '@/shared/components/ui/Button'
 import {
   Card,
@@ -15,6 +14,7 @@ import {
 } from '@/shared/components/ui/Card'
 import { FormInput, FormSelect } from '@/shared/components/ui/CustomFormField'
 import { Form } from '@/shared/components/ui/Form'
+import { StarRating } from '@/shared/components/ui/StarRating'
 import {
   Tooltip,
   TooltipContent,

@@ -1,10 +1,10 @@
 import React from 'react'
 
-import { Hamburger } from '@/shared/components/Hamburger'
 import { PanelFold } from '@/shared/components/layout/panel-fold/PanelFold'
 import { AuthSwitch } from '@/shared/components/layout/top-nav-bar/AuthSwitch'
 import { Logo } from '@/shared/components/layout/top-nav-bar/Logo'
 import { PageNav } from '@/shared/components/layout/top-nav-bar/PageNav'
+import { Hamburger } from '@/shared/components/ui/Hamburger'
 import { ModeToggle } from '@/shared/components/ui/ModeToggle'
 
 type TopNavBarProps = {

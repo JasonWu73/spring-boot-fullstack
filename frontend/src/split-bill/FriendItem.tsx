@@ -3,6 +3,8 @@ import { Link, useParams } from 'react-router-dom'
 import type { Friend } from '@/shared/apis/fake/friend-api'
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/components/ui/Avatar'
 import { buttonVariants } from '@/shared/components/ui/Button'
+import { Code } from '@/shared/components/ui/Code'
+import { ConfirmDialog } from '@/shared/components/ui/ConfirmDialog'
 import {
   Tooltip,
   TooltipContent,
@@ -10,7 +12,6 @@ import {
   TooltipTrigger
 } from '@/shared/components/ui/Tooltip'
 import { cn, truncate } from '@/shared/utils/helpers'
-import { DeleteFriend } from '@/split-bill/DeleteFriend'
 import { useFriends } from '@/split-bill/FriendProvider'
 
 type FriendItemProps = {
@@ -39,7 +40,19 @@ function FriendItem({ friend, onDeleteFriend }: FriendItemProps) {
         selected && 'bg-amber-100 dark:text-night'
       )}
     >
-      <DeleteFriend onDelete={() => onDeleteFriend(friend)} />
+      <ConfirmDialog
+        action={
+          <div className="absolute left-2 top-1 hidden cursor-pointer text-xs group-hover:block">
+            ❌
+          </div>
+        }
+        title={
+          <>
+            您确定要删除好友<Code className="mx-1">{friend.name}</Code>吗？
+          </>
+        }
+        onConfirm={() => onDeleteFriend(friend)}
+      />
 
       <Avatar>
         <AvatarImage src={friend.image} alt={name} />

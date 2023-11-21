@@ -132,7 +132,7 @@ function UserSearch({ loading }: UserSearchProps) {
         <Button
           onClick={handleReset}
           type="reset"
-          variant="secondary"
+          variant="outline"
           className="self-end"
           disabled={loading}
         >
