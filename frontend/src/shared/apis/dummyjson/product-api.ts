@@ -1,5 +1,24 @@
-import type { ApiError, Product } from '@/shared/apis/dummyjson/types'
 import { sendRequest } from '@/shared/utils/http'
+
+export type ApiError = {
+  message: string
+  name?: string
+  expiredAt?: string
+}
+
+export type Product = {
+  id: number
+  title: string
+  description: string
+  price: number
+  discountPercentage: number
+  rating: number
+  stock: number
+  brand: string
+  category: string
+  thumbnail: string
+  images: string[]
+}
 
 async function getRandomProductApi() {
   const randomId = Math.floor(Math.random() * 110)

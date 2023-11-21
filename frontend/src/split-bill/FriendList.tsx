@@ -2,7 +2,7 @@ import { ExclamationTriangleIcon, ReloadIcon, RocketIcon } from '@radix-ui/react
 import React from 'react'
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 
-import type { Friend } from '@/shared/apis/fake/types'
+import type { Friend } from '@/shared/apis/fake/friend-api'
 import { Alert, AlertDescription, AlertTitle } from '@/shared/components/ui/Alert'
 import { Card } from '@/shared/components/ui/Card'
 import { ScrollArea } from '@/shared/components/ui/ScrollArea'

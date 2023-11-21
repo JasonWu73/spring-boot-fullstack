@@ -1,7 +1,5 @@
 import React from 'react'
 
-import type { Action, FetchResponse, IgnoreFetch } from '@/shared/hooks/types'
-
 type State<TData> = {
   status: number // HTTP 响应状态码
   data: TData | null
@@ -15,6 +13,12 @@ const initialState: State<unknown> = {
   error: '',
   loading: false
 }
+
+type Action<TData> =
+  | { type: 'START_LOADING' }
+  | { type: 'FETCH_SUCCESS'; payload: { status: number; data: TData | null } }
+  | { type: 'FETCH_FAILED'; payload: { status: number; error: string } }
+  | { type: 'IGNORE_FETCH' } // 只是忽略请求的结果，而非取消请求；取消请求只会不易于前端调试，因为后端仍然会处理请求
 
 function reducer<TData>(state: State<TData>, action: Action<TData>): State<TData> {
   switch (action.type) {
@@ -60,7 +64,15 @@ function reducer<TData>(state: State<TData>, action: Action<TData>): State<TData
   }
 }
 
+type FetchResponse<T> = {
+  status: number // HTTP 响应状态码
+  data?: T
+  error?: string
+}
+
 type ApiCallback<TData, TParams> = (params?: TParams) => Promise<FetchResponse<TData>>
+
+type IgnoreFetch = () => void
 
 type UseFetch<TData, TParams> = {
   status: number
@@ -129,4 +141,4 @@ function useFetch<TData, TParams>(
   return { status, data, error, loading, fetchData, dispatch }
 }
 
-export { useFetch }
+export { useFetch, type Action, type FetchResponse, type IgnoreFetch }

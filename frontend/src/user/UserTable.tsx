@@ -3,8 +3,7 @@ import { MoreHorizontal } from 'lucide-react'
 import React from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 
-import { useAuth } from '@/auth/AuthProvider'
-import type { PaginationData } from '@/shared/apis/backend/types'
+import { useAuth, type PaginationData } from '@/auth/AuthProvider'
 import { Code } from '@/shared/components/Code'
 import { Button } from '@/shared/components/ui/Button'
 import { Checkbox } from '@/shared/components/ui/Checkbox'
@@ -20,9 +19,9 @@ import {
 } from '@/shared/components/ui/DropdownMenu'
 import { Switch } from '@/shared/components/ui/Switch'
 import { useToast } from '@/shared/components/ui/use-toast'
-import type { Action } from '@/shared/hooks/types'
+import type { Action } from '@/shared/hooks/use-fetch'
 import { URL_QUERY_KEY_ORDER, URL_QUERY_KEY_ORDER_BY } from '@/shared/utils/constants'
-import type { User } from '@/user/types'
+import type { User } from '@/user/UserListPage'
 
 type UserTableProps = {
   users: User[]

@@ -1,8 +1,7 @@
 import React from 'react'
 import { useSearchParams } from 'react-router-dom'
 
-import { useAuth } from '@/auth/AuthProvider'
-import type { PaginationData, PaginationParams } from '@/shared/apis/backend/types'
+import { useAuth, type PaginationData, type PaginationParams } from '@/auth/AuthProvider'
 import {
   Card,
   CardContent,
@@ -27,7 +26,17 @@ import {
 } from '@/shared/utils/constants'
 import { UserSearch } from '@/user/UserSearch'
 import { UserTable } from '@/user/UserTable'
-import type { User } from '@/user/types'
+
+type User = {
+  id: number
+  createdAt: string
+  updatedAt: string
+  remark: string
+  username: string
+  nickname: string
+  status: number
+  authorities: string[]
+}
 
 type GetUsersParams = PaginationParams & {
   username?: string
@@ -140,3 +149,5 @@ export default function UserListPage() {
     </Card>
   )
 }
+
+export { type User }

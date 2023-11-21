@@ -1,6 +1,14 @@
-import type { Friend } from '@/shared/apis/fake/types'
 import { wait } from '@/shared/utils/helpers'
 import { sendRequest } from '@/shared/utils/http'
+
+type Friend = {
+  id: number
+  name: string
+  image: string
+  balance: number
+  creditRating: number
+  birthday: string
+}
 
 const BASE_URL = window.location.host
 
@@ -16,4 +24,4 @@ async function getFriendsApi() {
   return { status, data, error: '' }
 }
 
-export { getFriendsApi }
+export { getFriendsApi, type Friend }

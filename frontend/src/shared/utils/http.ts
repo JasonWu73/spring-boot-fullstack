@@ -1,7 +1,19 @@
 import { endNProgress, startNProgress } from '@/shared/utils/nprogress'
-import type { ApiRequest, UrlParams } from '@/shared/utils/types'
 
 const CUSTOM_HTTP_STATUS_ERROR_CODE = 999
+
+type ContentType = 'JSON' | 'URLENCODED' | 'FILE'
+
+type UrlParams = Record<string, string | number | boolean | undefined | null>
+
+type ApiRequest = {
+  url: string
+  method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'
+  contentType?: ContentType
+  headers?: Record<string, string>
+  urlParams?: UrlParams
+  bodyData?: Record<string, unknown> | FormData
+}
 
 type SuccessResponse<T> = {
   status: number
@@ -115,4 +127,10 @@ async function sendRequest<TData, TError>({
   }
 }
 
-export { CUSTOM_HTTP_STATUS_ERROR_CODE, sendRequest }
+export {
+  CUSTOM_HTTP_STATUS_ERROR_CODE,
+  sendRequest,
+  type ApiRequest,
+  type ContentType,
+  type UrlParams
+}

@@ -1,6 +1,6 @@
 import { Link, useParams } from 'react-router-dom'
 
-import type { Friend } from '@/shared/apis/fake/types'
+import type { Friend } from '@/shared/apis/fake/friend-api'
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/components/ui/Avatar'
 import { buttonVariants } from '@/shared/components/ui/Button'
 import {

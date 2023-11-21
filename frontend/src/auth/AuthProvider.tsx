@@ -1,12 +1,28 @@
 import React from 'react'
 
-import type { Auth } from '@/auth/types'
-import { BASE_URL } from '@/shared/apis/backend/constants'
-import type { ApiError } from '@/shared/apis/backend/types'
-import type { FetchResponse } from '@/shared/hooks/types'
-import { CUSTOM_HTTP_STATUS_ERROR_CODE, sendRequest } from '@/shared/utils/http'
+import type { FetchResponse } from '@/shared/hooks/use-fetch'
+import {
+  CUSTOM_HTTP_STATUS_ERROR_CODE,
+  sendRequest,
+  type ApiRequest
+} from '@/shared/utils/http'
 import { encrypt } from '@/shared/utils/rsa'
-import type { ApiRequest } from '@/shared/utils/types'
+
+// 分页参数类型
+type PaginationParams = {
+  pageNum: number
+  pageSize: number
+  orderBy?: string
+  order?: 'asc' | 'desc'
+}
+
+// 分页结果类型
+type PaginationData<T> = {
+  pageNum: number
+  pageSize: number
+  total: number
+  list: T[]
+}
 
 const PUBLIC_KEY =
   'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCmWWFyJSaS/SMYr7hmCSXcwAvPF+aGPbbQFOt3rJXjDVKL2GhumWXH2y+dC5/DoaCtDz3dFTyzuoYyiuTHzbpsQ7ari8LoRunOJ81Hx0szpdKbOYJ5WnUr3mr7qEIwY5Verh1dgknNxuzeeTNlmAeLQj067+B+7m9+xp2WU+VSawIDAQAB'
@@ -16,12 +32,35 @@ const STORAGE_KEY = 'demo-auth'
 const LOADING_TYPE_LOGIN = 'login'
 const LOADING_TYPE_LOGOUT = 'logout'
 
+// 这里假设 Vite 运行时使用默认的 5173 端口
+const DEV_PORT = '5173'
+const BACKEND_BASE_URL = `${window.location.protocol}//${window.location.hostname}:8080`
+
+const BASE_URL =
+  window.location.port === DEV_PORT ? BACKEND_BASE_URL : window.location.host
+
+// 错误响应数据类型
+type ApiError = {
+  timestamp: string
+  status: number
+  error: string
+  path: string
+}
+
 type AuthResponse = {
   accessToken: string
   refreshToken: string
   expiresInSeconds: number
   nickname: string
   authorities: string[]
+}
+
+type Auth = {
+  accessToken: string
+  refreshToken: string
+  nickname: string
+  authorities: string[]
+  expiresAt: number
 }
 
 type Loading = {
@@ -265,4 +304,11 @@ async function requestPrivateApi<T>(request: ApiRequest): Promise<FetchResponse<
   return { status, data: data ?? undefined }
 }
 
-export { AuthProvider, LOADING_TYPE_LOGIN, LOADING_TYPE_LOGOUT, useAuth }
+export {
+  AuthProvider,
+  LOADING_TYPE_LOGIN,
+  LOADING_TYPE_LOGOUT,
+  useAuth,
+  type PaginationData,
+  type PaginationParams
+}

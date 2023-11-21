@@ -1,9 +1,7 @@
 import React from 'react'
 
-import { getFriendsApi } from '@/shared/apis/fake/friend-api'
-import type { Friend } from '@/shared/apis/fake/types'
-import type { IgnoreFetch } from '@/shared/hooks/types'
-import { useFetch } from '@/shared/hooks/use-fetch'
+import { getFriendsApi, type Friend } from '@/shared/apis/fake/friend-api'
+import { useFetch, type IgnoreFetch } from '@/shared/hooks/use-fetch'
 import { wait } from '@/shared/utils/helpers'
 import { CUSTOM_HTTP_STATUS_ERROR_CODE } from '@/shared/utils/http'
 import { endNProgress, startNProgress } from '@/shared/utils/nprogress'
