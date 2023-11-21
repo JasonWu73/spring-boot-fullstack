@@ -23,10 +23,10 @@ const authorityOptions = [
 ]
 
 const formSchema = z.object({
-  username: z.string(),
-  nickname: z.string(),
-  status: z.string(),
-  authority: z.string()
+  username: z.string().trim(),
+  nickname: z.string().trim(),
+  status: z.string().trim(),
+  authority: z.string().trim()
 })
 
 type FormSchema = z.infer<typeof formSchema>

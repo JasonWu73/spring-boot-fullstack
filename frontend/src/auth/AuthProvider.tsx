@@ -24,6 +24,18 @@ type PaginationData<T> = {
   list: T[]
 }
 
+// 可分配的功能权限
+const AUTHORITY_OPTIONS = [
+  {
+    value: 'admin',
+    label: '管理员'
+  },
+  {
+    value: 'user',
+    label: '普通用户'
+  }
+]
+
 const PUBLIC_KEY =
   'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCmWWFyJSaS/SMYr7hmCSXcwAvPF+aGPbbQFOt3rJXjDVKL2GhumWXH2y+dC5/DoaCtDz3dFTyzuoYyiuTHzbpsQ7ari8LoRunOJ81Hx0szpdKbOYJ5WnUr3mr7qEIwY5Verh1dgknNxuzeeTNlmAeLQj067+B+7m9+xp2WU+VSawIDAQAB'
 
@@ -249,4 +261,10 @@ async function requestBackendApi<T>(request: ApiRequest): Promise<FetchResponse<
   return { status, data: data ?? undefined }
 }
 
-export { AuthProvider, useAuth, type PaginationData, type PaginationParams }
+export {
+  AUTHORITY_OPTIONS,
+  AuthProvider,
+  useAuth,
+  type PaginationData,
+  type PaginationParams
+}

@@ -12,8 +12,8 @@ import { useTitle } from '@/shared/hooks/use-title'
 import { useFriends } from '@/split-bill/FriendProvider'
 
 const formSchema = z.object({
-  name: z.string().min(1, '必须输入姓名'),
-  image: z.string().url({ message: '图片必须是有效的 URL' }),
+  name: z.string().min(1, '必须输入姓名').trim(),
+  image: z.string().url({ message: '图片必须是有效的 URL' }).trim(),
   birthday: z
     .date({ required_error: '必须选择好友生日' })
     .max(new Date(), '生日不能是未来的日期')

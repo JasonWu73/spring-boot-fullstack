@@ -13,6 +13,7 @@ import {
   FormMessage
 } from '@/shared/components/ui/Form'
 import { Input } from '@/shared/components/ui/Input'
+import { MultiSelect } from '@/shared/components/ui/MultiSelect'
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/Popover'
 import {
   Select,
@@ -21,6 +22,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/shared/components/ui/Select'
+import { Textarea } from '@/shared/components/ui/Textarea'
 import { cn, tw } from '@/shared/utils/helpers'
 import { zhCN } from 'date-fns/locale'
 
@@ -44,6 +46,10 @@ type FormInputProps<T extends FieldValues> = {
   isError?: boolean
   inputRef?: React.MutableRefObject<HTMLInputElement | null>
   className?: string
+}
+
+type FormTextareaProps<T extends FieldValues> = Omit<FormInputProps<T>, 'inputRef'> & {
+  textareaRef?: React.MutableRefObject<HTMLTextAreaElement | null>
 }
 
 function FormInput<T extends FieldValues>({
@@ -73,9 +79,9 @@ function FormInput<T extends FieldValues>({
 
           <FormControl className={cn(className)}>
             <Input
+              {...field}
               type={type}
               placeholder={placeholder}
-              {...field}
               disabled={disabled}
               isError={isError}
               ref={(ref) => {
@@ -83,6 +89,53 @@ function FormInput<T extends FieldValues>({
 
                 if (inputRef) {
                   inputRef.current = ref
+                }
+              }}
+            />
+          </FormControl>
+
+          <FormMessage className="lg:col-start-2 lg:col-end-3 lg:row-span-1" />
+        </FormItem>
+      )}
+    />
+  )
+}
+
+function FormTextarea<T extends FieldValues>({
+  control,
+  name,
+  label,
+  labelWidth,
+  placeholder,
+  disabled,
+  isError = false,
+  textareaRef,
+  className
+}: FormTextareaProps<T>) {
+  return (
+    <FormField
+      control={control}
+      name={name}
+      render={({ field }) => (
+        <FormItem className="grid grid-flow-row items-center gap-2 lg:grid-cols-[auto_1fr]">
+          <FormLabel
+            style={{ width: labelWidth }}
+            className="overflow-hidden text-ellipsis whitespace-nowrap"
+          >
+            {label}
+          </FormLabel>
+
+          <FormControl className={cn(className)}>
+            <Textarea
+              {...field}
+              placeholder={placeholder}
+              disabled={disabled}
+              isError={isError}
+              ref={(ref) => {
+                field.ref(ref)
+
+                if (textareaRef) {
+                  textareaRef.current = ref
                 }
               }}
             />
@@ -146,6 +199,48 @@ function FormSelect<T extends FieldValues>({
               ))}
             </SelectContent>
           </Select>
+
+          <FormMessage className="lg:col-start-2 lg:col-end-3 lg:row-span-1" />
+        </FormItem>
+      )}
+    />
+  )
+}
+
+function FormMultiSelect<T extends FieldValues>({
+  control,
+  name,
+  label,
+  labelWidth,
+  options,
+  placeholder,
+  disabled,
+  isError = false,
+  className
+}: FormSelectProps<T>) {
+  return (
+    <FormField
+      control={control}
+      name={name}
+      render={({ field }) => (
+        <FormItem className="grid grid-flow-row items-center gap-2 lg:grid-cols-[auto_1fr]">
+          <FormLabel
+            style={{ width: labelWidth }}
+            className="overflow-hidden text-ellipsis whitespace-nowrap"
+          >
+            {label}
+          </FormLabel>
+
+          <FormControl className={cn(className)}>
+            <MultiSelect
+              {...field}
+              placeholder={placeholder}
+              selected={field.value}
+              options={options}
+              isError={isError}
+              disabled={disabled}
+            />
+          </FormControl>
 
           <FormMessage className="lg:col-start-2 lg:col-end-3 lg:row-span-1" />
         </FormItem>
@@ -221,4 +316,11 @@ function FormCalendar<T extends FieldValues>({
   )
 }
 
-export { FormCalendar, FormInput, FormSelect, inputErrorClasses }
+export {
+  FormCalendar,
+  FormInput,
+  FormMultiSelect,
+  FormSelect,
+  FormTextarea,
+  inputErrorClasses
+}
