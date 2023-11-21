@@ -45,8 +45,8 @@ type GetUsersParams = PaginationParams & {
   authority?: string
 }
 
-export default function UserListPage() {
-  useTitle('用户列表')
+function UserListPage() {
+  useTitle('用户管理')
 
   const [searchParams, setSearchParams] = useSearchParams()
 
@@ -149,5 +149,7 @@ export default function UserListPage() {
     </Card>
   )
 }
+
+export default UserListPage
 
 export { type User }

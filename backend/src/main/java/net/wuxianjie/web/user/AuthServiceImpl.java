@@ -186,6 +186,20 @@ public class AuthServiceImpl implements AuthService {
   }
 
   /**
+   * 通过用户名退出登录，用于退出非当前登录用户。
+   */
+  public void logout(final String username) {
+    // 从 Redis 中删除登录信息
+    final String accessToken = stringRedisTemplate.opsForValue().get(
+      KEY_PREFIX_LOGGED_IN_USER + username
+    );
+
+    if (accessToken != null) {
+      deleteLoginCache(accessToken, username);
+    }
+  }
+
+  /**
    * 从 Redis 中删除登录信息。
    */
   private void deleteLoginCache(final String accessToken, final String username) {

@@ -36,6 +36,7 @@ function ConfirmDialog({ trigger, title, onConfirm }: DeleteUserProps) {
 
         <AlertDialogFooter>
           <AlertDialogCancel>取消</AlertDialogCancel>
+
           <AlertDialogAction
             onClick={onConfirm}
             className={buttonVariants({ variant: 'destructive' })}

@@ -13,9 +13,9 @@ function LoginButton() {
   return (
     <Link
       to="/login"
-      onClick={(e) => {
+      onClick={(event) => {
         if (isLoading) {
-          e.preventDefault()
+          event.preventDefault()
         }
       }}
     >

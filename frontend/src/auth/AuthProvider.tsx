@@ -97,10 +97,7 @@ function AuthProvider({ children }: AuthProviderProps) {
   /**
    * 需要使用访问令牌的 API 请求。
    */
-  async function requestApi<T>(
-    request: ApiRequest,
-    type?: string
-  ): Promise<FetchResponse<T>> {
+  async function requestApi<T>(request: ApiRequest): Promise<FetchResponse<T>> {
     // 请求无需拥有访问令牌的开放 API
     if (!auth) return requestBackendApi(request)
 
@@ -110,8 +107,6 @@ function AuthProvider({ children }: AuthProviderProps) {
     // 这里为了测试目的，故意设置离过期时间有 29 分钟时就刷新访问令牌
     const needsRefreshAuth = expiresAt - Date.now() <= 29 * 60 * 1000
 
-    setLoading({ type, isLoading: true })
-
     // 发送请求
     const response = await requestBackendApi<T>({
       ...request,
@@ -120,7 +115,6 @@ function AuthProvider({ children }: AuthProviderProps) {
 
     // 检查是否需要重新登录
     if (response.status === 401) {
-      setLoading({ type, isLoading: false })
       setAuthCache(null)
       return { status: response.status, error: '登录过期' }
     }
@@ -134,8 +128,6 @@ function AuthProvider({ children }: AuthProviderProps) {
         method: 'POST',
         headers: { Authorization: `Bearer ${accessToken}` }
       })
-
-      setLoading({ type, isLoading: false })
 
       if (error) {
         setAuthCache(null)
@@ -152,8 +144,6 @@ function AuthProvider({ children }: AuthProviderProps) {
       setTimeout(() => {
         refreshable.current = true
       }, 600_000)
-    } else {
-      setLoading({ type, isLoading: false })
     }
 
     return response

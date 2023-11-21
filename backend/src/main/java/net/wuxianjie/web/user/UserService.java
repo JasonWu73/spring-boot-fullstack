@@ -144,10 +144,21 @@ public class UserService {
     final User user = Optional.ofNullable(userMapper.selectById(userId))
       .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "用户不存在"));
 
+    // root 账号不允许再调整权限
+    final String newAuthorities = toAuthorities(params.getAuthorities());
+
+    if (
+      user.getAuthorities() != null
+        && user.getAuthorities().contains(Authority.ROOT.getCode())
+        && !user.getAuthorities().equals(newAuthorities)
+    ) {
+      throw new ApiException(HttpStatus.FORBIDDEN, "超级管理员账号不允许再调整权限");
+    }
+
     // 更新数据库中的用户数据
     user.setUpdatedAt(LocalDateTime.now());
     user.setNickname(params.getNickname());
-    user.setAuthorities(toAuthorities(params.getAuthorities()));
+    user.setAuthorities(newAuthorities);
     user.setRemark(params.getRemark());
 
     userMapper.updateById(user);
@@ -166,7 +177,7 @@ public class UserService {
     userMapper.updateById(user);
 
     // 在密码更新后，需要重新登录
-    authService.logout();
+    authService.logout(user.getUsername());
   }
 
   public void updateUserStatus(final long userId, final UpdateUserStatusParams params) {

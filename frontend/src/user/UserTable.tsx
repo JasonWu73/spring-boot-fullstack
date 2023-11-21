@@ -11,6 +11,14 @@ import { ConfirmDialog } from '@/shared/components/ui/ConfirmDialog'
 import { DataTable, type Paging } from '@/shared/components/ui/DataTable'
 import { DataTableColumnHeader } from '@/shared/components/ui/DataTableColumnHeader'
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
+} from '@/shared/components/ui/Dialog'
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -22,6 +30,7 @@ import { Switch } from '@/shared/components/ui/Switch'
 import { useToast } from '@/shared/components/ui/use-toast'
 import type { Action } from '@/shared/hooks/use-fetch'
 import { URL_QUERY_KEY_ORDER, URL_QUERY_KEY_ORDER_BY } from '@/shared/utils/constants'
+import { ResetPassword } from '@/user/ResetPassword'
 import type { User } from '@/user/UserListPage'
 
 type UserTableProps = {
@@ -50,8 +59,9 @@ function UserTable({
   dispatch
 }: UserTableProps) {
   const [searchParams, setSearchParams] = useSearchParams()
+  const [updating, setUpdating] = React.useState(false)
 
-  const { isRoot, loading: loadingApi, requestApi } = useAuth()
+  const { isRoot, requestApi } = useAuth()
   const { toast } = useToast()
 
   const columns = getColumns(isRoot)
@@ -118,12 +128,11 @@ function UserTable({
           const user = row.original
           const enabled = user.status === 1
           const loadingType = `userOperation${user.id}`
-          const isLoading = loadingApi?.type === loadingType && loadingApi.isLoading
 
           return (
             <Switch
               checked={enabled}
-              disabled={isLoading}
+              disabled={updating}
               onCheckedChange={() => handleChangeStatus(user.id, enabled, loadingType)}
             />
           )
@@ -197,12 +206,11 @@ function UserTable({
         cell: ({ row }) => {
           const user = row.original
           const loadingType = `userOperation${user.id}`
-          const isLoading = loadingApi?.type === loadingType && loadingApi.isLoading
 
           return (
             /* `model=false`（启用与外部元素的交互）很重要，否则内部对话框焦点不可用 */
             <DropdownMenu modal={false}>
-              <DropdownMenuTrigger asChild disabled={isLoading}>
+              <DropdownMenuTrigger asChild disabled={updating}>
                 <Button variant="ghost" className="h-8 w-8 p-0">
                   <MoreHorizontal className="h-4 w-4" />
                 </Button>
@@ -223,18 +231,42 @@ function UserTable({
 
                     <ConfirmDialog
                       trigger={
-                        <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                          <div className="inline-block w-full cursor-pointer">删除</div>
+                        <DropdownMenuItem onSelect={(event) => event.preventDefault()}>
+                          <button className="w-full cursor-pointer text-left text-red-500 dark:text-red-600">
+                            删除
+                          </button>
                         </DropdownMenuItem>
                       }
                       title={
                         <>
-                          您确定要删除用户<Code className="mx-1">{user.username}</Code>
-                          吗？
+                          您确定要删除用户 <Code>{user.username}</Code> 吗？
                         </>
                       }
                       onConfirm={() => handleDeleteUser(user.id, loadingType)}
                     />
+
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <DropdownMenuItem onSelect={(event) => event.preventDefault()}>
+                          <button className="w-full cursor-pointer text-left text-red-500 dark:text-red-600">
+                            重置密码
+                          </button>
+                        </DropdownMenuItem>
+                      </DialogTrigger>
+
+                      <DialogContent className="sm:max-w-[425px]">
+                        <DialogHeader>
+                          <DialogTitle>
+                            重置用户 <Code>{user.username}</Code> 密码
+                          </DialogTitle>
+                          <DialogDescription>
+                            重置后，用户将使用新密码登录系统
+                          </DialogDescription>
+                        </DialogHeader>
+
+                        <ResetPassword userId={user.id} />
+                      </DialogContent>
+                    </Dialog>
                   </>
                 )}
               </DropdownMenuContent>
@@ -256,6 +288,8 @@ function UserTable({
   ) {
     const newStatus = enabled ? 0 : 1
 
+    setUpdating(true)
+
     const response = await requestApi(
       {
         url: `/api/v1/users/${userId}/status`,
@@ -264,6 +298,8 @@ function UserTable({
       },
       loadingType
     )
+
+    setUpdating(false)
 
     if (response.status === 204) {
       const newUsers = users.map((prevUser) => {
@@ -297,6 +333,8 @@ function UserTable({
   }
 
   async function handleDeleteUser(userId: number, loadingType: string) {
+    setUpdating(true)
+
     const response = await requestApi(
       {
         url: `/api/v1/users/${userId}`,
@@ -304,6 +342,8 @@ function UserTable({
       },
       loadingType
     )
+
+    setUpdating(false)
 
     if (response.status === 204) {
       const newUsers = users.filter((prevUser) => prevUser.id !== userId)
