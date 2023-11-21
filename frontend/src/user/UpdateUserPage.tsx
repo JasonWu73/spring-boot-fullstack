@@ -17,6 +17,7 @@ import {
   FormTextarea
 } from '@/shared/components/ui/CustomFormField'
 import { Form } from '@/shared/components/ui/Form'
+import { useNavigate } from 'react-router-dom'
 
 const formSchema = z.object({
   nickname: z.string().min(1, '必须输入昵称').trim(),
@@ -35,6 +36,8 @@ export default function UpdateUserPage() {
       remark: ''
     }
   })
+
+  const navigate = useNavigate()
 
   async function onSubmit(values: FormSchema) {
     console.log(values)
@@ -80,7 +83,7 @@ export default function UpdateUserPage() {
             />
 
             <div className="flex gap-2 sm:justify-end">
-              <Button type="button" variant="outline">
+              <Button onClick={() => navigate('/users')} type="button" variant="outline">
                 返回
               </Button>
 
