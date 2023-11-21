@@ -8,6 +8,7 @@ import { z } from 'zod'
 import { Button } from '@/shared/components/ui/Button'
 import { FormInput, FormSelect } from '@/shared/components/ui/CustomFormField'
 import { Form } from '@/shared/components/ui/Form'
+import { URL_QUERY_KEY_PAGE_NUM, URL_QUERY_KEY_PAGE_SIZE } from '@/shared/utils/constants'
 
 const statusOptions = [
   { value: '', label: '全部' },
@@ -62,6 +63,9 @@ function UserSearch({ loading }: UserSearchProps) {
   }, [searchParams, form])
 
   function onSubmit(values: FormSchema) {
+    searchParams.delete(URL_QUERY_KEY_PAGE_NUM)
+    searchParams.delete(URL_QUERY_KEY_PAGE_SIZE)
+    searchParams.delete('username')
     searchParams.delete('username')
     searchParams.delete('nickname')
     searchParams.delete('status')

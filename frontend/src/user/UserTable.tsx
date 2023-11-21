@@ -117,12 +117,13 @@ function UserTable({
         cell: ({ row }) => {
           const user = row.original
           const enabled = user.status === 1
-          const loadingType = `changeUser${user.id}`
+          const loadingType = `userOperation${user.id}`
+          const isLoading = loadingApi?.type === loadingType && loadingApi.isLoading
 
           return (
             <Switch
               checked={enabled}
-              disabled={loadingApi?.type === loadingType && loadingApi.isLoading}
+              disabled={isLoading}
               onCheckedChange={() => handleChangeStatus(user.id, enabled, loadingType)}
             />
           )
@@ -194,13 +195,14 @@ function UserTable({
         id: '操作',
         cell: ({ row }) => {
           const user = row.original
+          const loadingType = `userOperation${user.id}`
+          const isLoading = loadingApi?.type === loadingType && loadingApi.isLoading
 
           return (
             /* `model=false`（启用与外部元素的交互）很重要，否则内部对话框焦点不可用 */
             <DropdownMenu modal={false}>
-              <DropdownMenuTrigger asChild>
+              <DropdownMenuTrigger asChild disabled={isLoading}>
                 <Button variant="ghost" className="h-8 w-8 p-0">
-                  <span className="sr-only"></span>
                   <MoreHorizontal className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
@@ -230,7 +232,7 @@ function UserTable({
                           吗？
                         </>
                       }
-                      onConfirm={() => handleDeleteUser(user.id)}
+                      onConfirm={() => handleDeleteUser(user.id, loadingType)}
                     />
                   </>
                 )}
@@ -293,11 +295,14 @@ function UserTable({
     })
   }
 
-  async function handleDeleteUser(userId: number) {
-    const response = await requestApi({
-      url: `/api/v1/users/${userId}`,
-      method: 'DELETE'
-    })
+  async function handleDeleteUser(userId: number, loadingType: string) {
+    const response = await requestApi(
+      {
+        url: `/api/v1/users/${userId}`,
+        method: 'DELETE'
+      },
+      loadingType
+    )
 
     if (response.status === 204) {
       const newUsers = users.filter((prevUser) => prevUser.id !== userId)
@@ -310,7 +315,7 @@ function UserTable({
             list: newUsers,
             pageNum,
             pageSize,
-            total
+            total: total - 1
           }
         }
       })

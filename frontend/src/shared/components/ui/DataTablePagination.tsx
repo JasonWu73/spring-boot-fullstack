@@ -31,8 +31,8 @@ function DataTablePagination<TData>({
       <div className="text-muted-foreground hidden flex-1 text-sm lg:flex">
         {needsSelection && (
           <>
-            已选择 {table.getFilteredRowModel().rows.length} 行中的{' '}
-            {table.getFilteredSelectedRowModel().rows.length} 行
+            已选择 {table.getFilteredSelectedRowModel().rows.length} /{' '}
+            {table.getFilteredRowModel().rows.length} 行
           </>
         )}
       </div>
