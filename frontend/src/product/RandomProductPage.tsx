@@ -30,9 +30,7 @@ export default function RandomProductPage() {
   useRefresh(() => {
     const ignore = getProduct()
 
-    return () => {
-      ignore()
-    }
+    return () => ignore()
   })
 
   return (

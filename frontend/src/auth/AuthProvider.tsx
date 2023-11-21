@@ -102,9 +102,7 @@ function AuthProvider({ children }: AuthProviderProps) {
     type?: string
   ): Promise<FetchResponse<T>> {
     // 请求无需拥有访问令牌的开放 API
-    if (!auth) {
-      return requestPublicApi(request)
-    }
+    if (!auth) return requestBackendApi(request)
 
     // 请求需要访问令牌的 API（涉及自动刷新机制）
     const { expiresAt, accessToken, refreshToken } = auth
@@ -115,7 +113,7 @@ function AuthProvider({ children }: AuthProviderProps) {
     setLoading({ type, isLoading: true })
 
     // 发送请求
-    const response = await requestPrivateApi<T>({
+    const response = await requestBackendApi<T>({
       ...request,
       headers: { ...request.headers, Authorization: `Bearer ${accessToken}` }
     })
@@ -131,7 +129,7 @@ function AuthProvider({ children }: AuthProviderProps) {
     if (needsRefreshAuth && refreshable.current) {
       refreshable.current = false
 
-      const { status, data, error } = await requestPrivateApi<AuthResponse>({
+      const { status, data, error } = await requestBackendApi<AuthResponse>({
         url: `/api/v1/auth/refresh/${refreshToken}`,
         method: 'POST',
         headers: { Authorization: `Bearer ${accessToken}` }
@@ -178,7 +176,7 @@ function AuthProvider({ children }: AuthProviderProps) {
     login: async (username, password) => {
       setLoading({ type: LOADING_TYPE_LOGIN, isLoading: true })
 
-      const response = await requestPublicApi<AuthResponse>({
+      const response = await requestBackendApi<AuthResponse>({
         url: '/api/v1/auth/login',
         method: 'POST',
         bodyData: {
@@ -268,28 +266,7 @@ function toStorageAuth(data: AuthResponse) {
   return auth
 }
 
-/**
- * 不需要访问令牌的 API 请求。
- */
-async function requestPublicApi<T>(request: ApiRequest): Promise<FetchResponse<T>> {
-  const { status, data, error } = await sendRequest<T, ApiError>({
-    ...request,
-    url: `${BASE_URL}${request.url}`
-  })
-
-  if (error) {
-    if (typeof error === 'string') return { status, error }
-
-    return { status, error: error.error }
-  }
-
-  return { status, data: data ?? undefined }
-}
-
-/**
- * 需要访问令牌的 API 请求。
- */
-async function requestPrivateApi<T>(request: ApiRequest): Promise<FetchResponse<T>> {
+async function requestBackendApi<T>(request: ApiRequest): Promise<FetchResponse<T>> {
   const { status, data, error } = await sendRequest<T, ApiError>({
     ...request,
     url: `${BASE_URL}${request.url}`
