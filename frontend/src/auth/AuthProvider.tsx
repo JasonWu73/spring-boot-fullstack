@@ -29,9 +29,6 @@ const PUBLIC_KEY =
 
 const STORAGE_KEY = 'demo-auth'
 
-const LOADING_TYPE_LOGIN = 'login'
-const LOADING_TYPE_LOGOUT = 'logout'
-
 // 这里假设 Vite 运行时使用默认的 5173 端口
 const DEV_PORT = '5173'
 const BACKEND_BASE_URL = `${window.location.protocol}//${window.location.hostname}:8080`
@@ -63,24 +60,16 @@ type Auth = {
   expiresAt: number
 }
 
-type Loading = {
-  isLoading: boolean
-  type?: string
-}
-
 type AuthProviderState = {
   auth: Auth | null
-  loading?: Loading
-
-  login: (username: string, password: string) => Promise<FetchResponse<AuthResponse>>
-
-  logout: () => Promise<FetchResponse<void>>
-
-  requestApi: <T>(request: ApiRequest, type?: string) => Promise<FetchResponse<T>>
-
   isRoot: boolean
   isAdmin: boolean
   isUser: boolean
+
+  login: (username: string, password: string) => Promise<FetchResponse<AuthResponse>>
+  logout: () => Promise<FetchResponse<void>>
+
+  requestApi: <T>(request: ApiRequest, type?: string) => Promise<FetchResponse<T>>
 }
 
 const AuthProviderContext = React.createContext(undefined as unknown as AuthProviderState)
@@ -91,8 +80,13 @@ type AuthProviderProps = {
 
 function AuthProvider({ children }: AuthProviderProps) {
   const [auth, setAuth] = React.useState(getStorageAuth)
-  const [loading, setLoading] = React.useState<Loading>()
   const refreshable = React.useRef(true)
+
+  const isRoot = auth?.authorities.includes('root') ?? false
+
+  const isAdmin = isRoot || (auth?.authorities.includes('admin') ?? false)
+
+  const isUser = isRoot || isAdmin || (auth?.authorities.includes('user') ?? false)
 
   /**
    * 需要使用访问令牌的 API 请求。
@@ -154,18 +148,13 @@ function AuthProvider({ children }: AuthProviderProps) {
     setStorageAuth(auth)
   }
 
-  const isRoot = auth?.authorities.includes('root') ?? false
-
-  const isAdmin = isRoot || (auth?.authorities.includes('admin') ?? false)
-
-  const isUser = isRoot || isAdmin || (auth?.authorities.includes('user') ?? false)
-
   const value: AuthProviderState = {
     auth,
-    loading,
-    login: async (username, password) => {
-      setLoading({ type: LOADING_TYPE_LOGIN, isLoading: true })
+    isRoot,
+    isAdmin,
+    isUser,
 
+    login: async (username, password) => {
       const response = await requestBackendApi<AuthResponse>({
         url: '/api/v1/auth/login',
         method: 'POST',
@@ -175,8 +164,6 @@ function AuthProvider({ children }: AuthProviderProps) {
         }
       })
 
-      setLoading({ type: LOADING_TYPE_LOGIN, isLoading: false })
-
       if (response.data) {
         const auth = toStorageAuth(response.data)
         setAuth(auth)
@@ -185,18 +172,13 @@ function AuthProvider({ children }: AuthProviderProps) {
 
       return response
     },
-
     logout: async () => {
       if (!auth) return { status: CUSTOM_HTTP_STATUS_ERROR_CODE, error: '未登录' }
-
-      setLoading({ type: LOADING_TYPE_LOGOUT, isLoading: true })
 
       const response = await requestApi<void>({
         url: '/api/v1/auth/logout',
         method: 'DELETE'
       })
-
-      setLoading({ type: LOADING_TYPE_LOGOUT, isLoading: false })
 
       // 不论后端退出登录是否成功，前端都要退出登录
       setAuth(null)
@@ -205,11 +187,7 @@ function AuthProvider({ children }: AuthProviderProps) {
       return response
     },
 
-    requestApi,
-
-    isRoot,
-    isAdmin,
-    isUser
+    requestApi
   }
 
   return (
@@ -271,11 +249,4 @@ async function requestBackendApi<T>(request: ApiRequest): Promise<FetchResponse<
   return { status, data: data ?? undefined }
 }
 
-export {
-  AuthProvider,
-  LOADING_TYPE_LOGIN,
-  LOADING_TYPE_LOGOUT,
-  useAuth,
-  type PaginationData,
-  type PaginationParams
-}
+export { AuthProvider, useAuth, type PaginationData, type PaginationParams }

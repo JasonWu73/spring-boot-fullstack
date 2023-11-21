@@ -1,6 +1,6 @@
 import { LayoutDashboard } from 'lucide-react'
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 
 import { useAuth } from '@/auth/AuthProvider'
 import { LoginButton } from '@/shared/components/layout/top-nav-bar/LoginButton'
@@ -16,7 +16,11 @@ import {
 import { cn } from '@/shared/utils/helpers'
 
 function AuthSwitch() {
+  const location = useLocation()
+
   const { auth, isAdmin } = useAuth()
+
+  if (location.pathname === '/login') return null
 
   if (!auth) return <LoginButton />
 

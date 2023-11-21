@@ -1,10 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ReloadIcon } from '@radix-ui/react-icons'
+import React from 'react'
 import { useForm } from 'react-hook-form'
 import { Navigate, useLocation } from 'react-router-dom'
 import { z } from 'zod'
 
-import { LOADING_TYPE_LOGIN, useAuth } from '@/auth/AuthProvider'
+import { useAuth } from '@/auth/AuthProvider'
 import { Button } from '@/shared/components/ui/Button'
 import {
   Card,
@@ -41,11 +42,11 @@ export default function LoginPage() {
   })
 
   const location = useLocation()
+  const [loading, setLoading] = React.useState(false)
 
-  const { loading, login, auth } = useAuth()
+  const { login, auth } = useAuth()
   const { toast, dismiss } = useToast()
 
-  const isLoading = loading?.type === LOADING_TYPE_LOGIN && loading.isLoading
   const originUrl = location.state?.from || DEFAULT_REDIRECT_URL
 
   useRefresh(() => {
@@ -56,7 +57,11 @@ export default function LoginPage() {
   if (auth) return <Navigate to={originUrl} replace />
 
   async function onSubmit(values: FormSchema) {
+    setLoading(true)
+
     const { error } = await login(values.username, values.password)
+
+    setLoading(false)
 
     if (error) {
       toast({
@@ -107,8 +112,8 @@ export default function LoginPage() {
               isError={form.getFieldState('password')?.invalid}
             />
 
-            <Button type="submit" disabled={isLoading}>
-              {isLoading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
+            <Button type="submit" disabled={loading}>
+              {loading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
               登录
             </Button>
           </form>
