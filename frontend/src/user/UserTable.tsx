@@ -1,8 +1,10 @@
 import { type ColumnDef } from '@tanstack/react-table'
 import { MoreHorizontal } from 'lucide-react'
+import React from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 
 import { useAuth } from '@/auth/AuthProvider'
+import type { PaginationData } from '@/shared/apis/backend/types'
 import { Code } from '@/shared/components/Code'
 import { Button } from '@/shared/components/ui/Button'
 import { Checkbox } from '@/shared/components/ui/Checkbox'
@@ -18,6 +20,7 @@ import {
 } from '@/shared/components/ui/DropdownMenu'
 import { Switch } from '@/shared/components/ui/Switch'
 import { useToast } from '@/shared/components/ui/use-toast'
+import type { Action } from '@/shared/hooks/types'
 import { URL_QUERY_KEY_ORDER, URL_QUERY_KEY_ORDER_BY } from '@/shared/utils/constants'
 import type { User } from '@/user/types'
 
@@ -31,6 +34,7 @@ type UserTableProps = {
   onPaginate: (paging: Paging) => void
   onSelect: (rowIndexes: number[]) => void
   onShowSelection: () => void
+  dispatch: React.Dispatch<Action<PaginationData<User> | null>>
 }
 
 function UserTable({
@@ -42,10 +46,12 @@ function UserTable({
   total,
   onPaginate,
   onSelect,
-  onShowSelection
+  onShowSelection,
+  dispatch
 }: UserTableProps) {
   const [searchParams, setSearchParams] = useSearchParams()
-  const { isRoot, requestApi } = useAuth()
+
+  const { isRoot, loading: loadingApi, requestApi } = useAuth()
   const { toast } = useToast()
 
   const columns = getColumns(isRoot)
@@ -111,22 +117,45 @@ function UserTable({
         cell: ({ row }) => {
           const user = row.original
           const enabled = user.status === 1
+          const loadingType = `changeUser${user.id}`
 
           return (
             <Switch
               checked={enabled}
+              disabled={loadingApi?.type === loadingType && loadingApi.isLoading}
               onCheckedChange={async () => {
                 const newStatus = enabled ? 0 : 1
 
-                const response = await requestApi({
-                  url: `/api/v1/users/${user.id}/status`,
-                  method: 'PUT',
-                  bodyData: { status: newStatus }
-                })
+                const response = await requestApi(
+                  {
+                    url: `/api/v1/users/${user.id}/status`,
+                    method: 'PUT',
+                    bodyData: { status: newStatus }
+                  },
+                  loadingType
+                )
 
                 if (response.status === 204) {
-                  users.filter((prevUser) => prevUser.id === user.id)[0].status =
-                    newStatus
+                  const newUsers = users.map((prevUser) => {
+                    if (prevUser.id === user.id) prevUser.status = newStatus
+
+                    return prevUser
+                  })
+
+                  dispatch({
+                    type: 'FETCH_SUCCESS',
+                    payload: {
+                      status: 200,
+                      data: {
+                        list: newUsers,
+                        pageNum,
+                        pageSize,
+                        total
+                      }
+                    }
+                  })
+
+                  toast({ title: '修改用户状态成功' })
                   return
                 }
 
@@ -233,10 +262,43 @@ function UserTable({
                 </DropdownMenuItem>
 
                 {isRoot && (
-                  <DropdownMenuItem>
-                    <Link to={`/users/${user.id}/delete`} className="inline-block w-full">
-                      删除
-                    </Link>
+                  <DropdownMenuItem
+                    onClick={async () => {
+                      const response = await requestApi({
+                        url: `/api/v1/users/${user.id}`,
+                        method: 'DELETE'
+                      })
+
+                      if (response.status === 204) {
+                        const newUsers = users.filter(
+                          (prevUser) => prevUser.id !== user.id
+                        )
+
+                        dispatch({
+                          type: 'FETCH_SUCCESS',
+                          payload: {
+                            status: 200,
+                            data: {
+                              list: newUsers,
+                              pageNum,
+                              pageSize,
+                              total
+                            }
+                          }
+                        })
+
+                        toast({ title: '删除用户成功' })
+                        return
+                      }
+
+                      toast({
+                        title: '删除用户失败',
+                        description: response.error,
+                        variant: 'destructive'
+                      })
+                    }}
+                  >
+                    删除
                   </DropdownMenuItem>
                 )}
               </DropdownMenuContent>

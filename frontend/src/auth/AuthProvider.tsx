@@ -13,6 +13,9 @@ const PUBLIC_KEY =
 
 const STORAGE_KEY = 'demo-auth'
 
+const LOADING_TYPE_LOGIN = 'login'
+const LOADING_TYPE_LOGOUT = 'logout'
+
 type AuthResponse = {
   accessToken: string
   refreshToken: string
@@ -21,15 +24,20 @@ type AuthResponse = {
   authorities: string[]
 }
 
+type Loading = {
+  isLoading: boolean
+  type?: string
+}
+
 type AuthProviderState = {
   auth: Auth | null
-  loading: boolean
+  loading?: Loading
 
   login: (username: string, password: string) => Promise<FetchResponse<AuthResponse>>
 
   logout: () => Promise<FetchResponse<void>>
 
-  requestApi: <T>(request: ApiRequest) => Promise<FetchResponse<T>>
+  requestApi: <T>(request: ApiRequest, type?: string) => Promise<FetchResponse<T>>
 
   isRoot: boolean
   isAdmin: boolean
@@ -44,13 +52,16 @@ type AuthProviderProps = {
 
 function AuthProvider({ children }: AuthProviderProps) {
   const [auth, setAuth] = React.useState(getStorageAuth)
-  const [loading, setLoading] = React.useState(false)
+  const [loading, setLoading] = React.useState<Loading>()
   const refreshable = React.useRef(true)
 
   /**
    * 需要使用访问令牌的 API 请求。
    */
-  async function requestApi<T>(request: ApiRequest): Promise<FetchResponse<T>> {
+  async function requestApi<T>(
+    request: ApiRequest,
+    type?: string
+  ): Promise<FetchResponse<T>> {
     // 请求无需拥有访问令牌的开放 API
     if (!auth) {
       return requestPublicApi(request)
@@ -62,7 +73,7 @@ function AuthProvider({ children }: AuthProviderProps) {
     // 这里为了测试目的，故意设置离过期时间有 29 分钟时就刷新访问令牌
     const needsRefreshAuth = expiresAt - Date.now() <= 29 * 60 * 1000
 
-    setLoading(true)
+    setLoading({ type, isLoading: true })
 
     // 发送请求
     const response = await requestPrivateApi<T>({
@@ -72,7 +83,7 @@ function AuthProvider({ children }: AuthProviderProps) {
 
     // 检查是否需要重新登录
     if (response.status === 401) {
-      setLoading(false)
+      setLoading({ type, isLoading: false })
       setAuthCache(null)
       return { status: response.status, error: '登录过期' }
     }
@@ -87,7 +98,7 @@ function AuthProvider({ children }: AuthProviderProps) {
         headers: { Authorization: `Bearer ${accessToken}` }
       })
 
-      setLoading(false)
+      setLoading({ type, isLoading: false })
 
       if (error) {
         setAuthCache(null)
@@ -105,7 +116,7 @@ function AuthProvider({ children }: AuthProviderProps) {
         refreshable.current = true
       }, 600_000)
     } else {
-      setLoading(false)
+      setLoading({ type, isLoading: false })
     }
 
     return response
@@ -126,7 +137,7 @@ function AuthProvider({ children }: AuthProviderProps) {
     auth,
     loading,
     login: async (username, password) => {
-      setLoading(true)
+      setLoading({ type: LOADING_TYPE_LOGIN, isLoading: true })
 
       const response = await requestPublicApi<AuthResponse>({
         url: '/api/v1/auth/login',
@@ -137,7 +148,7 @@ function AuthProvider({ children }: AuthProviderProps) {
         }
       })
 
-      setLoading(false)
+      setLoading({ type: LOADING_TYPE_LOGIN, isLoading: false })
 
       if (response.data) {
         const auth = toStorageAuth(response.data)
@@ -151,14 +162,14 @@ function AuthProvider({ children }: AuthProviderProps) {
     logout: async () => {
       if (!auth) return { status: CUSTOM_HTTP_STATUS_ERROR_CODE, error: '未登录' }
 
-      setLoading(true)
+      setLoading({ type: LOADING_TYPE_LOGOUT, isLoading: true })
 
       const response = await requestApi<void>({
         url: '/api/v1/auth/logout',
         method: 'DELETE'
       })
 
-      setLoading(false)
+      setLoading({ type: LOADING_TYPE_LOGOUT, isLoading: false })
 
       // 不论后端退出登录是否成功，前端都要退出登录
       setAuth(null)
@@ -254,4 +265,4 @@ async function requestPrivateApi<T>(request: ApiRequest): Promise<FetchResponse<
   return { status, data: data ?? undefined }
 }
 
-export { AuthProvider, useAuth }
+export { AuthProvider, LOADING_TYPE_LOGIN, LOADING_TYPE_LOGOUT, useAuth }

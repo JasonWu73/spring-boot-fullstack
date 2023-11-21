@@ -40,6 +40,7 @@ export default function UserListPage() {
   useTitle('用户列表')
 
   const [searchParams, setSearchParams] = useSearchParams()
+
   const { requestApi } = useAuth()
   const { toast } = useToast()
 
@@ -56,7 +57,8 @@ export default function UserListPage() {
     data,
     error,
     loading,
-    fetchData: getUsers
+    fetchData: getUsers,
+    dispatch: usersDispatch
   } = useFetch(async () => {
     const params: GetUsersParams = { pageNum, pageSize }
     if (orderBy) params['orderBy'] = orderBy
@@ -132,6 +134,7 @@ export default function UserListPage() {
           onPaginate={handlePaginate}
           onSelect={handleSelect}
           onShowSelection={handleShowSelection}
+          dispatch={usersDispatch}
         />
       </CardContent>
     </Card>

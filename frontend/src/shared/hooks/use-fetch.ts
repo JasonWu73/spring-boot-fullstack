@@ -1,6 +1,6 @@
 import React from 'react'
 
-import type { FetchResponse, IgnoreFetch } from '@/shared/hooks/types'
+import type { Action, FetchResponse, IgnoreFetch } from '@/shared/hooks/types'
 
 type State<TData> = {
   status: number // HTTP 响应状态码
@@ -15,12 +15,6 @@ const initialState: State<unknown> = {
   error: '',
   loading: false
 }
-
-type Action<TData> =
-  | { type: 'START_LOADING' }
-  | { type: 'FETCH_SUCCESS'; payload: { status: number; data: TData | null } }
-  | { type: 'FETCH_FAILED'; payload: { status: number; error: string } }
-  | { type: 'IGNORE_FETCH' } // 只是忽略请求的结果，而非取消请求；取消请求只会不易于前端调试，因为后端仍然会处理请求
 
 function reducer<TData>(state: State<TData>, action: Action<TData>): State<TData> {
   switch (action.type) {
@@ -74,6 +68,7 @@ type UseFetch<TData, TParams> = {
   error: string
   loading: boolean
   fetchData: (params?: TParams) => IgnoreFetch
+  dispatch: React.Dispatch<Action<TData | null>>
 }
 
 /**
@@ -131,7 +126,7 @@ function useFetch<TData, TParams>(
     }
   }
 
-  return { status, data, error, loading, fetchData }
+  return { status, data, error, loading, fetchData, dispatch }
 }
 
 export { useFetch }

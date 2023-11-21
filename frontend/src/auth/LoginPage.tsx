@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form'
 import { Navigate, useLocation } from 'react-router-dom'
 import { z } from 'zod'
 
-import { useAuth } from '@/auth/AuthProvider'
+import { LOADING_TYPE_LOGIN, useAuth } from '@/auth/AuthProvider'
 import { Button } from '@/shared/components/ui/Button'
 import {
   Card,
@@ -45,6 +45,7 @@ export default function LoginPage() {
   const { loading, login, auth } = useAuth()
   const { toast, dismiss } = useToast()
 
+  const isLoading = loading?.type === LOADING_TYPE_LOGIN && loading.isLoading
   const originUrl = location.state?.from || DEFAULT_REDIRECT_URL
 
   useRefresh(() => {
@@ -106,8 +107,8 @@ export default function LoginPage() {
               isError={form.getFieldState('password')?.invalid}
             />
 
-            <Button type="submit" disabled={loading}>
-              {loading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
+            <Button type="submit" disabled={isLoading}>
+              {isLoading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
               登录
             </Button>
           </form>

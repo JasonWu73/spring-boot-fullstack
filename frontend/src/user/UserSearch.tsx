@@ -124,7 +124,7 @@ function UserSearch({ loading }: UserSearchProps) {
           isError={form.getFieldState('authority')?.invalid}
         />
 
-        <Button type="submit" disabled={loading} className="self-end">
+        <Button type="submit" className="self-end" disabled={loading}>
           {loading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
           查询
         </Button>
@@ -134,6 +134,7 @@ function UserSearch({ loading }: UserSearchProps) {
           type="reset"
           variant="secondary"
           className="self-end"
+          disabled={loading}
         >
           重置
         </Button>
