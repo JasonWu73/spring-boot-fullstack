@@ -41,9 +41,9 @@ function FriendItem({ friend, onDeleteFriend }: FriendItemProps) {
       )}
     >
       <ConfirmDialog
-        action={
+        trigger={
           <div className="absolute left-2 top-1 hidden cursor-pointer text-xs group-hover:block">
-            ❌
+            <button>❌</button>
           </div>
         }
         title={

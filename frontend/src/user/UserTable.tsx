@@ -196,7 +196,8 @@ function UserTable({
           const user = row.original
 
           return (
-            <DropdownMenu>
+            /* `model=false`（启用与外部元素的交互）很重要，否则内部对话框焦点不可用 */
+            <DropdownMenu modal={false}>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="h-8 w-8 p-0">
                   <span className="sr-only"></span>
@@ -218,7 +219,7 @@ function UserTable({
                     <DropdownMenuSeparator />
 
                     <ConfirmDialog
-                      action={
+                      trigger={
                         <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                           <div className="inline-block w-full cursor-pointer">删除</div>
                         </DropdownMenuItem>

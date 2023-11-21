@@ -15,15 +15,15 @@ import {
 import { buttonVariants } from '@/shared/components/ui/Button'
 
 type DeleteUserProps = {
-  action: React.ReactNode | string
+  trigger: React.ReactNode | string
   title: React.ReactNode | string
   onConfirm: () => void
 }
 
-function ConfirmDialog({ action, title, onConfirm }: DeleteUserProps) {
+function ConfirmDialog({ trigger, title, onConfirm }: DeleteUserProps) {
   return (
     <AlertDialog>
-      <AlertDialogTrigger asChild>{action}</AlertDialogTrigger>
+      <AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>
 
       <AlertDialogContent>
         <AlertDialogHeader>
