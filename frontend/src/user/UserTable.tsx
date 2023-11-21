@@ -193,6 +193,7 @@ function UserTable({
       },
       {
         id: '操作',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="操作" />,
         cell: ({ row }) => {
           const user = row.original
           const loadingType = `userOperation${user.id}`
