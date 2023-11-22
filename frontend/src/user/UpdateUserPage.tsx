@@ -15,6 +15,7 @@ import {
   CardHeader,
   CardTitle
 } from '@/shared/components/ui/Card'
+import { Code } from '@/shared/components/ui/Code'
 import {
   FormInput,
   FormMultiSelect,
@@ -108,7 +109,14 @@ export default function UpdateUserPage() {
     setUpdating(false)
 
     if (response.status === 204) {
-      toast({ title: '更新用户成功' })
+      toast({
+        title: '更新用户成功',
+        description: (
+          <span>
+            成功更新用户 <Code>{user?.username}</Code> 信息
+          </span>
+        )
+      })
 
       backToUserListPage()
       return

@@ -47,9 +47,9 @@ function FriendItem({ friend, onDeleteFriend }: FriendItemProps) {
           </button>
         }
         title={
-          <>
-            您确定要删除好友<Code className="mx-1">{friend.name}</Code>吗？
-          </>
+          <span>
+            您确定要删除好友 <Code>{friend.name}</Code> 吗？
+          </span>
         }
         onConfirm={() => onDeleteFriend(friend)}
       />

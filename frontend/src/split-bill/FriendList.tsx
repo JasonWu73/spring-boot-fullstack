@@ -5,6 +5,7 @@ import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import type { Friend } from '@/shared/apis/fake/friend-api'
 import { Alert, AlertDescription, AlertTitle } from '@/shared/components/ui/Alert'
 import { Card } from '@/shared/components/ui/Card'
+import { Code } from '@/shared/components/ui/Code'
 import { ScrollArea } from '@/shared/components/ui/ScrollArea'
 import { Separator } from '@/shared/components/ui/Separator'
 import { useToast } from '@/shared/components/ui/use-toast'
@@ -60,7 +61,11 @@ function FriendList() {
 
     toast({
       title: '删除好友',
-      description: `成功删除好友：${friend.name}`
+      description: (
+        <span>
+          成功删除好友 <Code>{friend.name}</Code>
+        </span>
+      )
     })
 
     navigate(`/split-bill${window.location.search}`, {

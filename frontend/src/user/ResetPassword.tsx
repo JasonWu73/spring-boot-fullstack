@@ -7,6 +7,7 @@ import { z } from 'zod'
 import { useAuth } from '@/auth/AuthProvider'
 import { Alert, AlertDescription, AlertTitle } from '@/shared/components/ui/Alert'
 import { Button } from '@/shared/components/ui/Button'
+import { Code } from '@/shared/components/ui/Code'
 import { FormInput } from '@/shared/components/ui/CustomFormField'
 import { DialogClose, DialogFooter } from '@/shared/components/ui/Dialog'
 import { Form } from '@/shared/components/ui/Form'
@@ -26,9 +27,10 @@ type FormSchema = z.infer<typeof formSchema>
 
 type ResetPasswordProps = {
   userId: number
+  username: string
 }
 
-function ResetPassword({ userId }: ResetPasswordProps) {
+function ResetPassword({ userId, username }: ResetPasswordProps) {
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -57,7 +59,14 @@ function ResetPassword({ userId }: ResetPasswordProps) {
     setLoading(false)
 
     if (response.status === 204) {
-      toast({ title: '重置用户密码成功' })
+      toast({
+        title: '重置用户密码成功',
+        description: (
+          <span>
+            成功重置用户 <Code>{username}</Code> 登录密码
+          </span>
+        )
+      })
       return
     }
 

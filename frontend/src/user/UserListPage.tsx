@@ -9,6 +9,7 @@ import {
   CardHeader,
   CardTitle
 } from '@/shared/components/ui/Card'
+import { Code } from '@/shared/components/ui/Code'
 import {
   DEFAULT_PAGE_NUM,
   DEFAULT_PAGE_SIZE,
@@ -119,7 +120,11 @@ function UserListPage() {
 
     toast({
       title: '选中的行',
-      description: `被选中的行 ID(s)：${ids.join(', ')}`
+      description: (
+        <span>
+          被选中的行 ID(s)：<Code>{ids.join(', ')}</Code>
+        </span>
+      )
     })
   }
 

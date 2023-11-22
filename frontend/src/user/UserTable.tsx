@@ -4,6 +4,7 @@ import React from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 
 import { ADMIN, ROOT, USER, useAuth, type PaginationData } from '@/auth/AuthProvider'
+import { Badge } from '@/shared/components/ui/Badge'
 import { Button } from '@/shared/components/ui/Button'
 import { Checkbox } from '@/shared/components/ui/Checkbox'
 import { Code } from '@/shared/components/ui/Code'
@@ -127,13 +128,12 @@ function UserTable({
         cell: ({ row }) => {
           const user = row.original
           const enabled = user.status === 1
-          const loadingType = `userOperation${user.id}`
 
           return (
             <Switch
               checked={enabled}
               disabled={updating}
-              onCheckedChange={() => handleChangeStatus(user.id, enabled, loadingType)}
+              onCheckedChange={() => handleChangeStatus(user.id, enabled)}
             />
           )
         }
@@ -149,33 +149,25 @@ function UserTable({
               {user.authorities.map((authority) => {
                 if (authority === ROOT.value) {
                   return (
-                    <Code key={authority} className="font-semibold text-red-500">
+                    <Badge key={authority} variant="destructive">
                       超级管理员
-                    </Code>
+                    </Badge>
                   )
                 }
 
                 if (authority === ADMIN.value) {
-                  return (
-                    <Code key={authority} className="text-red-500">
-                      管理员
-                    </Code>
-                  )
+                  return <Badge key={authority}>管理员</Badge>
                 }
 
                 if (authority === USER.value) {
                   return (
-                    <Code key={authority} className="text-green-500">
+                    <Badge key={authority} variant="outline">
                       用户
-                    </Code>
+                    </Badge>
                   )
                 }
 
-                return (
-                  <Code key={authority} className="text-slate-500">
-                    未知
-                  </Code>
-                )
+                return <Badge key={authority}>未知</Badge>
               })}
             </div>
           )
@@ -205,7 +197,6 @@ function UserTable({
         header: ({ column }) => <DataTableColumnHeader column={column} title="操作" />,
         cell: ({ row }) => {
           const user = row.original
-          const loadingType = `userOperation${user.id}`
 
           return (
             /* `model=false`（启用与外部元素的交互）很重要，否则内部对话框焦点不可用 */
@@ -248,7 +239,7 @@ function UserTable({
                           您确定要删除用户 <Code>{user.username}</Code> 吗？
                         </>
                       }
-                      onConfirm={() => handleDeleteUser(user.id, loadingType)}
+                      onConfirm={() => handleDeleteUser(user.id, user.username)}
                     />
 
                     <Dialog>
@@ -273,7 +264,7 @@ function UserTable({
                           </DialogDescription>
                         </DialogHeader>
 
-                        <ResetPassword userId={user.id} />
+                        <ResetPassword userId={user.id} username={user.username} />
                       </DialogContent>
                     </Dialog>
                   </>
@@ -290,29 +281,28 @@ function UserTable({
     return columns.filter((column) => column.id !== '选择')
   }
 
-  async function handleChangeStatus(
-    userId: number,
-    enabled: boolean,
-    loadingType: string
-  ) {
+  async function handleChangeStatus(userId: number, enabled: boolean) {
     const newStatus = enabled ? 0 : 1
 
     setUpdating(true)
 
-    const response = await requestApi(
-      {
-        url: `/api/v1/users/${userId}/status`,
-        method: 'PUT',
-        bodyData: { status: newStatus }
-      },
-      loadingType
-    )
+    const response = await requestApi({
+      url: `/api/v1/users/${userId}/status`,
+      method: 'PUT',
+      bodyData: { status: newStatus }
+    })
 
     setUpdating(false)
 
     if (response.status === 204) {
+      let updatedUsername = ''
+
       const newUsers = users.map((prevUser) => {
-        if (prevUser.id === userId) prevUser.status = newStatus
+        if (prevUser.id === userId) {
+          prevUser.status = newStatus
+
+          updatedUsername = prevUser.username
+        }
 
         return prevUser
       })
@@ -330,7 +320,14 @@ function UserTable({
         }
       })
 
-      toast({ title: '更新账号状态成功' })
+      toast({
+        title: '更新账号状态成功',
+        description: (
+          <span>
+            {!enabled ? '启用' : '禁用'} <Code>{updatedUsername}</Code> 账号
+          </span>
+        )
+      })
       return
     }
 
@@ -341,16 +338,13 @@ function UserTable({
     })
   }
 
-  async function handleDeleteUser(userId: number, loadingType: string) {
+  async function handleDeleteUser(userId: number, username: string) {
     setUpdating(true)
 
-    const response = await requestApi(
-      {
-        url: `/api/v1/users/${userId}`,
-        method: 'DELETE'
-      },
-      loadingType
-    )
+    const response = await requestApi({
+      url: `/api/v1/users/${userId}`,
+      method: 'DELETE'
+    })
 
     setUpdating(false)
 
@@ -370,7 +364,14 @@ function UserTable({
         }
       })
 
-      toast({ title: '删除用户成功' })
+      toast({
+        title: '删除用户成功',
+        description: (
+          <span>
+            成功删除用户 <Code>{username}</Code>
+          </span>
+        )
+      })
       return
     }
 
