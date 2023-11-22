@@ -31,7 +31,7 @@ import { zhCN } from 'date-fns/locale'
  */
 function inputErrorClasses(isError: boolean) {
   return isError
-    ? tw`border-red-500 focus-visible:ring-red-500 dark:border-red-600 dark:focus-visible:ring-red-700`
+    ? tw`border-red-500 focus:ring-red-500 focus-visible:ring-red-500 dark:border-red-600 dark:focus:ring-red-600 dark:focus-visible:ring-red-700`
     : tw`border-slate-200 focus-visible:ring-slate-950 dark:border-slate-800 dark:focus-visible:ring-slate-300`
 }
 

@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ExclamationTriangleIcon } from '@radix-ui/react-icons'
+import { ExclamationTriangleIcon, ReloadIcon } from '@radix-ui/react-icons'
 import React from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -22,6 +22,7 @@ import {
 } from '@/shared/components/ui/CustomFormField'
 import { Form } from '@/shared/components/ui/Form'
 import { Skeleton } from '@/shared/components/ui/Skeleton'
+import { useToast } from '@/shared/components/ui/use-toast'
 import { useFetch } from '@/shared/hooks/use-fetch'
 import { useRefresh } from '@/shared/hooks/use-router'
 import { useTitle } from '@/shared/hooks/use-title'
@@ -51,8 +52,10 @@ export default function UpdateUserPage() {
 
   const { userId } = useParams()
   const navigate = useNavigate()
+  const [updating, setUpdating] = React.useState(false)
 
   const { requestApi } = useAuth()
+  const { toast } = useToast()
 
   const {
     data: user,
@@ -90,7 +93,36 @@ export default function UpdateUserPage() {
   }, [user, form])
 
   async function onSubmit(values: FormSchema) {
-    console.log(values)
+    setUpdating(true)
+
+    const response = await requestApi({
+      url: `/api/v1/users/${user!.id}`,
+      method: 'PUT',
+      bodyData: {
+        nickname: values.nickname,
+        authorities: values.authorities.map((authority) => authority.value),
+        remark: values.remark
+      }
+    })
+
+    setUpdating(false)
+
+    if (response.status === 204) {
+      toast({ title: '更新用户成功' })
+
+      backToUserListPage()
+      return
+    }
+
+    toast({
+      title: '更新用户失败',
+      description: response.error,
+      variant: 'destructive'
+    })
+  }
+
+  function backToUserListPage() {
+    return navigate('/users')
   }
 
   return (
@@ -166,14 +198,16 @@ export default function UpdateUserPage() {
 
               <div className="flex gap-2 sm:justify-end">
                 <Button
-                  onClick={() => navigate('/users')}
+                  onClick={backToUserListPage}
                   type="button"
                   variant="outline"
+                  disabled={updating}
                 >
                   返回
                 </Button>
 
-                <Button type="submit" className="self-end">
+                <Button type="submit" className="self-end" disabled={updating}>
+                  {updating && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
                   提交
                 </Button>
               </div>

@@ -45,7 +45,7 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
             role="combobox"
             aria-expanded={open}
             className={cn(
-              'group flex h-9 w-full items-center justify-between rounded-md border bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-white placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-950 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-800 dark:ring-offset-slate-950 dark:placeholder:text-slate-400 dark:focus:ring-slate-300',
+              'flex h-9 w-full items-center justify-between rounded-md border bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-white placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-950 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-800 dark:ring-offset-slate-950 dark:placeholder:text-slate-400 dark:focus:ring-slate-300',
               inputErrorClasses(isError),
               className
             )}
@@ -57,7 +57,7 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
                 <Badge
                   variant="outline"
                   key={item.value}
-                  className="group-hover:bg-background flex h-7 items-center gap-1"
+                  className="flex h-7 items-center gap-1"
                   onClick={() => handleUnselect(item)}
                 >
                   {item.label}

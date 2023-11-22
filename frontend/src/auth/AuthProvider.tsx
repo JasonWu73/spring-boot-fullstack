@@ -108,13 +108,13 @@ function AuthProvider({ children }: AuthProviderProps) {
 
     if (!refreshable || !auth) return
     ;(async function () {
-      setRefreshable(false)
-
       const { status, data, error } = await requestBackendApi<AuthResponse>({
         url: `/api/v1/auth/refresh/${auth.refreshToken}`,
         method: 'POST',
         headers: { Authorization: `Bearer ${auth.accessToken}` }
       })
+
+      setRefreshable(false)
 
       if (error) {
         setAuthCache(null)
@@ -151,8 +151,8 @@ function AuthProvider({ children }: AuthProviderProps) {
     }
 
     // 检查是否需要刷新访问令牌
-    // 这里为了测试目的，故意设置离过期时间仅有 29 分钟时就刷新访问令牌
-    if (expiresAt - Date.now() <= 29 * 60 * 1000) {
+    // 这里为了测试目的，故意设置离过期时间小于等于 29 分 55 秒时就刷新访问令牌
+    if (expiresAt - Date.now() <= (30 * 60 - 5) * 1000) {
       setRefreshable(true)
     }
 
