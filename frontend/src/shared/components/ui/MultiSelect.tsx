@@ -37,26 +37,6 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
       onChange(selected.filter((i) => i.value !== item.value))
     }
 
-    // on delete key press, remove last selected item
-    // React.useEffect(() => {
-    //   const handleKeyDown = (e: KeyboardEvent) => {
-    //     if (e.key === 'Backspace' && selected.length > 0) {
-    //       onChange(selected.filter((_, index) => index !== selected.length - 1))
-    //     }
-    //
-    //     // close on escape
-    //     if (e.key === 'Escape') {
-    //       setOpen(false)
-    //     }
-    //   }
-    //
-    //   document.addEventListener('keydown', handleKeyDown)
-    //
-    //   return () => {
-    //     document.removeEventListener('keydown', handleKeyDown)
-    //   }
-    // }, [onChange, selected])
-
     return (
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
@@ -66,7 +46,6 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
             aria-expanded={open}
             className={cn(
               'group flex h-9 w-full items-center justify-between rounded-md border bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-white placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-950 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-800 dark:ring-offset-slate-950 dark:placeholder:text-slate-400 dark:focus:ring-slate-300',
-              // selected.length > 1 ? 'h-full' : 'h-10',
               inputErrorClasses(isError),
               className
             )}

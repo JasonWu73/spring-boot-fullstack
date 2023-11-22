@@ -91,14 +91,16 @@ const router = createBrowserRouter([
 
 export default function App() {
   return (
-    <ThemeProvider defaultTheme="system" storageKey="demo-ui-theme">
-      <AuthProvider>
-        <VersionProvider>
-          <RouterProvider router={router} />
+    <>
+      <ThemeProvider defaultTheme="system" storageKey="demo-ui-theme">
+        <AuthProvider>
+          <VersionProvider>
+            <RouterProvider router={router} />
+          </VersionProvider>
+        </AuthProvider>
+      </ThemeProvider>
 
-          <Toaster />
-        </VersionProvider>
-      </AuthProvider>
-    </ThemeProvider>
+      <Toaster />
+    </>
   )
 }
