@@ -1,6 +1,7 @@
 import React from 'react'
 
 import type { FetchResponse } from '@/shared/hooks/use-fetch'
+import { useSavedRef } from '@/shared/hooks/use-saved'
 import {
   CUSTOM_HTTP_STATUS_ERROR_CODE,
   sendRequest,
@@ -24,17 +25,17 @@ type PaginationData<T> = {
   list: T[]
 }
 
-// 可分配的功能权限
-const AUTHORITY_OPTIONS = [
-  {
-    value: 'admin',
-    label: '管理员'
-  },
-  {
-    value: 'user',
-    label: '普通用户'
-  }
-]
+type Authority = 'root' | 'admin' | 'user'
+
+type AuthorityOption = {
+  value: Authority
+  label: string
+}
+
+// 可分配的功能权限，其中 `root` 权限不可手动分配
+const ROOT: AuthorityOption = { value: 'root', label: '超级管理员' }
+const ADMIN: AuthorityOption = { value: 'admin', label: '管理员' }
+const USER: AuthorityOption = { value: 'user', label: '用户' }
 
 const PUBLIC_KEY =
   'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCmWWFyJSaS/SMYr7hmCSXcwAvPF+aGPbbQFOt3rJXjDVKL2GhumWXH2y+dC5/DoaCtDz3dFTyzuoYyiuTHzbpsQ7ari8LoRunOJ81Hx0szpdKbOYJ5WnUr3mr7qEIwY5Verh1dgknNxuzeeTNlmAeLQj067+B+7m9+xp2WU+VSawIDAQAB'
@@ -92,13 +93,40 @@ type AuthProviderProps = {
 
 function AuthProvider({ children }: AuthProviderProps) {
   const [auth, setAuth] = React.useState(getStorageAuth)
-  const refreshable = React.useRef(true)
+  const [refreshable, setRefreshable] = React.useState(false)
 
-  const isRoot = auth?.authorities.includes('root') ?? false
+  const authRef = useSavedRef(auth)
 
-  const isAdmin = isRoot || (auth?.authorities.includes('admin') ?? false)
+  const isRoot = auth?.authorities.includes(ROOT.value) ?? false
 
-  const isUser = isRoot || isAdmin || (auth?.authorities.includes('user') ?? false)
+  const isAdmin = isRoot || (auth?.authorities.includes(ADMIN.value) ?? false)
+
+  const isUser = isRoot || isAdmin || (auth?.authorities.includes(USER.value) ?? false)
+
+  React.useEffect(() => {
+    const auth = authRef.current
+
+    if (!refreshable || !auth) return
+    ;(async function () {
+      setRefreshable(false)
+
+      const { status, data, error } = await requestBackendApi<AuthResponse>({
+        url: `/api/v1/auth/refresh/${auth.refreshToken}`,
+        method: 'POST',
+        headers: { Authorization: `Bearer ${auth.accessToken}` }
+      })
+
+      if (error) {
+        setAuthCache(null)
+        return { status, error: error }
+      }
+
+      if (data) {
+        const auth = toStorageAuth(data)
+        setAuthCache(auth)
+      }
+    })()
+  }, [refreshable, authRef])
 
   /**
    * 需要使用访问令牌的 API 请求。
@@ -108,10 +136,7 @@ function AuthProvider({ children }: AuthProviderProps) {
     if (!auth) return requestBackendApi(request)
 
     // 请求需要访问令牌的 API（涉及自动刷新机制）
-    const { expiresAt, accessToken, refreshToken } = auth
-
-    // 这里为了测试目的，故意设置离过期时间有 29 分钟时就刷新访问令牌
-    const needsRefreshAuth = expiresAt - Date.now() <= 29 * 60 * 1000
+    const { expiresAt, accessToken } = auth
 
     // 发送请求
     const response = await requestBackendApi<T>({
@@ -126,30 +151,9 @@ function AuthProvider({ children }: AuthProviderProps) {
     }
 
     // 检查是否需要刷新访问令牌
-    if (needsRefreshAuth && refreshable.current) {
-      refreshable.current = false
-
-      const { status, data, error } = await requestBackendApi<AuthResponse>({
-        url: `/api/v1/auth/refresh/${refreshToken}`,
-        method: 'POST',
-        headers: { Authorization: `Bearer ${accessToken}` }
-      })
-
-      if (error) {
-        setAuthCache(null)
-        return { status, error: error }
-      }
-
-      if (data) {
-        const auth = toStorageAuth(data)
-        setAuthCache(auth)
-      }
-
-      // 刷新访问令牌后，至少间隔 10 分钟后才能再次触发
-      // 主要为了防止 `React.StrictMode` 模式下执行两次刷新，导致退出登录
-      setTimeout(() => {
-        refreshable.current = true
-      }, 600_000)
+    // 这里为了测试目的，故意设置离过期时间仅有 29 分钟时就刷新访问令牌
+    if (expiresAt - Date.now() <= 29 * 60 * 1000) {
+      setRefreshable(true)
     }
 
     return response
@@ -262,9 +266,12 @@ async function requestBackendApi<T>(request: ApiRequest): Promise<FetchResponse<
 }
 
 export {
-  AUTHORITY_OPTIONS,
+  ADMIN,
   AuthProvider,
+  ROOT,
+  USER,
   useAuth,
+  type Authority,
   type PaginationData,
   type PaginationParams
 }

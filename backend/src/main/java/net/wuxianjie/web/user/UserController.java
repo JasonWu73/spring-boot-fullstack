@@ -27,7 +27,7 @@ public class UserController {
   }
 
   /**
-   * 修改当前用户信息。
+   * 更新当前用户信息。
    */
   @PutMapping("/me")
   public ResponseEntity<Void> updateMe(

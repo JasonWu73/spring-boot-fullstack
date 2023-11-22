@@ -3,7 +3,7 @@ import { MoreHorizontal } from 'lucide-react'
 import React from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 
-import { useAuth, type PaginationData } from '@/auth/AuthProvider'
+import { ADMIN, ROOT, USER, useAuth, type PaginationData } from '@/auth/AuthProvider'
 import { Button } from '@/shared/components/ui/Button'
 import { Checkbox } from '@/shared/components/ui/Checkbox'
 import { Code } from '@/shared/components/ui/Code'
@@ -117,10 +117,10 @@ function UserTable({
         }
       },
       {
-        id: '是否启用',
+        id: '账号状态',
         header: ({ column }) => (
           <DataTableColumnHeader column={column}>
-            是否启用
+            账号状态
             <span className="ml-1 text-xs text-slate-500">（禁用后不可登录）</span>
           </DataTableColumnHeader>
         ),
@@ -147,7 +147,7 @@ function UserTable({
           return (
             <div className="space-x-1">
               {user.authorities.map((authority) => {
-                if (authority === 'root') {
+                if (authority === ROOT.value) {
                   return (
                     <Code key={authority} className="font-semibold text-red-500">
                       超级管理员
@@ -155,7 +155,7 @@ function UserTable({
                   )
                 }
 
-                if (authority === 'admin') {
+                if (authority === ADMIN.value) {
                   return (
                     <Code key={authority} className="text-red-500">
                       管理员
@@ -163,7 +163,7 @@ function UserTable({
                   )
                 }
 
-                if (authority === 'user') {
+                if (authority === USER.value) {
                   return (
                     <Code key={authority} className="text-green-500">
                       用户
@@ -189,10 +189,10 @@ function UserTable({
         )
       },
       {
-        id: '修改时间',
+        id: '更新时间',
         accessorKey: 'updatedAt',
         header: ({ column }) => (
-          <DataTableColumnHeader sortable column={column} title="修改时间" />
+          <DataTableColumnHeader sortable column={column} title="更新时间" />
         )
       },
       {
@@ -219,9 +219,12 @@ function UserTable({
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>操作</DropdownMenuLabel>
 
-                <DropdownMenuItem>
-                  <Link to={`/users/${user.id}`} className="inline-block w-full">
-                    编辑
+                <DropdownMenuItem className="p-0">
+                  <Link
+                    to={`/users/${user.id}`}
+                    className="inline-block w-full px-2 py-1.5"
+                  >
+                    查看详情
                   </Link>
                 </DropdownMenuItem>
 
@@ -231,9 +234,12 @@ function UserTable({
 
                     <ConfirmDialog
                       trigger={
-                        <DropdownMenuItem onSelect={(event) => event.preventDefault()}>
-                          <button className="w-full cursor-pointer text-left text-red-500 dark:text-red-600">
-                            删除
+                        <DropdownMenuItem
+                          onSelect={(event) => event.preventDefault()}
+                          className="p-0"
+                        >
+                          <button className="w-full cursor-pointer px-2 py-1.5 text-left text-red-500 dark:text-red-600">
+                            删除用户
                           </button>
                         </DropdownMenuItem>
                       }
@@ -247,8 +253,11 @@ function UserTable({
 
                     <Dialog>
                       <DialogTrigger asChild>
-                        <DropdownMenuItem onSelect={(event) => event.preventDefault()}>
-                          <button className="w-full cursor-pointer text-left text-red-500 dark:text-red-600">
+                        <DropdownMenuItem
+                          onSelect={(event) => event.preventDefault()}
+                          className="p-0"
+                        >
+                          <button className="w-full cursor-pointer px-2 py-1.5 text-left text-red-500 dark:text-red-600">
                             重置密码
                           </button>
                         </DropdownMenuItem>
@@ -321,12 +330,12 @@ function UserTable({
         }
       })
 
-      toast({ title: '修改用户状态成功' })
+      toast({ title: '更新账号状态成功' })
       return
     }
 
     toast({
-      title: '修改用户状态失败',
+      title: '更新账号状态失败',
       description: response.error,
       variant: 'destructive'
     })
@@ -388,7 +397,7 @@ function UserTable({
         orderBy={{
           id:
             searchParams.get(URL_QUERY_KEY_ORDER_BY) === 'updatedAt'
-              ? '修改时间'
+              ? '更新时间'
               : '创建时间',
           desc: searchParams.get(URL_QUERY_KEY_ORDER) !== 'asc'
         }}
@@ -396,7 +405,7 @@ function UserTable({
           searchParams.delete('createdAt')
           searchParams.delete('updatedAt')
 
-          const orderBy = sorting[0]?.id === '修改时间' ? 'updatedAt' : 'createdAt'
+          const orderBy = sorting[0]?.id === '更新时间' ? 'updatedAt' : 'createdAt'
           const order = sorting[0]?.desc === true ? 'desc' : 'asc'
 
           if (!orderBy) return

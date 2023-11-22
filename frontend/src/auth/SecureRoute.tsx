@@ -1,9 +1,9 @@
 import { Navigate, Outlet } from 'react-router-dom'
 
-import { useAuth } from '@/auth/AuthProvider'
+import { ADMIN, ROOT, USER, useAuth, type Authority } from '@/auth/AuthProvider'
 
 type SecureRouteProps = {
-  authority?: 'root' | 'admin' | 'user'
+  authority?: Authority
 }
 
 function SecureRoute({ authority }: SecureRouteProps) {
@@ -13,15 +13,15 @@ function SecureRoute({ authority }: SecureRouteProps) {
     return <Navigate to="/login" replace state={{ from: window.location.pathname }} />
   }
 
-  if (authority === 'root' && !isRoot) {
+  if (authority === ROOT.value && !isRoot) {
     return <Navigate to="/404" replace />
   }
 
-  if (authority === 'admin' && !isAdmin) {
+  if (authority === ADMIN.value && !isAdmin) {
     return <Navigate to="/404" replace />
   }
 
-  if (authority === 'user' && !isUser) {
+  if (authority === USER.value && !isUser) {
     return <Navigate to="/404" replace />
   }
 

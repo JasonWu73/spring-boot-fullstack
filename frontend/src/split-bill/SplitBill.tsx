@@ -99,7 +99,7 @@ function SplitBill() {
   // 因为是假 API，所以会导致 loading 时还是显示上次的数据，为了避免页面闪烁，所以这里需要重置一下
   const ctx = useFriends()
   const { loadingFriend: loading, getFriend, setCredit, splitBill } = ctx
-  let { curFriend: friend, errorFriend: error } = ctx
+  let { currentFriend: friend, errorFriend: error } = ctx
 
   if (loading) {
     error = ''

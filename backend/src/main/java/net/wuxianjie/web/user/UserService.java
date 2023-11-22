@@ -130,7 +130,7 @@ public class UserService {
     // 将明文密码进行 Hash 计算后再保存
     user.setHashedPassword(passwordEncoder.encode(params.getPassword()));
 
-    // 设置用户状态
+    // 设置账号状态
     user.setStatus(AccountStatus.ENABLED);
 
     // 保存用户功能权限

@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form'
 import { useSearchParams } from 'react-router-dom'
 import { z } from 'zod'
 
+import { ADMIN, USER } from '@/auth/AuthProvider'
 import { Button } from '@/shared/components/ui/Button'
 import { FormInput, FormSelect } from '@/shared/components/ui/CustomFormField'
 import { Form } from '@/shared/components/ui/Form'
@@ -16,11 +17,7 @@ const statusOptions = [
   { value: '1', label: '启用' }
 ]
 
-const authorityOptions = [
-  { value: '', label: '全部' },
-  { value: 'admin', label: '管理员' },
-  { value: 'user', label: '用户' }
-]
+const authorityOptions = [{ value: '', label: '全部' }, ADMIN, USER]
 
 const formSchema = z.object({
   username: z.string().trim(),

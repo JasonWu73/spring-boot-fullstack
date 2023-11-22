@@ -20,7 +20,7 @@ type FriendProviderState = {
   loadingFriends: boolean
   getFriends: () => IgnoreFetch
 
-  curFriend: Friend | null
+  currentFriend: Friend | null
   errorFriend: string
   loadingFriend: boolean
   getFriend: (params: GetFriendParams) => IgnoreFetch
@@ -45,14 +45,14 @@ type FriendProviderProps = {
 
 type State = {
   friends: Friend[]
-  curFriend: Friend | null
+  currentFriend: Friend | null
   showAddFriend: boolean
 }
 
 function createInitialState() {
   return {
     friends: getFriendsFromStorage(),
-    curFriend: null,
+    currentFriend: null,
     showAddFriend: false
   }
 }
@@ -83,7 +83,7 @@ function reducer(state: State, action: Action) {
     case 'SELECT_FRIEND': {
       return {
         ...state,
-        curFriend: action.payload
+        currentFriend: action.payload
       }
     }
     case 'ADD_FRIEND': {
@@ -144,7 +144,7 @@ function reducer(state: State, action: Action) {
 }
 
 function FriendProvider({ children }: FriendProviderProps) {
-  const [{ friends, curFriend, showAddFriend }, dispatch] = React.useReducer(
+  const [{ friends, currentFriend, showAddFriend }, dispatch] = React.useReducer(
     reducer,
     null,
     createInitialState
@@ -219,7 +219,7 @@ function FriendProvider({ children }: FriendProviderProps) {
     loadingFriends,
     getFriends,
 
-    curFriend,
+    currentFriend,
     errorFriend,
     loadingFriend,
     getFriend,
