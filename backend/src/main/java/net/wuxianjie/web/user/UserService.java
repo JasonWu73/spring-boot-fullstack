@@ -134,7 +134,7 @@ public class UserService {
     user.setStatus(AccountStatus.ENABLED);
 
     // 保存用户功能权限
-    user.setAuthorities(toAuthorities(params.getAuthorities()));
+    user.setAuthorities(toAuthorities(params.getAuthorities(), false));
 
     userMapper.insert(user);
   }
@@ -145,7 +145,7 @@ public class UserService {
       .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "用户不存在"));
 
     // root 账号不允许再调整权限
-    final String newAuthorities = toAuthorities(params.getAuthorities());
+    final String newAuthorities = toAuthorities(params.getAuthorities(), true);
 
     if (
       user.getAuthorities() != null
@@ -201,7 +201,7 @@ public class UserService {
     userMapper.deleteById(user.getId());
   }
 
-  private String toAuthorities(List<String> authorities) {
+  private String toAuthorities(final List<String> authorities, final boolean canRoot) {
     if (authorities == null || authorities.isEmpty()) return null;
 
     return authorities.
@@ -217,7 +217,7 @@ public class UserService {
             );
           }
 
-          if (authOpt.get() == Authority.ROOT) {
+          if (authOpt.get() == Authority.ROOT && !canRoot) {
             throw new ApiException(
               HttpStatus.FORBIDDEN,
               "权限 [%s] 不能直接分配".formatted(auth)
