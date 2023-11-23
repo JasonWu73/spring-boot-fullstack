@@ -1,12 +1,14 @@
 package net.wuxianjie.web.user;
 
 import lombok.RequiredArgsConstructor;
+import net.wuxianjie.web.shared.Constants;
 import net.wuxianjie.web.shared.auth.AuthUtils;
 import net.wuxianjie.web.shared.auth.Authority;
 import net.wuxianjie.web.shared.auth.CachedAuth;
 import net.wuxianjie.web.shared.exception.ApiException;
 import net.wuxianjie.web.shared.pagination.PaginationParams;
 import net.wuxianjie.web.shared.pagination.PaginationResult;
+import net.wuxianjie.web.shared.util.RsaUtils;
 import net.wuxianjie.web.shared.util.StrUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -54,18 +56,22 @@ public class UserService {
         throw new ApiException(HttpStatus.BAD_REQUEST, "新密码不能为空");
       }
 
+      // 解密密码
+      final String oldPassword = RsaUtils.decrypt(params.getOldPassword(), Constants.RSA_PRIVATE_KEY);
+      final String newPassword = RsaUtils.decrypt(params.getNewPassword(), Constants.RSA_PRIVATE_KEY);
+
       // 检查新密码是否与旧密码相同
-      if (params.getNewPassword().equals(params.getOldPassword())) {
+      if (newPassword.equals(oldPassword)) {
         throw new ApiException(HttpStatus.BAD_REQUEST, "新密码不能与旧密码相同");
       }
 
       // 检查旧密码是否正确
-      if (!passwordEncoder.matches(params.getOldPassword(), user.getHashedPassword())) {
+      if (!passwordEncoder.matches(oldPassword, user.getHashedPassword())) {
         throw new ApiException(HttpStatus.BAD_REQUEST, "旧密码错误");
       }
 
       // 更新密码
-      user.setHashedPassword(passwordEncoder.encode(params.getNewPassword()));
+      user.setHashedPassword(passwordEncoder.encode(newPassword));
       passwordUpdated = true;
     }
 
@@ -127,8 +133,11 @@ public class UserService {
     user.setUsername(params.getUsername());
     user.setNickname(params.getNickname());
 
+    // 解密密码
+    final String password = RsaUtils.decrypt(params.getPassword(), Constants.RSA_PRIVATE_KEY);
+
     // 将明文密码进行 Hash 计算后再保存
-    user.setHashedPassword(passwordEncoder.encode(params.getPassword()));
+    user.setHashedPassword(passwordEncoder.encode(password));
 
     // 设置账号状态
     user.setStatus(AccountStatus.ENABLED);
@@ -165,12 +174,15 @@ public class UserService {
   }
 
   public void resetPassword(final long userId, final ResetPasswordParams params) {
+    // 解密密码
+    final String password = RsaUtils.decrypt(params.getPassword(), Constants.RSA_PRIVATE_KEY);
+
     // 从数据库中查询用户数据
     final User user = Optional.ofNullable(userMapper.selectById(userId))
       .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "用户不存在"));
 
     // 将明文密码进行 Hash 计算后再保存
-    user.setHashedPassword(passwordEncoder.encode(params.getPassword()));
+    user.setHashedPassword(passwordEncoder.encode(password));
 
     // 更新数据库中的用户数据
     user.setUpdatedAt(LocalDateTime.now());

@@ -160,7 +160,7 @@
 					"response": []
 				},
 				{
-					"name": "修改当前用户信息",
+					"name": "更新当前用户信息",
 					"request": {
 						"method": "PUT",
 						"header": [
@@ -172,7 +172,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"nickname\": \"吴仙杰\",\n  \"oldPassword\": \"pass123\",\n  \"newPassword\": \"12\"\n}",
+							"raw": "{\n  \"nickname\": \"吴仙杰\",\n  \"oldPassword\": \"Qm+TowObbPw0jWJp/bzu+uwqihWstzT4H49R0A1VbYZRt4lAZ8TshxZ3IwGC2PHHqbM1S+kJ3Z7W+Km6OeNf4u2oae5wbcNxb4RurOBHkTJA4xfmKfzmGD37gG9xIiCMrLxxOvuFSvTZDrmPufMNTcJ3NvLoP82QqgHvTMiAh2A=\",\n  \"newPassword\": \"HpTcmgLTKMaxzwJHF+HkrJXR/ffnNIwp5AW51vRtRUu4ITjGUED+6g96hHk8zc9r0SdKwWIgTzE0iZPTKaO0NFSXJA6uuIyaQIqLv1PPRdOCN6UeHqgf+noUEXBl5cw5pvMVAUZMFh7fr9otL8H6i+U4G0c8xDyxVI8bBiQ3fVo=\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -302,7 +302,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"username\": \"test6\", // 用户名，必填\n  \"nickname\": \"测试用户\", // 昵称，必填\n  \"password\": \"pass123\", // 密码，必填\n  \"authorities\": [\"admin\"], // 功能权限列表\n  \"remark\": \"测试账号，用完即删\" // 备注\n}",
+							"raw": "{\n  \"username\": \"test6\", // 用户名，必填\n  \"nickname\": \"测试用户\", // 昵称，必填\n  \"password\": \"Qm+TowObbPw0jWJp/bzu+uwqihWstzT4H49R0A1VbYZRt4lAZ8TshxZ3IwGC2PHHqbM1S+kJ3Z7W+Km6OeNf4u2oae5wbcNxb4RurOBHkTJA4xfmKfzmGD37gG9xIiCMrLxxOvuFSvTZDrmPufMNTcJ3NvLoP82QqgHvTMiAh2A=\", // 密码，必填\n  \"authorities\": [\"admin\"], // 功能权限列表\n  \"remark\": \"测试账号，用完即删\" // 备注\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -377,7 +377,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"password\": \"pass123\"\n}",
+							"raw": "{\n  \"password\": \"Qm+TowObbPw0jWJp/bzu+uwqihWstzT4H49R0A1VbYZRt4lAZ8TshxZ3IwGC2PHHqbM1S+kJ3Z7W+Km6OeNf4u2oae5wbcNxb4RurOBHkTJA4xfmKfzmGD37gG9xIiCMrLxxOvuFSvTZDrmPufMNTcJ3NvLoP82QqgHvTMiAh2A=\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"

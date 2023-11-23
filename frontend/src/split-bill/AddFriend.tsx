@@ -3,13 +3,12 @@ import { format } from 'date-fns'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
-import type { Friend } from '@/shared/apis/fake/friend-api'
 import { Button } from '@/shared/components/ui/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/Card'
 import { FormCalendar, FormInput } from '@/shared/components/ui/CustomFormField'
 import { Form } from '@/shared/components/ui/Form'
 import { useTitle } from '@/shared/hooks/use-title'
-import { useFriends } from '@/split-bill/FriendProvider'
+import { useFriends, type Friend } from '@/split-bill/FriendProvider'
 
 const formSchema = z.object({
   name: z.string().min(1, '必须输入姓名').trim(),
@@ -32,10 +31,11 @@ function AddFriend() {
       birthday: undefined
     }
   })
-  const { addFriend, setShowAddFriend } = useFriends()
+  const { dispatch } = useFriends()
 
   function onSubmit(values: FormSchema) {
     const newId = Date.now()
+
     const newFriend: Friend = {
       id: newId,
       name: values.name,
@@ -45,8 +45,9 @@ function AddFriend() {
       creditRating: 0
     }
 
-    addFriend(newFriend)
-    setShowAddFriend(false)
+    dispatch({ type: 'ADD_FRIEND', payload: newFriend })
+
+    dispatch({ type: 'SHOW_ADD_FRIEND_FORM', payload: false })
   }
 
   return (

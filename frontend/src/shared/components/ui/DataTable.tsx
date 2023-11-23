@@ -188,7 +188,7 @@ function DataTable<TData, TValue>({
                 </TableRow>
               ))}
 
-            {error && <ErrorRow columnLen={columns.length} error={error} />}
+            {!loading && error && <ErrorRow columnLen={columns.length} error={error} />}
 
             {!loading && !error && table.getRowModel().rows?.length === 0 && (
               <ErrorRow columnLen={columns.length} />

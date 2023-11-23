@@ -25,7 +25,7 @@ import { Form } from '@/shared/components/ui/Form'
 import { Skeleton } from '@/shared/components/ui/Skeleton'
 import { useToast } from '@/shared/components/ui/use-toast'
 import { useFetch } from '@/shared/hooks/use-fetch'
-import { useRefresh } from '@/shared/hooks/use-router'
+import { useRefresh } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
 import type { User } from '@/user/UserListPage'
 
@@ -38,6 +38,12 @@ const formSchema = z.object({
 })
 
 type FormSchema = z.infer<typeof formSchema>
+
+type UpdateUserParams = {
+  nickname: string
+  authorities: string[]
+  remark: string
+}
 
 export default function UpdateUserPage() {
   useTitle('用户详情')
@@ -53,24 +59,29 @@ export default function UpdateUserPage() {
 
   const { userId } = useParams()
   const navigate = useNavigate()
-  const [updating, setUpdating] = React.useState(false)
 
   const { requestApi } = useAuth()
-  const { toast } = useToast()
 
   const {
     data: user,
     error,
     loading,
-    fetchData: getUser
-  } = useFetch(async () => {
-    return await requestApi<User>({ url: `/api/v1/users/${userId}` })
-  })
+    fetchData: fetchUser,
+    discardFetch
+  } = useFetch(requestApi<User>)
+
+  const url = `/api/v1/users/${userId}`
+
+  async function getUser() {
+    return await fetchUser({ url })
+  }
 
   useRefresh(() => {
-    const ignore = getUser()
+    const timestamp = Date.now()
 
-    return () => ignore()
+    getUser().then()
+
+    return () => discardFetch({ url }, timestamp)
   })
 
   React.useEffect(() => {
@@ -93,20 +104,24 @@ export default function UpdateUserPage() {
     })
   }, [user, form])
 
-  async function onSubmit(values: FormSchema) {
-    setUpdating(true)
+  const { loading: submitting, fetchData: fetchUpdate } = useFetch(requestApi<void>)
 
-    const response = await requestApi({
+  async function updateUser({ nickname, authorities, remark }: UpdateUserParams) {
+    return await fetchUpdate({
       url: `/api/v1/users/${user!.id}`,
       method: 'PUT',
-      bodyData: {
-        nickname: values.nickname,
-        authorities: values.authorities.map((authority) => authority.value),
-        remark: values.remark
-      }
+      bodyData: { nickname, authorities, remark }
     })
+  }
 
-    setUpdating(false)
+  const { toast } = useToast()
+
+  async function onSubmit(values: FormSchema) {
+    const response = await updateUser({
+      nickname: values.nickname,
+      authorities: values.authorities.map((authority) => authority.value),
+      remark: values.remark
+    })
 
     if (response.status === 204) {
       toast({
@@ -209,13 +224,13 @@ export default function UpdateUserPage() {
                   onClick={backToUserListPage}
                   type="button"
                   variant="outline"
-                  disabled={updating}
+                  disabled={submitting}
                 >
                   返回
                 </Button>
 
-                <Button type="submit" className="self-end" disabled={updating}>
-                  {updating && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
+                <Button type="submit" className="self-end" disabled={submitting}>
+                  {submitting && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
                   提交
                 </Button>
               </div>

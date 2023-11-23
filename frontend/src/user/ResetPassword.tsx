@@ -1,10 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ExclamationTriangleIcon, ReloadIcon } from '@radix-ui/react-icons'
-import React from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
-import { useAuth } from '@/auth/AuthProvider'
+import { PUBLIC_KEY, useAuth, type PaginationData } from '@/auth/AuthProvider'
 import { Alert, AlertDescription, AlertTitle } from '@/shared/components/ui/Alert'
 import { Button } from '@/shared/components/ui/Button'
 import { Code } from '@/shared/components/ui/Code'
@@ -12,6 +11,11 @@ import { FormInput } from '@/shared/components/ui/CustomFormField'
 import { DialogClose, DialogFooter } from '@/shared/components/ui/Dialog'
 import { Form } from '@/shared/components/ui/Form'
 import { useToast } from '@/shared/components/ui/use-toast'
+import type { SetDataAction } from '@/shared/hooks/use-fetch'
+import { useFetch } from '@/shared/hooks/use-fetch'
+import { encrypt } from '@/shared/utils/rsa'
+import type { User } from '@/user/UserListPage'
+import { format } from 'date-fns'
 
 const formSchema = z
   .object({
@@ -27,10 +31,10 @@ type FormSchema = z.infer<typeof formSchema>
 
 type ResetPasswordProps = {
   userId: number
-  username: string
+  updateUsers: (users: SetDataAction<PaginationData<User>>) => void
 }
 
-function ResetPassword({ userId, username }: ResetPasswordProps) {
+function ResetPassword({ userId, updateUsers }: ResetPasswordProps) {
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -39,26 +43,45 @@ function ResetPassword({ userId, username }: ResetPasswordProps) {
     }
   })
 
-  const [loading, setLoading] = React.useState(false)
-  const [error, setError] = React.useState('')
-
   const { requestApi } = useAuth()
+  const { error, loading, fetchData } = useFetch(requestApi<void>)
+
+  async function resetPassword(password: string) {
+    return await fetchData({
+      url: `/api/v1/users/${userId}/password`,
+      method: 'PUT',
+      bodyData: { password: encrypt(PUBLIC_KEY, password) }
+    })
+  }
+
   const { toast } = useToast()
 
   async function onSubmit(values: FormSchema) {
-    setLoading(true)
+    const { status } = await resetPassword(values.password)
 
-    const response = await requestApi({
-      url: `/api/v1/users/${userId}/password`,
-      method: 'PUT',
-      bodyData: {
-        password: values.password
-      }
-    })
+    if (status === 204) {
+      let username
 
-    setLoading(false)
+      updateUsers((prevUsers) => {
+        const newUsers = prevUsers.list.map((user) => {
+          if (user.id === userId) {
+            username = user.username
 
-    if (response.status === 204) {
+            return {
+              ...user,
+              updatedAt: format(Date.now(), 'yyyy-MM-dd HH:mm:ss')
+            }
+          }
+
+          return user
+        })
+
+        return {
+          ...prevUsers,
+          list: newUsers
+        }
+      })
+
       toast({
         title: '重置用户密码成功',
         description: (
@@ -69,8 +92,6 @@ function ResetPassword({ userId, username }: ResetPasswordProps) {
       })
       return
     }
-
-    setError(response.error!)
   }
 
   return (
@@ -80,7 +101,7 @@ function ResetPassword({ userId, username }: ResetPasswordProps) {
         autoComplete="off"
         className="flex flex-col gap-4"
       >
-        {error && (
+        {!loading && error && (
           <Alert variant="destructive">
             <ExclamationTriangleIcon className="h-4 w-4" />
             <AlertTitle>重置用户密码失败</AlertTitle>

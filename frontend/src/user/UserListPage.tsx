@@ -17,7 +17,7 @@ import {
 } from '@/shared/components/ui/DataTable'
 import { useToast } from '@/shared/components/ui/use-toast'
 import { useFetch } from '@/shared/hooks/use-fetch'
-import { useRefresh } from '@/shared/hooks/use-router'
+import { useRefresh } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
 import {
   URL_QUERY_KEY_ORDER,
@@ -63,32 +63,37 @@ function UserListPage() {
   const status = searchParams.get('status')
   const authority = searchParams.get('authority')
 
+  const url = '/api/v1/users'
+
   const {
-    data,
+    data: users,
     error,
     loading,
-    fetchData: getUsers,
-    dispatch: usersDispatch
-  } = useFetch(async () => {
-    const params: GetUsersParams = { pageNum, pageSize }
-    if (orderBy) params['orderBy'] = orderBy
-    if (order) params['order'] = order === 'asc' ? 'asc' : 'desc'
-    if (username) params['username'] = username
-    if (nickname) params['nickname'] = nickname
-    if (status) params['status'] = status
-    if (authority) params['authority'] = authority
-
-    return await requestApi<PaginationData<User>>({
-      url: '/api/v1/users',
-      urlParams: params
-    })
-  })
+    fetchData,
+    discardFetch,
+    updateData: updateUsers
+  } = useFetch(requestApi<PaginationData<User>>)
 
   useRefresh(() => {
-    const ignore = getUsers()
+    const timestamp = Date.now()
 
-    return () => ignore()
+    getUsers().then()
+
+    return () => discardFetch({ url }, timestamp)
   })
+
+  async function getUsers() {
+    const urlParams: GetUsersParams = { pageNum, pageSize }
+
+    if (orderBy) urlParams['orderBy'] = orderBy
+    if (order) urlParams['order'] = order === 'asc' ? 'asc' : 'desc'
+    if (username) urlParams['username'] = username
+    if (nickname) urlParams['nickname'] = nickname
+    if (status) urlParams['status'] = status
+    if (authority) urlParams['authority'] = authority
+
+    return await fetchData({ url, urlParams })
+  }
 
   function handlePaginate(paging: Paging) {
     searchParams.set(URL_QUERY_KEY_PAGE_NUM, String(paging.pageNum))
@@ -105,7 +110,7 @@ function UserListPage() {
   }
 
   function handleShowSelection() {
-    const ids = (data?.list || [])
+    const ids = (users?.list || [])
       .filter((_, index) => indexes.includes(index))
       .map((user) => user.id)
 
@@ -139,16 +144,16 @@ function UserListPage() {
         <UserSearch loading={loading} />
 
         <UserTable
-          users={data?.list || []}
+          users={users?.list || []}
           error={error}
           loading={loading}
           pageNum={pageNum}
           pageSize={pageSize}
-          total={data?.total || 0}
+          total={users?.total || 0}
           onPaginate={handlePaginate}
           onSelect={handleSelect}
           onShowSelection={handleShowSelection}
-          dispatch={usersDispatch}
+          updateUsers={updateUsers}
         />
       </CardContent>
     </Card>

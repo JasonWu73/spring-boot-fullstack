@@ -1,5 +1,6 @@
 import { useAuth } from '@/auth/AuthProvider'
-import { useLoaded } from '@/shared/hooks/use-router'
+import { useFetch } from '@/shared/hooks/use-fetch'
+import { useInitial } from '@/shared/hooks/use-refresh'
 import React from 'react'
 
 type Version = {
@@ -21,15 +22,27 @@ type VersionProviderProps = {
 
 function VersionProvider({ children }: VersionProviderProps) {
   const [version, setVersion] = React.useState<Version>()
+
   const { requestApi } = useAuth()
+  const { fetchData, discardFetch } = useFetch(requestApi<Version>)
 
-  useLoaded(() => {
-    ;(async function () {
-      const { data } = await requestApi<Version>({ url: '/api/v1/version' })
+  const url = '/api/v1/version'
 
-      setVersion(data)
-    })()
+  useInitial(() => {
+    const timestamp = Date.now()
+
+    getVersion().then()
+
+    return () => discardFetch({ url: url }, timestamp)
   })
+
+  async function getVersion() {
+    const { data } = await fetchData({ url: url })
+
+    if (data) {
+      setVersion(data)
+    }
+  }
 
   const value: VersionProviderState = {
     name: version?.name || '',

@@ -21,17 +21,18 @@ const AddFriend = React.lazy(() =>
 export default function SplitBillPage() {
   useTitle('分摊账单')
 
-  const { showAddFriend, setShowAddFriend } = useFriends()
+  const { showAddFriend, dispatch } = useFriends()
 
   const navigate = useNavigate()
 
   useKeypress({ key: 'Escape' }, () => {
-    setShowAddFriend(false)
+    dispatch({ type: 'SHOW_ADD_FRIEND_FORM', payload: false })
+
     navigate('/split-bill', { state: { noRefresh: true } })
   })
 
   function handleToggleAddFriend() {
-    setShowAddFriend(!showAddFriend)
+    dispatch({ type: 'SHOW_ADD_FRIEND_FORM', payload: !showAddFriend })
   }
 
   return (

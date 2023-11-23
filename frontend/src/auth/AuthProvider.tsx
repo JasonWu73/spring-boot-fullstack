@@ -1,13 +1,7 @@
 import React from 'react'
 
 import type { FetchResponse } from '@/shared/hooks/use-fetch'
-import { useSavedRef } from '@/shared/hooks/use-saved'
-import {
-  CUSTOM_HTTP_STATUS_ERROR_CODE,
-  sendRequest,
-  type ApiRequest
-} from '@/shared/utils/http'
-import { encrypt } from '@/shared/utils/rsa'
+import { sendRequest, type ApiRequest } from '@/shared/utils/http'
 
 // 分页参数类型
 type PaginationParams = {
@@ -44,10 +38,11 @@ const STORAGE_KEY = 'demo-auth'
 
 // 这里假设 Vite 运行时使用默认的 5173 端口
 const DEV_PORT = '5173'
-const BACKEND_BASE_URL = `${window.location.protocol}//${window.location.hostname}:8080`
+const DEV_BACKEND_BASE_URL = `${window.location.protocol}//${window.location.hostname}:8080`
+const PROD_BACKEND_BASE_URL = `${window.location.origin}`
 
 const BASE_URL =
-  window.location.port === DEV_PORT ? BACKEND_BASE_URL : window.location.host
+  window.location.port === DEV_PORT ? DEV_BACKEND_BASE_URL : PROD_BACKEND_BASE_URL
 
 // 错误响应数据类型
 type ApiError = {
@@ -79,8 +74,8 @@ type AuthProviderState = {
   isAdmin: boolean
   isUser: boolean
 
-  login: (username: string, password: string) => Promise<FetchResponse<AuthResponse>>
-  logout: () => Promise<FetchResponse<void>>
+  setAuth: (data: AuthResponse) => void
+  deleteAuth: () => void
 
   requestApi: <T>(request: ApiRequest, type?: string) => Promise<FetchResponse<T>>
 }
@@ -93,50 +88,20 @@ type AuthProviderProps = {
 
 function AuthProvider({ children }: AuthProviderProps) {
   const [auth, setAuth] = React.useState(getStorageAuth)
-  const [refreshable, setRefreshable] = React.useState(false)
-
-  const authRef = useSavedRef(auth)
 
   const isRoot = auth?.authorities.includes(ROOT.value) ?? false
-
   const isAdmin = isRoot || (auth?.authorities.includes(ADMIN.value) ?? false)
-
   const isUser = isRoot || isAdmin || (auth?.authorities.includes(USER.value) ?? false)
-
-  React.useEffect(() => {
-    const auth = authRef.current
-
-    if (!refreshable || !auth) return
-    ;(async function () {
-      const { status, data, error } = await requestBackendApi<AuthResponse>({
-        url: `/api/v1/auth/refresh/${auth.refreshToken}`,
-        method: 'POST',
-        headers: { Authorization: `Bearer ${auth.accessToken}` }
-      })
-
-      setRefreshable(false)
-
-      if (error) {
-        setAuthCache(null)
-        return { status, error: error }
-      }
-
-      if (data) {
-        const auth = toStorageAuth(data)
-        setAuthCache(auth)
-      }
-    })()
-  }, [refreshable, authRef])
 
   /**
    * 需要使用访问令牌的 API 请求。
    */
   async function requestApi<T>(request: ApiRequest): Promise<FetchResponse<T>> {
     // 请求无需拥有访问令牌的开放 API
-    if (!auth) return requestBackendApi(request)
+    if (!auth) return await requestBackendApi<T>(request)
 
     // 请求需要访问令牌的 API（涉及自动刷新机制）
-    const { expiresAt, accessToken } = auth
+    const { expiresAt, accessToken, refreshToken } = auth
 
     // 发送请求
     const response = await requestBackendApi<T>({
@@ -151,9 +116,23 @@ function AuthProvider({ children }: AuthProviderProps) {
     }
 
     // 检查是否需要刷新访问令牌
-    // 这里为了测试目的，故意设置离过期时间小于等于 29 分 55 秒时就刷新访问令牌
-    if (expiresAt - Date.now() <= (30 * 60 - 5) * 1000) {
-      setRefreshable(true)
+    // 这里为了测试目的，故意设置离过期时间小于 29 分 55 秒时就刷新访问令牌
+    if (expiresAt - Date.now() < (30 * 60 - 5) * 1000) {
+      const { status, data, error } = await requestBackendApi<AuthResponse>({
+        url: `/api/v1/auth/refresh/${refreshToken}`,
+        method: 'POST',
+        headers: { Authorization: `Bearer ${accessToken}` }
+      })
+
+      if (error) {
+        setAuthCache(null)
+        return { status, error: error }
+      }
+
+      if (data) {
+        const auth = toStorageAuth(data)
+        setAuthCache(auth)
+      }
     }
 
     return response
@@ -170,37 +149,16 @@ function AuthProvider({ children }: AuthProviderProps) {
     isAdmin,
     isUser,
 
-    login: async (username, password) => {
-      const response = await requestBackendApi<AuthResponse>({
-        url: '/api/v1/auth/login',
-        method: 'POST',
-        bodyData: {
-          username: encrypt(PUBLIC_KEY, username),
-          password: encrypt(PUBLIC_KEY, password)
-        }
-      })
+    setAuth: (data: AuthResponse) => {
+      const auth = toStorageAuth(data)
 
-      if (response.data) {
-        const auth = toStorageAuth(response.data)
-        setAuth(auth)
-        setStorageAuth(auth)
-      }
-
-      return response
+      setAuth(auth)
+      setStorageAuth(auth)
     },
-    logout: async () => {
-      if (!auth) return { status: CUSTOM_HTTP_STATUS_ERROR_CODE, error: '未登录' }
-
-      const response = await requestApi<void>({
-        url: '/api/v1/auth/logout',
-        method: 'DELETE'
-      })
-
+    deleteAuth: async () => {
       // 不论后端退出登录是否成功，前端都要退出登录
       setAuth(null)
       setStorageAuth(null)
-
-      return response
     },
 
     requestApi
@@ -251,9 +209,11 @@ function toStorageAuth(data: AuthResponse) {
 }
 
 async function requestBackendApi<T>(request: ApiRequest): Promise<FetchResponse<T>> {
+  const baseUrl = /^https?:\/\/.+/.test(request.url) ? request.url : BASE_URL
+
   const { status, data, error } = await sendRequest<T, ApiError>({
     ...request,
-    url: `${BASE_URL}${request.url}`
+    url: `${baseUrl}${request.url}`
   })
 
   if (error) {
@@ -268,9 +228,11 @@ async function requestBackendApi<T>(request: ApiRequest): Promise<FetchResponse<
 export {
   ADMIN,
   AuthProvider,
+  PUBLIC_KEY,
   ROOT,
   USER,
   useAuth,
+  type AuthResponse,
   type Authority,
   type PaginationData,
   type PaginationParams

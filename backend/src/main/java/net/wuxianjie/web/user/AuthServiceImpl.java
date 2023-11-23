@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import net.wuxianjie.web.shared.Constants;
 import net.wuxianjie.web.shared.auth.*;
 import net.wuxianjie.web.shared.exception.ApiException;
 import net.wuxianjie.web.shared.util.RsaUtils;
@@ -35,11 +36,6 @@ public class AuthServiceImpl implements AuthService {
 
   private static final int TOKEN_EXPIRES_IN_SECONDS = 1800;
 
-  // 公钥仅用于前端对用户名和密码进行加密
-  // private static final String RSA_PUBLIC_KEY = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCmWWFyJSaS/SMYr7hmCSXcwAvPF+aGPbbQFOt3rJXjDVKL2GhumWXH2y+dC5/DoaCtDz3dFTyzuoYyiuTHzbpsQ7ari8LoRunOJ81Hx0szpdKbOYJ5WnUr3mr7qEIwY5Verh1dgknNxuzeeTNlmAeLQj067+B+7m9+xp2WU+VSawIDAQAB";
-
-  private static final String RSA_PRIVATE_KEY = "MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAKZZYXIlJpL9IxivuGYJJdzAC88X5oY9ttAU63esleMNUovYaG6ZZcfbL50Ln8OhoK0PPd0VPLO6hjKK5MfNumxDtquLwuhG6c4nzUfHSzOl0ps5gnladSveavuoQjBjlV6uHV2CSc3G7N55M2WYB4tCPTrv4H7ub37GnZZT5VJrAgMBAAECgYAOZZ3xaxWzkwT+lfa3ngMQ3+4ltkPVSnIQAD+A1AcE55pFUC15pP0SFv4/8UmafNqTH8aS48ulIneK2EqEoGGJ6QUUQnmx8AhYGmANc9J7l4xZymUj7sUX7ipKCjfqomPbIZcxp2eRua3gunCXPo7HLFkZH8rmYOjdovw3IZzAQQJBAPIYpYZncyNZgWQa9pXRdZOghssGXnPrkUfiqdrAkZw6aGd8fspcm+4ahsULsWXVCvEmD6tyqtaB1S7xl18Laz0CQQCv5xU0v/9Z+4g39GauxTuh56N5AQ4WJxcCwP+iz8D5+Tkwf4FDmy4uDXMhgBcrEKmy7cKEKDlh+3LllG5DwC7HAkEAz7RrlvN8ahCpnVwwwPrS+FRaMSeGs8egfl8uQRrEEphd6KN8GFv5//9MLxRIH8j3OUvhV8PqZF1BrKPjrcybNQJAZzz49Ty6YdV+3VhT679WgG+zQhGccuP+XV9oqeXFHPFo3032T/eD4wOBzueesWfWMW3Z/DafdyJdDOFQ1fK1gQJAJAjujLut9M0W4AhMEOeIWmiG92zZd9v0sUx0S5ZiUus5cPPAiEpao+qbKXSb4WVAM8nsoe62Z+MvoB5nlBQcQw==";
-
   private final PasswordEncoder passwordEncoder;
   private final HttpServletRequest request;
   private final ObjectMapper objectMapper;
@@ -53,8 +49,8 @@ public class AuthServiceImpl implements AuthService {
     final String username;
     final String password;
     try {
-      username = RsaUtils.decrypt(params.getUsername(), RSA_PRIVATE_KEY);
-      password = RsaUtils.decrypt(params.getPassword(), RSA_PRIVATE_KEY);
+      username = RsaUtils.decrypt(params.getUsername(), Constants.RSA_PRIVATE_KEY);
+      password = RsaUtils.decrypt(params.getPassword(), Constants.RSA_PRIVATE_KEY);
     } catch (Exception e) {
       throw new ApiException(HttpStatus.UNAUTHORIZED, "用户名或密码错误", e);
     }

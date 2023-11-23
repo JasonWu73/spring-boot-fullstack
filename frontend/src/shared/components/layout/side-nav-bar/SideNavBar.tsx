@@ -18,18 +18,18 @@ function SideNavBar() {
             <UserCog2 className="h-5 w-5" />
             <span>用户管理</span>
           </MenuItem>
+        </Menu>
 
+        <MenuSeparator />
+
+        <Menu title="测试路由">
           {isRoot && (
             <MenuItem link="/product">
               <ShoppingCart className="h-4 w-4" />
               <span>随机商品</span>
             </MenuItem>
           )}
-        </Menu>
 
-        <MenuSeparator />
-
-        <Menu title="测试路由">
           <MenuItem link="/no-route">
             <BugOff className="h-4 w-4" />
             <span>Not Found</span>

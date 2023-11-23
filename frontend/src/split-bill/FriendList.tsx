@@ -2,40 +2,39 @@ import { ExclamationTriangleIcon, ReloadIcon, RocketIcon } from '@radix-ui/react
 import React from 'react'
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 
-import type { Friend } from '@/shared/apis/fake/friend-api'
+import { requestApi } from '@/shared/apis/local-api'
 import { Alert, AlertDescription, AlertTitle } from '@/shared/components/ui/Alert'
 import { Card } from '@/shared/components/ui/Card'
 import { Code } from '@/shared/components/ui/Code'
 import { ScrollArea } from '@/shared/components/ui/ScrollArea'
 import { Separator } from '@/shared/components/ui/Separator'
 import { useToast } from '@/shared/components/ui/use-toast'
-import { useRefresh } from '@/shared/hooks/use-router'
+import { useFetch } from '@/shared/hooks/use-fetch'
+import { useRefresh } from '@/shared/hooks/use-refresh'
 import { URL_QUERY_KEY_QUERY } from '@/shared/utils/constants'
 import { FriendItem } from '@/split-bill/FriendItem'
-import { useFriends } from '@/split-bill/FriendProvider'
+import { useFriends, type Friend } from '@/split-bill/FriendProvider'
 import { FriendSearch } from '@/split-bill/FriendSearch'
 
 function FriendList() {
-  // 因为是假 API，所以会导致 loading 时还是显示上次的数据，为了避免页面闪烁，所以这里需要重置一下
-  const ctx = useFriends()
-  const { loadingFriends: loading, getFriends, deleteFriend, setShowAddFriend } = ctx
-  let { friends, errorFriends: error } = ctx
-
-  if (loading) {
-    error = ''
-    friends = []
-  }
-
   const [searchParams] = useSearchParams()
+  const location = useLocation()
+  const navigate = useNavigate()
+
+  const { friends, dispatch } = useFriends()
+  const { toast } = useToast()
+
+  const url = '/data/friends.json'
+
+  const { error, loading, fetchData, discardFetch } = useFetch(requestApi<Friend[]>)
 
   const nameQuery = searchParams.get(URL_QUERY_KEY_QUERY) || ''
+
   const filteredFriends = nameQuery
-    ? friends.filter((friend) =>
+    ? friends?.filter((friend) =>
         friend.name.toLowerCase().includes(nameQuery.toLowerCase())
       )
     : friends
-
-  const location = useLocation()
 
   useRefresh(() => {
     if (location.state?.noRefresh === true) {
@@ -47,17 +46,29 @@ function FriendList() {
       return
     }
 
-    setShowAddFriend(false)
-    const ignore = getFriends()
+    dispatch({ type: 'SHOW_ADD_FRIEND_FORM', payload: false })
 
-    return () => ignore()
+    const timestamp = Date.now()
+
+    getFriends().then()
+
+    return () => discardFetch({ url }, timestamp)
   })
 
-  const { toast } = useToast()
-  const navigate = useNavigate()
+  async function getFriends() {
+    const { data, error } = await fetchData({ url })
+
+    if (data) {
+      dispatch({ type: 'SET_FRIENDS', payload: data })
+    }
+
+    if (error) {
+      dispatch({ type: 'SET_FRIENDS', payload: [] })
+    }
+  }
 
   function handleDeleteFriend(friend: Friend) {
-    deleteFriend(friend.id)
+    dispatch({ type: 'DELETE_FRIEND', payload: friend.id })
 
     toast({
       title: '删除好友',
@@ -89,7 +100,7 @@ function FriendList() {
               </Alert>
             )}
 
-            {error && (
+            {!loading && error && (
               <Alert variant="destructive">
                 <ExclamationTriangleIcon className="h-4 w-4" />
                 <AlertTitle>错误</AlertTitle>
@@ -105,7 +116,7 @@ function FriendList() {
               </Alert>
             )}
 
-            {filteredFriends.length > 0 && (
+            {!loading && !error && filteredFriends.length > 0 && (
               <ul>
                 {filteredFriends.map((item, index, array) => (
                   <React.Fragment key={item.id}>

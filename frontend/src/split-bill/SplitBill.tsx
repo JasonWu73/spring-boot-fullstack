@@ -21,9 +21,13 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from '@/shared/components/ui/Tooltip'
-import { useRefresh } from '@/shared/hooks/use-router'
+import { useFetch } from '@/shared/hooks/use-fetch'
+import { useRefresh } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
-import { useFriends } from '@/split-bill/FriendProvider'
+import { wait } from '@/shared/utils/helpers'
+import type { ApiRequest } from '@/shared/utils/http'
+import { endNProgress, startNProgress } from '@/shared/utils/nprogress'
+import { getFriendsFromStorage, useFriends } from '@/split-bill/FriendProvider'
 import { SplitBillError } from '@/split-bill/SplitBillError'
 import { SplitBillSkeleton } from '@/split-bill/SplitBillSkeleton'
 
@@ -96,27 +100,35 @@ function SplitBill() {
     form.setValue('friendExpense', Number((bill - userExpense).toFixed(2)))
   }, [watchedBill, watchedUserExpense, form])
 
-  // 因为是假 API，所以会导致 loading 时还是显示上次的数据，为了避免页面闪烁，所以这里需要重置一下
-  const ctx = useFriends()
-  const { loadingFriend: loading, getFriend, setCredit, splitBill } = ctx
-  let { currentFriend: friend, errorFriend: error } = ctx
+  const { friendId } = useParams()
 
-  if (loading) {
-    error = ''
-    friend = null
-  }
+  const id = Number(friendId)
 
-  const params = useParams()
-  const id = Number(params.friendId)
+  const {
+    data: friend,
+    error,
+    loading,
+    fetchData,
+    updateData
+  } = useFetch(getFriendFakeApi)
+  const { dispatch } = useFriends()
 
   useRefresh(() => {
     form.reset()
-    const ignore = getFriend({ id })
-
-    return () => {
-      ignore()
-    }
+    getFriend().then()
   })
+
+  async function getFriend() {
+    const { data, error } = await fetchData({ url: '/fake', urlParams: { id } })
+
+    if (data) {
+      dispatch({ type: 'SELECT_FRIEND', payload: data })
+    }
+
+    if (error) {
+      dispatch({ type: 'SELECT_FRIEND', payload: null })
+    }
+  }
 
   const navigate = useNavigate()
 
@@ -124,7 +136,7 @@ function SplitBill() {
     const expense =
       values.whoIsPaying === 'user' ? -values.friendExpense : values.userExpense
 
-    splitBill(id, expense)
+    dispatch({ type: 'SPLIT_BILL', payload: { id, expense } })
 
     navigate(`/split-bill${window.location.search}`, {
       state: { noRefresh: true }
@@ -132,16 +144,40 @@ function SplitBill() {
   }
 
   function handleCreditRating(creditRating: number) {
-    setCredit(id, creditRating)
+    dispatch({ type: 'RATE_CREDIT_RANK', payload: { id, creditRating } })
+  }
+
+  async function getFriendFakeApi(params: ApiRequest) {
+    startNProgress()
+
+    updateData((prevData) => {
+      return { ...prevData, loading: true }
+    })
+
+    // 仅为了模拟查看骨架屏的效果
+    await wait(2)
+
+    const friends = getFriendsFromStorage()
+    const friend = friends.find((friend) => friend.id === Number(params.urlParams!.id))
+
+    endNProgress()
+
+    updateData((prevData) => {
+      return { ...prevData, loading: false }
+    })
+
+    if (friend) return { status: 200, data: friend }
+
+    return { status: 404, error: '未找到好友数据' }
   }
 
   return (
     <Card className="w-96 bg-amber-100 text-slate-700 dark:bg-amber-100 dark:text-slate-700 md:w-[22rem] lg:w-[30rem]">
       {loading && <SplitBillSkeleton />}
 
-      {error && <SplitBillError message={error} />}
+      {!loading && error && <SplitBillError message={error} />}
 
-      {friend && (
+      {!loading && !error && friend && (
         <>
           <CardHeader>
             <CardTitle>与好友分摊账单</CardTitle>

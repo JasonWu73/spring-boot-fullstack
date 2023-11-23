@@ -1,6 +1,5 @@
 import { Link, useParams } from 'react-router-dom'
 
-import type { Friend } from '@/shared/apis/fake/friend-api'
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/components/ui/Avatar'
 import { buttonVariants } from '@/shared/components/ui/Button'
 import { Code } from '@/shared/components/ui/Code'
@@ -12,7 +11,7 @@ import {
   TooltipTrigger
 } from '@/shared/components/ui/Tooltip'
 import { cn, truncate } from '@/shared/utils/helpers'
-import { useFriends } from '@/split-bill/FriendProvider'
+import { useFriends, type Friend } from '@/split-bill/FriendProvider'
 
 type FriendItemProps = {
   friend: Friend
@@ -20,14 +19,18 @@ type FriendItemProps = {
 }
 
 function FriendItem({ friend, onDeleteFriend }: FriendItemProps) {
-  const params = useParams()
-  const selectedFriendId = Number(params.friendId)
+  const { friendId } = useParams()
+
+  const selectedFriendId = Number(friendId)
   const selected = friend.id === selectedFriendId
 
-  const { setShowAddFriend } = useFriends()
+  const { dispatch } = useFriends()
 
   function handleToggleSelect() {
-    setShowAddFriend(false)
+    dispatch({
+      type: 'SHOW_ADD_FRIEND_FORM',
+      payload: false
+    })
   }
 
   const name = truncate(friend.name, 5)
@@ -76,17 +79,21 @@ function FriendItem({ friend, onDeleteFriend }: FriendItemProps) {
 
         {friend.balance > 0 && (
           <p className="text-green-500">
-            {name} 欠您 ${friend.balance}
+            <Code>{name}</Code> 欠您 ${friend.balance}
           </p>
         )}
 
         {friend.balance < 0 && (
           <p className="text-red-500 dark:text-red-600">
-            您欠 {name} ${Math.abs(friend.balance)}
+            您欠 <Code>{name}</Code> ${Math.abs(friend.balance)}
           </p>
         )}
 
-        {friend.balance === 0 && <p>你和 {name} 互不相欠</p>}
+        {friend.balance === 0 && (
+          <p>
+            你和 <Code>{name}</Code> 互不相欠
+          </p>
+        )}
       </div>
 
       <Link

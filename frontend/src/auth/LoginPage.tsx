@@ -1,11 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ReloadIcon } from '@radix-ui/react-icons'
-import React from 'react'
 import { useForm } from 'react-hook-form'
 import { Navigate, useLocation } from 'react-router-dom'
 import { z } from 'zod'
 
-import { useAuth } from '@/auth/AuthProvider'
+import { PUBLIC_KEY, useAuth, type AuthResponse } from '@/auth/AuthProvider'
 import { Button } from '@/shared/components/ui/Button'
 import {
   Card,
@@ -17,8 +16,9 @@ import {
 import { FormInput } from '@/shared/components/ui/CustomFormField'
 import { Form } from '@/shared/components/ui/Form'
 import { useToast } from '@/shared/components/ui/use-toast'
-import { useRefresh } from '@/shared/hooks/use-router'
+import { useFetch } from '@/shared/hooks/use-fetch'
 import { useTitle } from '@/shared/hooks/use-title'
+import { encrypt } from '@/shared/utils/rsa'
 import { ShieldPlus } from 'lucide-react'
 
 const DEFAULT_REDIRECT_URL = '/admin'
@@ -42,26 +42,18 @@ export default function LoginPage() {
   })
 
   const location = useLocation()
-  const [loading, setLoading] = React.useState(false)
 
-  const { login, auth } = useAuth()
-  const { toast, dismiss } = useToast()
+  const { auth, requestApi, setAuth } = useAuth()
+  const { toast } = useToast()
 
-  const originUrl = location.state?.from || DEFAULT_REDIRECT_URL
+  const { loading, fetchData } = useFetch(requestApi<AuthResponse>)
 
-  useRefresh(() => {
-    form.reset()
-    dismiss()
-  })
+  const targetUrl = location.state?.from || DEFAULT_REDIRECT_URL
 
-  if (auth) return <Navigate to={originUrl} replace />
+  if (auth) return <Navigate to={targetUrl} replace />
 
   async function onSubmit(values: FormSchema) {
-    setLoading(true)
-
-    const { error } = await login(values.username, values.password)
-
-    setLoading(false)
+    const { data, error } = await login(values.username, values.password)
 
     if (error) {
       toast({
@@ -72,7 +64,20 @@ export default function LoginPage() {
       return
     }
 
-    return <Navigate to={originUrl} replace />
+    setAuth(data!)
+
+    return <Navigate to={targetUrl} replace />
+  }
+
+  async function login(username: string, password: string) {
+    return await fetchData({
+      url: '/api/v1/auth/login',
+      method: 'POST',
+      bodyData: {
+        username: encrypt(PUBLIC_KEY, username),
+        password: encrypt(PUBLIC_KEY, password)
+      }
+    })
   }
 
   return (

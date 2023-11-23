@@ -1,33 +1,33 @@
 import React from 'react'
 
-type State<TData> = {
+import type { ApiRequest } from '@/shared/utils/http'
+
+type State<T> = {
   status: number // HTTP 响应状态码
-  data: TData | null
-  error: string
+  data?: T
+  error?: string
   loading: boolean
 }
 
 const initialState: State<unknown> = {
   status: 0,
-  data: null,
-  error: '',
   loading: false
 }
 
-type Action<TData> =
+type Action<T> =
   | { type: 'START_LOADING' }
-  | { type: 'FETCH_SUCCESS'; payload: { status: number; data: TData | null } }
-  | { type: 'FETCH_FAILED'; payload: { status: number; error: string } }
-  | { type: 'IGNORE_FETCH' } // 只是忽略请求的结果，而非取消请求；取消请求只会不易于前端调试，因为后端仍然会处理请求
+  | { type: 'FETCH_SUCCESS'; payload: { status: number; data?: T } }
+  | { type: 'FETCH_FAILED'; payload: { status: number; error?: string } }
+  | { type: 'UPDATE_DATA'; payload: { data?: T } }
 
-function reducer<TData>(state: State<TData>, action: Action<TData>): State<TData> {
+function reducer<T>(state: State<T>, action: Action<T>): State<T> {
   switch (action.type) {
     case 'START_LOADING': {
       return {
         ...state,
         status: 0,
-        data: null,
-        error: '',
+        data: undefined,
+        error: undefined,
         loading: true
       }
     }
@@ -36,7 +36,7 @@ function reducer<TData>(state: State<TData>, action: Action<TData>): State<TData
         ...state,
         status: action.payload.status,
         data: action.payload.data,
-        error: '',
+        error: undefined,
         loading: false
       }
     }
@@ -44,20 +44,20 @@ function reducer<TData>(state: State<TData>, action: Action<TData>): State<TData
       return {
         ...state,
         status: action.payload.status,
-        data: null,
+        data: undefined,
         error: action.payload.error,
         loading: false
       }
     }
-    case 'IGNORE_FETCH': {
+
+    // 用于后端 API 请求成功后，对前端的数据更新
+    case 'UPDATE_DATA': {
       return {
         ...state,
-        status: 0,
-        data: null,
-        error: '',
-        loading: false
+        data: action.payload.data
       }
     }
+
     default: {
       throw new Error(`未知的 action 类型：${action}`)
     }
@@ -70,75 +70,110 @@ type FetchResponse<T> = {
   error?: string
 }
 
-type ApiCallback<TData, TParams> = (params?: TParams) => Promise<FetchResponse<TData>>
+type SetDataAction<T> = T | ((prevData: T) => T)
 
-type IgnoreFetch = () => void
-
-type UseFetch<TData, TParams> = {
+type UseFetch<T> = {
   status: number
-  data: TData | null
-  error: string
+  data?: T
+  error?: string
   loading: boolean
-  fetchData: (params?: TParams) => IgnoreFetch
-  dispatch: React.Dispatch<Action<TData | null>>
+  fetchData: (params: ApiRequest) => Promise<FetchResponse<T>>
+  discardFetch: (params: DiscardRequestParams, timestamp: number) => void
+  updateData: (data: SetDataAction<T>) => void
 }
+
+type Method = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'
+
+type PrevFetch = {
+  url: string
+  timestamp: number
+  method?: Method
+}
+
+type DiscardRequestParams = { url: string; method?: Method }
 
 /**
  * 获取数据的自定义 Hook。
  *
  * <p>主要用于页面初始化时获取数据。
  *
- * @template TData - 返回的数据类型
- * @template TParams - 请求参数类型
+ * @template T - 返回的数据类型
  *
  * @param callback - 获取数据的回调函数
  * @returns {UseFetch} - 数据、错误信息、加载状态、获取数据的回调函数
  */
-function useFetch<TData, TParams>(
-  callback: ApiCallback<TData, TParams>
-): UseFetch<TData, TParams> {
+function useFetch<T>(
+  callback: (params: ApiRequest) => Promise<FetchResponse<T>>
+): UseFetch<T> {
   const [{ status, data, error, loading }, dispatch] = React.useReducer(
-    reducer as React.Reducer<State<TData | null>, Action<TData | null>>,
-    initialState as State<TData>
+    reducer as React.Reducer<State<T>, Action<T>>,
+    initialState as State<T>
   )
 
-  function fetchData(params?: TParams) {
-    // 前端应该只是忽略请求结果，而非使用 AbortController 取消请求
-    // 后者会导致 F12 中丢失响应信息，不易于前端调试
-    let ignoreResult = false
+  const prevFetchRef = React.useRef<PrevFetch | null>(null)
 
+  async function fetchData(request: ApiRequest): Promise<FetchResponse<T>> {
     dispatch({ type: 'START_LOADING' })
-    ;(async function () {
-      const response = await callback(params)
 
-      // 如果在请求过程中，用户已经点击了路由，那么就忽略请求结果
-      if (ignoreResult) return
+    // 防止重复提交（React Strict Mode）
+    const prevRequest = prevFetchRef.current
 
-      if (response.error) {
-        dispatch({
-          type: 'FETCH_FAILED',
-          payload: { status: response.status, error: response.error }
-        })
-        return
-      }
-
-      dispatch({
-        type: 'FETCH_SUCCESS',
-        payload: { status: response.status, data: response.data ?? null }
-      })
-    })()
-
-    return () => {
-      ignoreResult = true
-      // 因为 `dispatch` 是异步的，所以必须在此处忽略请求结果
-      // 如果放在 IIFE 内则可能会覆盖掉后续的 `dispatch` 结果
-      dispatch({
-        type: 'IGNORE_FETCH'
-      })
+    if (
+      prevRequest &&
+      prevRequest.url === request.url &&
+      prevRequest.method === request.method &&
+      Date.now() - prevRequest.timestamp < 50
+    ) {
+      return { status: 0 }
     }
+
+    const response = await callback(request)
+
+    // 若 HTTP 状态码为自定义的重复提交状态码，则代表是重复提交（React Strict Mode），不需要处理
+    if (response.status === 0) return response
+
+    if (response.error) {
+      dispatch({
+        type: 'FETCH_FAILED',
+        payload: { status: response.status, error: response.error }
+      })
+
+      return response
+    }
+
+    dispatch({
+      type: 'FETCH_SUCCESS',
+      payload: { status: response.status, data: response.data }
+    })
+
+    return response
   }
 
-  return { status, data, error, loading, fetchData, dispatch }
+  function discardFetch({ url, method }: DiscardRequestParams, timestamp: number) {
+    prevFetchRef.current = { url, method, timestamp }
+  }
+
+  function updateData(newData: SetDataAction<T>) {
+    if (typeof newData === 'function') {
+      const updater = newData as (prevData: T) => T
+
+      const updatedData = updater(data!)
+
+      dispatch({
+        type: 'UPDATE_DATA',
+        payload: { data: updatedData }
+      })
+
+      return
+    }
+
+    dispatch({
+      type: 'UPDATE_DATA',
+      payload: { data: newData }
+    })
+  }
+
+  return { status, data, error, loading, fetchData, discardFetch, updateData }
 }
 
-export { useFetch, type Action, type FetchResponse, type IgnoreFetch }
+export { useFetch, type Action, type FetchResponse, type SetDataAction }

@@ -1,6 +1,5 @@
 import { type ColumnDef } from '@tanstack/react-table'
 import { MoreHorizontal } from 'lucide-react'
-import React from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 
 import { ADMIN, ROOT, USER, useAuth, type PaginationData } from '@/auth/AuthProvider'
@@ -29,14 +28,16 @@ import {
 } from '@/shared/components/ui/DropdownMenu'
 import { Switch } from '@/shared/components/ui/Switch'
 import { useToast } from '@/shared/components/ui/use-toast'
-import type { Action } from '@/shared/hooks/use-fetch'
+import type { SetDataAction } from '@/shared/hooks/use-fetch'
+import { useFetch } from '@/shared/hooks/use-fetch'
 import { URL_QUERY_KEY_ORDER, URL_QUERY_KEY_ORDER_BY } from '@/shared/utils/constants'
 import { ResetPassword } from '@/user/ResetPassword'
 import type { User } from '@/user/UserListPage'
+import { format } from 'date-fns'
 
 type UserTableProps = {
   users: User[]
-  error: string
+  error?: string
   loading: boolean
   pageNum: number
   pageSize: number
@@ -44,7 +45,7 @@ type UserTableProps = {
   onPaginate: (paging: Paging) => void
   onSelect: (rowIndexes: number[]) => void
   onShowSelection: () => void
-  dispatch: React.Dispatch<Action<PaginationData<User> | null>>
+  updateUsers: (users: SetDataAction<PaginationData<User>>) => void
 }
 
 function UserTable({
@@ -57,15 +58,103 @@ function UserTable({
   onPaginate,
   onSelect,
   onShowSelection,
-  dispatch
+  updateUsers
 }: UserTableProps) {
   const [searchParams, setSearchParams] = useSearchParams()
-  const [updating, setUpdating] = React.useState(false)
 
   const { isRoot, requestApi } = useAuth()
+  const { loading: submitting, fetchData } = useFetch(requestApi<void>)
   const { toast } = useToast()
 
-  const columns = getColumns(isRoot)
+  async function changeStatus(userId: number, status: number) {
+    return await fetchData({
+      url: `/api/v1/users/${userId}/status`,
+      method: 'PUT',
+      bodyData: { status }
+    })
+  }
+
+  async function handleChangeStatus(userId: number, enabled: boolean) {
+    const newStatus = enabled ? 0 : 1
+
+    const { status, error } = await changeStatus(userId, newStatus)
+
+    if (status === 204) {
+      let updatedUsername = ''
+
+      const newUsers = users.map((prevUser) => {
+        if (prevUser.id === userId) {
+          prevUser.status = newStatus
+          prevUser.updatedAt = format(Date.now(), 'yyyy-MM-dd HH:mm:ss')
+
+          updatedUsername = prevUser.username
+        }
+
+        return prevUser
+      })
+
+      updateUsers({
+        list: newUsers,
+        pageNum,
+        pageSize,
+        total
+      })
+
+      toast({
+        title: '更新账号状态成功',
+        description: (
+          <span>
+            {!enabled ? '启用' : '禁用'} <Code>{updatedUsername}</Code> 账号
+          </span>
+        )
+      })
+      return
+    }
+
+    toast({
+      title: '更新账号状态失败',
+      description: error,
+      variant: 'destructive'
+    })
+  }
+
+  async function deleteUser(userId: number) {
+    return await fetchData({
+      url: `/api/v1/users/${userId}`,
+      method: 'DELETE'
+    })
+  }
+
+  async function handleDeleteUser(userId: number, username: string) {
+    const { status, error } = await deleteUser(userId)
+
+    if (status === 204) {
+      const newUsers = users.filter((prevUser) => prevUser.id !== userId)
+
+      updateUsers({
+        list: newUsers,
+        pageNum,
+        pageSize,
+        total: total - 1
+      })
+
+      toast({
+        title: '删除用户成功',
+        description: (
+          <span>
+            成功删除用户 <Code>{username}</Code>
+          </span>
+        )
+      })
+      return
+    }
+
+    toast({
+      title: '删除用户失败',
+      description: error,
+      variant: 'destructive'
+    })
+  }
 
   function getColumns(isRoot: boolean) {
     const columns: ColumnDef<User>[] = [
@@ -132,7 +221,7 @@ function UserTable({
           return (
             <Switch
               checked={enabled}
-              disabled={updating}
+              disabled={submitting}
               onCheckedChange={() => handleChangeStatus(user.id, enabled)}
             />
           )
@@ -201,7 +290,7 @@ function UserTable({
           return (
             /* `model=false`（启用与外部元素的交互）很重要，否则内部对话框焦点不可用 */
             <DropdownMenu modal={false}>
-              <DropdownMenuTrigger asChild disabled={updating}>
+              <DropdownMenuTrigger asChild disabled={submitting}>
                 <Button variant="ghost" className="h-8 w-8 p-0">
                   <MoreHorizontal className="h-4 w-4" />
                 </Button>
@@ -264,7 +353,7 @@ function UserTable({
                           </DialogDescription>
                         </DialogHeader>
 
-                        <ResetPassword userId={user.id} username={user.username} />
+                        <ResetPassword userId={user.id} updateUsers={updateUsers} />
                       </DialogContent>
                     </Dialog>
                   </>
@@ -281,111 +370,10 @@ function UserTable({
     return columns.filter((column) => column.id !== '选择')
   }
 
-  async function handleChangeStatus(userId: number, enabled: boolean) {
-    const newStatus = enabled ? 0 : 1
-
-    setUpdating(true)
-
-    const response = await requestApi({
-      url: `/api/v1/users/${userId}/status`,
-      method: 'PUT',
-      bodyData: { status: newStatus }
-    })
-
-    setUpdating(false)
-
-    if (response.status === 204) {
-      let updatedUsername = ''
-
-      const newUsers = users.map((prevUser) => {
-        if (prevUser.id === userId) {
-          prevUser.status = newStatus
-
-          updatedUsername = prevUser.username
-        }
-
-        return prevUser
-      })
-
-      dispatch({
-        type: 'FETCH_SUCCESS',
-        payload: {
-          status: 200,
-          data: {
-            list: newUsers,
-            pageNum,
-            pageSize,
-            total
-          }
-        }
-      })
-
-      toast({
-        title: '更新账号状态成功',
-        description: (
-          <span>
-            {!enabled ? '启用' : '禁用'} <Code>{updatedUsername}</Code> 账号
-          </span>
-        )
-      })
-      return
-    }
-
-    toast({
-      title: '更新账号状态失败',
-      description: response.error,
-      variant: 'destructive'
-    })
-  }
-
-  async function handleDeleteUser(userId: number, username: string) {
-    setUpdating(true)
-
-    const response = await requestApi({
-      url: `/api/v1/users/${userId}`,
-      method: 'DELETE'
-    })
-
-    setUpdating(false)
-
-    if (response.status === 204) {
-      const newUsers = users.filter((prevUser) => prevUser.id !== userId)
-
-      dispatch({
-        type: 'FETCH_SUCCESS',
-        payload: {
-          status: 200,
-          data: {
-            list: newUsers,
-            pageNum,
-            pageSize,
-            total: total - 1
-          }
-        }
-      })
-
-      toast({
-        title: '删除用户成功',
-        description: (
-          <span>
-            成功删除用户 <Code>{username}</Code>
-          </span>
-        )
-      })
-      return
-    }
-
-    toast({
-      title: '删除用户失败',
-      description: response.error,
-      variant: 'destructive'
-    })
-  }
-
   return (
     <>
       <DataTable
-        columns={columns}
+        columns={getColumns(isRoot)}
         data={users}
         error={error}
         loading={loading}

@@ -1,6 +1,6 @@
 import { endNProgress, startNProgress } from '@/shared/utils/nprogress'
 
-const CUSTOM_HTTP_STATUS_ERROR_CODE = 999
+const ERROR_CODE = 999
 
 type ContentType = 'JSON' | 'URLENCODED' | 'FILE'
 
@@ -15,25 +15,17 @@ type ApiRequest = {
   bodyData?: Record<string, unknown> | FormData
 }
 
-type SuccessResponse<T> = {
+type ApiResponse<TData, TError> = {
   status: number
-  data: T | null
-  error: null
+  data?: TData
+  error?: TError | string
 }
-
-type ErrorResponse<T> = {
-  status: number
-  data: null
-  error: T | string
-}
-
-type ApiResponse<TData, TError> = SuccessResponse<TData> | ErrorResponse<TError>
 
 /**
  * 发送 HTTP 请求，并以 JSON 数据格式解析响应数据。
  *
- * <p>不建议使用 `signal` 实现主动取消请求，因为这只会不易于前端 F12 调试（看不到内容），而后端仍然会处理请求。
- * <br>前端要做的事应该只是忽略请求的结果，而非取消请求。
+ * <p>不建议使用 `signal`（`AbortController`）实现中途放弃请求，因为这只会不易于前端 F12 调试（看不到内容），而后端仍然会处理请求。
+ * <br>前端要做的事应该只是忽略请求的结果，而非中途放弃请求。
  *
  * @template TData - 成功响应时的数据类型
  * @template TError - 错误响应时的数据类型
@@ -99,38 +91,30 @@ async function sendRequest<TData, TError>({
 
     // 如果 HTTP 状态码为 204，表示请求成功，但无响应数据
     if (response.status === 204) {
-      return { status: response.status, data: null, error: null }
+      return { status: response.status }
     }
 
     // 以 JSON 数据格式解析请求
     const responseData = await response.json()
 
     // 请求失败时，返回异常响应数据
-    if (!response.ok) return { status: response.status, data: null, error: responseData }
+    if (!response.ok) return { status: response.status, error: responseData }
 
-    return { status: response.status, data: responseData, error: null }
+    return { status: response.status, data: responseData }
   } catch (error) {
     if (error instanceof Error && error.name === 'AbortError') {
       return {
-        status: CUSTOM_HTTP_STATUS_ERROR_CODE,
-        data: null,
-        error: '用户主动取消了请求'
+        status: ERROR_CODE,
+        error: '用户中途放弃了请求'
       }
     }
 
-    if (error instanceof Error)
-      return { status: CUSTOM_HTTP_STATUS_ERROR_CODE, data: null, error: error.message }
+    if (error instanceof Error) return { status: ERROR_CODE, error: error.message }
 
-    return { status: CUSTOM_HTTP_STATUS_ERROR_CODE, data: null, error: String(error) }
+    return { status: ERROR_CODE, error: String(error) }
   } finally {
     endNProgress()
   }
 }
 
-export {
-  CUSTOM_HTTP_STATUS_ERROR_CODE,
-  sendRequest,
-  type ApiRequest,
-  type ContentType,
-  type UrlParams
-}
+export { ERROR_CODE, sendRequest, type ApiRequest, type ContentType, type UrlParams }

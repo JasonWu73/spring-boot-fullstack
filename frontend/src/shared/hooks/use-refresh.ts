@@ -31,7 +31,7 @@ function useRefresh(callback: RefreshCallback) {
  *
  * @param callback - 刷新组件状态的回调函数，该回调函数可再返回清理函数
  */
-function useLoaded(callback: RefreshCallback) {
+function useInitial(callback: RefreshCallback) {
   const callbackRef = useSavedRef(callback)
 
   React.useEffect(() => {
@@ -41,4 +41,4 @@ function useLoaded(callback: RefreshCallback) {
   }, [callbackRef])
 }
 
-export { useLoaded, useRefresh }
+export { useInitial, useRefresh }

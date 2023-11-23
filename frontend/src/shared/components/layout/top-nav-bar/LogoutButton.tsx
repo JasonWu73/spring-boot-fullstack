@@ -1,21 +1,22 @@
 import { ReloadIcon } from '@radix-ui/react-icons'
 import { LogOut } from 'lucide-react'
-import React from 'react'
 
 import { useAuth } from '@/auth/AuthProvider'
 import { Button } from '@/shared/components/ui/Button'
+import { useFetch } from '@/shared/hooks/use-fetch'
 
 function LogoutButton() {
-  const [loading, setLoading] = React.useState(false)
+  const { requestApi, deleteAuth } = useAuth()
 
-  const { logout } = useAuth()
+  const { loading, fetchData } = useFetch(requestApi<void>)
 
   async function handleLogout() {
-    setLoading(true)
+    await fetchData({
+      url: '/api/v1/auth/logout',
+      method: 'DELETE'
+    })
 
-    await logout()
-
-    setLoading(false)
+    deleteAuth()
   }
 
   return (
