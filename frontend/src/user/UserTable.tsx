@@ -1,4 +1,4 @@
-import { type ColumnDef } from '@tanstack/react-table'
+import { type ColumnDef, type SortingState } from '@tanstack/react-table'
 import { MoreHorizontal } from 'lucide-react'
 import { Link, useSearchParams } from 'react-router-dom'
 
@@ -35,6 +35,8 @@ import { ResetPassword } from '@/user/ResetPassword'
 import type { User } from '@/user/UserListPage'
 import { format } from 'date-fns'
 
+type UpdateUsers = (users: SetDataAction<PaginationData<User>>) => void
+
 type UserTableProps = {
   users: User[]
   error?: string
@@ -45,7 +47,7 @@ type UserTableProps = {
   onPaginate: (paging: Paging) => void
   onSelect: (rowIndexes: number[]) => void
   onShowSelection: () => void
-  updateUsers: (users: SetDataAction<PaginationData<User>>) => void
+  updateUsers: UpdateUsers
 }
 
 function UserTable({
@@ -66,97 +68,8 @@ function UserTable({
   const { loading: submitting, fetchData } = useFetch(requestApi<void>)
   const { toast } = useToast()
 
-  async function changeStatus(userId: number, status: number) {
-    return await fetchData({
-      url: `/api/v1/users/${userId}/status`,
-      method: 'PUT',
-      bodyData: { status }
-    })
-  }
-
-  async function handleChangeStatus(userId: number, enabled: boolean) {
-    const newStatus = enabled ? 0 : 1
-
-    const { status, error } = await changeStatus(userId, newStatus)
-
-    if (status === 204) {
-      let updatedUsername = ''
-
-      const newUsers = users.map((prevUser) => {
-        if (prevUser.id === userId) {
-          prevUser.status = newStatus
-          prevUser.updatedAt = format(Date.now(), 'yyyy-MM-dd HH:mm:ss')
-
-          updatedUsername = prevUser.username
-        }
-
-        return prevUser
-      })
-
-      updateUsers({
-        list: newUsers,
-        pageNum,
-        pageSize,
-        total
-      })
-
-      toast({
-        title: '更新账号状态成功',
-        description: (
-          <span>
-            {!enabled ? '启用' : '禁用'} <Code>{updatedUsername}</Code> 账号
-          </span>
-        )
-      })
-      return
-    }
-
-    toast({
-      title: '更新账号状态失败',
-      description: error,
-      variant: 'destructive'
-    })
-  }
-
-  async function deleteUser(userId: number) {
-    return await fetchData({
-      url: `/api/v1/users/${userId}`,
-      method: 'DELETE'
-    })
-  }
-
-  async function handleDeleteUser(userId: number, username: string) {
-    const { status, error } = await deleteUser(userId)
-
-    if (status === 204) {
-      const newUsers = users.filter((prevUser) => prevUser.id !== userId)
-
-      updateUsers({
-        list: newUsers,
-        pageNum,
-        pageSize,
-        total: total - 1
-      })
-
-      toast({
-        title: '删除用户成功',
-        description: (
-          <span>
-            成功删除用户 <Code>{username}</Code>
-          </span>
-        )
-      })
-      return
-    }
-
-    toast({
-      title: '删除用户失败',
-      description: error,
-      variant: 'destructive'
-    })
-  }
-
-  function getColumns(isRoot: boolean) {
+  // 对话框不应该放在表格内部，否则会导致在表格刷新时（当刷新身份验证信息时）,对话框就会被关闭
+  function getColumns() {
     const columns: ColumnDef<User>[] = [
       {
         id: '选择',
@@ -186,9 +99,7 @@ function UserTable({
         id: '昵称',
         header: ({ column }) => <DataTableColumnHeader column={column} title="昵称" />,
         cell: ({ row }) => {
-          const user = row.original
-
-          return user.nickname
+          return row.original.nickname
         }
       },
       {
@@ -201,9 +112,7 @@ function UserTable({
           </DataTableColumnHeader>
         ),
         cell: ({ row }) => {
-          const user = row.original
-
-          return <Code>{user.username}</Code>
+          return <Code>{row.original.username}</Code>
         }
       },
       {
@@ -256,7 +165,7 @@ function UserTable({
                   )
                 }
 
-                return <Badge key={authority}>未知</Badge>
+                return null
               })}
             </div>
           )
@@ -324,9 +233,9 @@ function UserTable({
                         </DropdownMenuItem>
                       }
                       title={
-                        <>
+                        <span>
                           您确定要删除用户 <Code>{user.username}</Code> 吗？
-                        </>
+                        </span>
                       }
                       onConfirm={() => handleDeleteUser(user.id, user.username)}
                     />
@@ -370,10 +279,107 @@ function UserTable({
     return columns.filter((column) => column.id !== '选择')
   }
 
+  async function handleChangeStatus(userId: number, enabled: boolean) {
+    const newStatus = enabled ? 0 : 1
+
+    const { status, error } = await fetchData({
+      url: `/api/v1/users/${userId}/status`,
+      method: 'PUT',
+      bodyData: { status: newStatus }
+    })
+
+    if (status === 204) {
+      let username = ''
+
+      updateUsers((prePaging) => {
+        const newUsers = prePaging.list.map((prevUser) => {
+          if (prevUser.id === userId) {
+            prevUser.status = newStatus
+            prevUser.updatedAt = format(Date.now(), 'yyyy-MM-dd HH:mm:ss')
+            username = prevUser.username
+          }
+
+          return prevUser
+        })
+
+        return {
+          ...prePaging,
+          list: newUsers
+        }
+      })
+
+      toast({
+        title: '更新账号状态成功',
+        description: (
+          <span>
+            {!enabled ? '启用' : '禁用'} <Code>{username}</Code> 账号
+          </span>
+        )
+      })
+      return
+    }
+
+    toast({
+      title: '更新账号状态失败',
+      description: error,
+      variant: 'destructive'
+    })
+  }
+
+  async function handleDeleteUser(userId: number, username: string) {
+    const { status, error } = await fetchData({
+      url: `/api/v1/users/${userId}`,
+      method: 'DELETE'
+    })
+
+    if (status === 204) {
+      updateUsers((prevPaging) => {
+        const newUsers = prevPaging.list.filter((prevUser) => prevUser.id !== userId)
+
+        return {
+          ...prevPaging,
+          list: newUsers,
+          total: prevPaging.total - 1
+        }
+      })
+
+      toast({
+        title: '删除用户成功',
+        description: (
+          <span>
+            成功删除用户 <Code>{username}</Code>
+          </span>
+        )
+      })
+      return
+    }
+
+    toast({
+      title: '删除用户失败',
+      description: error,
+      variant: 'destructive'
+    })
+  }
+
+  const handleSorting = (sorting: SortingState) => {
+    searchParams.delete('createdAt')
+    searchParams.delete('updatedAt')
+
+    const orderBy = sorting[0]?.id === '更新时间' ? 'updatedAt' : 'createdAt'
+    const order = sorting[0]?.desc === true ? 'desc' : 'asc'
+
+    if (!orderBy) return
+
+    searchParams.set(URL_QUERY_KEY_ORDER_BY, orderBy)
+    searchParams.set(URL_QUERY_KEY_ORDER, order)
+
+    setSearchParams(searchParams)
+  }
+
   return (
     <>
       <DataTable
-        columns={getColumns(isRoot)}
+        columns={getColumns()}
         data={users}
         error={error}
         loading={loading}
@@ -390,20 +396,7 @@ function UserTable({
               : '创建时间',
           desc: searchParams.get(URL_QUERY_KEY_ORDER) !== 'asc'
         }}
-        onSorting={(sorting) => {
-          searchParams.delete('createdAt')
-          searchParams.delete('updatedAt')
-
-          const orderBy = sorting[0]?.id === '更新时间' ? 'updatedAt' : 'createdAt'
-          const order = sorting[0]?.desc === true ? 'desc' : 'asc'
-
-          if (!orderBy) return
-
-          searchParams.set(URL_QUERY_KEY_ORDER_BY, orderBy)
-          searchParams.set(URL_QUERY_KEY_ORDER, order)
-
-          setSearchParams(searchParams)
-        }}
+        onSorting={handleSorting}
         enableRowSelection
         onSelect={onSelect}
       >
