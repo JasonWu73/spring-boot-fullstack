@@ -116,8 +116,8 @@ function AuthProvider({ children }: AuthProviderProps) {
     }
 
     // 检查是否需要刷新访问令牌
-    // 这里为了测试目的，故意设置离过期时间小于 29 分时就刷新访问令牌
-    if (expiresAt - Date.now() < 29 * 60 * 1000) {
+    // 这里为了测试目的，故意设置离过期时间小于 29 分 55 秒时就刷新访问令牌，即 5 秒后刷新
+    if (expiresAt - Date.now() < (30 * 60 - 5) * 1000) {
       const { status, data, error } = await requestBackendApi<AuthResponse>({
         url: `/api/v1/auth/refresh/${refreshToken}`,
         method: 'POST',

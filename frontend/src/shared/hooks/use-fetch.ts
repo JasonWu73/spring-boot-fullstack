@@ -119,6 +119,7 @@ function useFetch<T>(
     // 防止重复提交（React Strict Mode）
     const prevRequest = prevFetchRef.current
 
+    // 两次相同的请求至少要间隔 50 毫秒
     if (
       prevRequest &&
       prevRequest.url === request.url &&

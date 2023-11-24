@@ -40,34 +40,15 @@ function LoginPage() {
       password: ''
     }
   })
-
   const location = useLocation()
 
   const { auth, requestApi, setAuth } = useAuth()
-  const { toast } = useToast()
-
   const { loading, fetchData } = useFetch(requestApi<AuthResponse>)
+  const { toast } = useToast()
 
   const targetUrl = location.state?.from || DEFAULT_REDIRECT_URL
 
   if (auth) return <Navigate to={targetUrl} replace />
-
-  async function onSubmit(values: FormSchema) {
-    const { data, error } = await login(values.username, values.password)
-
-    if (error) {
-      toast({
-        title: '登录失败',
-        description: error,
-        variant: 'destructive'
-      })
-      return
-    }
-
-    setAuth(data!)
-
-    return <Navigate to={targetUrl} replace />
-  }
 
   async function login(username: string, password: string) {
     return await fetchData({
@@ -80,13 +61,31 @@ function LoginPage() {
     })
   }
 
+  async function onSubmit(values: FormSchema) {
+    const { data, error } = await login(values.username, values.password)
+
+    if (error) {
+      toast({
+        title: '登录失败',
+        description: error,
+        variant: 'destructive'
+      })
+
+      return
+    }
+
+    setAuth(data!)
+
+    return <Navigate to={targetUrl} replace />
+  }
+
   return (
     <Card className="mx-auto mt-8 w-96 md:w-[22rem] lg:w-[30rem]">
       <CardHeader>
         <CardTitle>登录</CardTitle>
         <CardDescription className="flex items-center text-green-500 dark:text-green-600">
           <ShieldPlus className="mr-1 h-4 w-4" />
-          支持用户名和密码加密传输
+          用户名和密码进行加密传输，且不会被保存在本地
         </CardDescription>
       </CardHeader>
 

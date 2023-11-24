@@ -28,9 +28,6 @@ function RandomProductPage() {
   // 成功获取商品的次数
   const [count, setCount] = React.useState(0)
 
-  const randomId = Math.floor(Math.random() * 110)
-  const url = `/products/${randomId}`
-
   const {
     data: product,
     loading,
@@ -38,6 +35,9 @@ function RandomProductPage() {
     fetchData,
     discardFetch
   } = useFetch(requestApi<Product>)
+
+  const randomId = Math.floor(Math.random() * 110)
+  const url = `/products/${randomId}`
 
   useRefresh(() => {
     const timestamp = Date.now()
@@ -62,7 +62,7 @@ function RandomProductPage() {
 
         {!loading && error && <Title label={error} isError />}
 
-        {!loading && error && product && (
+        {!loading && !error && product && (
           <Title label={`${product.id} - ${product.title}`} />
         )}
       </div>

@@ -18,8 +18,13 @@ function useRefresh(callback: RefreshCallback) {
   const location = useLocation()
 
   const callbackRef = useSavedRef(callback)
+  const prevTimestamp = React.useRef<number>()
 
   React.useEffect(() => {
+    if (!!prevTimestamp.current && Date.now() - prevTimestamp.current < 1_000) return
+
+    prevTimestamp.current = Date.now()
+
     const cleanup = callbackRef.current()
 
     return () => cleanup && cleanup()
