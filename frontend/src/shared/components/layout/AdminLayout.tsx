@@ -8,7 +8,7 @@ import { usePanelFold } from '@/shared/components/layout/panel-fold/PanelFoldPro
 import { SpinnerFullPage } from '@/shared/components/ui/SpinnerFullPage'
 import { cn } from '@/shared/utils/helpers'
 
-export default function AdminLayout() {
+function AdminLayout() {
   const { folded } = usePanelFold()
 
   return (
@@ -29,3 +29,5 @@ export default function AdminLayout() {
     </div>
   )
 }
+
+export default AdminLayout

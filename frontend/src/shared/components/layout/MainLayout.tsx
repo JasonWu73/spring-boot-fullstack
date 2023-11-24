@@ -5,7 +5,7 @@ import { Footer } from '@/shared/components/layout/Footer'
 import { Header } from '@/shared/components/layout/Header'
 import { SpinnerFullPage } from '@/shared/components/ui/SpinnerFullPage'
 
-export default function MainLayout() {
+function MainLayout() {
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
@@ -20,3 +20,5 @@ export default function MainLayout() {
     </div>
   )
 }
+
+export default MainLayout

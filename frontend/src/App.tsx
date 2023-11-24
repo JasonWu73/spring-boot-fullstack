@@ -89,7 +89,7 @@ const router = createBrowserRouter([
   }
 ])
 
-export default function App() {
+function App() {
   return (
     <>
       <ThemeProvider defaultTheme="system" storageKey="demo-ui-theme">
@@ -104,3 +104,5 @@ export default function App() {
     </>
   )
 }
+
+export default App

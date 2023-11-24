@@ -30,7 +30,7 @@ const formSchema = z.object({
 
 type FormSchema = z.infer<typeof formSchema>
 
-export default function LoginPage() {
+function LoginPage() {
   useTitle('登录')
 
   const form = useForm<FormSchema>({
@@ -127,3 +127,5 @@ export default function LoginPage() {
     </Card>
   )
 }
+
+export default LoginPage

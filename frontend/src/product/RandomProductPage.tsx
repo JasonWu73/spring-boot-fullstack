@@ -22,7 +22,7 @@ type Product = {
   images: string[]
 }
 
-export default function RandomProductPage() {
+function RandomProductPage() {
   useTitle('随机商品')
 
   // 成功获取商品的次数
@@ -105,3 +105,5 @@ type TitleProps = {
 function Title({ label, isError = false }: TitleProps) {
   return <h1 className={cn(isError && 'text-red-500 dark:text-red-600')}>{label}</h1>
 }
+
+export default RandomProductPage
