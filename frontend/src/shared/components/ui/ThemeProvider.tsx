@@ -30,20 +30,9 @@ function ThemeProvider({
     () => (localStorage.getItem(storageKey) as Theme) || defaultTheme
   )
 
-  React.useEffect(() => {
-    resetTheme()
-    if (theme !== 'system') return applyTheme(theme)
+  useResetTheme(theme)
 
-    const darkQuery = window.matchMedia('(prefers-color-scheme: dark)')
-    const selectedTheme = darkQuery.matches ? 'dark' : 'light'
-    applyTheme(selectedTheme)
-
-    darkQuery.addEventListener('change', handleToggleTheme)
-
-    return () => darkQuery.removeEventListener('change', handleToggleTheme)
-  }, [theme])
-
-  const value = {
+  const value: ThemeProviderState = {
     theme,
     setTheme: (theme: Theme) => {
       localStorage.setItem(storageKey, theme)
@@ -63,14 +52,34 @@ function ThemeProvider({
  */
 function useTheme() {
   const context = React.useContext(ThemeProviderContext)
+
   if (context === undefined) {
     throw new Error('useTheme 必须在 ThemeProvider 中使用')
   }
+
   return context
+}
+
+function useResetTheme(theme: Theme) {
+  React.useEffect(() => {
+    resetTheme()
+
+    if (theme !== 'system') return applyTheme(theme)
+
+    const darkQuery = window.matchMedia('(prefers-color-scheme: dark)')
+    const selectedTheme = darkQuery.matches ? 'dark' : 'light'
+
+    applyTheme(selectedTheme)
+
+    darkQuery.addEventListener('change', handleToggleTheme)
+
+    return () => darkQuery.removeEventListener('change', handleToggleTheme)
+  }, [theme])
 }
 
 function handleToggleTheme(darkMatchEvent: MediaQueryListEvent) {
   resetTheme()
+
   if (darkMatchEvent.matches) return applyTheme('dark')
 
   applyTheme('light')

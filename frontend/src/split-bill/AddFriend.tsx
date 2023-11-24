@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui
 import { FormCalendar, FormInput } from '@/shared/components/ui/CustomFormField'
 import { Form } from '@/shared/components/ui/Form'
 import { useTitle } from '@/shared/hooks/use-title'
-import { useFriends, type Friend } from '@/split-bill/FriendProvider'
+import { useFriends } from '@/split-bill/FriendProvider'
 
 const formSchema = z.object({
   name: z.string().min(1, '必须输入姓名').trim(),
@@ -20,32 +20,36 @@ const formSchema = z.object({
 
 type FormSchema = z.infer<typeof formSchema>
 
+const defaultValues = {
+  name: '',
+  image: 'https://i.pravatar.cc/150',
+  birthday: undefined
+}
+
 function AddFriend() {
   useTitle('添加好友')
 
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: '',
-      image: 'https://i.pravatar.cc/150',
-      birthday: undefined
-    }
+    defaultValues
   })
+
   const { dispatch } = useFriends()
 
   function onSubmit(values: FormSchema) {
     const newId = Date.now()
 
-    const newFriend: Friend = {
-      id: newId,
-      name: values.name,
-      image: `${values.image}?u=${newId}`,
-      birthday: format(values.birthday, 'yyyy-MM-dd'),
-      balance: 0,
-      creditRating: 0
-    }
-
-    dispatch({ type: 'ADD_FRIEND', payload: newFriend })
+    dispatch({
+      type: 'ADD_FRIEND',
+      payload: {
+        id: newId,
+        name: values.name,
+        image: `${values.image}?u=${newId}`,
+        birthday: format(values.birthday, 'yyyy-MM-dd'),
+        balance: 0,
+        creditRating: 0
+      }
+    })
 
     dispatch({ type: 'SHOW_ADD_FRIEND_FORM', payload: false })
   }

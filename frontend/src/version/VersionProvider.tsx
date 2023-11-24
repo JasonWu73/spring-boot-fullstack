@@ -31,17 +31,17 @@ function VersionProvider({ children }: VersionProviderProps) {
   useInitial(() => {
     const timestamp = Date.now()
 
-    getVersion().then()
+    getVersion().then(({ data }) => {
+      if (data) {
+        setVersion(data)
+      }
+    })
 
     return () => discardFetch({ url: url }, timestamp)
   })
 
   async function getVersion() {
-    const { data } = await fetchData({ url: url })
-
-    if (data) {
-      setVersion(data)
-    }
+    return await fetchData({ url: url })
   }
 
   const value: VersionProviderState = {
@@ -60,9 +60,11 @@ function VersionProvider({ children }: VersionProviderProps) {
 
 function useVersion() {
   const context = React.useContext(VersionProviderContext)
+
   if (context === undefined) {
     throw new Error('useVersion 必须在 VersionProvider 中使用')
   }
+
   return context
 }
 

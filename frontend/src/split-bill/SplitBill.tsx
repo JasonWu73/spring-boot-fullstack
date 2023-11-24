@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import React from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, type UseFormReturn } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
 import { z } from 'zod'
 
@@ -29,7 +29,7 @@ import { wait } from '@/shared/utils/helpers'
 import type { ApiRequest } from '@/shared/utils/http'
 import { endNProgress, startNProgress } from '@/shared/utils/nprogress'
 import { getFriendsFromStorage, useFriends } from '@/split-bill/FriendProvider'
-import { SplitBillError } from '@/split-bill/SplitBillError'
+import { ExclamationTriangleIcon } from '@radix-ui/react-icons'
 
 const whoIsPayingOptions = [
   { value: 'user', label: '您' },
@@ -74,35 +74,26 @@ const formSchema = z
 
 type FormSchema = z.infer<typeof formSchema>
 
+const defaultValues = {
+  bill: 0,
+  userExpense: 0,
+  friendExpense: 0,
+  whoIsPaying: whoIsPayingOptions[0].value
+}
+
 function SplitBill() {
   useTitle('分摊账单')
 
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      bill: 0,
-      userExpense: 0,
-      friendExpense: 0,
-      whoIsPaying: whoIsPayingOptions[0].value
-    }
+    defaultValues
   })
+  const params = useParams()
+  const navigate = useNavigate()
 
-  // 更新好友的花费
-  const watchedBill = form.watch('bill')
-  const watchedUserExpense = form.watch('userExpense')
+  const friendId = Number(params.friendId)
 
-  React.useEffect(() => {
-    // 虽然通过 `Zod` 的校验最终从 `handleSubmit` 得到的是 `number`，但在这里的值仍然是 `string`，所以需要转换
-    const bill = Number(watchedBill)
-    const userExpense = Number(watchedUserExpense)
-    if (userExpense > bill) return
-
-    form.setValue('friendExpense', Number((bill - userExpense).toFixed(2)))
-  }, [watchedBill, watchedUserExpense, form])
-
-  const { friendId } = useParams()
-
-  const id = Number(friendId)
+  useWatchFriendExpense(form) // 更新好友的费用
 
   const {
     data: friend,
@@ -115,28 +106,29 @@ function SplitBill() {
 
   useRefresh(() => {
     form.reset()
-    getFriend().then()
+
+    getFriend().then(({ data, error }) => {
+      if (error) {
+        dispatch({ type: 'SELECT_FRIEND', payload: null })
+
+        return
+      }
+
+      if (data) {
+        dispatch({ type: 'SELECT_FRIEND', payload: data })
+      }
+    })
   })
 
   async function getFriend() {
-    const { data, error } = await fetchData({ url: '/fake', urlParams: { id } })
-
-    if (data) {
-      dispatch({ type: 'SELECT_FRIEND', payload: data })
-    }
-
-    if (error) {
-      dispatch({ type: 'SELECT_FRIEND', payload: null })
-    }
+    return await fetchData({ url: '/fake', urlParams: { id: friendId } })
   }
-
-  const navigate = useNavigate()
 
   function onSubmit(values: FormSchema) {
     const expense =
       values.whoIsPaying === 'user' ? -values.friendExpense : values.userExpense
 
-    dispatch({ type: 'SPLIT_BILL', payload: { id, expense } })
+    dispatch({ type: 'SPLIT_BILL', payload: { id: friendId, expense } })
 
     navigate(`/split-bill${window.location.search}`, {
       state: { noRefresh: true }
@@ -144,7 +136,7 @@ function SplitBill() {
   }
 
   function handleCreditRating(creditRating: number) {
-    dispatch({ type: 'RATE_CREDIT_RANK', payload: { id, creditRating } })
+    dispatch({ type: 'RATE_CREDIT_RANK', payload: { id: friendId, creditRating } })
   }
 
   async function getFriendFakeApi(params: ApiRequest) {
@@ -173,7 +165,7 @@ function SplitBill() {
 
   return (
     <Card className="w-96 bg-amber-100 text-slate-700 dark:bg-amber-100 dark:text-slate-700 md:w-[22rem] lg:w-[30rem]">
-      {loading && <Formkeleton />}
+      {loading && <FormSkeleton />}
 
       {!loading && error && <SplitBillError message={error} />}
 
@@ -266,7 +258,7 @@ function SplitBill() {
   )
 }
 
-function Formkeleton() {
+function FormSkeleton() {
   return (
     <>
       <CardHeader>
@@ -291,6 +283,38 @@ function Formkeleton() {
       </CardContent>
     </>
   )
+}
+
+type ErrorProps = {
+  message: string
+}
+
+function SplitBillError({ message }: ErrorProps) {
+  return (
+    <CardHeader>
+      <CardTitle className="flex items-center gap-1 text-red-500">
+        <ExclamationTriangleIcon className="h-4 w-4" />
+        <span className="h-5">分摊账单出错</span>
+      </CardTitle>
+      <CardDescription>{message}</CardDescription>
+    </CardHeader>
+  )
+}
+
+function useWatchFriendExpense(form: UseFormReturn<FormSchema>) {
+  const watchedBill = form.watch('bill')
+  const watchedUserExpense = form.watch('userExpense')
+
+  React.useEffect(() => {
+    // 虽然通过 `Zod` 的校验最终从 `handleSubmit` 得到的是 `number`
+    // 但在这里的值仍然是 `string`，所以需要转换
+    const bill = Number(watchedBill)
+    const userExpense = Number(watchedUserExpense)
+
+    if (userExpense > bill) return
+
+    form.setValue('friendExpense', Number((bill - userExpense).toFixed(2)))
+  }, [watchedBill, watchedUserExpense, form])
 }
 
 // 为测试校验, 添加一个不在 options 中的值

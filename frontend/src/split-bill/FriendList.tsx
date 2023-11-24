@@ -11,30 +11,30 @@ import { Separator } from '@/shared/components/ui/Separator'
 import { useToast } from '@/shared/components/ui/use-toast'
 import { useFetch } from '@/shared/hooks/use-fetch'
 import { useRefresh } from '@/shared/hooks/use-refresh'
+import { useTitle } from '@/shared/hooks/use-title'
 import { URL_QUERY_KEY_QUERY } from '@/shared/utils/constants'
 import { FriendItem } from '@/split-bill/FriendItem'
 import { useFriends, type Friend } from '@/split-bill/FriendProvider'
 import { FriendSearch } from '@/split-bill/FriendSearch'
 
 function FriendList() {
+  useTitle('好友列表')
+
   const [searchParams] = useSearchParams()
   const location = useLocation()
   const navigate = useNavigate()
 
   const { friends, dispatch } = useFriends()
+  const { error, loading, fetchData, discardFetch } = useFetch(requestApi<Friend[]>)
   const { toast } = useToast()
 
-  const url = '/data/friends.json'
-
-  const { error, loading, fetchData, discardFetch } = useFetch(requestApi<Friend[]>)
-
   const nameQuery = searchParams.get(URL_QUERY_KEY_QUERY) || ''
-
   const filteredFriends = nameQuery
-    ? friends?.filter((friend) =>
+    ? friends.filter((friend) =>
         friend.name.toLowerCase().includes(nameQuery.toLowerCase())
       )
     : friends
+  const url = '/data/friends.json'
 
   useRefresh(() => {
     if (location.state?.noRefresh === true) {
@@ -50,21 +50,23 @@ function FriendList() {
 
     const timestamp = Date.now()
 
-    getFriends().then()
+    getFriends().then(({ data, error }) => {
+      if (error) {
+        dispatch({ type: 'SET_FRIENDS', payload: [] })
+
+        return
+      }
+
+      if (data) {
+        dispatch({ type: 'SET_FRIENDS', payload: data })
+      }
+    })
 
     return () => discardFetch({ url }, timestamp)
   })
 
   async function getFriends() {
-    const { data, error } = await fetchData({ url })
-
-    if (data) {
-      dispatch({ type: 'SET_FRIENDS', payload: data })
-    }
-
-    if (error) {
-      dispatch({ type: 'SET_FRIENDS', payload: [] })
-    }
+    return await fetchData({ url })
   }
 
   function handleDeleteFriend(friend: Friend) {

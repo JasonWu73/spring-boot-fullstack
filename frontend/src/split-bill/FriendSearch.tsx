@@ -7,8 +7,9 @@ import { URL_QUERY_KEY_QUERY } from '@/shared/utils/constants'
 
 function FriendSearch() {
   const inputRef = React.useRef<HTMLInputElement | null>(null)
-
   const [searchParams, setSearchParams] = useSearchParams()
+  const navigate = useNavigate()
+
   const name = searchParams.get(URL_QUERY_KEY_QUERY) || ''
 
   useKeypress({ key: '\\', modifiers: ['ctrlKey'] }, () => {
@@ -17,10 +18,14 @@ function FriendSearch() {
     inputRef.current?.focus()
   })
 
-  const navigate = useNavigate()
-
   function handleSearch(event: React.ChangeEvent<HTMLInputElement>) {
-    searchParams.set(URL_QUERY_KEY_QUERY, event.target.value)
+    searchParams.delete(URL_QUERY_KEY_QUERY)
+
+    const nameQuery = event.target.value
+
+    if (nameQuery) {
+      searchParams.set(URL_QUERY_KEY_QUERY, nameQuery)
+    }
 
     return setSearchParams(searchParams, {
       replace: true,

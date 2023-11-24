@@ -16,18 +16,7 @@ type PanelFoldProviderProps = {
 function PanelFoldProvider({ children }: PanelFoldProviderProps) {
   const [folded, setFolded] = React.useState(false)
 
-  React.useEffect(() => {
-    const largeScreen = window.matchMedia('(max-width: 1024px)')
-    largeScreen.matches && setFolded(true)
-
-    function handleScreenChange(largeScreenMatchEvent: MediaQueryListEvent) {
-      setFolded(largeScreenMatchEvent.matches)
-    }
-
-    largeScreen.addEventListener('change', handleScreenChange)
-
-    return () => largeScreen.removeEventListener('change', handleScreenChange)
-  }, [setFolded])
+  useScreenChange(setFolded)
 
   const value: PanelFoldProviderState = {
     folded,
@@ -43,10 +32,30 @@ function PanelFoldProvider({ children }: PanelFoldProviderProps) {
 
 function usePanelFold() {
   const context = React.useContext(PanelFoldProviderContext)
+
   if (context === undefined) {
     throw new Error('usePanelFold 必须在 PanelFoldProvider 中使用')
   }
+
   return context
+}
+
+function useScreenChange(setFolded: React.Dispatch<React.SetStateAction<boolean>>) {
+  React.useEffect(() => {
+    const largeScreen = window.matchMedia('(max-width: 1024px)')
+
+    if (largeScreen.matches) {
+      setFolded(true)
+    }
+
+    function handleScreenChange(largeScreenMatchEvent: MediaQueryListEvent) {
+      setFolded(largeScreenMatchEvent.matches)
+    }
+
+    largeScreen.addEventListener('change', handleScreenChange)
+
+    return () => largeScreen.removeEventListener('change', handleScreenChange)
+  }, [setFolded])
 }
 
 export { PanelFoldProvider, usePanelFold }

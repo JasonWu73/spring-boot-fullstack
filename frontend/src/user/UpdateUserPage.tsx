@@ -57,8 +57,10 @@ function UpdateUserPage() {
     resolver: zodResolver(formSchema),
     defaultValues
   })
-  const { userId } = useParams()
+  const params = useParams()
   const navigate = useNavigate()
+
+  const userId = Number(params.userId)
 
   const { requestApi } = useAuth()
   const {

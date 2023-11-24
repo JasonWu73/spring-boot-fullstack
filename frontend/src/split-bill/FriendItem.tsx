@@ -19,12 +19,12 @@ type FriendItemProps = {
 }
 
 function FriendItem({ friend, onDeleteFriend }: FriendItemProps) {
-  const { friendId } = useParams()
-
-  const selectedFriendId = Number(friendId)
-  const selected = friend.id === selectedFriendId
+  const params = useParams()
 
   const { dispatch } = useFriends()
+
+  const friendId = Number(params.friendId)
+  const selected = friend.id === friendId
 
   function handleToggleSelect() {
     dispatch({

@@ -15,8 +15,8 @@ import {
 import { buttonVariants } from '@/shared/components/ui/Button'
 
 type ConfirmDialogProps = {
-  open: boolean
-  onOpenChange: (open: boolean) => void
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
   trigger?: React.ReactNode | string
   title: React.ReactNode | string
   onConfirm: () => void

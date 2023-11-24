@@ -13,9 +13,7 @@ type Friend = {
 
 type FriendProviderState = {
   friends: Friend[]
-
   showAddFriend: boolean
-
   dispatch: React.Dispatch<Action>
 }
 
@@ -98,6 +96,7 @@ function reducer(state: State, action: Action) {
 
         return friend
       })
+
       localStorage.setItem(STORAGE_KEY, JSON.stringify(friends))
 
       return {
@@ -113,6 +112,7 @@ function reducer(state: State, action: Action) {
 
         return f
       })
+
       localStorage.setItem(STORAGE_KEY, JSON.stringify(friends))
 
       return {
@@ -135,9 +135,7 @@ function FriendProvider({ children }: FriendProviderProps) {
 
   const value: FriendProviderState = {
     friends,
-
     showAddFriend,
-
     dispatch
   }
 
@@ -150,9 +148,11 @@ function FriendProvider({ children }: FriendProviderProps) {
 
 function useFriends() {
   const context = React.useContext(FriendProviderContext)
+
   if (context === undefined) {
     throw new Error('useFriends 必须在 FriendProvider 中使用')
   }
+
   return context
 }
 

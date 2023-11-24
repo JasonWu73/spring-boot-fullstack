@@ -21,9 +21,9 @@ const AddFriend = React.lazy(() =>
 function SplitBillPage() {
   useTitle('分摊账单')
 
-  const { showAddFriend, dispatch } = useFriends()
-
   const navigate = useNavigate()
+
+  const { showAddFriend, dispatch } = useFriends()
 
   useKeypress({ key: 'Escape' }, () => {
     dispatch({ type: 'SHOW_ADD_FRIEND_FORM', payload: false })
