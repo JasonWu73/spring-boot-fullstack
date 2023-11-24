@@ -4,6 +4,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Input } from '@/shared/components/ui/Input'
 import { useKeypress } from '@/shared/hooks/use-keypress'
 import { URL_QUERY_KEY_QUERY } from '@/shared/utils/constants'
+import ShortcutTip from '@/split-bill/ShortcutTip'
 
 function FriendSearch() {
   const inputRef = React.useRef<HTMLInputElement | null>(null)
@@ -41,14 +42,18 @@ function FriendSearch() {
   }
 
   return (
-    <Input
-      value={name}
-      onChange={handleSearch}
-      onFocus={handleFocus}
-      ref={inputRef}
-      placeholder="搜索好友..."
-      className="mb-4 dark:border-amber-500"
-    />
+    <>
+      <ShortcutTip />
+
+      <Input
+        value={name}
+        onChange={handleSearch}
+        onFocus={handleFocus}
+        ref={inputRef}
+        placeholder="搜索好友..."
+        className="my-4 dark:border-amber-500"
+      />
+    </>
   )
 }
 
