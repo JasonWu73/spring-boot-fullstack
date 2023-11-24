@@ -18,7 +18,7 @@ type Action<T> =
   | { type: 'START_LOADING' }
   | { type: 'FETCH_SUCCESS'; payload: { status: number; data?: T } }
   | { type: 'FETCH_FAILED'; payload: { status: number; error?: string } }
-  | { type: 'UPDATE_DATA'; payload: { data?: T } }
+  | { type: 'UPDATE_STATE'; payload: State<T> }
 
 function reducer<T>(state: State<T>, action: Action<T>): State<T> {
   switch (action.type) {
@@ -50,11 +50,11 @@ function reducer<T>(state: State<T>, action: Action<T>): State<T> {
       }
     }
 
-    // 用于后端 API 请求成功后，对前端的数据更新
-    case 'UPDATE_DATA': {
+    // 用于后端 API 请求后，对前端的数据更新
+    case 'UPDATE_STATE': {
       return {
         ...state,
-        data: action.payload.data
+        ...action.payload
       }
     }
 
@@ -70,7 +70,7 @@ type FetchResponse<T> = {
   error?: string
 }
 
-type SetDataAction<T> = T | ((prevData: T) => T)
+type SetStateAction<T> = State<T> | ((prevState: State<T>) => State<T>)
 
 type UseFetch<T> = {
   status: number
@@ -79,7 +79,7 @@ type UseFetch<T> = {
   loading: boolean
   fetchData: (params: ApiRequest) => Promise<FetchResponse<T>>
   discardFetch: (params: DiscardRequestParams, timestamp: number) => void
-  updateData: (data: SetDataAction<T>) => void
+  updateState: (state: SetStateAction<T>) => void
 }
 
 type Method = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'
@@ -105,12 +105,13 @@ type DiscardRequestParams = { url: string; method?: Method }
 function useFetch<T>(
   callback: (params: ApiRequest) => Promise<FetchResponse<T>>
 ): UseFetch<T> {
-  const [{ status, data, error, loading }, dispatch] = React.useReducer(
+  const [state, dispatch] = React.useReducer(
     reducer as React.Reducer<State<T>, Action<T>>,
     initialState as State<T>
   )
-
   const prevFetchRef = React.useRef<PrevFetch | null>(null)
+
+  const { status, data, error, loading } = state
 
   async function fetchData(request: ApiRequest): Promise<FetchResponse<T>> {
     dispatch({ type: 'START_LOADING' })
@@ -153,27 +154,26 @@ function useFetch<T>(
     prevFetchRef.current = { url, method, timestamp }
   }
 
-  function updateData(newData: SetDataAction<T>) {
-    if (typeof newData === 'function') {
-      const updater = newData as (prevData: T) => T
-
-      const updatedData = updater(data!)
+  function updateState(newState: SetStateAction<T>) {
+    if (typeof newState === 'function') {
+      const updater = newState as (prevData: State<T>) => State<T>
+      const updatedState = updater(state)
 
       dispatch({
-        type: 'UPDATE_DATA',
-        payload: { data: updatedData }
+        type: 'UPDATE_STATE',
+        payload: updatedState
       })
 
       return
     }
 
     dispatch({
-      type: 'UPDATE_DATA',
-      payload: { data: newData }
+      type: 'UPDATE_STATE',
+      payload: newState
     })
   }
 
-  return { status, data, error, loading, fetchData, discardFetch, updateData }
+  return { status, data, error, loading, fetchData, discardFetch, updateState }
 }
 
-export { useFetch, type Action, type FetchResponse, type SetDataAction }
+export { useFetch, type Action, type FetchResponse, type SetStateAction, type State }

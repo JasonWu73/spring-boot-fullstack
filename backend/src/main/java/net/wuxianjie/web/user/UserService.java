@@ -57,8 +57,14 @@ public class UserService {
       }
 
       // 解密密码
-      final String oldPassword = RsaUtils.decrypt(params.getOldPassword(), Constants.RSA_PRIVATE_KEY);
-      final String newPassword = RsaUtils.decrypt(params.getNewPassword(), Constants.RSA_PRIVATE_KEY);
+      final String oldPassword;
+      final String newPassword;
+      try {
+        oldPassword = RsaUtils.decrypt(params.getOldPassword(), Constants.RSA_PRIVATE_KEY);
+        newPassword = RsaUtils.decrypt(params.getNewPassword(), Constants.RSA_PRIVATE_KEY);
+      } catch (Exception e) {
+        throw new ApiException(HttpStatus.BAD_REQUEST, "密码错误");
+      }
 
       // 检查新密码是否与旧密码相同
       if (newPassword.equals(oldPassword)) {
@@ -134,7 +140,12 @@ public class UserService {
     user.setNickname(params.getNickname());
 
     // 解密密码
-    final String password = RsaUtils.decrypt(params.getPassword(), Constants.RSA_PRIVATE_KEY);
+    final String password;
+    try {
+      password = RsaUtils.decrypt(params.getPassword(), Constants.RSA_PRIVATE_KEY);
+    } catch (Exception e) {
+      throw new ApiException(HttpStatus.BAD_REQUEST, "密码错误");
+    }
 
     // 将明文密码进行 Hash 计算后再保存
     user.setHashedPassword(passwordEncoder.encode(password));
@@ -175,7 +186,12 @@ public class UserService {
 
   public void resetPassword(final long userId, final ResetPasswordParams params) {
     // 解密密码
-    final String password = RsaUtils.decrypt(params.getPassword(), Constants.RSA_PRIVATE_KEY);
+    final String password;
+    try {
+      password = RsaUtils.decrypt(params.getPassword(), Constants.RSA_PRIVATE_KEY);
+    } catch (Exception e) {
+      throw new ApiException(HttpStatus.BAD_REQUEST, "密码错误");
+    }
 
     // 从数据库中查询用户数据
     final User user = Optional.ofNullable(userMapper.selectById(userId))

@@ -44,7 +44,6 @@ function UserSearch({ loading }: UserSearchProps) {
     resolver: zodResolver(formSchema),
     defaultValues
   })
-
   const [searchParams, setSearchParams] = useSearchParams()
 
   React.useEffect(() => {

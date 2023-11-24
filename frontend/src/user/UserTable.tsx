@@ -11,14 +11,6 @@ import { ConfirmDialog } from '@/shared/components/ui/ConfirmDialog'
 import { DataTable, type Paging } from '@/shared/components/ui/DataTable'
 import { DataTableColumnHeader } from '@/shared/components/ui/DataTableColumnHeader'
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger
-} from '@/shared/components/ui/Dialog'
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -28,14 +20,20 @@ import {
 } from '@/shared/components/ui/DropdownMenu'
 import { Switch } from '@/shared/components/ui/Switch'
 import { useToast } from '@/shared/components/ui/use-toast'
-import type { SetDataAction } from '@/shared/hooks/use-fetch'
+import type { SetStateAction } from '@/shared/hooks/use-fetch'
 import { useFetch } from '@/shared/hooks/use-fetch'
-import { URL_QUERY_KEY_ORDER, URL_QUERY_KEY_ORDER_BY } from '@/shared/utils/constants'
-import { ResetPassword } from '@/user/ResetPassword'
+import {
+  URL_QUERY_KEY_ORDER,
+  URL_QUERY_KEY_ORDER_BY,
+  URL_QUERY_KEY_PAGE_NUM,
+  URL_QUERY_KEY_PAGE_SIZE
+} from '@/shared/utils/constants'
+import { ResetPasswordDialog } from '@/user/ResetPasswordDialog'
 import type { User } from '@/user/UserListPage'
 import { format } from 'date-fns'
+import React from 'react'
 
-type UpdateUsers = (users: SetDataAction<PaginationData<User>>) => void
+type UpdateState = (state: SetStateAction<PaginationData<User>>) => void
 
 type UserTableProps = {
   users: User[]
@@ -44,10 +42,9 @@ type UserTableProps = {
   pageNum: number
   pageSize: number
   total: number
-  onPaginate: (paging: Paging) => void
   onSelect: (rowIndexes: number[]) => void
   onShowSelection: () => void
-  updateUsers: UpdateUsers
+  updateState: UpdateState
 }
 
 function UserTable({
@@ -57,16 +54,18 @@ function UserTable({
   pageNum,
   pageSize,
   total,
-  onPaginate,
   onSelect,
   onShowSelection,
-  updateUsers
+  updateState
 }: UserTableProps) {
   const [searchParams, setSearchParams] = useSearchParams()
+  const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false)
+  const [openResetPasswordDialog, setOpenResetPasswordDialog] = React.useState(false)
 
   const { isRoot, requestApi } = useAuth()
   const { loading: submitting, fetchData } = useFetch(requestApi<void>)
   const { toast } = useToast()
+  const currentUserRef = React.useRef<User | null>(null)
 
   // 对话框不应该放在表格内部，否则会导致在表格刷新时（当刷新身份验证信息时）,对话框就会被关闭
   function getColumns() {
@@ -131,7 +130,7 @@ function UserTable({
             <Switch
               checked={enabled}
               disabled={submitting}
-              onCheckedChange={() => handleChangeStatus(user.id, enabled)}
+              onCheckedChange={() => handleChangeStatus(user, enabled)}
             />
           )
         }
@@ -197,8 +196,7 @@ function UserTable({
           const user = row.original
 
           return (
-            /* `model=false`（启用与外部元素的交互）很重要，否则内部对话框焦点不可用 */
-            <DropdownMenu modal={false}>
+            <DropdownMenu>
               <DropdownMenuTrigger asChild disabled={submitting}>
                 <Button variant="ghost" className="h-8 w-8 p-0">
                   <MoreHorizontal className="h-4 w-4" />
@@ -221,50 +219,28 @@ function UserTable({
                   <>
                     <DropdownMenuSeparator />
 
-                    <ConfirmDialog
-                      trigger={
-                        <DropdownMenuItem
-                          onSelect={(event) => event.preventDefault()}
-                          className="p-0"
-                        >
-                          <button className="w-full cursor-pointer px-2 py-1.5 text-left text-red-500 dark:text-red-600">
-                            删除用户
-                          </button>
-                        </DropdownMenuItem>
-                      }
-                      title={
-                        <span>
-                          您确定要删除用户 <Code>{user.username}</Code> 吗？
-                        </span>
-                      }
-                      onConfirm={() => handleDeleteUser(user.id, user.username)}
-                    />
-
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <DropdownMenuItem
-                          onSelect={(event) => event.preventDefault()}
-                          className="p-0"
-                        >
-                          <button className="w-full cursor-pointer px-2 py-1.5 text-left text-red-500 dark:text-red-600">
-                            重置密码
-                          </button>
-                        </DropdownMenuItem>
-                      </DialogTrigger>
-
-                      <DialogContent className="sm:max-w-[425px]">
-                        <DialogHeader>
-                          <DialogTitle>
-                            重置用户 <Code>{user.username}</Code> 密码
-                          </DialogTitle>
-                          <DialogDescription>
-                            重置后，用户将使用新密码登录系统
-                          </DialogDescription>
-                        </DialogHeader>
-
-                        <ResetPassword userId={user.id} updateUsers={updateUsers} />
-                      </DialogContent>
-                    </Dialog>
+                    <DropdownMenuItem className="p-0">
+                      <button
+                        onClick={() => {
+                          setOpenDeleteDialog(true)
+                          currentUserRef.current = user
+                        }}
+                        className="inline-block w-full px-2 py-1.5 text-left text-red-500 dark:text-red-600"
+                      >
+                        删除用户
+                      </button>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="p-0">
+                      <button
+                        onClick={() => {
+                          setOpenResetPasswordDialog(true)
+                          currentUserRef.current = user
+                        }}
+                        className="inline-block w-full px-2 py-1.5 text-left text-red-500 dark:text-red-600"
+                      >
+                        重置密码
+                      </button>
+                    </DropdownMenuItem>
                   </>
                 )}
               </DropdownMenuContent>
@@ -279,86 +255,113 @@ function UserTable({
     return columns.filter((column) => column.id !== '选择')
   }
 
-  async function handleChangeStatus(userId: number, enabled: boolean) {
-    const newStatus = enabled ? 0 : 1
-
-    const { status, error } = await fetchData({
+  async function changeStatus(userId: number, status: number) {
+    return await fetchData({
       url: `/api/v1/users/${userId}/status`,
       method: 'PUT',
-      bodyData: { status: newStatus }
-    })
-
-    if (status === 204) {
-      let username = ''
-
-      updateUsers((prePaging) => {
-        const newUsers = prePaging.list.map((prevUser) => {
-          if (prevUser.id === userId) {
-            prevUser.status = newStatus
-            prevUser.updatedAt = format(Date.now(), 'yyyy-MM-dd HH:mm:ss')
-            username = prevUser.username
-          }
-
-          return prevUser
-        })
-
-        return {
-          ...prePaging,
-          list: newUsers
-        }
-      })
-
-      toast({
-        title: '更新账号状态成功',
-        description: (
-          <span>
-            {!enabled ? '启用' : '禁用'} <Code>{username}</Code> 账号
-          </span>
-        )
-      })
-      return
-    }
-
-    toast({
-      title: '更新账号状态失败',
-      description: error,
-      variant: 'destructive'
+      bodyData: { status }
     })
   }
 
-  async function handleDeleteUser(userId: number, username: string) {
-    const { status, error } = await fetchData({
+  async function deleteUser(userId: number) {
+    return await fetchData({
       url: `/api/v1/users/${userId}`,
       method: 'DELETE'
     })
+  }
 
-    if (status === 204) {
-      updateUsers((prevPaging) => {
-        const newUsers = prevPaging.list.filter((prevUser) => prevUser.id !== userId)
+  async function handleChangeStatus(user: User, enabled: boolean) {
+    const newStatus = enabled ? 0 : 1
+    const { status, error } = await changeStatus(user.id, newStatus)
 
-        return {
-          ...prevPaging,
-          list: newUsers,
-          total: prevPaging.total - 1
-        }
-      })
-
+    if (status !== 204) {
       toast({
-        title: '删除用户成功',
-        description: (
-          <span>
-            成功删除用户 <Code>{username}</Code>
-          </span>
-        )
+        title: '更新账号状态失败',
+        description: error,
+        variant: 'destructive'
       })
+
       return
     }
 
-    toast({
-      title: '删除用户失败',
-      description: error,
-      variant: 'destructive'
+    updateState((prevState) => {
+      if (!prevState.data) return prevState
+
+      const newUsers = prevState.data.list.map((prevUser) => {
+        if (prevUser.id === user.id) {
+          prevUser.status = newStatus
+          prevUser.updatedAt = format(Date.now(), 'yyyy-MM-dd HH:mm:ss')
+        }
+
+        return prevUser
+      })
+
+      return {
+        ...prevState,
+        data: {
+          ...prevState.data,
+          list: newUsers
+        }
+      }
     })
+
+    toast({
+      title: '更新账号状态成功',
+      description: (
+        <span>
+          {!enabled ? '启用' : '禁用'} <Code>{user.username}</Code> 账号
+        </span>
+      )
+    })
+  }
+
+  async function handleDeleteUser() {
+    if (!currentUserRef.current) return
+
+    const { id, username } = currentUserRef.current
+    const { status, error } = await deleteUser(id)
+
+    if (status !== 204) {
+      toast({
+        title: '删除用户失败',
+        description: error,
+        variant: 'destructive'
+      })
+
+      return
+    }
+
+    updateState((prevState) => {
+      if (!prevState.data) return prevState
+
+      const newUsers = prevState.data.list.filter((prevUser) => prevUser.id !== id)
+
+      return {
+        ...prevState,
+        data: {
+          ...prevState.data,
+          total: prevState.data.total - 1,
+          list: newUsers
+        }
+      }
+    })
+
+    toast({
+      title: '删除用户成功',
+      description: (
+        <span>
+          成功删除用户 <Code>{username}</Code>
+        </span>
+      )
+    })
+    return
+  }
+
+  function handlePaginate(paging: Paging) {
+    searchParams.set(URL_QUERY_KEY_PAGE_NUM, String(paging.pageNum))
+    searchParams.set(URL_QUERY_KEY_PAGE_SIZE, String(paging.pageSize))
+
+    setSearchParams(searchParams, { replace: true })
   }
 
   const handleSorting = (sorting: SortingState) => {
@@ -388,7 +391,7 @@ function UserTable({
           pageSize,
           total
         }}
-        onPaginate={onPaginate}
+        onPaginate={handlePaginate}
         orderBy={{
           id:
             searchParams.get(URL_QUERY_KEY_ORDER_BY) === 'updatedAt'
@@ -402,12 +405,34 @@ function UserTable({
       >
         {isRoot && (
           <div>
-            <Button onClick={onShowSelection} variant="destructive" size="sm">
+            <Button onClick={onShowSelection} size="sm">
               查看被选中的行
             </Button>
           </div>
         )}
       </DataTable>
+
+      {currentUserRef.current && (
+        <ConfirmDialog
+          open={openDeleteDialog}
+          onOpenChange={setOpenDeleteDialog}
+          title={
+            <span>
+              您确定要删除用户 <Code>{currentUserRef.current.username}</Code> 吗？
+            </span>
+          }
+          onConfirm={handleDeleteUser}
+        />
+      )}
+
+      {currentUserRef.current && (
+        <ResetPasswordDialog
+          open={openResetPasswordDialog}
+          onOpenChange={setOpenResetPasswordDialog}
+          user={currentUserRef.current}
+          updateState={updateState}
+        />
+      )}
     </>
   )
 }

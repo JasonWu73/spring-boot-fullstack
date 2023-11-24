@@ -10,11 +10,7 @@ import {
   CardTitle
 } from '@/shared/components/ui/Card'
 import { Code } from '@/shared/components/ui/Code'
-import {
-  DEFAULT_PAGE_NUM,
-  DEFAULT_PAGE_SIZE,
-  type Paging
-} from '@/shared/components/ui/DataTable'
+import { DEFAULT_PAGE_NUM, DEFAULT_PAGE_SIZE } from '@/shared/components/ui/DataTable'
 import { useToast } from '@/shared/components/ui/use-toast'
 import { useFetch } from '@/shared/hooks/use-fetch'
 import { useRefresh } from '@/shared/hooks/use-refresh'
@@ -49,30 +45,21 @@ type GetUsersParams = PaginationParams & {
 function UserListPage() {
   useTitle('用户管理')
 
-  const [searchParams, setSearchParams] = useSearchParams()
+  const [searchParams] = useSearchParams()
+  const [indexes, setIndexes] = React.useState<number[]>([]) // 选中的行的索引
 
   const { requestApi } = useAuth()
-  const { toast } = useToast()
-
-  const pageNum = Number(searchParams.get(URL_QUERY_KEY_PAGE_NUM)) || DEFAULT_PAGE_NUM
-  const pageSize = Number(searchParams.get(URL_QUERY_KEY_PAGE_SIZE)) || DEFAULT_PAGE_SIZE
-  const orderBy = searchParams.get(URL_QUERY_KEY_ORDER_BY) || 'createdAt'
-  const order = searchParams.get(URL_QUERY_KEY_ORDER) || 'desc'
-  const username = searchParams.get('username')
-  const nickname = searchParams.get('nickname')
-  const status = searchParams.get('status')
-  const authority = searchParams.get('authority')
-
-  const url = '/api/v1/users'
-
   const {
     data: users,
     error,
     loading,
     fetchData,
     discardFetch,
-    updateData: updateUsers
+    updateState
   } = useFetch(requestApi<PaginationData<User>>)
+  const { toast } = useToast()
+
+  const url = '/api/v1/users'
 
   useRefresh(() => {
     const timestamp = Date.now()
@@ -82,8 +69,18 @@ function UserListPage() {
     return () => discardFetch({ url }, timestamp)
   })
 
+  const pageNum = Number(searchParams.get(URL_QUERY_KEY_PAGE_NUM)) || DEFAULT_PAGE_NUM
+  const pageSize = Number(searchParams.get(URL_QUERY_KEY_PAGE_SIZE)) || DEFAULT_PAGE_SIZE
+
   async function getUsers() {
     const urlParams: GetUsersParams = { pageNum, pageSize }
+
+    const orderBy = searchParams.get(URL_QUERY_KEY_ORDER_BY) || 'createdAt'
+    const order = searchParams.get(URL_QUERY_KEY_ORDER) || 'desc'
+    const username = searchParams.get('username')
+    const nickname = searchParams.get('nickname')
+    const status = searchParams.get('status')
+    const authority = searchParams.get('authority')
 
     if (orderBy) urlParams['orderBy'] = orderBy
     if (order) urlParams['order'] = order === 'asc' ? 'asc' : 'desc'
@@ -93,20 +90,6 @@ function UserListPage() {
     if (authority) urlParams['authority'] = authority
 
     return await fetchData({ url, urlParams })
-  }
-
-  function handlePaginate(paging: Paging) {
-    searchParams.set(URL_QUERY_KEY_PAGE_NUM, String(paging.pageNum))
-    searchParams.set(URL_QUERY_KEY_PAGE_SIZE, String(paging.pageSize))
-
-    setSearchParams(searchParams, { replace: true })
-  }
-
-  // 选中的行的索引
-  const [indexes, setIndexes] = React.useState<number[]>([])
-
-  function handleSelect(rowIndexes: number[]) {
-    setIndexes(rowIndexes)
   }
 
   function handleShowSelection() {
@@ -120,6 +103,7 @@ function UserListPage() {
         description: '请先选中要操作的行',
         variant: 'destructive'
       })
+
       return
     }
 
@@ -150,10 +134,9 @@ function UserListPage() {
           pageNum={pageNum}
           pageSize={pageSize}
           total={users?.total || 0}
-          onPaginate={handlePaginate}
-          onSelect={handleSelect}
+          onSelect={setIndexes}
           onShowSelection={handleShowSelection}
-          updateUsers={updateUsers}
+          updateState={updateState}
         />
       </CardContent>
     </Card>

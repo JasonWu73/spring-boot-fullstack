@@ -57,12 +57,17 @@ function DataTableColumnHeader<TData, TValue>({
         <DropdownMenuContent align="start">
           {sortable && column.getCanSort() && (
             <>
-              <DropdownMenuItem onClick={() => column.toggleSorting(false)}>
+              <DropdownMenuItem
+                onClick={() => column.toggleSorting(false)}
+                className="cursor-pointer"
+              >
                 <ArrowUpIcon className="text-muted-foreground/70 mr-2 h-3.5 w-3.5" />
                 升序
               </DropdownMenuItem>
-
-              <DropdownMenuItem onClick={() => column.toggleSorting(true)}>
+              <DropdownMenuItem
+                onClick={() => column.toggleSorting(true)}
+                className="cursor-pointer"
+              >
                 <ArrowDownIcon className="text-muted-foreground/70 mr-2 h-3.5 w-3.5" />
                 降序
               </DropdownMenuItem>
@@ -71,7 +76,10 @@ function DataTableColumnHeader<TData, TValue>({
             </>
           )}
 
-          <DropdownMenuItem onClick={() => column.toggleVisibility(false)}>
+          <DropdownMenuItem
+            onClick={() => column.toggleVisibility(false)}
+            className="cursor-pointer"
+          >
             <EyeNoneIcon className="text-muted-foreground/70 mr-2 h-3.5 w-3.5" />
             隐藏
           </DropdownMenuItem>

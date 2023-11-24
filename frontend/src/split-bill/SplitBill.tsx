@@ -14,6 +14,7 @@ import {
 } from '@/shared/components/ui/Card'
 import { FormInput, FormSelect } from '@/shared/components/ui/CustomFormField'
 import { Form } from '@/shared/components/ui/Form'
+import { Skeleton } from '@/shared/components/ui/Skeleton'
 import { StarRating } from '@/shared/components/ui/StarRating'
 import {
   Tooltip,
@@ -29,7 +30,6 @@ import type { ApiRequest } from '@/shared/utils/http'
 import { endNProgress, startNProgress } from '@/shared/utils/nprogress'
 import { getFriendsFromStorage, useFriends } from '@/split-bill/FriendProvider'
 import { SplitBillError } from '@/split-bill/SplitBillError'
-import { SplitBillSkeleton } from '@/split-bill/SplitBillSkeleton'
 
 const whoIsPayingOptions = [
   { value: 'user', label: '您' },
@@ -109,7 +109,7 @@ function SplitBill() {
     error,
     loading,
     fetchData,
-    updateData
+    updateState
   } = useFetch(getFriendFakeApi)
   const { dispatch } = useFriends()
 
@@ -150,8 +150,8 @@ function SplitBill() {
   async function getFriendFakeApi(params: ApiRequest) {
     startNProgress()
 
-    updateData((prevData) => {
-      return { ...prevData, loading: true }
+    updateState((prevState) => {
+      return { ...prevState, loading: true }
     })
 
     // 仅为了模拟查看骨架屏的效果
@@ -162,8 +162,8 @@ function SplitBill() {
 
     endNProgress()
 
-    updateData((prevData) => {
-      return { ...prevData, loading: false }
+    updateState((prevState) => {
+      return { ...prevState, loading: false }
     })
 
     if (friend) return { status: 200, data: friend }
@@ -173,7 +173,7 @@ function SplitBill() {
 
   return (
     <Card className="w-96 bg-amber-100 text-slate-700 dark:bg-amber-100 dark:text-slate-700 md:w-[22rem] lg:w-[30rem]">
-      {loading && <SplitBillSkeleton />}
+      {loading && <Formkeleton />}
 
       {!loading && error && <SplitBillError message={error} />}
 
@@ -263,6 +263,33 @@ function SplitBill() {
         </>
       )}
     </Card>
+  )
+}
+
+function Formkeleton() {
+  return (
+    <>
+      <CardHeader>
+        <CardTitle>
+          <Skeleton className="h-6 w-[300px]" />
+        </CardTitle>
+        <CardDescription className="space-y-2">
+          <Skeleton className="h-5 w-[300px]" />
+          <Skeleton className="h-6 w-[200px]" />
+        </CardDescription>
+      </CardHeader>
+
+      <CardContent className="flex flex-col gap-4">
+        {Array.from({ length: 4 }, (_, i) => (
+          <div key={i} className="flex gap-4">
+            <Skeleton className="h-8 w-32" />
+            <Skeleton className="h-8 w-full" />
+          </div>
+        ))}
+
+        <Skeleton className="h-8 w-20 self-end" />
+      </CardContent>
+    </>
   )
 }
 

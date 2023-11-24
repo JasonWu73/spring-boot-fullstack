@@ -167,7 +167,7 @@ function toast({ ...props }: Toast) {
 }
 
 /**
- * 注意：退出或执行 `dismiss` 方法进，会导致退出所有弹出框都退出。
+ * 注意：退出或执行 `dismiss` 方法进，会导致退出其他弹出框也退出。
  */
 function useToast() {
   const [state, setState] = React.useState<State>(memoryState)

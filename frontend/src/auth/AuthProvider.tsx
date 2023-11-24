@@ -116,8 +116,8 @@ function AuthProvider({ children }: AuthProviderProps) {
     }
 
     // 检查是否需要刷新访问令牌
-    // 这里为了测试目的，故意设置离过期时间小于 29 分 55 秒时就刷新访问令牌
-    if (expiresAt - Date.now() < (30 * 60 - 5) * 1000) {
+    // 这里为了测试目的，故意设置离过期时间小于 29 分时就刷新访问令牌
+    if (expiresAt - Date.now() < 29 * 60 * 1000) {
       const { status, data, error } = await requestBackendApi<AuthResponse>({
         url: `/api/v1/auth/refresh/${refreshToken}`,
         method: 'POST',
@@ -131,6 +131,7 @@ function AuthProvider({ children }: AuthProviderProps) {
 
       if (data) {
         const auth = toStorageAuth(data)
+
         setAuthCache(auth)
       }
     }
@@ -152,13 +153,11 @@ function AuthProvider({ children }: AuthProviderProps) {
     setAuth: (data: AuthResponse) => {
       const auth = toStorageAuth(data)
 
-      setAuth(auth)
-      setStorageAuth(auth)
+      setAuthCache(auth)
     },
     deleteAuth: async () => {
       // 不论后端退出登录是否成功，前端都要退出登录
-      setAuth(null)
-      setStorageAuth(null)
+      setAuthCache(null)
     },
 
     requestApi
@@ -188,24 +187,23 @@ function getStorageAuth(): Auth | null {
 }
 
 function setStorageAuth(auth: Auth | null) {
-  if (auth) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(auth))
+  if (!auth) {
+    localStorage.removeItem(STORAGE_KEY)
+
     return
   }
 
-  localStorage.removeItem(STORAGE_KEY)
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(auth))
 }
 
-function toStorageAuth(data: AuthResponse) {
-  const auth: Auth = {
+function toStorageAuth(data: AuthResponse): Auth {
+  return {
     accessToken: data.accessToken,
     refreshToken: data.refreshToken,
     nickname: data.nickname,
     authorities: data.authorities,
     expiresAt: Date.now() + data.expiresInSeconds * 1000
   }
-
-  return auth
 }
 
 async function requestBackendApi<T>(request: ApiRequest): Promise<FetchResponse<T>> {
@@ -222,7 +220,7 @@ async function requestBackendApi<T>(request: ApiRequest): Promise<FetchResponse<
     return { status, error: error.error }
   }
 
-  return { status, data: data ?? undefined }
+  return { status, data }
 }
 
 export {

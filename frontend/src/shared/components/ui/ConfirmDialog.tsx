@@ -14,15 +14,23 @@ import {
 } from '@/shared/components/ui/AlertDialog'
 import { buttonVariants } from '@/shared/components/ui/Button'
 
-type DeleteUserProps = {
-  trigger: React.ReactNode | string
+type ConfirmDialogProps = {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  trigger?: React.ReactNode | string
   title: React.ReactNode | string
   onConfirm: () => void
 }
 
-function ConfirmDialog({ trigger, title, onConfirm }: DeleteUserProps) {
+function ConfirmDialog({
+  open,
+  onOpenChange,
+  trigger,
+  title,
+  onConfirm
+}: ConfirmDialogProps) {
   return (
-    <AlertDialog>
+    <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>
 
       <AlertDialogContent>
@@ -30,7 +38,7 @@ function ConfirmDialog({ trigger, title, onConfirm }: DeleteUserProps) {
           <AlertDialogTitle>{title}</AlertDialogTitle>
           <AlertDialogDescription className="flex items-center">
             <AlertOctagon className="mr-1 h-4 w-4 text-amber-500 dark:text-amber-600" />
-            此操作无法撤消，这将永久删除数据。
+            此操作无法撤消，请谨慎操作！
           </AlertDialogDescription>
         </AlertDialogHeader>
 

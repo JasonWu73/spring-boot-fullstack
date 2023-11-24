@@ -1,6 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ExclamationTriangleIcon, ReloadIcon } from '@radix-ui/react-icons'
-import React from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
 import { z } from 'zod'
@@ -45,23 +44,23 @@ type UpdateUserParams = {
   remark: string
 }
 
-export default function UpdateUserPage() {
+const defaultValues = {
+  nickname: '',
+  authorities: [],
+  remark: ''
+}
+
+function UpdateUserPage() {
   useTitle('用户详情')
 
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      nickname: '',
-      authorities: [],
-      remark: ''
-    }
+    defaultValues
   })
-
   const { userId } = useParams()
   const navigate = useNavigate()
 
   const { requestApi } = useAuth()
-
   const {
     data: user,
     error,
@@ -69,24 +68,28 @@ export default function UpdateUserPage() {
     fetchData: fetchUser,
     discardFetch
   } = useFetch(requestApi<User>)
+  const { loading: submitting, fetchData: fetchUpdate } = useFetch(requestApi<void>)
+  const { toast } = useToast()
 
   const url = `/api/v1/users/${userId}`
+
+  useRefresh(() => {
+    const timestamp = Date.now()
+
+    getUser().then(({ data }) => {
+      if (data) {
+        initializeUserData(data)
+      }
+    })
+
+    return () => discardFetch({ url }, timestamp)
+  })
 
   async function getUser() {
     return await fetchUser({ url })
   }
 
-  useRefresh(() => {
-    const timestamp = Date.now()
-
-    getUser().then()
-
-    return () => discardFetch({ url }, timestamp)
-  })
-
-  React.useEffect(() => {
-    if (!user) return
-
+  function initializeUserData(user: User) {
     form.reset({
       nickname: user.nickname,
       authorities: user.authorities.map((authority) => ({
@@ -102,9 +105,7 @@ export default function UpdateUserPage() {
       })),
       remark: user.remark
     })
-  }, [user, form])
-
-  const { loading: submitting, fetchData: fetchUpdate } = useFetch(requestApi<void>)
+  }
 
   async function updateUser({ nickname, authorities, remark }: UpdateUserParams) {
     return await fetchUpdate({
@@ -114,34 +115,35 @@ export default function UpdateUserPage() {
     })
   }
 
-  const { toast } = useToast()
-
   async function onSubmit(values: FormSchema) {
-    const response = await updateUser({
+    if (!user) return
+
+    const { status, error } = await updateUser({
       nickname: values.nickname,
       authorities: values.authorities.map((authority) => authority.value),
       remark: values.remark
     })
 
-    if (response.status === 204) {
+    if (status !== 204) {
       toast({
-        title: '更新用户成功',
-        description: (
-          <span>
-            成功更新用户 <Code>{user?.username}</Code> 信息
-          </span>
-        )
+        title: '更新用户失败',
+        description: error,
+        variant: 'destructive'
       })
 
-      backToUserListPage()
       return
     }
 
     toast({
-      title: '更新用户失败',
-      description: response.error,
-      variant: 'destructive'
+      title: '更新用户成功',
+      description: (
+        <span>
+          成功更新用户 <Code>{user.username}</Code> 信息
+        </span>
+      )
     })
+
+    backToUserListPage()
   }
 
   function backToUserListPage() {
@@ -156,6 +158,8 @@ export default function UpdateUserPage() {
       </CardHeader>
 
       <CardContent>
+        {loading && <FormSkeleton />}
+
         {!loading && (
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
@@ -237,30 +241,34 @@ export default function UpdateUserPage() {
             </form>
           </Form>
         )}
-
-        {loading && (
-          <div className="flex flex-col gap-4">
-            {Array.from({ length: 6 }, (_, i) => (
-              <div key={i} className="flex flex-col gap-4">
-                <div className="flex items-center gap-4">
-                  <Skeleton className="h-9 w-32" />
-                  <Skeleton className="h-9 w-full" />
-                </div>
-              </div>
-            ))}
-
-            <div className="flex items-center gap-4">
-              <Skeleton className="h-9 w-32" />
-              <Skeleton className="h-16 w-full" />
-            </div>
-
-            <div className="flex gap-2 sm:justify-end">
-              <Skeleton className="h-9 w-20 self-end" />
-              <Skeleton className="h-9 w-20 self-end" />
-            </div>
-          </div>
-        )}
       </CardContent>
     </Card>
   )
 }
+
+function FormSkeleton() {
+  return (
+    <div className="flex flex-col gap-4">
+      {Array.from({ length: 6 }, (_, i) => (
+        <div key={i} className="flex flex-col gap-4">
+          <div className="flex items-center gap-4">
+            <Skeleton className="h-9 w-32" />
+            <Skeleton className="h-9 w-full" />
+          </div>
+        </div>
+      ))}
+
+      <div className="flex items-center gap-4">
+        <Skeleton className="h-9 w-32" />
+        <Skeleton className="h-16 w-full" />
+      </div>
+
+      <div className="flex gap-2 sm:justify-end">
+        <Skeleton className="h-9 w-20 self-end" />
+        <Skeleton className="h-9 w-20 self-end" />
+      </div>
+    </div>
+  )
+}
+
+export default UpdateUserPage
