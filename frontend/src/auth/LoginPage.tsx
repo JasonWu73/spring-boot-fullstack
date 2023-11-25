@@ -80,7 +80,7 @@ function LoginPage() {
   }
 
   return (
-    <Card className="mx-auto mt-8 w-96 md:w-[22rem] lg:w-[30rem]">
+    <Card className="mx-auto mt-8 w-96 md:w-[22rem] lg:mt-24 lg:w-[30rem]">
       <CardHeader>
         <CardTitle>登录</CardTitle>
         <CardDescription className="flex items-center text-green-500 dark:text-green-600">
