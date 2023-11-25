@@ -19,6 +19,7 @@ const RandomProductPage = React.lazy(() => import('@/product/RandomProductPage')
 const SplitBillPage = React.lazy(() => import('@/split-bill/SplitBillPage'))
 const NotFoundPage = React.lazy(() => import('@/shared/components/ui/NotFoundPage'))
 const UserListPage = React.lazy(() => import('@/user/UserListPage'))
+const AddUserPage = React.lazy(() => import('@/user/AddUserPage'))
 const UpdateUserPage = React.lazy(() => import('@/user/UpdateUserPage'))
 
 // 测试 React Router 懒加载（React Split Code）
@@ -78,6 +79,7 @@ const router = createBrowserRouter([
         children: [
           { path: '/admin', element: <Navigate to="/users" replace /> },
           { path: '/users', element: <UserListPage /> },
+          { path: '/users/add', element: <AddUserPage /> },
           { path: '/users/:userId', element: <UpdateUserPage /> }
         ]
       },
@@ -96,11 +98,11 @@ function App() {
         <AuthProvider>
           <VersionProvider>
             <RouterProvider router={router} />
+
+            <Toaster />
           </VersionProvider>
         </AuthProvider>
       </ThemeProvider>
-
-      <Toaster />
     </>
   )
 }

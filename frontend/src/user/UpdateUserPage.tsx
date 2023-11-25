@@ -24,7 +24,7 @@ import { Form } from '@/shared/components/ui/Form'
 import { Skeleton } from '@/shared/components/ui/Skeleton'
 import { useToast } from '@/shared/components/ui/use-toast'
 import { useFetch } from '@/shared/hooks/use-fetch'
-import { useRefresh } from '@/shared/hooks/use-refresh'
+import { useInitial } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
 import type { User } from '@/user/UserListPage'
 
@@ -32,7 +32,7 @@ const AUTHORITY_OPTIONS = [ADMIN, USER]
 
 const formSchema = z.object({
   nickname: z.string().min(1, '必须输入昵称').trim(),
-  authorities: z.array(z.record(z.string().trim())).min(1, '必须选择功能权限'),
+  authorities: z.array(z.record(z.string().trim())),
   remark: z.string().trim()
 })
 
@@ -75,7 +75,7 @@ function UpdateUserPage() {
 
   const url = `/api/v1/users/${userId}`
 
-  useRefresh(() => {
+  useInitial(() => {
     const timestamp = Date.now()
 
     getUser().then(({ data }) => {
@@ -140,7 +140,7 @@ function UpdateUserPage() {
       title: '更新用户成功',
       description: (
         <span>
-          成功更新用户 <Code>{user.username}</Code> 信息
+          成功更新用户 <Code>{user.username}</Code>
         </span>
       )
     })

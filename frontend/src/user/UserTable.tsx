@@ -4,7 +4,7 @@ import { Link, useSearchParams } from 'react-router-dom'
 
 import { ADMIN, ROOT, USER, useAuth, type PaginationData } from '@/auth/AuthProvider'
 import { Badge } from '@/shared/components/ui/Badge'
-import { Button } from '@/shared/components/ui/Button'
+import { Button, buttonVariants } from '@/shared/components/ui/Button'
 import { Checkbox } from '@/shared/components/ui/Checkbox'
 import { Code } from '@/shared/components/ui/Code'
 import { ConfirmDialog } from '@/shared/components/ui/ConfirmDialog'
@@ -28,6 +28,7 @@ import {
   URL_QUERY_KEY_PAGE_NUM,
   URL_QUERY_KEY_PAGE_SIZE
 } from '@/shared/utils/constants'
+import { cn } from '@/shared/utils/helpers'
 import { ResetPasswordDialog } from '@/user/ResetPasswordDialog'
 import type { User } from '@/user/UserListPage'
 import { format } from 'date-fns'
@@ -405,9 +406,22 @@ function UserTable({
       >
         {isRoot && (
           <div>
-            <Button onClick={onShowSelection} size="sm">
+            <Button onClick={onShowSelection} size="sm" variant="secondary">
               查看被选中的行
             </Button>
+
+            <Link
+              to="/users/add"
+              className={cn(
+                'ml-2',
+                buttonVariants({
+                  variant: 'default',
+                  size: 'sm'
+                })
+              )}
+            >
+              新增用户
+            </Link>
           </div>
         )}
       </DataTable>
