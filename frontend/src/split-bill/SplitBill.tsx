@@ -273,9 +273,12 @@ function FormSkeleton() {
 
       <CardContent className="flex flex-col gap-4">
         {Array.from({ length: 4 }, (_, i) => (
-          <div key={i} className="flex gap-4">
+          <div
+            key={i}
+            className="grid grid-flow-row items-center gap-2 lg:grid-cols-[auto_1fr]"
+          >
             <Skeleton className="h-8 w-32" />
-            <Skeleton className="h-8 w-full" />
+            <Skeleton className="h-8" />
           </div>
         ))}
 

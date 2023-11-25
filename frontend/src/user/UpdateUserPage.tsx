@@ -251,7 +251,7 @@ function UpdateUserPage() {
 function FormSkeleton() {
   return (
     <div className="flex flex-col gap-4">
-      {Array.from({ length: 6 }, (_, i) => (
+      {Array.from({ length: 4 }, (_, i) => (
         <div key={i} className="flex flex-col gap-4">
           <div className="flex items-center gap-4">
             <Skeleton className="h-9 w-32" />
@@ -260,9 +260,18 @@ function FormSkeleton() {
         </div>
       ))}
 
-      <div className="flex items-center gap-4">
+      {Array.from({ length: 2 }, (_, i) => (
+        <div key={i} className="flex flex-col gap-4">
+          <div className="grid grid-flow-row items-center gap-2 lg:grid-cols-[auto_1fr]">
+            <Skeleton className="h-9 w-32" />
+            <Skeleton className="h-9" />
+          </div>
+        </div>
+      ))}
+
+      <div className="grid grid-flow-row items-center gap-2 lg:grid-cols-[auto_1fr]">
         <Skeleton className="h-9 w-32" />
-        <Skeleton className="h-16 w-full" />
+        <Skeleton className="h-16" />
       </div>
 
       <div className="flex gap-2 sm:justify-end">
