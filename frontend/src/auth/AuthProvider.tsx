@@ -78,6 +78,8 @@ type AuthProviderState = {
   deleteAuth: () => void
 
   requestApi: <T>(request: ApiRequest, type?: string) => Promise<FetchResponse<T>>
+
+  refreshAuth: () => Promise<void>
 }
 
 const AuthProviderContext = React.createContext(undefined as unknown as AuthProviderState)
@@ -101,7 +103,7 @@ function AuthProvider({ children }: AuthProviderProps) {
     if (!auth) return await requestBackendApi<T>(request)
 
     // 请求需要访问令牌的 API（涉及自动刷新机制）
-    const { expiresAt, accessToken, refreshToken } = auth
+    const { expiresAt, accessToken } = auth
 
     // 发送请求
     const response = await requestBackendApi<T>({
@@ -118,25 +120,32 @@ function AuthProvider({ children }: AuthProviderProps) {
     // 检查是否需要刷新访问令牌
     // 这里为了测试目的，故意设置离过期时间小于 29 分时就刷新访问令牌，即 5 秒后刷新
     if (expiresAt - Date.now() < 29 * 60 * 1000) {
-      const { status, data, error } = await requestBackendApi<AuthResponse>({
-        url: `/api/v1/auth/refresh/${refreshToken}`,
-        method: 'POST',
-        headers: { Authorization: `Bearer ${accessToken}` }
-      })
-
-      if (error) {
-        setAuthCache(null)
-        return { status, error: error }
-      }
-
-      if (data) {
-        const auth = toStorageAuth(data)
-
-        setAuthCache(auth)
-      }
+      refreshAuth().then()
     }
 
     return response
+  }
+
+  async function refreshAuth() {
+    if (!auth) return
+
+    const { data, error } = await requestBackendApi<AuthResponse>({
+      url: `/api/v1/auth/refresh/${auth.refreshToken}`,
+      method: 'POST',
+      headers: { Authorization: `Bearer ${auth.accessToken}` }
+    })
+
+    if (error) {
+      setAuthCache(null)
+
+      return
+    }
+
+    if (data) {
+      const auth = toStorageAuth(data)
+
+      setAuthCache(auth)
+    }
   }
 
   function setAuthCache(auth: Auth | null) {
@@ -160,7 +169,9 @@ function AuthProvider({ children }: AuthProviderProps) {
       setAuthCache(null)
     },
 
-    requestApi
+    requestApi,
+
+    refreshAuth
   }
 
   return (

@@ -42,7 +42,10 @@ const router = createBrowserRouter([
     element: <MainLayout />,
     children: [
       { path: '/', element: <Navigate to="/split-bill" replace /> },
-      { path: '/profile', element: <ProfilePage /> },
+      {
+        element: <SecureRoute />,
+        children: [{ path: '/profile', element: <ProfilePage /> }]
+      },
       {
         element: <SecureRoute authority="user" />,
         children: [{ path: '/fetch', element: <RandomProductPage /> }]

@@ -1,10 +1,15 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ExclamationTriangleIcon, ReloadIcon } from '@radix-ui/react-icons'
 import { useForm } from 'react-hook-form'
-import { useNavigate, useParams } from 'react-router-dom'
 import { z } from 'zod'
 
-import { ADMIN, ROOT, useAuth, USER } from '@/auth/AuthProvider'
+import { PUBLIC_KEY, useAuth } from '@/auth/AuthProvider'
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger
+} from '@/shared/components/ui/Accordion'
 import { Alert, AlertDescription, AlertTitle } from '@/shared/components/ui/Alert'
 import { Button } from '@/shared/components/ui/Button'
 import {
@@ -14,35 +19,29 @@ import {
   CardHeader,
   CardTitle
 } from '@/shared/components/ui/Card'
-import { Code } from '@/shared/components/ui/Code'
-import {
-  FormInput,
-  FormMultiSelect,
-  FormTextarea
-} from '@/shared/components/ui/CustomFormField'
+import { FormInput } from '@/shared/components/ui/CustomFormField'
 import { Form } from '@/shared/components/ui/Form'
 import { Skeleton } from '@/shared/components/ui/Skeleton'
 import { useToast } from '@/shared/components/ui/use-toast'
 import { useFetch } from '@/shared/hooks/use-fetch'
 import { useInitial } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
+import { encrypt } from '@/shared/utils/rsa'
 import type { User } from '@/user/UserListPage'
-
-const AUTHORITY_OPTIONS = [ADMIN, USER]
 
 const formSchema = z
   .object({
     nickname: z.string().min(1, '必须输入昵称').trim(),
-    oldPassword: z.string(),
-    newPassword: z.string(),
-    confirmPassword: z.string()
+    oldPassword: z.string().trim(),
+    newPassword: z.string().trim(),
+    confirmPassword: z.string().trim()
   })
   .refine(
     ({ oldPassword, newPassword }) =>
       (oldPassword && newPassword) || (!oldPassword && !newPassword),
     {
-      message: '新密码和旧密码必须同时存在或同时不存在',
-      path: ['oldPassword', 'newPassword']
+      message: '新旧密码必须同时存在或不存在',
+      path: ['newPassword']
     }
   )
   .refine(({ newPassword, confirmPassword }) => newPassword === confirmPassword, {
@@ -54,6 +53,8 @@ type FormSchema = z.infer<typeof formSchema>
 
 type UpdateUserParams = {
   nickname: string
+  oldPassword?: string
+  newPassword?: string
 }
 
 const defaultValues = {
@@ -70,12 +71,8 @@ function UpdateUserPage() {
     resolver: zodResolver(formSchema),
     defaultValues
   })
-  const params = useParams()
-  const navigate = useNavigate()
 
-  const userId = Number(params.userId)
-
-  const { requestApi } = useAuth()
+  const { requestApi, deleteAuth, refreshAuth } = useAuth()
   const {
     data: user,
     error,
@@ -86,7 +83,7 @@ function UpdateUserPage() {
   const { loading: submitting, fetchData: fetchUpdate } = useFetch(requestApi<void>)
   const { toast } = useToast()
 
-  const url = `/api/v1/users/${userId}`
+  const url = '/api/v1/users/me'
 
   useInitial(() => {
     const timestamp = Date.now()
@@ -107,26 +104,21 @@ function UpdateUserPage() {
   function initializeUserData(user: User) {
     form.reset({
       nickname: user.nickname,
-      authorities: user.authorities.map((authority) => ({
-        value: authority,
-        label:
-          authority === ROOT.value
-            ? ROOT.label
-            : authority === ADMIN.value
-            ? ADMIN.label
-            : authority === USER.value
-            ? USER.label
-            : ''
-      })),
-      remark: user.remark
+      oldPassword: '',
+      newPassword: '',
+      confirmPassword: ''
     })
   }
 
-  async function updateUser({ nickname, authorities, remark }: UpdateUserParams) {
+  async function updateUser({ nickname, oldPassword, newPassword }: UpdateUserParams) {
     return await fetchUpdate({
-      url: `/api/v1/users/${user!.id}`,
+      url: '/api/v1/users/me',
       method: 'PUT',
-      bodyData: { nickname, authorities, remark }
+      bodyData: {
+        nickname,
+        oldPassword: oldPassword ? encrypt(PUBLIC_KEY, oldPassword) : null,
+        newPassword: newPassword ? encrypt(PUBLIC_KEY, newPassword) : null
+      }
     })
   }
 
@@ -135,13 +127,13 @@ function UpdateUserPage() {
 
     const { status, error } = await updateUser({
       nickname: values.nickname,
-      authorities: values.authorities.map((authority) => authority.value),
-      remark: values.remark
+      oldPassword: values.oldPassword,
+      newPassword: values.newPassword
     })
 
     if (status !== 204) {
       toast({
-        title: '更新用户失败',
+        title: '更新资料失败',
         description: error,
         variant: 'destructive'
       })
@@ -150,26 +142,26 @@ function UpdateUserPage() {
     }
 
     toast({
-      title: '更新用户成功',
-      description: (
-        <span>
-          成功更新用户 <Code>{user.username}</Code>
-        </span>
-      )
+      title: '更新资料成功',
+      description: <span>您已成功更新个人资料。</span>
     })
 
-    backToUserListPage()
-  }
+    // 若修改了密码，则需要重新登录
+    if (values.newPassword) {
+      deleteAuth()
 
-  function backToUserListPage() {
-    return navigate('/users')
+      return
+    }
+
+    // 若修改了昵称，则需要刷新访问令牌（也从后台获取到了最新数据）
+    await refreshAuth()
   }
 
   return (
     <Card className="mx-auto w-full md:w-4/5 lg:w-2/3">
       <CardHeader>
-        <CardTitle>用户详情</CardTitle>
-        <CardDescription>用户详情信息</CardDescription>
+        <CardTitle>个人资料</CardTitle>
+        <CardDescription>您的个人资料</CardDescription>
       </CardHeader>
 
       <CardContent>
@@ -181,33 +173,10 @@ function UpdateUserPage() {
               {error && (
                 <Alert variant="destructive">
                   <ExclamationTriangleIcon className="h-4 w-4" />
-                  <AlertTitle>获取用户详情失败</AlertTitle>
+                  <AlertTitle>获取个人资料失败</AlertTitle>
                   <AlertDescription>{error}</AlertDescription>
                 </Alert>
               )}
-
-              <p>
-                <label className="inline-block w-[80px]">用户名：</label>
-                <span>{user?.username}</span>
-              </p>
-              <p>
-                <label>账号状态：</label>
-                <span>
-                  {user?.status === 1 ? (
-                    <span className="text-green-500 dark:text-green-600">启用</span>
-                  ) : (
-                    <span className="text-red-500 dark:text-red-600">禁用</span>
-                  )}
-                </span>
-              </p>
-              <p>
-                <label>创建时间：</label>
-                <span>{user?.createdAt}</span>
-              </p>
-              <p>
-                <label>更新时间：</label>
-                <span>{user?.updatedAt}</span>
-              </p>
 
               <FormInput
                 control={form.control}
@@ -219,35 +188,45 @@ function UpdateUserPage() {
                 isError={form.getFieldState('nickname')?.invalid}
               />
 
-              <FormMultiSelect
-                control={form.control}
-                name="authorities"
-                label="功能权限"
-                labelWidth={60}
-                placeholder="请选择功能权限"
-                options={AUTHORITY_OPTIONS}
-                isError={form.getFieldState('authorities')?.invalid}
-              />
+              <Accordion type="single" collapsible>
+                <AccordionItem value="item-1">
+                  <AccordionTrigger>修改密码</AccordionTrigger>
 
-              <FormTextarea
-                control={form.control}
-                name="remark"
-                label="备注"
-                labelWidth={60}
-                placeholder="备注"
-                isError={form.getFieldState('remark')?.invalid}
-              />
+                  <AccordionContent className="space-y-2 pt-2">
+                    <FormInput
+                      control={form.control}
+                      name="oldPassword"
+                      type="password"
+                      label="旧密码"
+                      labelWidth={60}
+                      placeholder="旧密码，不需要修改密码则不用填"
+                      isError={form.getFieldState('oldPassword')?.invalid}
+                    />
+
+                    <FormInput
+                      control={form.control}
+                      name="newPassword"
+                      type="password"
+                      label="新密码"
+                      labelWidth={60}
+                      placeholder="新密码，不需要修改密码则不用填"
+                      isError={form.getFieldState('newPassword')?.invalid}
+                    />
+
+                    <FormInput
+                      control={form.control}
+                      name="confirmPassword"
+                      type="password"
+                      label="确认密码"
+                      labelWidth={60}
+                      placeholder="确认密码，不需要修改密码则不用填"
+                      isError={form.getFieldState('confirmPassword')?.invalid}
+                    />
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
 
               <div className="flex gap-2 sm:justify-end">
-                <Button
-                  onClick={backToUserListPage}
-                  type="button"
-                  variant="outline"
-                  disabled={submitting}
-                >
-                  返回
-                </Button>
-
                 <Button type="submit" className="self-end" disabled={submitting}>
                   {submitting && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
                   提交
@@ -264,22 +243,20 @@ function UpdateUserPage() {
 function FormSkeleton() {
   return (
     <div className="flex flex-col gap-4">
-      {Array.from({ length: 6 }, (_, i) => (
+      {Array.from({ length: 1 }, (_, i) => (
         <div key={i} className="flex flex-col gap-4">
-          <div className="flex items-center gap-4">
+          <div className="grid grid-flow-row items-center gap-2 lg:grid-cols-[auto_1fr]">
             <Skeleton className="h-9 w-32" />
-            <Skeleton className="h-9 w-full" />
+            <Skeleton className="h-9" />
           </div>
         </div>
       ))}
 
-      <div className="flex items-center gap-4">
-        <Skeleton className="h-9 w-32" />
-        <Skeleton className="h-16 w-full" />
+      <div className="border-b pb-4">
+        <Skeleton className="h-9 w-full" />
       </div>
 
       <div className="flex gap-2 sm:justify-end">
-        <Skeleton className="h-9 w-20 self-end" />
         <Skeleton className="h-9 w-20 self-end" />
       </div>
     </div>
