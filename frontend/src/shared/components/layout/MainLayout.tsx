@@ -10,7 +10,7 @@ function MainLayout() {
     <div className="flex min-h-screen flex-col">
       <Header />
 
-      <main className="relative flex-grow">
+      <main className="relative flex-grow p-4">
         <React.Suspense fallback={<SpinnerFullPage />}>
           <Outlet />
         </React.Suspense>
