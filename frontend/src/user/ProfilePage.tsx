@@ -30,28 +30,41 @@ import type { User } from '@/user/UserListPage'
 
 const AUTHORITY_OPTIONS = [ADMIN, USER]
 
-const formSchema = z.object({
-  nickname: z.string().min(1, '必须输入昵称').trim(),
-  authorities: z.array(z.record(z.string().trim())),
-  remark: z.string().trim()
-})
+const formSchema = z
+  .object({
+    nickname: z.string().min(1, '必须输入昵称').trim(),
+    oldPassword: z.string(),
+    newPassword: z.string(),
+    confirmPassword: z.string()
+  })
+  .refine(
+    ({ oldPassword, newPassword }) =>
+      (oldPassword && newPassword) || (!oldPassword && !newPassword),
+    {
+      message: '新密码和旧密码必须同时存在或同时不存在',
+      path: ['oldPassword', 'newPassword']
+    }
+  )
+  .refine(({ newPassword, confirmPassword }) => newPassword === confirmPassword, {
+    message: '新密码和确认密码必须相同',
+    path: ['confirmPassword']
+  })
 
 type FormSchema = z.infer<typeof formSchema>
 
 type UpdateUserParams = {
   nickname: string
-  authorities: string[]
-  remark: string
 }
 
 const defaultValues = {
   nickname: '',
-  authorities: [],
-  remark: ''
+  oldPassword: '',
+  newPassword: '',
+  confirmPassword: ''
 }
 
 function UpdateUserPage() {
-  useTitle('用户详情')
+  useTitle('个人资料')
 
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),

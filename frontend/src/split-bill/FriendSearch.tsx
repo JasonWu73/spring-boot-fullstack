@@ -9,9 +9,8 @@ import ShortcutTip from '@/split-bill/ShortcutTip'
 function FriendSearch() {
   const inputRef = React.useRef<HTMLInputElement | null>(null)
   const [searchParams, setSearchParams] = useSearchParams()
+  const [query, setQuery] = React.useState(searchParams.get(URL_QUERY_KEY_QUERY) || '')
   const navigate = useNavigate()
-
-  const name = searchParams.get(URL_QUERY_KEY_QUERY) || ''
 
   useKeypress({ key: '\\', modifiers: ['ctrlKey'] }, () => {
     if (document.activeElement === inputRef.current) return
@@ -22,7 +21,11 @@ function FriendSearch() {
   function handleSearch(event: React.ChangeEvent<HTMLInputElement>) {
     searchParams.delete(URL_QUERY_KEY_QUERY)
 
-    const nameQuery = event.target.value
+    const value = event.target.value
+
+    setQuery(value)
+
+    const nameQuery = value.trim()
 
     if (nameQuery) {
       searchParams.set(URL_QUERY_KEY_QUERY, nameQuery)
@@ -46,7 +49,7 @@ function FriendSearch() {
       <ShortcutTip />
 
       <Input
-        value={name}
+        value={query}
         onChange={handleSearch}
         onFocus={handleFocus}
         ref={inputRef}
