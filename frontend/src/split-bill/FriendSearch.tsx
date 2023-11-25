@@ -18,6 +18,10 @@ function FriendSearch() {
     inputRef.current?.focus()
   })
 
+  useKeypress({ key: 'Escape' }, () => {
+    setQuery('')
+  })
+
   function handleSearch(event: React.ChangeEvent<HTMLInputElement>) {
     searchParams.delete(URL_QUERY_KEY_QUERY)
 
