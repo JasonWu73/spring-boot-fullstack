@@ -1,6 +1,7 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 
+import { useAuth } from '@/auth/AuthProvider'
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -36,10 +37,12 @@ function PageNav({ isOpen }: PageNavProps) {
 }
 
 function NavItemList() {
+  const { isUser } = useAuth()
+
   return (
     <>
       <NavItem link="/split-bill">全面的表单</NavItem>
-      <NavItem link="/fetch">自定义 useFetch</NavItem>
+      {isUser && <NavItem link="/fetch">自定义 useFetch</NavItem>}
     </>
   )
 }

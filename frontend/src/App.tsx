@@ -21,6 +21,7 @@ const NotFoundPage = React.lazy(() => import('@/shared/components/ui/NotFoundPag
 const UserListPage = React.lazy(() => import('@/user/UserListPage'))
 const AddUserPage = React.lazy(() => import('@/user/AddUserPage'))
 const UpdateUserPage = React.lazy(() => import('@/user/UpdateUserPage'))
+const ProfilePage = React.lazy(() => import('@/user/ProfilePage'))
 
 // 测试 React Router 懒加载（React Split Code）
 const SplitBillForm = React.lazy(() =>
@@ -41,6 +42,7 @@ const router = createBrowserRouter([
     element: <MainLayout />,
     children: [
       { path: '/', element: <Navigate to="/split-bill" replace /> },
+      { path: '/profile', element: <ProfilePage /> },
       {
         element: <SecureRoute authority="user" />,
         children: [{ path: '/fetch', element: <RandomProductPage /> }]

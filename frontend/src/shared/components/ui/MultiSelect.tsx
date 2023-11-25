@@ -77,7 +77,7 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
                       handleUnselect(item)
                     }}
                   >
-                    <X className="text-muted-foreground hover:text-foreground h-4 w-4 rounded-sm border-none hover:bg-slate-200" />
+                    <X className="h-4 w-4 rounded-sm border-none hover:bg-slate-200 dark:hover:bg-night-1" />
                   </div>
                 </Badge>
               ))}

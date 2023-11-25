@@ -1,4 +1,4 @@
-import { LayoutDashboard } from 'lucide-react'
+import { CircleUserRound, LayoutDashboard } from 'lucide-react'
 import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
 
@@ -41,6 +41,11 @@ function AuthSwitch() {
             onPointerLeave={(event) => event.preventDefault()}
           >
             <ul className="grid min-w-max grid-flow-row grid-cols-1 py-1">
+              <NavItem link="/profile">
+                <CircleUserRound className="h-4 w-4" />
+                个人资料
+              </NavItem>
+
               {isAdmin && (
                 <NavItem link="/admin">
                   <LayoutDashboard className="h-4 w-4" />
