@@ -3,7 +3,7 @@
     "id": 1,
     "name": "Lisa",
     "image": "https://i.pravatar.cc/150?img=40",
-    "balance": 10.5,
+    "balance": -10.5,
     "creditRating": 5,
     "birthday": "2023-01-20"
   },
@@ -11,7 +11,7 @@
     "id": 2,
     "name": "Lucy",
     "image": "https://i.pravatar.cc/400?img=29",
-    "balance": -8.8,
+    "balance": 8.8,
     "creditRating": 3.5,
     "birthday": "2023-02-20"
   },
