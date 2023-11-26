@@ -28,7 +28,7 @@ function DataTablePagination<TData>({
 }: DataTablePaginationProps<TData>) {
   return (
     <div className="mt-4 flex items-center justify-between px-2">
-      <div className="text-muted-foreground hidden flex-1 text-sm lg:flex">
+      <div className="hidden flex-1 text-sm lg:flex">
         {needsSelection && (
           <>
             已选中 {table.getFilteredSelectedRowModel().rows.length} /{' '}

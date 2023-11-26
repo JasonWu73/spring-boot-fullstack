@@ -281,11 +281,7 @@ function FormCalendar<T extends FieldValues>({
               <FormControl className={cn(className)}>
                 <Button
                   variant="outline"
-                  className={cn(
-                    'pl-3 text-left font-normal',
-                    !field.value && 'text-muted-foreground',
-                    inputErrorClasses(isError)
-                  )}
+                  className={cn('pl-3 text-left font-normal', inputErrorClasses(isError))}
                 >
                   <span className="pr-2">
                     {field.value ? format(field.value, 'yyyy-MM-dd') : placeholder}
