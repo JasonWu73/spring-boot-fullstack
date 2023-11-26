@@ -50,7 +50,7 @@ function UserListPage() {
 
   const { requestApi } = useAuth()
   const {
-    data: users,
+    data: userPaging,
     error,
     loading,
     fetchData,
@@ -82,18 +82,18 @@ function UserListPage() {
     const status = searchParams.get('status')
     const authority = searchParams.get('authority')
 
-    if (orderBy) urlParams['orderBy'] = orderBy
-    if (order) urlParams['order'] = order === 'asc' ? 'asc' : 'desc'
-    if (username) urlParams['username'] = username
-    if (nickname) urlParams['nickname'] = nickname
-    if (status) urlParams['status'] = status
-    if (authority) urlParams['authority'] = authority
+    if (orderBy) urlParams.orderBy = orderBy
+    if (order) urlParams.order = order === 'asc' ? 'asc' : 'desc'
+    if (username) urlParams.username = username
+    if (nickname) urlParams.nickname = nickname
+    if (status) urlParams.status = status
+    if (authority) urlParams.authority = authority
 
     return await fetchData({ url, urlParams })
   }
 
   function handleShowSelection() {
-    const ids = (users?.list || [])
+    const ids = (userPaging?.list || [])
       .filter((_, index) => indexes.includes(index))
       .map((user) => user.id)
 
@@ -120,7 +120,7 @@ function UserListPage() {
   return (
     <Card className="mx-auto h-full w-full">
       <CardHeader>
-        <CardTitle>用户列表</CardTitle>
+        <CardTitle>用户管理</CardTitle>
         <CardDescription>可登录系统的所有账号信息</CardDescription>
       </CardHeader>
 
@@ -128,12 +128,12 @@ function UserListPage() {
         <UserSearch loading={loading} />
 
         <UserTable
-          users={users?.list || []}
+          users={userPaging?.list || []}
           error={error}
           loading={loading}
           pageNum={pageNum}
           pageSize={pageSize}
-          total={users?.total || 0}
+          total={userPaging?.total || 0}
           onSelect={setIndexes}
           onShowSelection={handleShowSelection}
           updateState={updateState}

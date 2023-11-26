@@ -22,6 +22,9 @@ const UserListPage = React.lazy(() => import('@/user/UserListPage'))
 const AddUserPage = React.lazy(() => import('@/user/AddUserPage'))
 const UpdateUserPage = React.lazy(() => import('@/user/UpdateUserPage'))
 const ProfilePage = React.lazy(() => import('@/user/ProfilePage'))
+const OperationLogListPage = React.lazy(
+  () => import('@/operation-log/OperationLogListPage')
+)
 
 // 测试 React Router 懒加载（React Split Code）
 const SplitBillForm = React.lazy(() =>
@@ -85,7 +88,8 @@ const router = createBrowserRouter([
           { path: '/admin', element: <Navigate to="/users" replace /> },
           { path: '/users', element: <UserListPage /> },
           { path: '/users/add', element: <AddUserPage /> },
-          { path: '/users/:userId', element: <UpdateUserPage /> }
+          { path: '/users/:userId', element: <UpdateUserPage /> },
+          { path: '/operation-logs', element: <OperationLogListPage /> }
         ]
       },
       {

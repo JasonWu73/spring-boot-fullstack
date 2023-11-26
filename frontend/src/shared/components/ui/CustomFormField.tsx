@@ -1,5 +1,6 @@
 import { CalendarIcon } from '@radix-ui/react-icons'
 import { format } from 'date-fns'
+import { zhCN } from 'date-fns/locale'
 import React from 'react'
 import { type Control, type FieldValues, type Path } from 'react-hook-form'
 
@@ -24,7 +25,6 @@ import {
 } from '@/shared/components/ui/Select'
 import { Textarea } from '@/shared/components/ui/Textarea'
 import { cn, tw } from '@/shared/utils/helpers'
-import { zhCN } from 'date-fns/locale'
 
 /**
  * 当参数校验不通过时的输入框样式。
@@ -287,11 +287,9 @@ function FormCalendar<T extends FieldValues>({
                     inputErrorClasses(isError)
                   )}
                 >
-                  {field.value ? (
-                    format(field.value, 'yyyy-MM-dd')
-                  ) : (
-                    <span>{placeholder}</span>
-                  )}
+                  <span className="pr-2">
+                    {field.value ? format(field.value, 'yyyy-MM-dd') : placeholder}
+                  </span>
                   <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                 </Button>
               </FormControl>

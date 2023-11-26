@@ -44,7 +44,7 @@ type UpdateUserParams = {
   remark: string
 }
 
-const defaultValues = {
+const defaultValues: FormSchema = {
   nickname: '',
   authorities: [],
   remark: ''

@@ -32,7 +32,7 @@ type UserSearchProps = {
   loading: boolean
 }
 
-const defaultValues = {
+const defaultValues: FormSchema = {
   username: '',
   nickname: '',
   status: '',

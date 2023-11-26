@@ -1,5 +1,7 @@
 import { type ColumnDef, type SortingState } from '@tanstack/react-table'
+import { format } from 'date-fns'
 import { MoreHorizontal } from 'lucide-react'
+import React from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 
 import { ADMIN, ROOT, USER, useAuth, type PaginationData } from '@/auth/AuthProvider'
@@ -31,8 +33,6 @@ import {
 import { cn } from '@/shared/utils/helpers'
 import { ResetPasswordDialog } from '@/user/ResetPasswordDialog'
 import type { User } from '@/user/UserListPage'
-import { format } from 'date-fns'
-import React from 'react'
 
 type UpdateState = (state: SetStateAction<PaginationData<User>>) => void
 
@@ -62,11 +62,11 @@ function UserTable({
   const [searchParams, setSearchParams] = useSearchParams()
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false)
   const [openResetPasswordDialog, setOpenResetPasswordDialog] = React.useState(false)
+  const currentUserRef = React.useRef<User | null>(null)
 
   const { isRoot, requestApi } = useAuth()
   const { loading: submitting, fetchData } = useFetch(requestApi<void>)
   const { toast } = useToast()
-  const currentUserRef = React.useRef<User | null>(null)
 
   // 对话框不应该放在表格内部，否则会导致在表格刷新时（当刷新身份验证信息时）,对话框就会被关闭
   function getColumns() {
@@ -291,7 +291,7 @@ function UserTable({
       const newUsers = prevState.data.list.map((prevUser) => {
         if (prevUser.id === user.id) {
           prevUser.status = newStatus
-          prevUser.updatedAt = format(Date.now(), 'yyyy-MM-dd HH:mm:ss')
+          prevUser.updatedAt = format(new Date(), 'yyyy-MM-dd HH:mm:ss')
         }
 
         return prevUser

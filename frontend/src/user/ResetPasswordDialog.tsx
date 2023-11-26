@@ -44,7 +44,7 @@ type ResetPasswordDialogProps = {
   updateState: (users: SetStateAction<PaginationData<User>>) => void
 }
 
-const defaultValues = {
+const defaultValues: FormSchema = {
   password: '',
   confirmPassword: ''
 }
@@ -89,7 +89,7 @@ function ResetPasswordDialog({
         if (prevUser.id === user.id) {
           return {
             ...prevUser,
-            updatedAt: format(Date.now(), 'yyyy-MM-dd HH:mm:ss')
+            updatedAt: format(new Date(), 'yyyy-MM-dd HH:mm:ss')
           }
         }
 

@@ -1,4 +1,4 @@
-import { BugOff, ShoppingCart, UserCog2 } from 'lucide-react'
+import { BugOff, FileClock, ShoppingCart, UserCog2 } from 'lucide-react'
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 
@@ -17,6 +17,10 @@ function SideNavBar() {
           <MenuItem link="/users">
             <UserCog2 className="h-5 w-5" />
             <span>用户管理</span>
+          </MenuItem>
+          <MenuItem link="/operation-logs">
+            <FileClock className="h-5 w-5" />
+            <span>操作日志</span>
           </MenuItem>
         </Menu>
 

@@ -57,7 +57,7 @@ type UpdateUserParams = {
   newPassword?: string
 }
 
-const defaultValues = {
+const defaultValues: FormSchema = {
   nickname: '',
   oldPassword: '',
   newPassword: '',

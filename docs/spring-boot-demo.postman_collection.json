@@ -532,13 +532,18 @@
 									"value": "2023-11-17"
 								},
 								{
-									"key": "status",
-									"value": "1",
+									"key": "clientIp",
+									"value": "127",
 									"disabled": true
 								},
 								{
-									"key": "authority",
-									"value": "user",
+									"key": "username",
+									"value": "su",
+									"disabled": true
+								},
+								{
+									"key": "message",
+									"value": "登 录",
 									"disabled": true
 								}
 							]

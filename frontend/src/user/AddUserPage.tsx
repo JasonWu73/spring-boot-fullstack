@@ -51,7 +51,7 @@ type AddUserParams = {
   remark: string
 }
 
-const defaultValues = {
+const defaultValues: FormSchema = {
   username: '',
   nickname: '',
   password: '',

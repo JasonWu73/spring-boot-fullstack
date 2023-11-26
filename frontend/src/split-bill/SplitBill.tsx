@@ -74,7 +74,7 @@ const formSchema = z
 
 type FormSchema = z.infer<typeof formSchema>
 
-const defaultValues = {
+const defaultValues: FormSchema = {
   bill: 0,
   userExpense: 0,
   friendExpense: 0,

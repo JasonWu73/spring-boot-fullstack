@@ -30,15 +30,17 @@ const formSchema = z.object({
 
 type FormSchema = z.infer<typeof formSchema>
 
+const defaultValues: FormSchema = {
+  username: '',
+  password: ''
+}
+
 function LoginPage() {
   useTitle('登录')
 
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      username: '',
-      password: ''
-    }
+    defaultValues
   })
   const location = useLocation()
 
