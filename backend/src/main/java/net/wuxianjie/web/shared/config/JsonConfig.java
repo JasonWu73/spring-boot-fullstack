@@ -8,6 +8,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import net.wuxianjie.web.shared.Constants;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.codec.json.Jackson2JsonDecoder;
 import org.springframework.http.codec.json.Jackson2JsonEncoder;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -38,6 +40,8 @@ public class JsonConfig {
                             );
                         }
                 )
+                // 设置请求只接收 JSON 响应
+                .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
                 .build();
     }
 
