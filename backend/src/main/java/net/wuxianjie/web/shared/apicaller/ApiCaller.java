@@ -1,6 +1,7 @@
 package net.wuxianjie.web.shared.apicaller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.MultipartBodyBuilder;
@@ -35,7 +36,7 @@ public class ApiCaller {
      * @param <T>          响应结果类型
      * @return 响应结果
      */
-    public <T> ApiResponse<T> getRequest(
+    public <T> ApiResponse<T> sendGetRequest(
             final String url,
             final Map<String, String> urlParams,
             final Class<T> responseType
@@ -52,20 +53,23 @@ public class ApiCaller {
     }
 
     /**
-     * 发送 HTTP POST x-www-form-urlencoded 请求。
+     * 发送 HTTP x-www-form-urlencoded 请求。
      *
+     * @param method       请求方法
      * @param url          请求地址
      * @param formData     表单请求体
      * @param responseType 响应结果类型
      * @param <T>          响应结果类型
      * @return 响应结果
      */
-    public <T> ApiResponse<T> postFormRequest(
+    public <T> ApiResponse<T> sendFormRequest(
+            final HttpMethod method,
             final String url,
             final LinkedMultiValueMap<String, String> formData,
             final Class<T> responseType) {
         return executeRequest(() -> webClient
-                .post().uri(url)
+                .method(method)
+                .uri(url)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters.fromFormData(formData))
                 .retrieve()
@@ -74,21 +78,24 @@ public class ApiCaller {
     }
 
     /**
-     * 发送 HTTP POST form-data 请求。
+     * 发送 HTTP form-data 请求。
      *
+     * @param method          请求方法
      * @param url             请求地址
      * @param formDataBuilder 表单请求体生成器
      * @param responseType    响应结果类型
      * @param <T>             响应结果类型
      * @return 响应结果
      */
-    public <T> ApiResponse<T> postUploadRequest(
+    public <T> ApiResponse<T> sendUploadRequest(
+            final HttpMethod method,
             final String url,
             final MultipartBodyBuilder formDataBuilder,
             final Class<T> responseType
     ) {
         return executeRequest(() -> webClient
-                .post().uri(url)
+                .method(method)
+                .uri(url)
                 .contentType(MediaType.MULTIPART_FORM_DATA)
                 .body(BodyInserters.fromMultipartData(formDataBuilder.build()))
                 .retrieve()
@@ -97,21 +104,24 @@ public class ApiCaller {
     }
 
     /**
-     * 发送 HTTP POST JSON 请求。
+     * 发送 HTTP JSON 请求。
      *
+     * @param method       请求方法
      * @param url          请求地址
      * @param jsonData     JSON 请求体
      * @param responseType 响应结果类型
      * @param <T>          响应结果类型
      * @return 响应结果
      */
-    public <T> ApiResponse<T> postJsonRequest(
+    public <T> ApiResponse<T> sendJsonRequest(
+            final HttpMethod method,
             final String url,
             final Object jsonData,
             final Class<T> responseType
     ) {
         return executeRequest(() -> webClient
-                .post().uri(url)
+                .method(method)
+                .uri(url)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(jsonData)
                 .retrieve()

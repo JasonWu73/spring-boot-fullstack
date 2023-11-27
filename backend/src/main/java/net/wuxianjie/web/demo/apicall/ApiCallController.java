@@ -9,6 +9,7 @@ import net.wuxianjie.web.shared.apicaller.ApiResponse;
 import net.wuxianjie.web.shared.config.Constants;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,7 +45,7 @@ public class ApiCallController {
     public ApiResponse<OuterData> sendGetRequest() {
         final Map<String, String> urlParams = getSendGetRequestParams();
 
-        return apiCaller.getRequest(
+        return apiCaller.sendGetRequest(
                 "http://localhost:%s/api/v1/test/params".formatted(port),
                 urlParams,
                 OuterData.class
@@ -58,7 +59,8 @@ public class ApiCallController {
     public ApiResponse<OuterData> sendPostFormRequest() {
         final LinkedMultiValueMap<String, String> formData = getSendPostFormRequestParams();
 
-        return apiCaller.postFormRequest(
+        return apiCaller.sendFormRequest(
+                HttpMethod.POST,
                 "http://localhost:%s/api/v1/test/params".formatted(port),
                 formData,
                 OuterData.class
@@ -72,7 +74,8 @@ public class ApiCallController {
     public ApiResponse<Uploaded> sendPostUploadRequest() {
         final MultipartBodyBuilder formDataBuilder = getSendPostUploadRequest();
 
-        return apiCaller.postUploadRequest(
+        return apiCaller.sendUploadRequest(
+                HttpMethod.POST,
                 "http://localhost:%s/api/v1/test/params/upload".formatted(port),
                 formDataBuilder,
                 Uploaded.class
@@ -86,7 +89,8 @@ public class ApiCallController {
     public ApiResponse<OuterData> sendPostJsonRequest() {
         final OuterData jsonData = getSendPostJsonRequestParams();
 
-        return apiCaller.postJsonRequest(
+        return apiCaller.sendJsonRequest(
+                HttpMethod.POST,
                 "http://localhost:%s/api/v1/test/params/json".formatted(port),
                 jsonData,
                 OuterData.class

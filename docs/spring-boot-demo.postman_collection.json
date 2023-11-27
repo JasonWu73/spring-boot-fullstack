@@ -725,27 +725,6 @@
 							"response": []
 						},
 						{
-							"name": "POST JSON 传参",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"url": {
-									"raw": "{{BASE_URL}}/api/v1/test/api-call/json",
-									"host": [
-										"{{BASE_URL}}"
-									],
-									"path": [
-										"api",
-										"v1",
-										"test",
-										"api-call",
-										"json"
-									]
-								}
-							},
-							"response": []
-						},
-						{
 							"name": "POST form-data 传参（支持文本和文件）",
 							"request": {
 								"method": "POST",
@@ -761,6 +740,27 @@
 										"test",
 										"api-call",
 										"upload"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "POST JSON 传参",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/test/api-call/json",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"test",
+										"api-call",
+										"json"
 									]
 								}
 							},
