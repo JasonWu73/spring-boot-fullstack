@@ -49,8 +49,8 @@ public class ApiCallController {
      * GET URL 传参。
      */
     @GetMapping("/params")
-    public ApiResponse<?> sendGetRequest() {
-        final Map<String, String> urlParams = getGetRequestParams();
+    public ApiResponse<OuterData> sendGetRequest() {
+        final Map<String, String> urlParams = getSendGetRequestParams();
 
         return apiCaller.getRequest(
                 "http://localhost:%s/api/v1/test/params".formatted(port),
@@ -63,8 +63,8 @@ public class ApiCallController {
      * POST x-www-form-urlencoded 传参（仅支持文本）。
      */
     @PostMapping("/form")
-    public ApiResponse<?> sendPostFormRequest() {
-        final MultiValueMap<String, String> formData = getPostFormRequestParams();
+    public ApiResponse<OuterData> sendPostFormRequest() {
+        final MultiValueMap<String, String> formData = getSendPostFormRequestParams();
 
         return apiCaller.postFormRequest(
                 "http://localhost:%s/api/v1/test/params".formatted(port),
@@ -77,42 +77,13 @@ public class ApiCallController {
      * POST JSON 传参。
      */
     @PostMapping("/json")
-    public ApiResponse<?> sendPostJsonRequest() {
-        // 构造请求参数
-        final OuterData jsonData = new OuterData(
-                100L,
-                "张三",
-                new InnerData(
-                        new Date(),
-                        LocalDate.now(),
-                        LocalDateTime.now()
-                )
-        );
+    public ApiResponse<OuterData> sendPostJsonRequest() {
+        final OuterData jsonData = getSendPostJsonRequestParams();
 
-        // 发送 POST JSON 请求
-        final ResponseEntity<OuterData> response;
-
-        try {
-            response = getWebClient()
-                    .post().uri("/api/v1/test/params/json")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .bodyValue(jsonData)
-                    .retrieve()
-                    .toEntity(OuterData.class).block();
-        } catch (WebClientResponseException e) {
-            // 读取并返回错误响应结果
-            return new ApiResponse<>(
-                    e.getStatusCode(),
-                    null,
-                    e.getResponseBodyAsString()
-            );
-        }
-
-        // 读取并返回响应结果
-        return new ApiResponse<>(
-                Objects.requireNonNull(response).getStatusCode(),
-                response.getBody(),
-                null
+        return apiCaller.postJsonRequest(
+                "http://localhost:%s/api/v1/test/params/json".formatted(port),
+                jsonData,
+                OuterData.class
         );
     }
 
@@ -163,7 +134,7 @@ public class ApiCallController {
                 .build();
     }
 
-    private static Map<String, String> getGetRequestParams() {
+    private static Map<String, String> getSendGetRequestParams() {
         return Map.of(
                 "name", "张三",
                 "num", "123",
@@ -172,7 +143,7 @@ public class ApiCallController {
         );
     }
 
-    private static MultiValueMap<String, String> getPostFormRequestParams() {
+    private static MultiValueMap<String, String> getSendPostFormRequestParams() {
         final MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
 
         formData.add("name", "张三");
@@ -181,6 +152,18 @@ public class ApiCallController {
         formData.add("dateTime", getNow());
 
         return formData;
+    }
+
+    private static OuterData getSendPostJsonRequestParams() {
+        return new OuterData(
+                100L,
+                "张三",
+                new InnerData(
+                        new Date(),
+                        LocalDate.now(),
+                        LocalDateTime.now()
+                )
+        );
     }
 
     private static String getNow() {

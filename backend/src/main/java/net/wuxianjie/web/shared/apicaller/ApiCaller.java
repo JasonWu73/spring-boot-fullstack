@@ -42,6 +42,7 @@ public class ApiCaller {
         return executeRequest(() -> webClient
                 .get().uri(url, uriBuilder -> {
                     urlParams.forEach(uriBuilder::queryParam);
+
                     return uriBuilder.build();
                 })
                 .retrieve()
@@ -66,6 +67,29 @@ public class ApiCaller {
                 .post().uri(url)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters.fromFormData(formData))
+                .retrieve()
+                .toEntity(responseType).block()
+        );
+    }
+
+    /**
+     * 发送 HTTP POST JSON 请求。
+     *
+     * @param url          请求地址
+     * @param jsonData     JSON 请求体
+     * @param responseType 响应结果类型
+     * @param <T>          响应结果类型
+     * @return 响应结果
+     */
+    public <T> ApiResponse<T> postJsonRequest(
+            final String url,
+            final Object jsonData,
+            final Class<T> responseType
+    ) {
+        return executeRequest(() -> webClient
+                .post().uri(url)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(jsonData)
                 .retrieve()
                 .toEntity(responseType).block()
         );
