@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 import net.wuxianjie.web.shared.Constants;
 import net.wuxianjie.web.shared.validator.EnumValidator;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -21,18 +22,19 @@ import java.util.Date;
 /**
  * 测试常用的请求参数接收方式。
  */
+@Slf4j
 @Validated
 @RestController
 @RequestMapping("/api/v1/test/params")
 public class RequestParamController {
 
     /**
-     * 测试接收请求：
+     * 请求默认支持的传参方式：
      *
      * <ul>
-     *   <li>GET 传参</li>
-     *   <li>POST 表单传参（仅支持文本）</li>
-     *   <li>POST 表单传参（支持文本和文件）</li>
+     *   <li>GET URL 传参</li>
+     *   <li>POST x-www-form-urlencoded 传参（仅支持文本）</li>
+     *   <li>POST form-data 传参（支持文本和文件）</li>
      * </ul>
      */
     @RequestMapping
@@ -44,9 +46,12 @@ public class RequestParamController {
             @DateTimeFormat(pattern = Constants.DATE_TIME_PATTERN)
             final LocalDateTime dateTime
     ) {
-        System.out.printf("name=%s%num=%s%ntype=%s%ndateTime=%s%n", name, num, type, dateTime);
+        log.info("name={}, num={}, type={}, dateTime={}", name, num, type, dateTime);
 
-        final LocalDateTime returnDateTime = dateTime == null ? LocalDateTime.now() : dateTime;
+        final LocalDateTime returnDateTime = dateTime == null
+                ? LocalDateTime.now()
+                : dateTime;
+
         return new OuterData(
                 100L,
                 name,
@@ -59,17 +64,15 @@ public class RequestParamController {
     }
 
     /**
-     * 测试 POST JSON Body 传参。
+     * POST JSON 传参。
      */
     @PostMapping("/json")
-    public OuterData postJsonData(
-            @RequestBody
-            @Valid final OuterData data) {
+    public OuterData postJsonData(@RequestBody @Valid final OuterData data) {
         return data;
     }
 
     /**
-     * 测试 POST 表单传参（支持文本和文件）。
+     * 上传文件。
      */
     @PostMapping("/upload")
     public Uploaded uploadFile(

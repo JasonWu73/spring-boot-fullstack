@@ -42,7 +42,7 @@ public class ApiCallController {
     private int port;
 
     /**
-     * 发送 GET 请求。
+     * GET URL 传参。
      */
     @GetMapping("/params")
     public ApiCallResponse<?> sendGetRequest() {
@@ -85,7 +85,7 @@ public class ApiCallController {
     }
 
     /**
-     * 发送 POST 表单请求（仅文本）。
+     * POST x-www-form-urlencoded 传参（仅支持文本）。
      */
     @PostMapping("/form")
     public ApiCallResponse<?> sendPostFormRequest() {
@@ -123,7 +123,7 @@ public class ApiCallController {
     }
 
     /**
-     * 发送 POST JSON 请求。
+     * POST JSON 传参。
      */
     @PostMapping("/json")
     public ApiCallResponse<?> sendPostJsonRequest() {
@@ -164,7 +164,7 @@ public class ApiCallController {
     }
 
     /**
-     * 发送 POST 表单请求（支持文本和文件）。
+     * POST form-data 传参（支持文本和文件）。
      */
     @PostMapping("/upload")
     public ApiCallResponse<?> sendPostUploadRequest() {
