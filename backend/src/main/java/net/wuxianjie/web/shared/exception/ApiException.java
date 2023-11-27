@@ -3,48 +3,52 @@ package net.wuxianjie.web.shared.exception;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
+/**
+ * API 调用异常。
+ */
 @Getter
 public class ApiException extends RuntimeException {
 
-  public static final String MESSAGE_SEPARATOR = "; ";
+    public static final String MESSAGE_SEPARATOR = "; ";
 
-  private final HttpStatus status;
-  private final String reason;
+    private final HttpStatus status;
+    private final String reason;
 
-  public ApiException(final HttpStatus status, final String reason) {
-    super(reason);
-    this.status = status;
-    this.reason = reason;
-  }
+    public ApiException(final HttpStatus status, final String reason) {
+        super(reason);
+        this.status = status;
+        this.reason = reason;
+    }
 
-  public ApiException(final HttpStatus status, final String reason, final Throwable cause) {
-    super(reason, cause);
-    this.status = status;
-    this.reason = reason;
-  }
+    public ApiException(final HttpStatus status, final String reason, final Throwable cause) {
+        super(reason, cause);
+        this.status = status;
+        this.reason = reason;
+    }
 
-  @Override
-  public String getMessage() {
-    final String message = "%s \"%s\"".formatted(status, reason);
-    final StringBuilder nestedMessage = getNestedMessage(getCause());
-    if (nestedMessage == null) return message;
+    @Override
+    public String getMessage() {
+        final String message = "%s \"%s\"".formatted(status, reason);
+        final StringBuilder nestedMessage = getNestedMessage(getCause());
 
-    return message + MESSAGE_SEPARATOR + nestedMessage;
-  }
+        if (nestedMessage == null) return message;
 
-  private StringBuilder getNestedMessage(final Throwable cause) {
-    if (cause == null) return null;
+        return message + MESSAGE_SEPARATOR + nestedMessage;
+    }
 
-    final StringBuilder sb = new StringBuilder();
-    sb.append("嵌套异常 [")
-      .append(cause.getClass().getName())
-      .append(": ")
-      .append(cause.getMessage())
-      .append("]");
+    private StringBuilder getNestedMessage(final Throwable cause) {
+        if (cause == null) return null;
 
-    final StringBuilder nestedMessage = getNestedMessage(cause.getCause());
-    if (nestedMessage == null) return sb;
+        final StringBuilder sb = new StringBuilder();
+        sb.append("嵌套异常 [")
+                .append(cause.getClass().getName())
+                .append(": ")
+                .append(cause.getMessage())
+                .append("]");
 
-    return sb.append(MESSAGE_SEPARATOR).append(nestedMessage);
-  }
+        final StringBuilder nestedMessage = getNestedMessage(cause.getCause());
+        if (nestedMessage == null) return sb;
+
+        return sb.append(MESSAGE_SEPARATOR).append(nestedMessage);
+    }
 }
