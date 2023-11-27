@@ -31,9 +31,6 @@ const ROOT: AuthorityOption = { value: 'root', label: '超级管理员' }
 const ADMIN: AuthorityOption = { value: 'admin', label: '管理员' }
 const USER: AuthorityOption = { value: 'user', label: '用户' }
 
-const PUBLIC_KEY =
-  'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCmWWFyJSaS/SMYr7hmCSXcwAvPF+aGPbbQFOt3rJXjDVKL2GhumWXH2y+dC5/DoaCtDz3dFTyzuoYyiuTHzbpsQ7ari8LoRunOJ81Hx0szpdKbOYJ5WnUr3mr7qEIwY5Verh1dgknNxuzeeTNlmAeLQj067+B+7m9+xp2WU+VSawIDAQAB'
-
 const STORAGE_KEY = 'demo-auth'
 
 // 这里假设 Vite 运行时使用默认的 5173 端口
@@ -237,7 +234,6 @@ async function requestBackendApi<T>(request: ApiRequest): Promise<FetchResponse<
 export {
   ADMIN,
   AuthProvider,
-  PUBLIC_KEY,
   ROOT,
   USER,
   useAuth,
