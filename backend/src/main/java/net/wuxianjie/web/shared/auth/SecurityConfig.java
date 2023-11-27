@@ -56,6 +56,8 @@ public class SecurityConfig {
         auth.requestMatchers("/api/v1/auth/login").permitAll()
           // 开放获取项目版本号 API
           .requestMatchers("/api/v1/version").permitAll()
+          // 开放测试 API
+          .requestMatchers("/api/v1/test/**").permitAll()
           // 默认所有 API 都需要登录才能访问
           .requestMatchers("/**").authenticated();
       })

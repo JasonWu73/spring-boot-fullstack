@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/redis")
+@RequestMapping("/api/v1/test/redis")
 @RequiredArgsConstructor
 public class RedisController {
 

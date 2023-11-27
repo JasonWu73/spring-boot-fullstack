@@ -18,9 +18,12 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Date;
 
+/**
+ * 测试接收请求参数。
+ */
 @Validated
 @RestController
-@RequestMapping("/api/v1/params")
+@RequestMapping("/api/v1/test/params")
 public class RequestParamController {
 
   /**

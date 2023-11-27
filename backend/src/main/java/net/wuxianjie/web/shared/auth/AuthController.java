@@ -18,7 +18,7 @@ public class AuthController {
    */
   @Operation("登录")
   @PostMapping("/login")
-  public Token login(@Valid @RequestBody final LoginParams params) {
+  public AuthResponse login(@Valid @RequestBody final LoginParams params) {
     return authService.login(params);
   }
 
@@ -36,7 +36,7 @@ public class AuthController {
    * 刷新令牌。
    */
   @PostMapping("/refresh/{refreshToken}")
-  public Token refresh(@PathVariable final String refreshToken) {
+  public AuthResponse refresh(@PathVariable final String refreshToken) {
     return authService.refresh(refreshToken);
   }
 }

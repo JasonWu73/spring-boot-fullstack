@@ -47,7 +47,7 @@ public class RedisLock {
     // 启动一个单独的线程或定时任务来负责 Lock 的续期。这个线程会在 Lock 快到期时，对 Lock 进行续期
     new Thread(() -> {
       // 使用标志变量控制线程
-      while (renewFlags.get(key).get()) {
+      while (renewFlags.get(key) != null && renewFlags.get(key).get()) {
         // 若非当前锁的持有者，则直接退出线程
         final String curValue = stringRedisTemplate.opsForValue().get(key);
         if (curValue == null || !curValue.equals(value)) break;
