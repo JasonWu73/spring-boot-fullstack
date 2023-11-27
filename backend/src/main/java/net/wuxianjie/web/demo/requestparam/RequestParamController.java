@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import net.wuxianjie.web.shared.Constants;
+import net.wuxianjie.web.shared.config.Constants;
 import net.wuxianjie.web.shared.validator.EnumValidator;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;

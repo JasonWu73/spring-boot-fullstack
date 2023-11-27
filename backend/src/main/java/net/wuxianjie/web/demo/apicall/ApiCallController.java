@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import net.wuxianjie.web.demo.requestparam.InnerData;
 import net.wuxianjie.web.demo.requestparam.OuterData;
 import net.wuxianjie.web.demo.requestparam.Uploaded;
-import net.wuxianjie.web.shared.exception.ApiError;
+import net.wuxianjie.web.shared.apicaller.ApiCaller;
+import net.wuxianjie.web.shared.apicaller.ApiResponse;
+import net.wuxianjie.web.shared.config.Constants;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.MediaType;
@@ -22,6 +24,7 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
@@ -37,6 +40,7 @@ public class ApiCallController {
     private final ResourceLoader resourceLoader;
 
     private final WebClient webClient;
+    private final ApiCaller apiCaller;
 
     @Value("${server.port}")
     private int port;
@@ -45,50 +49,20 @@ public class ApiCallController {
      * GET URL 传参。
      */
     @GetMapping("/params")
-    public ApiCallResponse<?> sendGetRequest() {
-        // 构造请求参数
-        final Map<String, String> urlParams = Map.of(
-                "name", "张三",
-                "num", "123",
-                "type", "1",
-                "dateTime", "2021-01-01 12:00:00"
-        );
+    public ApiResponse<?> sendGetRequest() {
+        final Map<String, String> urlParams = getGetRequestParams();
 
-        // 发送 GET 请求
-        final ResponseEntity<OuterData> response;
-
-        try {
-            response = getWebClient()
-                    .get().uri(
-                            uriBuilder -> {
-                                uriBuilder.path("/api/v1/test/params");
-                                urlParams.forEach(uriBuilder::queryParam);
-
-                                return uriBuilder.build();
-                            }
-                    )
-                    .retrieve()
-                    .toEntity(OuterData.class).block();
-        } catch (WebClientResponseException e) {
-            // 读取并返回错误响应结果
-            return new ApiCallResponse<>(
-                    e.getStatusCode().value(),
-                    e.getResponseBodyAs(ApiError.class)
-            );
-        }
-
-        // 读取并返回响应结果
-        return new ApiCallResponse<>(
-                Objects.requireNonNull(response).getStatusCode().value(),
-                response.getBody()
-        );
+        return apiCaller.getRequest(
+                "http://localhost:%s/api/v1/test/params".formatted(port),
+                urlParams,
+                OuterData.class);
     }
 
     /**
      * POST x-www-form-urlencoded 传参（仅支持文本）。
      */
     @PostMapping("/form")
-    public ApiCallResponse<?> sendPostFormRequest() {
+    public ApiResponse<?> sendPostFormRequest() {
         // 构造请求参数
         final MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
 
@@ -109,16 +83,18 @@ public class ApiCallController {
                     .toEntity(OuterData.class).block();
         } catch (WebClientResponseException e) {
             // 读取并返回错误响应结果
-            return new ApiCallResponse<>(
-                    e.getStatusCode().value(),
-                    e.getResponseBodyAs(ApiError.class)
+            return new ApiResponse<>(
+                    e.getStatusCode(),
+                    null,
+                    e.getResponseBodyAsString()
             );
         }
 
         // 读取并返回响应结果
-        return new ApiCallResponse<>(
-                Objects.requireNonNull(response).getStatusCode().value(),
-                response.getBody()
+        return new ApiResponse<>(
+                Objects.requireNonNull(response).getStatusCode(),
+                response.getBody(),
+                null
         );
     }
 
@@ -126,7 +102,7 @@ public class ApiCallController {
      * POST JSON 传参。
      */
     @PostMapping("/json")
-    public ApiCallResponse<?> sendPostJsonRequest() {
+    public ApiResponse<?> sendPostJsonRequest() {
         // 构造请求参数
         final OuterData jsonData = new OuterData(
                 100L,
@@ -150,16 +126,18 @@ public class ApiCallController {
                     .toEntity(OuterData.class).block();
         } catch (WebClientResponseException e) {
             // 读取并返回错误响应结果
-            return new ApiCallResponse<>(
-                    e.getStatusCode().value(),
-                    e.getResponseBodyAs(ApiError.class)
+            return new ApiResponse<>(
+                    e.getStatusCode(),
+                    null,
+                    e.getResponseBodyAsString()
             );
         }
 
         // 读取并返回响应结果
-        return new ApiCallResponse<>(
-                Objects.requireNonNull(response).getStatusCode().value(),
-                response.getBody()
+        return new ApiResponse<>(
+                Objects.requireNonNull(response).getStatusCode(),
+                response.getBody(),
+                null
         );
     }
 
@@ -167,7 +145,7 @@ public class ApiCallController {
      * POST form-data 传参（支持文本和文件）。
      */
     @PostMapping("/upload")
-    public ApiCallResponse<?> sendPostUploadRequest() {
+    public ApiResponse<?> sendPostUploadRequest() {
         // 构造请求参数
         final MultipartBodyBuilder formData = new MultipartBodyBuilder();
         formData.part("message", "测试上传文件");
@@ -188,16 +166,18 @@ public class ApiCallController {
                     .toEntity(Uploaded.class).block();
         } catch (WebClientResponseException e) {
             // 读取并返回错误响应结果
-            return new ApiCallResponse<>(
-                    e.getStatusCode().value(),
-                    e.getResponseBodyAs(ApiError.class)
+            return new ApiResponse<>(
+                    e.getStatusCode(),
+                    null,
+                    e.getResponseBodyAsString()
             );
         }
 
         // 读取并返回响应结果
-        return new ApiCallResponse<>(
-                Objects.requireNonNull(response).getStatusCode().value(),
-                response.getBody()
+        return new ApiResponse<>(
+                Objects.requireNonNull(response).getStatusCode(),
+                response.getBody(),
+                null
         );
     }
 
@@ -206,5 +186,18 @@ public class ApiCallController {
                 .mutate()
                 .baseUrl("http://localhost:%s".formatted(port))
                 .build();
+    }
+
+    private static Map<String, String> getGetRequestParams() {
+        final String now = LocalDateTime.now().format(
+                DateTimeFormatter.ofPattern(Constants.DATE_TIME_PATTERN)
+        );
+
+        return Map.of(
+                "name", "张三",
+                "num", "123",
+                "type", "1",
+                "dateTime", now
+        );
     }
 }

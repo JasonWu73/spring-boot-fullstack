@@ -5,48 +5,19 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import net.wuxianjie.web.shared.Constants;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.codec.json.Jackson2JsonDecoder;
-import org.springframework.http.codec.json.Jackson2JsonEncoder;
-import org.springframework.web.reactive.function.client.WebClient;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-/**
- * 配置 JSON 序列化与反序列化。
- */
 @Configuration
 public class JsonConfig {
 
     /**
-     * 配置 {@code WebClient} 使用指定的 {@code ObjectMapper}。
-     */
-    @Bean
-    public WebClient webClient() {
-        return WebClient.builder()
-                .codecs(configurer -> {
-                            configurer.defaultCodecs().jackson2JsonDecoder(
-                                    new Jackson2JsonDecoder(objectMapper())
-                            );
-                            configurer.defaultCodecs().jackson2JsonEncoder(
-                                    new Jackson2JsonEncoder(objectMapper())
-                            );
-                        }
-                )
-                // 设置请求只接收 JSON 响应
-                .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
-                .build();
-    }
-
-    /**
-     * 配置 JSON 序列化与反序列化。
+     * 配置 Jackson 的 {@code ObjectMapper}，即 Spring Boot 默认使用的 JSON 序列化与反序列化工具。
      */
     @Bean
     public ObjectMapper objectMapper() {
@@ -54,9 +25,9 @@ public class JsonConfig {
         final JavaTimeModule timeModule = getJavaTimeModule();
 
         return JsonMapper.builder()
-                // 在反序列化时，若空字符串转换为 POJO 时（非 `String` 类型），则会转换为 `null`
+                // 若空字符串转换为 POJO 时（非 `String` 类型），则会转换为 `null`
                 .enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT)
-                // 在反序列化时，忽略未知的 JSON 字段
+                // 忽略未知的 JSON 字段，即遇到未知字段时不抛出异常
                 .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
                 // 对 Java 8 `LocalDateTime` 与 `LocalDate` 有效
                 .addModule(timeModule)

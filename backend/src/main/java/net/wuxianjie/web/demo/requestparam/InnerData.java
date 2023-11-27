@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.wuxianjie.web.shared.Constants;
+import net.wuxianjie.web.shared.config.Constants;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;

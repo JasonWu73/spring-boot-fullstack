@@ -1,7 +1,7 @@
 package net.wuxianjie.web.user;
 
 import lombok.RequiredArgsConstructor;
-import net.wuxianjie.web.shared.Constants;
+import net.wuxianjie.web.shared.config.Constants;
 import net.wuxianjie.web.shared.auth.AuthUtils;
 import net.wuxianjie.web.shared.auth.Authority;
 import net.wuxianjie.web.shared.auth.CachedAuth;
