@@ -55,7 +55,8 @@ public class ApiCallController {
         return apiCaller.getRequest(
                 "http://localhost:%s/api/v1/test/params".formatted(port),
                 urlParams,
-                OuterData.class);
+                OuterData.class
+        );
     }
 
     /**
@@ -63,38 +64,12 @@ public class ApiCallController {
      */
     @PostMapping("/form")
     public ApiResponse<?> sendPostFormRequest() {
-        // 构造请求参数
-        final MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
+        final MultiValueMap<String, String> formData = getPostFormRequestParams();
 
-        formData.add("name", "张三");
-        formData.add("num", "123");
-        formData.add("type", "1");
-        formData.add("dateTime", "2021-01-01 12:00:00");
-
-        // 发送 POST 表单请求
-        final ResponseEntity<OuterData> response;
-
-        try {
-            response = getWebClient()
-                    .post().uri("/api/v1/test/params")
-                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                    .bodyValue(formData)
-                    .retrieve()
-                    .toEntity(OuterData.class).block();
-        } catch (WebClientResponseException e) {
-            // 读取并返回错误响应结果
-            return new ApiResponse<>(
-                    e.getStatusCode(),
-                    null,
-                    e.getResponseBodyAsString()
-            );
-        }
-
-        // 读取并返回响应结果
-        return new ApiResponse<>(
-                Objects.requireNonNull(response).getStatusCode(),
-                response.getBody(),
-                null
+        return apiCaller.postFormRequest(
+                "http://localhost:%s/api/v1/test/params".formatted(port),
+                formData,
+                OuterData.class
         );
     }
 
@@ -189,15 +164,28 @@ public class ApiCallController {
     }
 
     private static Map<String, String> getGetRequestParams() {
-        final String now = LocalDateTime.now().format(
-                DateTimeFormatter.ofPattern(Constants.DATE_TIME_PATTERN)
-        );
-
         return Map.of(
                 "name", "张三",
                 "num", "123",
                 "type", "1",
-                "dateTime", now
+                "dateTime", getNow()
+        );
+    }
+
+    private static MultiValueMap<String, String> getPostFormRequestParams() {
+        final MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
+
+        formData.add("name", "张三");
+        formData.add("num", "123");
+        formData.add("type", "1");
+        formData.add("dateTime", getNow());
+
+        return formData;
+    }
+
+    private static String getNow() {
+        return LocalDateTime.now().format(
+                DateTimeFormatter.ofPattern(Constants.DATE_TIME_PATTERN)
         );
     }
 }
