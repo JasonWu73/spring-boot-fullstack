@@ -9,25 +9,18 @@ import net.wuxianjie.web.shared.apicaller.ApiResponse;
 import net.wuxianjie.web.shared.config.Constants;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.reactive.function.BodyInserters;
-import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * 测试常用的 API 调用方式。
@@ -39,7 +32,6 @@ public class ApiCallController {
 
     private final ResourceLoader resourceLoader;
 
-    private final WebClient webClient;
     private final ApiCaller apiCaller;
 
     @Value("${server.port}")
@@ -64,12 +56,26 @@ public class ApiCallController {
      */
     @PostMapping("/form")
     public ApiResponse<OuterData> sendPostFormRequest() {
-        final MultiValueMap<String, String> formData = getSendPostFormRequestParams();
+        final LinkedMultiValueMap<String, String> formData = getSendPostFormRequestParams();
 
         return apiCaller.postFormRequest(
                 "http://localhost:%s/api/v1/test/params".formatted(port),
                 formData,
                 OuterData.class
+        );
+    }
+
+    /**
+     * POST form-data 传参（支持文本和文件）。
+     */
+    @PostMapping("/upload")
+    public ApiResponse<Uploaded> sendPostUploadRequest() {
+        final MultipartBodyBuilder formDataBuilder = getSendPostUploadRequest();
+
+        return apiCaller.postUploadRequest(
+                "http://localhost:%s/api/v1/test/params/upload".formatted(port),
+                formDataBuilder,
+                Uploaded.class
         );
     }
 
@@ -87,53 +93,6 @@ public class ApiCallController {
         );
     }
 
-    /**
-     * POST form-data 传参（支持文本和文件）。
-     */
-    @PostMapping("/upload")
-    public ApiResponse<?> sendPostUploadRequest() {
-        // 构造请求参数
-        final MultipartBodyBuilder formData = new MultipartBodyBuilder();
-        formData.part("message", "测试上传文件");
-        formData.part(
-                "file",
-                resourceLoader.getResource("file:/Users/wxj/Downloads/README.md")
-        );
-
-        // 发送 POST 表单请求
-        final ResponseEntity<Uploaded> response;
-
-        try {
-            response = getWebClient()
-                    .post().uri("/api/v1/test/params/upload")
-                    .contentType(MediaType.MULTIPART_FORM_DATA)
-                    .body(BodyInserters.fromMultipartData(formData.build()))
-                    .retrieve()
-                    .toEntity(Uploaded.class).block();
-        } catch (WebClientResponseException e) {
-            // 读取并返回错误响应结果
-            return new ApiResponse<>(
-                    e.getStatusCode(),
-                    null,
-                    e.getResponseBodyAsString()
-            );
-        }
-
-        // 读取并返回响应结果
-        return new ApiResponse<>(
-                Objects.requireNonNull(response).getStatusCode(),
-                response.getBody(),
-                null
-        );
-    }
-
-    private WebClient getWebClient() {
-        return webClient
-                .mutate()
-                .baseUrl("http://localhost:%s".formatted(port))
-                .build();
-    }
-
     private static Map<String, String> getSendGetRequestParams() {
         return Map.of(
                 "name", "张三",
@@ -143,8 +102,8 @@ public class ApiCallController {
         );
     }
 
-    private static MultiValueMap<String, String> getSendPostFormRequestParams() {
-        final MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
+    private static LinkedMultiValueMap<String, String> getSendPostFormRequestParams() {
+        final LinkedMultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
 
         formData.add("name", "张三");
         formData.add("num", "123");
@@ -152,6 +111,18 @@ public class ApiCallController {
         formData.add("dateTime", getNow());
 
         return formData;
+    }
+
+    private MultipartBodyBuilder getSendPostUploadRequest() {
+        final MultipartBodyBuilder formDataBuilder = new MultipartBodyBuilder();
+
+        formDataBuilder.part("message", "测试上传文件");
+        formDataBuilder.part(
+                "file",
+                resourceLoader.getResource("file:/Users/wxj/Downloads/README.md")
+        );
+
+        return formDataBuilder;
     }
 
     private static OuterData getSendPostJsonRequestParams() {

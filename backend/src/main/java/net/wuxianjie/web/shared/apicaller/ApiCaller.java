@@ -3,8 +3,9 @@ package net.wuxianjie.web.shared.apicaller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.stereotype.Component;
-import org.springframework.util.MultiValueMap;
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
@@ -61,12 +62,35 @@ public class ApiCaller {
      */
     public <T> ApiResponse<T> postFormRequest(
             final String url,
-            final MultiValueMap<String, String> formData,
+            final LinkedMultiValueMap<String, String> formData,
             final Class<T> responseType) {
         return executeRequest(() -> webClient
                 .post().uri(url)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters.fromFormData(formData))
+                .retrieve()
+                .toEntity(responseType).block()
+        );
+    }
+
+    /**
+     * 发送 HTTP POST form-data 请求。
+     *
+     * @param url             请求地址
+     * @param formDataBuilder 表单请求体生成器
+     * @param responseType    响应结果类型
+     * @param <T>             响应结果类型
+     * @return 响应结果
+     */
+    public <T> ApiResponse<T> postUploadRequest(
+            final String url,
+            final MultipartBodyBuilder formDataBuilder,
+            final Class<T> responseType
+    ) {
+        return executeRequest(() -> webClient
+                .post().uri(url)
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .body(BodyInserters.fromMultipartData(formDataBuilder.build()))
                 .retrieve()
                 .toEntity(responseType).block()
         );

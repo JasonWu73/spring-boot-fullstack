@@ -64,14 +64,6 @@ public class RequestParamController {
     }
 
     /**
-     * POST JSON 传参。
-     */
-    @PostMapping("/json")
-    public OuterData postJsonData(@RequestBody @Valid final OuterData data) {
-        return data;
-    }
-
-    /**
      * 上传文件。
      */
     @PostMapping("/upload")
@@ -82,6 +74,14 @@ public class RequestParamController {
         if (file == null || file.isEmpty()) return new Uploaded(false, null, message);
 
         return new Uploaded(true, file.getOriginalFilename(), message);
+    }
+
+    /**
+     * POST JSON 传参。
+     */
+    @PostMapping("/json")
+    public OuterData postJsonData(@RequestBody @Valid final OuterData data) {
+        return data;
     }
 
     @Getter
