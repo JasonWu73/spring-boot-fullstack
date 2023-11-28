@@ -147,20 +147,19 @@ public class AuthServiceImpl implements AuthService {
    * 从 Redis 中删除登录信息。
    */
   private void deleteLoginCache(final String username) {
-    stringRedisTemplate.executePipelined((RedisCallback<?>) connection -> {
-      final byte[] accessTokenBytes = connection
-          .stringCommands()
-          .getDel((LOGGED_IN_USER_KEY_PREFIX + username).getBytes(StandardCharsets.UTF_8));
+    final String loggedInKey = LOGGED_IN_USER_KEY_PREFIX + username;
 
-      if (accessTokenBytes != null) {
-        final String accessKey =
-            ACCESS_TOKEN_KEY_PREFIX + new String(accessTokenBytes, StandardCharsets.UTF_8);
+    final String accessToken = stringRedisTemplate
+        .opsForValue()
+        .get(loggedInKey);
 
-        connection.keyCommands().del(accessKey.getBytes(StandardCharsets.UTF_8));
-      }
+    if (accessToken == null) return;
 
-      return null;
-    });
+    stringRedisTemplate
+        .delete(List.of(
+            ACCESS_TOKEN_KEY_PREFIX + accessToken,
+            loggedInKey
+        ));
   }
 
   /**
