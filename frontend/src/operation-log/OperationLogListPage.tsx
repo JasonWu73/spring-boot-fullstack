@@ -16,10 +16,10 @@ import { useFetch } from '@/shared/hooks/use-fetch'
 import { useRefresh } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
 import {
-  URL_QUERY_KEY_ORDER,
-  URL_QUERY_KEY_ORDER_BY,
   URL_QUERY_KEY_PAGE_NUM,
-  URL_QUERY_KEY_PAGE_SIZE
+  URL_QUERY_KEY_PAGE_SIZE,
+  URL_QUERY_KEY_SORT_COLUMN,
+  URL_QUERY_KEY_SORT_ORDER
 } from '@/shared/utils/constants'
 
 type OperationLog = {
@@ -71,14 +71,14 @@ function OperationLogListPage() {
   async function getLogs() {
     const urlParams: GetLogsParams = { pageNum, pageSize, startAt, endAt }
 
-    const orderBy = searchParams.get(URL_QUERY_KEY_ORDER_BY) || 'requestedAt'
-    const order = searchParams.get(URL_QUERY_KEY_ORDER) || 'desc'
+    const sortColumn = searchParams.get(URL_QUERY_KEY_SORT_COLUMN) || 'requestedAt'
+    const sortOrder = searchParams.get(URL_QUERY_KEY_SORT_ORDER) || 'desc'
     const clientIp = searchParams.get('clientIp')
     const username = searchParams.get('username')
     const message = searchParams.get('message')
 
-    if (orderBy) urlParams.orderBy = orderBy
-    if (order) urlParams.order = order === 'asc' ? 'asc' : 'desc'
+    if (sortColumn) urlParams.sortColumn = sortColumn
+    if (sortOrder) urlParams.sortOrder = sortOrder === 'asc' ? 'asc' : 'desc'
     if (startAt) urlParams.startAt = startAt
     if (endAt) urlParams.endAt = endAt
     if (clientIp) urlParams.clientIp = clientIp

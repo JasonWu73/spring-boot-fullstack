@@ -5,10 +5,10 @@ import type { OperationLog } from '@/operation-log/OperationLogListPage'
 import { DataTable, type Paging } from '@/shared/components/ui/DataTable'
 import { DataTableColumnHeader } from '@/shared/components/ui/DataTableColumnHeader'
 import {
-  URL_QUERY_KEY_ORDER,
-  URL_QUERY_KEY_ORDER_BY,
   URL_QUERY_KEY_PAGE_NUM,
-  URL_QUERY_KEY_PAGE_SIZE
+  URL_QUERY_KEY_PAGE_SIZE,
+  URL_QUERY_KEY_SORT_COLUMN,
+  URL_QUERY_KEY_SORT_ORDER
 } from '@/shared/utils/constants'
 
 type OperationLogTableProps = {
@@ -70,13 +70,13 @@ function OperationLogTable({
   const handleSorting = (sorting: SortingState) => {
     searchParams.delete('requestedAt')
 
-    const orderBy = sorting[0]?.id === '请求时间' ? 'requestedAt' : ''
-    const order = sorting[0]?.desc === true ? 'desc' : 'asc'
+    const sortColumn = sorting[0]?.id === '请求时间' ? 'requestedAt' : ''
+    const sortOrder = sorting[0]?.desc === true ? 'desc' : 'asc'
 
-    if (!orderBy) return
+    if (!sortColumn) return
 
-    searchParams.set(URL_QUERY_KEY_ORDER_BY, orderBy)
-    searchParams.set(URL_QUERY_KEY_ORDER, order)
+    searchParams.set(URL_QUERY_KEY_SORT_COLUMN, sortColumn)
+    searchParams.set(URL_QUERY_KEY_SORT_ORDER, sortOrder)
 
     setSearchParams(searchParams)
   }
@@ -93,9 +93,10 @@ function OperationLogTable({
         total
       }}
       onPaginate={handlePaginate}
-      orderBy={{
-        id: searchParams.get(URL_QUERY_KEY_ORDER_BY) === 'requestedAt' ? '请求时间' : '',
-        desc: searchParams.get(URL_QUERY_KEY_ORDER) !== 'asc'
+      sortColumn={{
+        id:
+          searchParams.get(URL_QUERY_KEY_SORT_COLUMN) === 'requestedAt' ? '请求时间' : '',
+        desc: searchParams.get(URL_QUERY_KEY_SORT_ORDER) !== 'asc'
       }}
       onSorting={handleSorting}
     />

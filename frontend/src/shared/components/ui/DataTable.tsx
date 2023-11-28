@@ -41,7 +41,7 @@ type DataTableProps<TData, TValue> = {
   onPaginate?: (paging: Paging) => void
 
   manualSorting?: boolean
-  orderBy?: ColumnSort
+  sortColumn?: ColumnSort
   onSorting?: (sorting: SortingState) => void
 
   enableRowSelection?: boolean
@@ -64,7 +64,7 @@ function DataTable<TData, TValue>({
   onPaginate,
 
   manualSorting = true,
-  orderBy,
+  sortColumn,
   onSorting,
 
   enableRowSelection = false,
@@ -83,7 +83,7 @@ function DataTable<TData, TValue>({
         pageSize: pagination?.pageSize || DEFAULT_PAGE_SIZE
       },
 
-      sorting: orderBy ? [orderBy] : sorting,
+      sorting: sortColumn ? [sortColumn] : sorting,
 
       columnVisibility,
 

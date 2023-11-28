@@ -3,7 +3,7 @@ package net.wuxianjie.web.shared.operationlog;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import net.wuxianjie.web.shared.auth.Admin;
-import net.wuxianjie.web.shared.pagination.PaginationParams;
+import net.wuxianjie.web.shared.pagination.PaginationParam;
 import net.wuxianjie.web.shared.pagination.PaginationResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,9 +22,9 @@ public class OperationLogController {
   @Admin
   @GetMapping
   public PaginationResult<OperationLog> getLogs(
-    @Valid final PaginationParams paginationParams,
+    @Valid final PaginationParam paginationParam,
     @Valid final GetLogParams logParams
   ) {
-    return operationLogService.getLogs(paginationParams, logParams);
+    return operationLogService.getLogs(paginationParam, logParams);
   }
 }

@@ -1,7 +1,7 @@
 package net.wuxianjie.web.shared.operationlog;
 
 import lombok.RequiredArgsConstructor;
-import net.wuxianjie.web.shared.pagination.PaginationParams;
+import net.wuxianjie.web.shared.pagination.PaginationParam;
 import net.wuxianjie.web.shared.pagination.PaginationResult;
 import net.wuxianjie.web.shared.util.StrUtils;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,7 @@ public class OperationLogService {
   private final OperationLogMapper operationLogMapper;
 
   public PaginationResult<OperationLog> getLogs(
-    final PaginationParams paginationParams,
+    final PaginationParam paginationParam,
     final GetLogParams logParams
   ) {
     // 设置模糊查询参数
@@ -25,7 +25,7 @@ public class OperationLogService {
 
     // 从数据库中查询符合条件的操作日志列表
     final List<OperationLog> list = operationLogMapper.selectByQueryLimit(
-      paginationParams,
+            paginationParam,
       logParams
     );
 
@@ -34,8 +34,8 @@ public class OperationLogService {
 
     // 返回操作日志分页列表
     return new PaginationResult<>(
-      paginationParams.getPageNum(),
-      paginationParams.getPageSize(),
+      paginationParam.getPageNum(),
+      paginationParam.getPageSize(),
       total,
       list
     );

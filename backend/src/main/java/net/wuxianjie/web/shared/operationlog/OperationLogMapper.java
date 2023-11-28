@@ -1,6 +1,6 @@
 package net.wuxianjie.web.shared.operationlog;
 
-import net.wuxianjie.web.shared.pagination.PaginationParams;
+import net.wuxianjie.web.shared.pagination.PaginationParam;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -12,7 +12,7 @@ public interface OperationLogMapper {
   void insert(OperationLog operation);
 
   List<OperationLog> selectByQueryLimit(
-    @Param("p") PaginationParams paginationParams,
+    @Param("p") PaginationParam paginationParam,
     @Param("q") GetLogParams logParams
   );
 

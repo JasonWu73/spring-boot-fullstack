@@ -25,10 +25,10 @@ import { useToast } from '@/shared/components/ui/use-toast'
 import type { SetStateAction } from '@/shared/hooks/use-fetch'
 import { useFetch } from '@/shared/hooks/use-fetch'
 import {
-  URL_QUERY_KEY_ORDER,
-  URL_QUERY_KEY_ORDER_BY,
   URL_QUERY_KEY_PAGE_NUM,
-  URL_QUERY_KEY_PAGE_SIZE
+  URL_QUERY_KEY_PAGE_SIZE,
+  URL_QUERY_KEY_SORT_COLUMN,
+  URL_QUERY_KEY_SORT_ORDER
 } from '@/shared/utils/constants'
 import { cn } from '@/shared/utils/helpers'
 import { ResetPasswordDialog } from '@/user/ResetPasswordDialog'
@@ -369,13 +369,13 @@ function UserTable({
     searchParams.delete('createdAt')
     searchParams.delete('updatedAt')
 
-    const orderBy = sorting[0]?.id === '更新时间' ? 'updatedAt' : 'createdAt'
-    const order = sorting[0]?.desc === true ? 'desc' : 'asc'
+    const sortColumn = sorting[0]?.id === '更新时间' ? 'updatedAt' : 'createdAt'
+    const sortOrder = sorting[0]?.desc === true ? 'desc' : 'asc'
 
-    if (!orderBy) return
+    if (!sortColumn) return
 
-    searchParams.set(URL_QUERY_KEY_ORDER_BY, orderBy)
-    searchParams.set(URL_QUERY_KEY_ORDER, order)
+    searchParams.set(URL_QUERY_KEY_SORT_COLUMN, sortColumn)
+    searchParams.set(URL_QUERY_KEY_SORT_ORDER, sortOrder)
 
     setSearchParams(searchParams)
   }
@@ -393,12 +393,12 @@ function UserTable({
           total
         }}
         onPaginate={handlePaginate}
-        orderBy={{
+        sortColumn={{
           id:
-            searchParams.get(URL_QUERY_KEY_ORDER_BY) === 'updatedAt'
+            searchParams.get(URL_QUERY_KEY_SORT_COLUMN) === 'updatedAt'
               ? '更新时间'
               : '创建时间',
-          desc: searchParams.get(URL_QUERY_KEY_ORDER) !== 'asc'
+          desc: searchParams.get(URL_QUERY_KEY_SORT_ORDER) !== 'asc'
         }}
         onSorting={handleSorting}
         enableRowSelection

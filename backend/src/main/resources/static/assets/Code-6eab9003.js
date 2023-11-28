@@ -1,1 +1,0 @@
-import{j as o,h as r}from"./index-9c64216f.js";function s({children:t,className:e}){return o.jsx("code",{className:r("rounded bg-slate-100 px-1 py-0.5 font-mono text-red-500 dark:bg-night-3 dark:text-[#88C0D0]",e),children:t})}export{s as C};

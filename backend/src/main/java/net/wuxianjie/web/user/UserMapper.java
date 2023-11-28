@@ -1,6 +1,6 @@
 package net.wuxianjie.web.user;
 
-import net.wuxianjie.web.shared.pagination.PaginationParams;
+import net.wuxianjie.web.shared.pagination.PaginationParam;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -16,7 +16,7 @@ public interface UserMapper {
   UserInfo selectInfoById(long userId);
 
   List<UserInfo> selectByQueryLimit(
-    @Param("p") PaginationParams paginationParams,
+    @Param("p") PaginationParam paginationParam,
     @Param("q") GetUserParams userParams
   );
 

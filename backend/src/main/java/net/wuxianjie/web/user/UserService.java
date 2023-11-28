@@ -6,7 +6,7 @@ import net.wuxianjie.web.shared.auth.AuthUtils;
 import net.wuxianjie.web.shared.auth.Authority;
 import net.wuxianjie.web.shared.auth.CachedAuth;
 import net.wuxianjie.web.shared.exception.ApiException;
-import net.wuxianjie.web.shared.pagination.PaginationParams;
+import net.wuxianjie.web.shared.pagination.PaginationParam;
 import net.wuxianjie.web.shared.pagination.PaginationResult;
 import net.wuxianjie.web.shared.util.RsaUtils;
 import net.wuxianjie.web.shared.util.StrUtils;
@@ -93,7 +93,7 @@ public class UserService {
   }
 
   public PaginationResult<UserInfo> getUsers(
-    final PaginationParams paginationParams,
+    final PaginationParam paginationParam,
     final GetUserParams userParams
   ) {
     // 设置模糊查询参数
@@ -101,15 +101,15 @@ public class UserService {
     userParams.setNickname(StrUtils.toNullableLikeValue(userParams.getNickname()));
 
     // 从数据库中查询符合条件的用户列表
-    final List<UserInfo> list = userMapper.selectByQueryLimit(paginationParams, userParams);
+    final List<UserInfo> list = userMapper.selectByQueryLimit(paginationParam, userParams);
 
     // 从数据库中查询符合条件的用户总数
     final long total = userMapper.countByQuery(userParams);
 
     // 返回用户分页列表
     return new PaginationResult<>(
-      paginationParams.getPageNum(),
-      paginationParams.getPageSize(),
+      paginationParam.getPageNum(),
+      paginationParam.getPageSize(),
       total,
       list
     );

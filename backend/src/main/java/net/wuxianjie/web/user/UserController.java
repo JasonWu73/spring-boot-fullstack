@@ -4,7 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import net.wuxianjie.web.shared.auth.Admin;
 import net.wuxianjie.web.shared.auth.Root;
-import net.wuxianjie.web.shared.pagination.PaginationParams;
+import net.wuxianjie.web.shared.pagination.PaginationParam;
 import net.wuxianjie.web.shared.pagination.PaginationResult;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,10 +43,10 @@ public class UserController {
   @Admin
   @GetMapping
   public PaginationResult<UserInfo> getUsers(
-    @Valid final PaginationParams paginationParams,
+    @Valid final PaginationParam paginationParam,
     @Valid final GetUserParams userParams
   ) {
-    return userService.getUsers(paginationParams, userParams);
+    return userService.getUsers(paginationParam, userParams);
   }
 
   /**

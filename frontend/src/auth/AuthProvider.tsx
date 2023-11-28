@@ -7,8 +7,8 @@ import { sendRequest, type ApiRequest } from '@/shared/utils/http'
 type PaginationParams = {
   pageNum: number
   pageSize: number
-  orderBy?: string
-  order?: 'asc' | 'desc'
+  sortColumn?: string
+  sortOrder?: 'asc' | 'desc'
 }
 
 // 分页结果类型
