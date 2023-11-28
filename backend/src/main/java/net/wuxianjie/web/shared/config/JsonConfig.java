@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -15,6 +16,16 @@ import java.time.format.DateTimeFormatter;
 
 @Configuration
 public class JsonConfig {
+
+  @Bean
+  public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {
+    final MappingJackson2HttpMessageConverter converter =
+        new MappingJackson2HttpMessageConverter();
+
+    converter.setObjectMapper(objectMapper());
+
+    return converter;
+  }
 
   /**
    * 配置 Jackson 的 {@code ObjectMapper}，即 Spring Boot 默认使用的 JSON 序列化与反序列化工具。
@@ -45,26 +56,30 @@ public class JsonConfig {
     final JavaTimeModule timeModule = new JavaTimeModule();
 
     timeModule.addSerializer(LocalDateTime.class, new JsonSerializer<>() {
+
       @Override
       public void serialize(
           final LocalDateTime value,
           final JsonGenerator gen,
           final SerializerProvider serializers
       ) throws IOException {
-        gen.writeString(value.format(
-            DateTimeFormatter.ofPattern(Constants.DATE_TIME_PATTERN)
-        ));
+        gen.writeString(
+            value.format(DateTimeFormatter.ofPattern(Constants.DATE_TIME_PATTERN))
+        );
       }
     });
 
     timeModule.addDeserializer(LocalDateTime.class, new JsonDeserializer<>() {
+
       @Override
       public LocalDateTime deserialize(
           final JsonParser p,
           final DeserializationContext ctx
       ) throws IOException {
-        return LocalDateTime.parse(p.getValueAsString(),
-            DateTimeFormatter.ofPattern(Constants.DATE_TIME_PATTERN));
+        return LocalDateTime.parse(
+            p.getValueAsString(),
+            DateTimeFormatter.ofPattern(Constants.DATE_TIME_PATTERN)
+        );
       }
     });
 

@@ -10,7 +10,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>3.1.5</version>
+    <version>3.2.0</version>
     <relativePath /> <!-- lookup parent from repository -->
   </parent>
 
@@ -22,6 +22,7 @@
     <java.version>17</java.version>
 
     <jasypt.version>3.0.5</jasypt.version>
+    <mybatis-spring-boot.version>3.0.3</mybatis-spring-boot.version>
   </properties>
 
 
@@ -44,12 +45,6 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
-    </dependency>
-
-    <!-- 主要使用 WebClient 工具类 -->
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-webflux</artifactId>
     </dependency>
 
     <!-- Spring Security -->
@@ -81,7 +76,7 @@
     <dependency>
       <groupId>org.mybatis.spring.boot</groupId>
       <artifactId>mybatis-spring-boot-starter</artifactId>
-      <version>3.0.2</version>
+      <version>${mybatis-spring-boot.version}</version>
     </dependency>
 
     <!-- MySQL JDBC 驱动 -->
