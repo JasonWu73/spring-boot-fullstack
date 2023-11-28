@@ -3,12 +3,12 @@ package net.wuxianjie.web.demo.redis;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.wuxianjie.web.shared.redis.RedisLock;
+import net.wuxianjie.web.shared.util.StrUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -37,7 +37,7 @@ public class RedisController {
     System.out.printf("[%s] 准备开始执行业务逻辑%n", Thread.currentThread().getName());
 
     // 生成锁的唯一值
-    final String identifier = UUID.randomUUID().toString();
+    final String identifier = StrUtils.generateUuid();
 
     // 直到获取到锁才能执行
     untilGetLock(identifier);
@@ -73,8 +73,8 @@ public class RedisController {
 
   private void delay() {
     try {
-      // 设置大于 RedisLock#LOCK_TIMEOUT_SECS 的超时时间，可以验证锁续期逻辑是否正确
-      TimeUnit.SECONDS.sleep(10);
+      // 设置大于 `RedisLock#LOCK_TIMEOUT_SECONDS` 的超时时间，可以验证锁续期逻辑是否正确
+      TimeUnit.SECONDS.sleep(40);
     } catch (InterruptedException e) {
       throw new RuntimeException(e);
     }

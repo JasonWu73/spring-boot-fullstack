@@ -8,9 +8,7 @@ import net.wuxianjie.web.shared.validator.EnumValidator;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * 实现枚举值校验注解的处理逻辑。
@@ -18,35 +16,58 @@ import java.util.Optional;
 @Slf4j
 public class EnumValidatorImpl implements ConstraintValidator<EnumValidator, Object> {
 
-  public static final String METHOD_NAME = "getCode";
+    /**
+     * 需要校验的枚举值所对应的方法名。
+     */
+    public static final String METHOD_NAME = "getCode";
 
-  private boolean isPassed = false;
-  private List<Object> values;
+    private boolean isPassed = false;
 
-  @Override
-  public void initialize(final EnumValidator enumValidator) {
-    values = new ArrayList<>();
-    final Class<? extends Enum<?>> enumClass = enumValidator.value();
-    Optional.ofNullable(enumClass.getEnumConstants())
-      .ifPresent(enums -> Arrays.stream(enums)
-        .forEach(theEnum -> {
-          try {
-            final Method method = theEnum.getClass().getDeclaredMethod(METHOD_NAME);
-            method.setAccessible(true);
-            values.add(method.invoke(theEnum));
-          } catch (NoSuchMethodException e) {
+    private final List<Object> values = new ArrayList<>();
+
+    @Override
+    public void initialize(final EnumValidator enumValidator) {
+        final Class<? extends Enum<?>> enumClass = enumValidator.value();
+
+        if (!enumClass.isEnum()) {
+            log.warn("忽略枚举值校验 [{} 不是枚举类]", enumClass.getName());
+
             isPassed = true;
-            log.warn("忽略枚举值校验 [{} 不存在 {} 方法]", enumClass.getName(), METHOD_NAME);
-          } catch (InvocationTargetException | IllegalAccessException e) {
-            isPassed = true;
-            log.warn("忽略枚举值校验 [{}.{} 方法执行出错]", enumClass.getName(), METHOD_NAME);
-          }
-        })
-      );
-  }
 
-  @Override
-  public boolean isValid(final Object value, final ConstraintValidatorContext context) {
-    return isPassed || value == null || values.contains(value);
-  }
+            return;
+        }
+
+        final Enum<?>[] enumConstants = enumClass.getEnumConstants();
+
+        for (final Enum<?> theEnum : enumConstants) {
+            try {
+                final Method method = theEnum.getClass().getDeclaredMethod(METHOD_NAME);
+
+                method.setAccessible(true);
+
+                values.add(method.invoke(theEnum));
+            } catch (NoSuchMethodException e) {
+                isPassed = true;
+
+                log.warn(
+                        "忽略枚举值校验 [{} 不存在 {} 方法]",
+                        enumClass.getName(),
+                        METHOD_NAME
+                );
+            } catch (InvocationTargetException | IllegalAccessException e) {
+                isPassed = true;
+
+                log.warn(
+                        "忽略枚举值校验 [{}.{} 方法执行出错]",
+                        enumClass.getName(),
+                        METHOD_NAME
+                );
+            }
+        }
+    }
+
+    @Override
+    public boolean isValid(final Object value, final ConstraintValidatorContext context) {
+        return isPassed || value == null || values.contains(value);
+    }
 }
