@@ -59,7 +59,8 @@ public class EnumTypeHandler<T extends Enum<?> & EnumType>
   private T toEnum(final Class<T> enumClass, final int value) {
     return Optional
         .ofNullable(enumClass.getEnumConstants())
-        .flatMap(enums -> Arrays.stream(enums)
+        .flatMap(enums -> Arrays
+            .stream(enums)
             .filter(theEnum -> theEnum.getCode() == value)
             .findFirst()
         )

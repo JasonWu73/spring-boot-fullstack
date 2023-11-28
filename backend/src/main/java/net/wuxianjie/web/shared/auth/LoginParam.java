@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginParams {
+public class LoginParam {
 
   /**
    * 加密后的用户名（不区分大小写），必填。

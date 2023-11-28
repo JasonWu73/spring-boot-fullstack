@@ -35,8 +35,9 @@ public enum Authority {
   public static Optional<Authority> resolve(final String code) {
     if (code == null) return Optional.empty();
 
-    return Arrays.stream(VALUES)
-      .filter(value -> value.code.equals(code))
-      .findFirst();
+    return Arrays
+        .stream(VALUES)
+        .filter(value -> value.code.equals(code))
+        .findFirst();
   }
 }

@@ -10,5 +10,4 @@ import java.lang.annotation.Target;
 @PreAuthorize("hasAuthority('root')")
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Root {
-}
+public @interface Root {}

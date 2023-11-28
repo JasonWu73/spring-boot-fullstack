@@ -10,5 +10,4 @@ import java.lang.annotation.Target;
 @PreAuthorize("hasAuthority('admin')")
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Admin {
-}
+public @interface Admin {}

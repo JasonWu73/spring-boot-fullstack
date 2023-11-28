@@ -18,8 +18,8 @@ public class AuthController {
    */
   @Operation("登录")
   @PostMapping("/login")
-  public AuthResponse login(@Valid @RequestBody final LoginParams params) {
-    return authService.login(params);
+  public AuthResponse login(@Valid @RequestBody final LoginParam param) {
+    return authService.login(param);
   }
 
   /**

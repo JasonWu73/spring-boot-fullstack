@@ -29,8 +29,9 @@ public enum AccountStatus implements EnumType {
   public static Optional<AccountStatus> resolve(final Integer code) {
     if (code == null) return Optional.empty();
 
-    return Arrays.stream(VALUES)
-      .filter(value -> value.code == code)
-      .findFirst();
+    return Arrays
+        .stream(VALUES)
+        .filter(value -> value.code == code)
+        .findFirst();
   }
 }

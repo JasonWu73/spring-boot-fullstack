@@ -13,10 +13,10 @@ import java.util.List;
  * @param refreshToken 刷新令牌，用于刷新访问令牌
  */
 public record CachedAuth(
-  long userId,
-  String username,
-  String nickname,
-  List<String> authorities,
-  String accessToken,
-  String refreshToken
+    long userId,
+    String username,
+    String nickname,
+    List<String> authorities,
+    String accessToken,
+    String refreshToken
 ) {}

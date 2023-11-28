@@ -2,7 +2,7 @@ package net.wuxianjie.web.shared.auth;
 
 public interface AuthService {
 
-  AuthResponse login(LoginParams params);
+  AuthResponse login(LoginParam param);
 
   void logout();
 

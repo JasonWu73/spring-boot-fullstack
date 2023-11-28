@@ -12,9 +12,9 @@ import java.util.List;
  * @param authorities      功能权限列表
  */
 public record AuthResponse(
-  String accessToken,
-  String refreshToken,
-  int expiresInSeconds,
-  String nickname,
-  List<String> authorities
+    String accessToken,
+    String refreshToken,
+    int expiresInSeconds,
+    String nickname,
+    List<String> authorities
 ) {}

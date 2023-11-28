@@ -4,8 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import net.wuxianjie.web.shared.config.Constants;
 import net.wuxianjie.web.shared.auth.*;
+import net.wuxianjie.web.shared.config.Constants;
 import net.wuxianjie.web.shared.exception.ApiException;
 import net.wuxianjie.web.shared.util.RsaUtils;
 import net.wuxianjie.web.shared.util.StrUtils;
@@ -44,20 +44,20 @@ public class AuthServiceImpl implements AuthService {
   private final UserMapper userMapper;
 
   @Override
-  public AuthResponse login(final LoginParams params) {
+  public AuthResponse login(final LoginParam param) {
     // 解密用户名和密码
     final String username;
     final String password;
     try {
-      username = RsaUtils.decrypt(params.getUsername(), Constants.RSA_PRIVATE_KEY);
-      password = RsaUtils.decrypt(params.getPassword(), Constants.RSA_PRIVATE_KEY);
+      username = RsaUtils.decrypt(param.getUsername(), Constants.RSA_PRIVATE_KEY);
+      password = RsaUtils.decrypt(param.getPassword(), Constants.RSA_PRIVATE_KEY);
     } catch (Exception e) {
       throw new ApiException(HttpStatus.UNAUTHORIZED, "用户名或密码错误", e);
     }
 
     // 从数据库中查询用户信息
     final User user = Optional.ofNullable(userMapper.selectByUsername(username))
-      .orElseThrow(() -> new ApiException(HttpStatus.UNAUTHORIZED, "用户名或密码错误"));
+        .orElseThrow(() -> new ApiException(HttpStatus.UNAUTHORIZED, "用户名或密码错误"));
 
     // 检查账号状态
     if (user.getStatus() == AccountStatus.DISABLED) {
@@ -75,20 +75,20 @@ public class AuthServiceImpl implements AuthService {
 
     // 将登录信息写入 Spring Security Context
     final CachedAuth auth = new CachedAuth(
-      user.getId(),
-      user.getUsername(),
-      user.getNickname(),
-      user.getAuthorities() != null
-        ? List.of(user.getAuthorities().split(","))
-        : List.of(),
-      accessToken,
-      refreshToken
+        user.getId(),
+        user.getUsername(),
+        user.getNickname(),
+        user.getAuthorities() != null
+            ? List.of(user.getAuthorities().split(","))
+            : List.of(),
+        accessToken,
+        refreshToken
     );
     AuthUtils.setAuthenticatedContext(auth, request);
 
     // 从 Redis 中删除旧的登录信息
     final String oldAccessToken = stringRedisTemplate.opsForValue().get(
-      KEY_PREFIX_LOGGED_IN_USER + user.getUsername()
+        KEY_PREFIX_LOGGED_IN_USER + user.getUsername()
     );
 
     if (oldAccessToken != null) {
@@ -107,11 +107,11 @@ public class AuthServiceImpl implements AuthService {
 
     // 返回响应数据
     return new AuthResponse(
-      accessToken,
-      refreshToken,
-      TOKEN_EXPIRES_IN_SECONDS,
-      user.getNickname(),
-      auth.authorities()
+        accessToken,
+        refreshToken,
+        TOKEN_EXPIRES_IN_SECONDS,
+        user.getNickname(),
+        auth.authorities()
     );
   }
 
@@ -139,7 +139,7 @@ public class AuthServiceImpl implements AuthService {
 
     // 从数据库中查询用户信息
     final User user = Optional.ofNullable(userMapper.selectById(oldAuth.userId()))
-      .orElseThrow(() -> new ApiException(HttpStatus.UNAUTHORIZED, "用户不存在"));
+        .orElseThrow(() -> new ApiException(HttpStatus.UNAUTHORIZED, "用户不存在"));
 
     // 检查账号状态
     if (user.getStatus() == AccountStatus.DISABLED) {
@@ -152,14 +152,14 @@ public class AuthServiceImpl implements AuthService {
 
     // 保存登录信息至 Redis
     final CachedAuth newAuth = new CachedAuth(
-      user.getId(),
-      user.getUsername(),
-      user.getNickname(),
-      user.getAuthorities() != null
-        ? List.of(user.getAuthorities().split(","))
-        : List.of(),
-      newAccessToken,
-      newRefreshToken
+        user.getId(),
+        user.getUsername(),
+        user.getNickname(),
+        user.getAuthorities() != null
+            ? List.of(user.getAuthorities().split(","))
+            : List.of(),
+        newAccessToken,
+        newRefreshToken
     );
 
     final String newAuthJson;
@@ -173,11 +173,11 @@ public class AuthServiceImpl implements AuthService {
 
     // 返回响应数据
     return new AuthResponse(
-      newAccessToken,
-      newRefreshToken,
-      TOKEN_EXPIRES_IN_SECONDS,
-      newAuth.nickname(),
-      newAuth.authorities()
+        newAccessToken,
+        newRefreshToken,
+        TOKEN_EXPIRES_IN_SECONDS,
+        newAuth.nickname(),
+        newAuth.authorities()
     );
   }
 
@@ -187,7 +187,7 @@ public class AuthServiceImpl implements AuthService {
   public void logout(final String username) {
     // 从 Redis 中删除登录信息
     final String accessToken = stringRedisTemplate.opsForValue().get(
-      KEY_PREFIX_LOGGED_IN_USER + username
+        KEY_PREFIX_LOGGED_IN_USER + username
     );
 
     if (accessToken != null) {
@@ -207,22 +207,22 @@ public class AuthServiceImpl implements AuthService {
    * 保存登录信息至 Redis。
    */
   private void saveLoginCache(
-    final String accessToken,
-    final String authJson,
-    final String username
+      final String accessToken,
+      final String authJson,
+      final String username
   ) {
     stringRedisTemplate.opsForValue().set(
-      KEY_PREFIX_ACCESS_TOKEN + accessToken,
-      authJson,
-      TOKEN_EXPIRES_IN_SECONDS,
-      TimeUnit.SECONDS
+        KEY_PREFIX_ACCESS_TOKEN + accessToken,
+        authJson,
+        TOKEN_EXPIRES_IN_SECONDS,
+        TimeUnit.SECONDS
     );
 
     stringRedisTemplate.opsForValue().set(
-      KEY_PREFIX_LOGGED_IN_USER + username,
-      accessToken,
-      TOKEN_EXPIRES_IN_SECONDS,
-      TimeUnit.SECONDS
+        KEY_PREFIX_LOGGED_IN_USER + username,
+        accessToken,
+        TOKEN_EXPIRES_IN_SECONDS,
+        TimeUnit.SECONDS
     );
   }
 }
