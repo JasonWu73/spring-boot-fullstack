@@ -20,48 +20,49 @@ import java.util.Optional;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EnumTypeHandler<T extends Enum<?> & EnumType>
-        extends BaseTypeHandler<EnumType> {
+    extends BaseTypeHandler<EnumType> {
 
-    private Class<T> enumType;
+  private Class<T> enumType;
 
-    @Override
-    public void setNonNullParameter(
-            final PreparedStatement ps,
-            final int i,
-            final EnumType parameter,
-            final JdbcType jdbcType
-    ) throws SQLException {
-        ps.setInt(i, parameter.getCode());
-    }
+  @Override
+  public void setNonNullParameter(
+      final PreparedStatement ps,
+      final int i,
+      final EnumType parameter,
+      final JdbcType jdbcType
+  ) throws SQLException {
+    ps.setInt(i, parameter.getCode());
+  }
 
-    @Override
-    public EnumType getNullableResult(
-            final ResultSet rs,
-            final String columnName
-    ) throws SQLException {
-        return toEnum(enumType, rs.getInt(columnName));
-    }
+  @Override
+  public EnumType getNullableResult(
+      final ResultSet rs,
+      final String columnName
+  ) throws SQLException {
+    return toEnum(enumType, rs.getInt(columnName));
+  }
 
-    @Override
-    public EnumType getNullableResult(final ResultSet rs, final int columnIndex)
-            throws SQLException {
-        return toEnum(enumType, rs.getInt(columnIndex));
-    }
+  @Override
+  public EnumType getNullableResult(final ResultSet rs, final int columnIndex)
+      throws SQLException {
+    return toEnum(enumType, rs.getInt(columnIndex));
+  }
 
-    @Override
-    public EnumType getNullableResult(
-            final CallableStatement cs,
-            final int columnIndex
-    ) throws SQLException {
-        return toEnum(enumType, cs.getInt(columnIndex));
-    }
+  @Override
+  public EnumType getNullableResult(
+      final CallableStatement cs,
+      final int columnIndex
+  ) throws SQLException {
+    return toEnum(enumType, cs.getInt(columnIndex));
+  }
 
-    private T toEnum(final Class<T> enumClass, final int value) {
-        return Optional.ofNullable(enumClass.getEnumConstants())
-                .flatMap(enums -> Arrays.stream(enums)
-                        .filter(theEnum -> theEnum.getCode() == value)
-                        .findFirst()
-                )
-                .orElse(null);
-    }
+  private T toEnum(final Class<T> enumClass, final int value) {
+    return Optional
+        .ofNullable(enumClass.getEnumConstants())
+        .flatMap(enums -> Arrays.stream(enums)
+            .filter(theEnum -> theEnum.getCode() == value)
+            .findFirst()
+        )
+        .orElse(null);
+  }
 }

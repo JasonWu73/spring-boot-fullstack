@@ -35,8 +35,8 @@ public class GlobalExceptionHandler {
     writeToLog(e);
 
     return ResponseEntity
-      .status(e.getStatus())
-      .body(new ApiError(e.getStatus(), e.getReason()));
+        .status(e.getStatus())
+        .body(new ApiError(e.getStatus(), e.getReason()));
   }
 
   /**
@@ -50,12 +50,11 @@ public class GlobalExceptionHandler {
       throw springSecurity403Exception;
     }
 
-    final HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
     log.error("落空的服务异常: {}", e.getMessage(), e);
 
     return ResponseEntity
-      .status(status)
-      .body(new ApiError(status, "服务异常"));
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .body(new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, "服务异常"));
   }
 
   /**
@@ -70,20 +69,24 @@ public class GlobalExceptionHandler {
    */
   @ExceptionHandler(ConstraintViolationException.class)
   public ResponseEntity<ApiError> handleConstraintViolationException(
-    final ConstraintViolationException e
+      final ConstraintViolationException e
   ) {
-    final StringBuilder sb = new StringBuilder();
-    Optional.ofNullable(e.getConstraintViolations()).ifPresent(
-      violations -> violations.forEach(violation -> {
-        if (!sb.isEmpty()) {
-          sb.append(ApiException.MESSAGE_SEPARATOR);
-        }
+    final StringBuilder stringBuilder = new StringBuilder();
 
-        sb.append(violation.getMessage());
-      })
+    Optional
+        .ofNullable(e.getConstraintViolations())
+        .ifPresent(violations -> violations.forEach(violation -> {
+              if (!stringBuilder.isEmpty()) {
+                stringBuilder.append(ApiException.MESSAGE_SEPARATOR);
+              }
+
+              stringBuilder.append(violation.getMessage());
+            })
+        );
+
+    return handleApiException(
+        new ApiException(HttpStatus.BAD_REQUEST, stringBuilder.toString(), e)
     );
-
-    return handleApiException(new ApiException(HttpStatus.BAD_REQUEST, sb.toString(), e));
   }
 
   /**
@@ -98,37 +101,45 @@ public class GlobalExceptionHandler {
    */
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public ResponseEntity<ApiError> handleMethodArgumentNotValidException(
-    final MethodArgumentNotValidException e
+      final MethodArgumentNotValidException e
   ) {
-    final StringBuilder sb = new StringBuilder();
-    e.getBindingResult().getFieldErrors().forEach(error -> {
-      if (!sb.isEmpty()) {
-        sb.append(ApiException.MESSAGE_SEPARATOR);
-      }
+    final StringBuilder stringBuilder = new StringBuilder();
 
-      if (error.isBindingFailure()) {
-        final String field = error.getField();
-        final Object rejectedValue = error.getRejectedValue();
-        final String reason = "参数值不合法 [%s=%s]".formatted(field, rejectedValue);
-        sb.append(reason);
-        return;
-      }
+    e
+        .getBindingResult()
+        .getFieldErrors()
+        .forEach(error -> {
+          if (!stringBuilder.isEmpty()) {
+            stringBuilder.append(ApiException.MESSAGE_SEPARATOR);
+          }
 
-      sb.append(error.getDefaultMessage());
-    });
+          if (error.isBindingFailure()) {
+            final String field = error.getField();
+            final Object rejectedValue = error.getRejectedValue();
+            final String reason = "参数值不合法 [%s=%s]".formatted(field, rejectedValue);
 
-    return handleApiException(new ApiException(HttpStatus.BAD_REQUEST, sb.toString(), e));
+            stringBuilder.append(reason);
+
+            return;
+          }
+
+          stringBuilder.append(error.getDefaultMessage());
+        });
+
+    return handleApiException(
+        new ApiException(HttpStatus.BAD_REQUEST, stringBuilder.toString(), e)
+    );
   }
 
   /**
    * 处理因缺少请求参数（{@code @RequestParam} 默认为必填参数）而产生的异常。
    */
   @ExceptionHandler({
-    MissingServletRequestParameterException.class,
-    MissingServletRequestPartException.class
+      MissingServletRequestParameterException.class,
+      MissingServletRequestPartException.class
   })
   public ResponseEntity<ApiError> handleMissingServletRequestParameterException(
-    final Exception e
+      final Exception e
   ) {
     final String paramName;
 
@@ -141,6 +152,7 @@ public class GlobalExceptionHandler {
     }
 
     String reason = "缺少必填参数 [%s]".formatted(paramName);
+
     return handleApiException(new ApiException(HttpStatus.BAD_REQUEST, reason, e));
   }
 
@@ -149,11 +161,12 @@ public class GlobalExceptionHandler {
    */
   @ExceptionHandler(MethodArgumentTypeMismatchException.class)
   public ResponseEntity<ApiError> handleMethodArgumentTypeMismatchException(
-    final MethodArgumentTypeMismatchException e
+      final MethodArgumentTypeMismatchException e
   ) {
     final String paramName = e.getName();
     final Object paramValue = e.getValue();
     final String reason = "参数值不合法 [%s=%s]".formatted(paramName, paramValue);
+
     return handleApiException(new ApiException(HttpStatus.BAD_REQUEST, reason, e));
   }
 
@@ -162,13 +175,11 @@ public class GlobalExceptionHandler {
    */
   @ExceptionHandler(HttpMessageNotReadableException.class)
   public ResponseEntity<ApiError> handleHttpMessageNotReadableException(
-    final HttpMessageNotReadableException e
+      final HttpMessageNotReadableException e
   ) {
-    return handleApiException(new ApiException(
-      HttpStatus.BAD_REQUEST,
-      "无法解析请求体内容",
-      e
-    ));
+    return handleApiException(
+        new ApiException(HttpStatus.BAD_REQUEST, "无法解析请求体内容", e)
+    );
   }
 
   /**
@@ -176,10 +187,11 @@ public class GlobalExceptionHandler {
    */
   @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
   public ResponseEntity<ApiError> handleHttpRequestMethodNotSupportedException(
-    final HttpRequestMethodNotSupportedException e,
-    final HttpServletRequest request
+      final HttpRequestMethodNotSupportedException e,
+      final HttpServletRequest request
   ) {
     final String reason = "不支持的请求方法 [%s]".formatted(request.getMethod());
+
     return handleApiException(new ApiException(HttpStatus.METHOD_NOT_ALLOWED, reason, e));
   }
 
@@ -188,13 +200,14 @@ public class GlobalExceptionHandler {
    */
   @ExceptionHandler(HttpMediaTypeException.class)
   public ResponseEntity<ApiError> handleHttpMediaTypeException(
-    final HttpMediaTypeException e,
-    final HttpServletRequest request
+      final HttpMediaTypeException e,
+      final HttpServletRequest request
   ) {
     final String reason = "不支持的媒体类型 [%s: %s]".formatted(
-      HttpHeaders.CONTENT_TYPE,
-      request.getHeader(HttpHeaders.CONTENT_TYPE)
+        HttpHeaders.CONTENT_TYPE,
+        request.getHeader(HttpHeaders.CONTENT_TYPE)
     );
+
     return handleApiException(new ApiException(HttpStatus.NOT_ACCEPTABLE, reason, e));
   }
 
@@ -204,7 +217,7 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(MultipartException.class)
   public ResponseEntity<ApiError> handleMultipartException(final MultipartException e) {
     return handleApiException(
-      new ApiException(HttpStatus.NOT_ACCEPTABLE, "仅支持 Multipart 请求", e)
+        new ApiException(HttpStatus.NOT_ACCEPTABLE, "仅支持 Multipart 请求", e)
     );
   }
 
@@ -220,8 +233,10 @@ public class GlobalExceptionHandler {
     // 因为是已经识别了的异常，故不需要记录错误的堆栈信息
     // 以 WARN 级别记录客户端异常
     final boolean isClientError = e.getStatus().is4xxClientError();
+
     if (isClientError) {
       log.warn("客户端异常: {}", e.getMessage());
+
       return;
     }
 
