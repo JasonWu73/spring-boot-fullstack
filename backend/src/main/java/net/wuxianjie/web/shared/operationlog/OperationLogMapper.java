@@ -9,12 +9,12 @@ import java.util.List;
 @Mapper
 public interface OperationLogMapper {
 
-  void insert(OperationLog operation);
-
   List<OperationLog> selectByQueryLimit(
-    @Param("p") PaginationParam paginationParam,
-    @Param("q") GetLogParams logParams
+      @Param("p") PaginationParam paginationParam,
+      @Param("q") GetLogParam logParam
   );
 
-  long countByQuery(@Param("q") GetLogParams logParams);
+  long countByQuery(@Param("q") GetLogParam logParam);
+
+  void insert(OperationLog operation);
 }

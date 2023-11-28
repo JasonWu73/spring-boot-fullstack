@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetLogParams {
+public class GetLogParam {
 
   /**
    * 开始日期。

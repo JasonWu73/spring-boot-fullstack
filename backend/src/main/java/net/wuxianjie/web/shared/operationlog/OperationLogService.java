@@ -15,29 +15,33 @@ public class OperationLogService {
   private final OperationLogMapper operationLogMapper;
 
   public PaginationResult<OperationLog> getLogs(
-    final PaginationParam paginationParam,
-    final GetLogParams logParams
+      final PaginationParam paginationParam,
+      final GetLogParam logParam
   ) {
     // 设置模糊查询参数
-    logParams.setClientIp(StrUtils.toNullableLikeValue(logParams.getClientIp()));
-    logParams.setUsername(StrUtils.toNullableLikeValue(logParams.getUsername()));
-    logParams.setMessage(StrUtils.toNullableLikeValue(logParams.getMessage()));
+    setFuzzySearchParams(logParam);
 
     // 从数据库中查询符合条件的操作日志列表
     final List<OperationLog> list = operationLogMapper.selectByQueryLimit(
-            paginationParam,
-      logParams
+        paginationParam,
+        logParam
     );
 
     // 从数据库中查询符合条件的操作日志总数
-    final long total = operationLogMapper.countByQuery(logParams);
+    final long total = operationLogMapper.countByQuery(logParam);
 
     // 返回操作日志分页列表
     return new PaginationResult<>(
-      paginationParam.getPageNum(),
-      paginationParam.getPageSize(),
-      total,
-      list
+        paginationParam.getPageNum(),
+        paginationParam.getPageSize(),
+        total,
+        list
     );
+  }
+
+  private void setFuzzySearchParams(final GetLogParam logParam) {
+    logParam.setClientIp(StrUtils.toNullableLikeValue(logParam.getClientIp()));
+    logParam.setUsername(StrUtils.toNullableLikeValue(logParam.getUsername()));
+    logParam.setMessage(StrUtils.toNullableLikeValue(logParam.getMessage()));
   }
 }

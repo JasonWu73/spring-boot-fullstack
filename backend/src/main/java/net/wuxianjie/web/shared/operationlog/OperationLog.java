@@ -1,14 +1,13 @@
 package net.wuxianjie.web.shared.operationlog;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+/**
+ * 操作日志。
+ */
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class OperationLog {
 
   /**

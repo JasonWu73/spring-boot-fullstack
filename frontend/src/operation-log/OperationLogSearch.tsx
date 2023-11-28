@@ -13,11 +13,11 @@ import { URL_QUERY_KEY_PAGE_NUM, URL_QUERY_KEY_PAGE_SIZE } from '@/shared/utils/
 
 const formSchema = z.object({
   startAt: z
-    .date({ required_error: '必须选择开始时间' })
-    .max(addDays(new Date(), +1), '开始时间不能是未来的日期'),
+    .date({ required_error: '必须选择开始日期' })
+    .max(addDays(new Date(), +1), '开始日期不能是未来的日期'),
   endAt: z
-    .date({ required_error: '必须选择结束时间' })
-    .max(addDays(new Date(), +1), '结束时间不能是未来的日期'),
+    .date({ required_error: '必须选择结束日期' })
+    .max(addDays(new Date(), +1), '结束日期不能是未来的日期'),
   clientIp: z.string().trim(),
   username: z.string().trim(),
   message: z.string().trim()
@@ -94,9 +94,9 @@ function OperationLogSearch({ loading }: OperationLogSearchProps) {
         <FormCalendar
           control={form.control}
           name="startAt"
-          label="开始时间"
+          label="开始日期"
           labelWidth={60}
-          placeholder="开始时间"
+          placeholder="开始日期"
           disabledWhen={(date) => date > new Date() || date < new Date('1900-01-01')}
           isError={form.getFieldState('startAt')?.invalid}
         />
@@ -104,9 +104,9 @@ function OperationLogSearch({ loading }: OperationLogSearchProps) {
         <FormCalendar
           control={form.control}
           name="endAt"
-          label="结束时间"
+          label="结束日期"
           labelWidth={60}
-          placeholder="结束时间"
+          placeholder="结束日期"
           disabledWhen={(date) => date > new Date() || date < new Date('1900-01-01')}
           isError={form.getFieldState('endAt')?.invalid}
         />

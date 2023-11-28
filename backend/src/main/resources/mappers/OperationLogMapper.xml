@@ -1,48 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.wuxianjie.web.shared.operationlog.OperationLogMapper">
-    <insert id="insert">
-        INSERT INTO operation_log (requested_at, client_ip, username, message)
-        VALUES (#{requestedAt}, #{clientIp}, #{username}, #{message})
-    </insert>
+  <select
+      id="selectByQueryLimit"
+      resultType="net.wuxianjie.web.shared.operationlog.OperationLog"
+  >
+    SELECT id,
+           requested_at as requestedAt,
+           client_ip as clientIp,
+           username,
+           message
+    FROM operation_log
+    <include refid="whereQuery" />
+    <if test="p.sortColumn != null and p.sortColumn == 'requestedAt'">
+      ORDER BY ${p.sortColumn} ${p.sortOrder}
+    </if>
+    LIMIT #{p.offset}, #{p.pageSize}
+  </select>
 
-    <select
-            id="selectByQueryLimit"
-            resultType="net.wuxianjie.web.shared.operationlog.OperationLog"
-    >
-        SELECT id,
-        requested_at as requestedAt,
-        client_ip as clientIp,
-        username,
-        message
-        FROM operation_log
-        <include refid="whereQuery" />
-        <if test="p.sortColumn != null and p.sortColumn == 'requestedAt'">
-            ORDER BY ${p.sortColumn} ${p.sortOrder}
-        </if>
-        LIMIT #{p.offset}, #{p.pageSize}
-    </select>
+  <select id="countByQuery" resultType="long">
+    SELECT COUNT(1)
+    FROM operation_log
+    <include refid="whereQuery" />
+  </select>
 
-    <select id="countByQuery" resultType="long">
-        SELECT COUNT(1)
-        FROM operation_log
-        <include refid="whereQuery" />
-    </select>
+  <sql id="whereQuery">
+    <where>
+      AND requested_at &gt;= CONCAT(#{q.startAt}, ' 00:00:00')
+      AND requested_at &lt;= CONCAT(#{q.endAt}, ' 23:59:59')
+      <if test="q.clientIp != null and q.clientIp != ''">
+        AND client_ip LIKE #{q.clientIp}
+      </if>
+      <if test="q.username != null and q.username != ''">
+        AND username LIKE #{q.username}
+      </if>
+      <if test="q.message != null and q.message != ''">
+        AND message LIKE #{q.message}
+      </if>
+    </where>
+  </sql>
 
-    <sql id="whereQuery">
-        <where>
-            requested_at &gt;= CONCAT(#{q.startAt}, ' 00:00:00')
-            AND requested_at &lt;= CONCAT(#{q.endAt}, ' 23:59:59')
-            <if test="q.clientIp != null and q.clientIp != ''">
-                AND client_ip LIKE #{q.clientIp}
-            </if>
-            <if test="q.username != null and q.username != ''">
-                AND username LIKE #{q.username}
-            </if>
-            <if test="q.message != null and q.message != ''">
-                AND message LIKE #{q.message}
-            </if>
-        </where>
-    </sql>
+  <insert id="insert">
+    INSERT INTO operation_log (requested_at, client_ip, username, message)
+    VALUES (#{requestedAt}, #{clientIp}, #{username}, #{message})
+  </insert>
 </mapper>

@@ -7,9 +7,9 @@ import java.util.List;
 @Mapper
 public interface MyBatisMapper {
 
-  void insertData(MyBatisData data);
-
   List<MyBatisData> selectAllData();
+
+  void insertData(MyBatisData data);
 
   void truncateTable();
 }

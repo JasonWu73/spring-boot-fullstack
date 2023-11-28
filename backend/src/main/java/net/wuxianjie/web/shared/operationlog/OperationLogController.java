@@ -22,9 +22,9 @@ public class OperationLogController {
   @Admin
   @GetMapping
   public PaginationResult<OperationLog> getLogs(
-    @Valid final PaginationParam paginationParam,
-    @Valid final GetLogParams logParams
+      @Valid final PaginationParam paginationParam,
+      @Valid final GetLogParam logParam
   ) {
-    return operationLogService.getLogs(paginationParam, logParams);
+    return operationLogService.getLogs(paginationParam, logParam);
   }
 }

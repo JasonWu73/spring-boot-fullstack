@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.wuxianjie.web.demo.mybatis.MyBatisMapper">
-  <insert id="insertData">
-    INSERT INTO mybatis (name, type, date, local_date_time, local_date)
-    VALUES (#{name}, #{type}, #{date}, #{localDateTime}, #{localDate})
-  </insert>
-
   <select id="selectAllData" resultType="net.wuxianjie.web.demo.mybatis.MyBatisData">
     SELECT id, name, type, date, local_date_time as localDateTime, local_date as localDate
     FROM mybatis
   </select>
+
+  <insert id="insertData">
+    INSERT INTO mybatis (name, type, date, local_date_time, local_date)
+    VALUES (#{name}, #{type}, #{date}, #{localDateTime}, #{localDate})
+  </insert>
 
   <delete id="truncateTable">
     truncate table mybatis
