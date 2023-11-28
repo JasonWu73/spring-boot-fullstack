@@ -87,6 +87,7 @@ type AuthProviderProps = {
 
 function AuthProvider({ children }: AuthProviderProps) {
   const [auth, setAuth] = React.useState(getStorageAuth)
+  const refreshedAtRef = React.useRef<number>(0)
 
   const isRoot = auth?.authorities.includes(ROOT.value) ?? false
   const isAdmin = isRoot || (auth?.authorities.includes(ADMIN.value) ?? false)
@@ -111,11 +112,12 @@ function AuthProvider({ children }: AuthProviderProps) {
     // 检查是否需要重新登录
     if (response.status === 401) {
       setAuthCache(null)
+
       return { status: response.status, error: '登录过期' }
     }
 
     // 检查是否需要刷新访问令牌
-    // 这里为了测试目的，故意设置离过期时间小于 29 分时就刷新访问令牌，即 5 秒后刷新
+    // 这里为了测试目的，故意设置离过期时间小于 29 分时就刷新访问令牌，即 1 分钟后刷新
     if (expiresAt - Date.now() < 29 * 60 * 1000) {
       await refreshAuth()
     }
@@ -125,6 +127,12 @@ function AuthProvider({ children }: AuthProviderProps) {
 
   async function refreshAuth() {
     if (!auth) return
+
+    // 防止因同时发起多个请求，从而触发了多次刷新，从而因读取了旧令牌而导致身份验证失败
+    // 1 分钟内只允许刷新一次
+    if (Date.now() - refreshedAtRef.current < 60 * 1000) return
+
+    refreshedAtRef.current = Date.now()
 
     const { data, error } = await requestBackendApi<AuthResponse>({
       url: `/api/v1/auth/refresh/${auth.refreshToken}`,
