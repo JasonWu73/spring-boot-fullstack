@@ -73,10 +73,9 @@ type AuthProviderState = {
 
   setAuth: (data: AuthResponse) => void
   deleteAuth: () => void
+  updateAuth: (callback: (prevAuth: Auth) => Auth) => void
 
   requestApi: <T>(request: ApiRequest, type?: string) => Promise<FetchResponse<T>>
-
-  refreshAuth: () => Promise<void>
 }
 
 const AuthProviderContext = React.createContext(undefined as unknown as AuthProviderState)
@@ -173,10 +172,15 @@ function AuthProvider({ children }: AuthProviderProps) {
       // 不论后端退出登录是否成功，前端都要退出登录
       setAuthCache(null)
     },
+    updateAuth: (callback) => {
+      if (auth == null) return
 
-    requestApi,
+      const newAuth = callback(auth)
 
-    refreshAuth
+      setAuthCache(newAuth)
+    },
+
+    requestApi
   }
 
   return (

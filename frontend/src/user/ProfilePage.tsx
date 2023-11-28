@@ -73,7 +73,7 @@ function UpdateUserPage() {
     defaultValues
   })
 
-  const { requestApi, deleteAuth, refreshAuth } = useAuth()
+  const { requestApi, deleteAuth, updateAuth } = useAuth()
   const {
     data: user,
     error,
@@ -149,13 +149,14 @@ function UpdateUserPage() {
 
     // 若修改了密码，则需要重新登录
     if (values.newPassword) {
+      // 修改密码时，后端会自动退出登录，所以前端只要删除已保存的身份验证信息即可
       deleteAuth()
-
-      return
     }
 
-    // 若修改了昵称，则需要刷新访问令牌（也从后台获取到了最新数据）
-    await refreshAuth()
+    // 更新已保存的身份验证信息
+    updateAuth((prevAuth) => {
+      return { ...prevAuth, nickname: values.nickname }
+    })
   }
 
   return (
