@@ -17,7 +17,7 @@ public class VersionInfoController {
   public static final String VERSION = "v1.0.0";
 
   // 请实时更新构建时间
-  public static final LocalDateTime BUILT_AT = LocalDateTime.of(2023, 11, 16, 10, 49, 25);
+  public static final LocalDateTime BUILT_AT = LocalDateTime.of(2023, 11, 28, 14, 19, 30);
 
   /**
    * 获取项目版本号。

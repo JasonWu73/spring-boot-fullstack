@@ -40,6 +40,7 @@ public class OperationLogService {
   }
 
   private void setFuzzySearchParams(final GetLogParam logParam) {
+    // 设置模糊查询参数
     logParam.setClientIp(StrUtils.toNullableLikeValue(logParam.getClientIp()));
     logParam.setUsername(StrUtils.toNullableLikeValue(logParam.getUsername()));
     logParam.setMessage(StrUtils.toNullableLikeValue(logParam.getMessage()));

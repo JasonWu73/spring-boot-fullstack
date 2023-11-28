@@ -30,9 +30,8 @@ public class UserController {
    * 更新当前用户信息。
    */
   @PutMapping("/me")
-  public ResponseEntity<Void> updateMe(
-    @Valid @RequestBody final UpdateMeParams params) {
-    userService.updateMe(params);
+  public ResponseEntity<Void> updateMe(@Valid @RequestBody final UpdateMeParam param) {
+    userService.updateMe(param);
 
     return ResponseEntity.noContent().build();
   }
@@ -43,10 +42,10 @@ public class UserController {
   @Admin
   @GetMapping
   public PaginationResult<UserInfo> getUsers(
-    @Valid final PaginationParam paginationParam,
-    @Valid final GetUserParams userParams
+      @Valid final PaginationParam paginationParam,
+      @Valid final GetUserParam userParam
   ) {
-    return userService.getUsers(paginationParam, userParams);
+    return userService.getUsers(paginationParam, userParam);
   }
 
   /**
@@ -63,7 +62,7 @@ public class UserController {
    */
   @Admin
   @PostMapping
-  public ResponseEntity<Void> addUser(@Valid @RequestBody final AddUserParams params) {
+  public ResponseEntity<Void> addUser(@Valid @RequestBody final AddUserParam params) {
     userService.addUser(params);
 
     return ResponseEntity.noContent().build();
@@ -75,10 +74,10 @@ public class UserController {
   @Admin
   @PutMapping("/{userId}")
   public ResponseEntity<Void> updateUser(
-    @PathVariable final long userId,
-    @Valid @RequestBody final UpdateUserParams params
+      @PathVariable final long userId,
+      @Valid @RequestBody final UpdateUserParam param
   ) {
-    userService.updateUser(userId, params);
+    userService.updateUser(userId, param);
 
     return ResponseEntity.noContent().build();
   }
@@ -89,10 +88,10 @@ public class UserController {
   @Root
   @PutMapping("/{userId}/password")
   public ResponseEntity<Void> resetPassword(
-    @PathVariable final long userId,
-    @Valid @RequestBody final ResetPasswordParams params
+      @PathVariable final long userId,
+      @Valid @RequestBody final ResetPasswordParam param
   ) {
-    userService.resetPassword(userId, params);
+    userService.resetPassword(userId, param);
 
     return ResponseEntity.noContent().build();
   }
@@ -103,10 +102,10 @@ public class UserController {
   @Admin
   @PutMapping("/{userId}/status")
   public ResponseEntity<Void> updateUserStatus(
-    @PathVariable final long userId,
-    @Valid @RequestBody final UpdateUserStatusParams params
+      @PathVariable final long userId,
+      @Valid @RequestBody final UpdateUserStatusParam param
   ) {
-    userService.updateUserStatus(userId, params);
+    userService.updateUserStatus(userId, param);
 
     return ResponseEntity.noContent().build();
   }

@@ -15,14 +15,16 @@ import org.springframework.stereotype.Service;
 public class TokenAuthImpl implements TokenAuth {
 
   private final StringRedisTemplate stringRedisTemplate;
+
   private final ObjectMapper objectMapper;
 
   @Override
   public CachedAuth authenticate(final String accessToken) throws JsonProcessingException {
     // 从 Redis 中获取登录信息
-    final String authJson = stringRedisTemplate.opsForValue().get(
-      AuthServiceImpl.KEY_PREFIX_ACCESS_TOKEN + accessToken
-    );
+    final String authJson = stringRedisTemplate
+        .opsForValue()
+        .get(AuthServiceImpl.ACCESS_TOKEN_KEY_PREFIX + accessToken);
+
     if (authJson == null) {
       throw new ApiException(HttpStatus.UNAUTHORIZED, "访问令牌已过期");
     }

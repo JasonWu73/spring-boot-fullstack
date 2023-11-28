@@ -1,14 +1,10 @@
 package net.wuxianjie.web.user;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import net.wuxianjie.web.shared.validator.EnumValidator;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class GetUserParams {
+public class GetUserParam {
 
   /**
    * 用户名。

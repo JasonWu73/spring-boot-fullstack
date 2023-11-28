@@ -59,14 +59,18 @@ public class RedisController {
 
   private void doBiz(final String identifier) {
     final String threadName = Thread.currentThread().getName();
+
     System.out.printf("🔐[%s] 获取锁成功%n", threadName);
 
     try {
       System.out.printf("[%s] 执行业务逻辑%n", threadName);
+
       delay();
+
       System.out.printf("[%s] 完成业务逻辑%n", threadName);
     } finally {
       redisLock.unlock(LOCK_KEY, identifier);
+     
       System.out.printf("🔓[%s] 解锁成功%n", threadName);
     }
   }

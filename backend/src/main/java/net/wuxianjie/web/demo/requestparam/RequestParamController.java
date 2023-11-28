@@ -28,70 +28,68 @@ import java.util.Date;
 @RequestMapping("/api/v1/test/params")
 public class RequestParamController {
 
-    /**
-     * 请求默认支持的传参方式：
-     *
-     * <ul>
-     *   <li>GET URL 传参</li>
-     *   <li>POST x-www-form-urlencoded 传参（仅支持文本）</li>
-     *   <li>POST form-data 传参（支持文本和文件）</li>
-     * </ul>
-     */
-    @RequestMapping
-    public OuterData getData(
-            @RequestParam final String name,
-            @NotNull(message = "num 不能为 null") final Integer num,
-            @EnumValidator(value = Type.class, message = "type 值不合法")
-            final Integer type,
-            @DateTimeFormat(pattern = Constants.DATE_TIME_PATTERN)
-            final LocalDateTime dateTime
-    ) {
-        log.info("name={}, num={}, type={}, dateTime={}", name, num, type, dateTime);
+  /**
+   * 请求默认支持的传参方式：
+   *
+   * <ul>
+   *   <li>GET URL 传参</li>
+   *   <li>POST x-www-form-urlencoded 传参（仅支持文本）</li>
+   *   <li>POST form-data 传参（支持文本和文件）</li>
+   * </ul>
+   */
+  @RequestMapping
+  public OuterData getData(
+      @RequestParam final String name,
+      @NotNull(message = "num 不能为 null") final Integer num,
+      @EnumValidator(value = Type.class, message = "type 值不合法") final Integer type,
+      @DateTimeFormat(pattern = Constants.DATE_TIME_PATTERN) final LocalDateTime dateTime
+  ) {
+    log.info("name={}, num={}, type={}, dateTime={}", name, num, type, dateTime);
 
-        final LocalDateTime returnDateTime = dateTime == null
-                ? LocalDateTime.now()
-                : dateTime;
+    final LocalDateTime returnDateTime = dateTime == null
+        ? LocalDateTime.now()
+        : dateTime;
 
-        return new OuterData(
-                100L,
-                name,
-                new InnerData(
-                        Date.from(returnDateTime.toInstant(ZoneOffset.ofHours(8))),
-                        returnDateTime.toLocalDate(),
-                        returnDateTime
-                )
-        );
-    }
+    return new OuterData(
+        100L,
+        name,
+        new InnerData(
+            Date.from(returnDateTime.toInstant(ZoneOffset.ofHours(8))),
+            returnDateTime.toLocalDate(),
+            returnDateTime
+        )
+    );
+  }
 
-    /**
-     * 上传文件。
-     */
-    @PostMapping("/upload")
-    public Uploaded uploadFile(
-            @NotBlank final String message,
-            @RequestParam final MultipartFile file
-    ) {
-        if (file == null || file.isEmpty()) return new Uploaded(false, null, message);
+  /**
+   * 上传文件。
+   */
+  @PostMapping("/upload")
+  public Uploaded uploadFile(
+      @NotBlank final String message,
+      @RequestParam final MultipartFile file
+  ) {
+    if (file == null || file.isEmpty()) return new Uploaded(false, null, message);
 
-        return new Uploaded(true, file.getOriginalFilename(), message);
-    }
+    return new Uploaded(true, file.getOriginalFilename(), message);
+  }
 
-    /**
-     * POST JSON 传参。
-     */
-    @PostMapping("/json")
-    public OuterData postJsonData(@RequestBody @Valid final OuterData data) {
-        return data;
-    }
+  /**
+   * POST JSON 传参。
+   */
+  @PostMapping("/json")
+  public OuterData postJsonData(@RequestBody @Valid final OuterData data) {
+    return data;
+  }
 
-    @Getter
-    @ToString
-    @RequiredArgsConstructor
-    enum Type {
+  @Getter
+  @ToString
+  @RequiredArgsConstructor
+  enum Type {
 
-        ONE(1);
+    ONE(1);
 
-        @JsonValue
-        private final int code;
-    }
+    @JsonValue
+    private final int code;
+  }
 }

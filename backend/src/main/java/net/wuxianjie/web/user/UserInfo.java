@@ -54,26 +54,26 @@ public class UserInfo {
 
   // 用于 MyBatis 的构造函数
   public UserInfo(
-    final Long id,
-    final LocalDateTime createdAt,
-    final LocalDateTime updatedAt,
-    final String remark,
-    final String username,
-    final String nickname,
-    final AccountStatus status,
-    final String authorities
+      final Long id,
+      final LocalDateTime createdAt,
+      final LocalDateTime updatedAt,
+      final String remark,
+      final String username,
+      final String nickname,
+      final AccountStatus status,
+      final String authorities
   ) {
     this(
-      id,
-      createdAt,
-      updatedAt,
-      remark,
-      username,
-      nickname,
-      status,
-      authorities != null
-        ? List.of(authorities.split(","))
-        : List.of()
+        id,
+        createdAt,
+        updatedAt,
+        remark,
+        username,
+        nickname,
+        status,
+        authorities != null
+            ? List.of(authorities.split(","))
+            : List.of()
     );
   }
 }

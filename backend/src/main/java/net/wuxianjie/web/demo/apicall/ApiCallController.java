@@ -31,119 +31,119 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ApiCallController {
 
-    private final ResourceLoader resourceLoader;
+  private final ResourceLoader resourceLoader;
 
-    private final ApiCaller apiCaller;
+  private final ApiCaller apiCaller;
 
-    @Value("${server.port}")
-    private int port;
+  @Value("${server.port}")
+  private int port;
 
-    /**
-     * GET URL 传参。
-     */
-    @GetMapping("/params")
-    public ApiResponse<OuterData> sendGetRequest() {
-        final Map<String, String> urlParams = getSendGetRequestParams();
+  /**
+   * GET URL 传参。
+   */
+  @GetMapping("/params")
+  public ApiResponse<OuterData> sendGetRequest() {
+    final Map<String, String> urlParams = getSendGetRequestParams();
 
-        return apiCaller.sendGetRequest(
-                "http://localhost:%s/api/v1/test/params".formatted(port),
-                urlParams,
-                OuterData.class
-        );
-    }
+    return apiCaller.sendGetRequest(
+        "http://localhost:%s/api/v1/test/params".formatted(port),
+        urlParams,
+        OuterData.class
+    );
+  }
 
-    /**
-     * POST x-www-form-urlencoded 传参（仅支持文本）。
-     */
-    @PostMapping("/form")
-    public ApiResponse<OuterData> sendPostFormRequest() {
-        final LinkedMultiValueMap<String, String> formData = getSendPostFormRequestParams();
+  /**
+   * POST x-www-form-urlencoded 传参（仅支持文本）。
+   */
+  @PostMapping("/form")
+  public ApiResponse<OuterData> sendPostFormRequest() {
+    final LinkedMultiValueMap<String, String> formData = getSendPostFormRequestParams();
 
-        return apiCaller.sendFormRequest(
-                HttpMethod.POST,
-                "http://localhost:%s/api/v1/test/params".formatted(port),
-                formData,
-                OuterData.class
-        );
-    }
+    return apiCaller.sendFormRequest(
+        HttpMethod.POST,
+        "http://localhost:%s/api/v1/test/params".formatted(port),
+        formData,
+        OuterData.class
+    );
+  }
 
-    /**
-     * POST form-data 传参（支持文本和文件）。
-     */
-    @PostMapping("/upload")
-    public ApiResponse<Uploaded> sendPostUploadRequest() {
-        final MultipartBodyBuilder formDataBuilder = getSendPostUploadRequest();
+  /**
+   * POST form-data 传参（支持文本和文件）。
+   */
+  @PostMapping("/upload")
+  public ApiResponse<Uploaded> sendPostUploadRequest() {
+    final MultipartBodyBuilder formDataBuilder = getSendPostUploadRequest();
 
-        return apiCaller.sendUploadRequest(
-                HttpMethod.POST,
-                "http://localhost:%s/api/v1/test/params/upload".formatted(port),
-                formDataBuilder,
-                Uploaded.class
-        );
-    }
+    return apiCaller.sendUploadRequest(
+        HttpMethod.POST,
+        "http://localhost:%s/api/v1/test/params/upload".formatted(port),
+        formDataBuilder,
+        Uploaded.class
+    );
+  }
 
-    /**
-     * POST JSON 传参。
-     */
-    @PostMapping("/json")
-    public ApiResponse<OuterData> sendPostJsonRequest() {
-        final OuterData jsonData = getSendPostJsonRequestParams();
+  /**
+   * POST JSON 传参。
+   */
+  @PostMapping("/json")
+  public ApiResponse<OuterData> sendPostJsonRequest() {
+    final OuterData jsonData = getSendPostJsonRequestParams();
 
-        return apiCaller.sendJsonRequest(
-                HttpMethod.POST,
-                "http://localhost:%s/api/v1/test/params/json".formatted(port),
-                jsonData,
-                OuterData.class
-        );
-    }
+    return apiCaller.sendJsonRequest(
+        HttpMethod.POST,
+        "http://localhost:%s/api/v1/test/params/json".formatted(port),
+        jsonData,
+        OuterData.class
+    );
+  }
 
-    private static Map<String, String> getSendGetRequestParams() {
-        return Map.of(
-                "name", "张三",
-                "num", "123",
-                "type", "1",
-                "dateTime", getNow()
-        );
-    }
+  private static Map<String, String> getSendGetRequestParams() {
+    return Map.of(
+        "name", "张三",
+        "num", "123",
+        "type", "1",
+        "dateTime", getNow()
+    );
+  }
 
-    private static LinkedMultiValueMap<String, String> getSendPostFormRequestParams() {
-        final LinkedMultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
+  private static LinkedMultiValueMap<String, String> getSendPostFormRequestParams() {
+    final LinkedMultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
 
-        formData.add("name", "张三");
-        formData.add("num", "123");
-        formData.add("type", "1");
-        formData.add("dateTime", getNow());
+    formData.add("name", "张三");
+    formData.add("num", "123");
+    formData.add("type", "1");
+    formData.add("dateTime", getNow());
 
-        return formData;
-    }
+    return formData;
+  }
 
-    private MultipartBodyBuilder getSendPostUploadRequest() {
-        final MultipartBodyBuilder formDataBuilder = new MultipartBodyBuilder();
+  private MultipartBodyBuilder getSendPostUploadRequest() {
+    final MultipartBodyBuilder formDataBuilder = new MultipartBodyBuilder();
 
-        formDataBuilder.part("message", "测试上传文件");
-        formDataBuilder.part(
-                "file",
-                resourceLoader.getResource("file:/Users/wxj/Downloads/README.md")
-        );
+    formDataBuilder.part("message", "测试上传文件");
+    formDataBuilder.part(
+        "file",
+        resourceLoader.getResource("file:/Users/wxj/Downloads/README.md")
+    );
 
-        return formDataBuilder;
-    }
+    return formDataBuilder;
+  }
 
-    private static OuterData getSendPostJsonRequestParams() {
-        return new OuterData(
-                100L,
-                "张三",
-                new InnerData(
-                        new Date(),
-                        LocalDate.now(),
-                        LocalDateTime.now()
-                )
-        );
-    }
+  private static OuterData getSendPostJsonRequestParams() {
+    return new OuterData(
+        100L,
+        "张三",
+        new InnerData(
+            new Date(),
+            LocalDate.now(),
+            LocalDateTime.now()
+        )
+    );
+  }
 
-    private static String getNow() {
-        return LocalDateTime.now().format(
-                DateTimeFormatter.ofPattern(Constants.DATE_TIME_PATTERN)
-        );
-    }
+  private static String getNow() {
+    return LocalDateTime.now().format(
+        DateTimeFormatter.ofPattern(Constants.DATE_TIME_PATTERN)
+    );
+  }
 }

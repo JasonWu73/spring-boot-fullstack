@@ -11,8 +11,8 @@ import java.time.LocalDateTime;
  * @param builtAt   构建时间
  */
 public record VersionInfo(
-  String name,
-  String developer,
-  String version,
-  LocalDateTime builtAt
+    String name,
+    String developer,
+    String version,
+    LocalDateTime builtAt
 ) {}

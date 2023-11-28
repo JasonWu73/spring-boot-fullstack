@@ -16,11 +16,11 @@ public interface UserMapper {
   UserInfo selectInfoById(long userId);
 
   List<UserInfo> selectByQueryLimit(
-    @Param("p") PaginationParam paginationParam,
-    @Param("q") GetUserParams userParams
+      @Param("p") PaginationParam paginationParam,
+      @Param("q") GetUserParam userParam
   );
 
-  long countByQuery(@Param("q") GetUserParams userParams);
+  long countByQuery(@Param("q") GetUserParam userParam);
 
   void insert(User user);
 
