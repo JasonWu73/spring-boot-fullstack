@@ -123,7 +123,8 @@ public class AuthServiceImpl implements AuthService {
     deleteLoginCache(oldAuth.username());
 
     // 从数据库中查询用户信息
-    final User user = Optional.ofNullable(userMapper.selectById(oldAuth.userId()))
+    final User user = Optional
+        .ofNullable(userMapper.selectById(oldAuth.userId()))
         .orElseThrow(() -> new ApiException(HttpStatus.UNAUTHORIZED, "用户不存在"));
 
     // 检查账号状态

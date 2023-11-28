@@ -112,7 +112,8 @@ public class UserService {
 
   public UserInfo getUserInfo(final long userId) {
     // 从数据库中查询用户详情并返回
-    return Optional.ofNullable(userMapper.selectInfoById(userId))
+    return Optional
+        .ofNullable(userMapper.selectInfoById(userId))
         .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "用户不存在"));
   }
 
