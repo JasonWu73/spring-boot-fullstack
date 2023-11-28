@@ -41,11 +41,9 @@ public class NotFoundController {
 
   private final ResourceLoader resourceLoader;
 
-  /**
-   * 配置 404 页面。
-   */
   @Bean
-  public WebServerFactoryCustomizer<ConfigurableServletWebServerFactory> webServerFactoryCustomizer() {
+  public WebServerFactoryCustomizer<ConfigurableServletWebServerFactory>
+  webServerFactoryCustomizer() {
     return factory -> factory.addErrorPages(
         new ErrorPage(HttpStatus.NOT_FOUND, NOT_FOUND_PATH)
     );
