@@ -16,34 +16,34 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public enum SortOrder {
 
-    /**
-     * 升序。
-     */
-    ASC("asc"),
+  /**
+   * 升序。
+   */
+  ASC("asc"),
 
-    /**
-     * 降序。
-     */
-    DESC("desc");
+  /**
+   * 降序。
+   */
+  DESC("desc");
 
-    private static final SortOrder[] VALUES;
+  private static final SortOrder[] VALUES;
 
-    static {
-        VALUES = values();
-    }
+  static {
+    VALUES = values();
+  }
 
-    /**
-     * 排序方式编码。
-     */
-    @JsonValue
-    private final String code;
+  /**
+   * 排序方式编码。
+   */
+  @JsonValue
+  private final String code;
 
-    public static Optional<SortOrder> resolve(final String code) {
-        if (code == null) return Optional.empty();
+  public static Optional<SortOrder> resolve(final String code) {
+    if (code == null) return Optional.empty();
 
-        return Arrays
-                .stream(VALUES)
-                .filter(value -> value.code.equals(code))
-                .findFirst();
-    }
+    return Arrays
+        .stream(VALUES)
+        .filter(value -> value.code.equals(code))
+        .findFirst();
+  }
 }

@@ -14,23 +14,23 @@ import java.util.List;
 @AllArgsConstructor
 public class PaginationResult<T> {
 
-    /**
-     * 页码。
-     */
-    private int pageNum;
+  /**
+   * 页码。
+   */
+  private int pageNum;
 
-    /**
-     * 每页条数。
-     */
-    private int pageSize;
+  /**
+   * 每页条数。
+   */
+  private int pageSize;
 
-    /**
-     * 总条数。
-     */
-    private long total;
+  /**
+   * 总条数。
+   */
+  private long total;
 
-    /**
-     * 数据列表。
-     */
-    private List<T> list;
+  /**
+   * 数据列表。
+   */
+  private List<T> list;
 }

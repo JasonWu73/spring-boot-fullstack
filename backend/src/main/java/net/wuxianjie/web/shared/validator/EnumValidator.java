@@ -22,18 +22,18 @@ import static java.lang.annotation.ElementType.*;
 @Repeatable(EnumValidator.List.class)
 public @interface EnumValidator {
 
-    Class<? extends Enum<?>> value();
+  Class<? extends Enum<?>> value();
 
-    String message() default "类型不合法";
+  String message() default "类型不合法";
 
-    Class<?>[] groups() default {};
+  Class<?>[] groups() default {};
 
-    Class<? extends Payload>[] payload() default {};
+  Class<? extends Payload>[] payload() default {};
 
-    @Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE})
-    @Retention(RetentionPolicy.RUNTIME)
-    @interface List {
+  @Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE})
+  @Retention(RetentionPolicy.RUNTIME)
+  @interface List {
 
-        EnumValidator[] value();
-    }
+    EnumValidator[] value();
+  }
 }
