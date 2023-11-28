@@ -9,14 +9,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @Slf4j
 class SecurityConfigTest {
 
-    @Test
-    @Disabled
-    void passwordEncoder() {
-        final String rawPassword = "pass123";
-        final String hashedPassword = new BCryptPasswordEncoder().encode(rawPassword);
+  @Test
+  @Disabled
+  void passwordEncoder() {
+    final String rawPassword = "pass123";
+    final String hashedPassword = new BCryptPasswordEncoder().encode(rawPassword);
 
-        Assertions.assertThat(hashedPassword).isNotBlank();
+    Assertions.assertThat(hashedPassword).isNotBlank();
 
-        log.info("原密码: {}, 哈希密码: {}", rawPassword, hashedPassword);
-    }
+    log.info("原密码: {}, 哈希密码: {}", rawPassword, hashedPassword);
+  }
 }

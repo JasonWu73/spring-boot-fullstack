@@ -57,15 +57,14 @@
   </select>
 
   <select id="selectByQueryLimit" resultMap="userBaseMap">
-    SELECT
-    id,
-    created_at AS createdAt,
-    updated_at AS updatedAt,
-    remark,
-    username,
-    nickname,
-    status,
-    authorities
+    SELECT id,
+           created_at AS createdAt,
+           updated_at AS updatedAt,
+           remark,
+           username,
+           nickname,
+           status,
+           authorities
     FROM user
     <include refid="whereQuery" />
     <if
@@ -98,10 +97,10 @@
       </if>
       <if test="q.authority != null and q.authority != ''">
         AND (
-        authorities = #{q.authority}
-        OR authorities LIKE CONCAT(#{q.authority}, ',%')
-        OR authorities LIKE CONCAT('%,', #{q.authority}, ',%')
-        OR authorities LIKE CONCAT('%,', #{q.authority})
+          authorities = #{q.authority}
+          OR authorities LIKE CONCAT(#{q.authority}, ',%')
+          OR authorities LIKE CONCAT('%,', #{q.authority}, ',%')
+          OR authorities LIKE CONCAT('%,', #{q.authority})
         )
       </if>
     </where>
