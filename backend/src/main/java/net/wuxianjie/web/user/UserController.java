@@ -6,8 +6,7 @@ import net.wuxianjie.web.shared.auth.Admin;
 import net.wuxianjie.web.shared.auth.Root;
 import net.wuxianjie.web.shared.pagination.PaginationParam;
 import net.wuxianjie.web.shared.pagination.PaginationResult;
-import net.wuxianjie.web.user.dto.AddUserParam;
-import net.wuxianjie.web.user.dto.GetUserParam;
+import net.wuxianjie.web.user.dto.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

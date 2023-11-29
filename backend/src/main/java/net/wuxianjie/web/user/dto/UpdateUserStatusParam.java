@@ -1,9 +1,13 @@
-package net.wuxianjie.web.user;
+package net.wuxianjie.web.user.dto;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import net.wuxianjie.web.shared.validator.EnumValidator;
+import net.wuxianjie.web.user.AccountStatus;
 
+/**
+ * 更新用户状态参数。
+ */
 @Data
 public class UpdateUserStatusParam {
 

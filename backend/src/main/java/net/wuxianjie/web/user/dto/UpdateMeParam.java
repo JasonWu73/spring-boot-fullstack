@@ -1,8 +1,11 @@
-package net.wuxianjie.web.user;
+package net.wuxianjie.web.user.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
+/**
+ * 更新当前用户信息参数。
+ */
 @Data
 public class UpdateMeParam {
 
@@ -13,14 +16,14 @@ public class UpdateMeParam {
   private String nickname;
 
   /**
-   * 旧密码。
+   * 加密后的旧密码。
    */
   private String oldPassword;
 
   /**
-   * 新密码。
+   * 加密后的新密码。
    *
-   * <p>若旧密码存在，则新密码必填。
+   * <p>`oldPassword` 与 `newPassword` 要么同时存在，要么同时不存在。
    */
   private String newPassword;
 }

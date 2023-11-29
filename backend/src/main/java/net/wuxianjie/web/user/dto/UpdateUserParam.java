@@ -1,10 +1,13 @@
-package net.wuxianjie.web.user;
+package net.wuxianjie.web.user.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 import java.util.List;
 
+/**
+ * 更新用户参数。
+ */
 @Data
 public class UpdateUserParam {
 
