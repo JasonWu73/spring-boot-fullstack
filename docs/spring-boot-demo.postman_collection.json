@@ -560,9 +560,29 @@
 					"name": "MyBatis",
 					"item": [
 						{
-							"name": "测试数据库清空表",
+							"name": "查询",
 							"request": {
-								"method": "DELETE",
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/test/mybatis",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"test",
+										"mybatis"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "新增",
+							"request": {
+								"method": "POST",
 								"header": [
 									{
 										"key": "Content-Type",
@@ -596,29 +616,9 @@
 							"response": []
 						},
 						{
-							"name": "测试数据库查询",
+							"name": "清空表",
 							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{BASE_URL}}/api/v1/test/mybatis",
-									"host": [
-										"{{BASE_URL}}"
-									],
-									"path": [
-										"api",
-										"v1",
-										"test",
-										"mybatis"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "测试数据库新增",
-							"request": {
-								"method": "POST",
+								"method": "DELETE",
 								"header": [
 									{
 										"key": "Content-Type",
@@ -657,7 +657,7 @@
 					"name": "Redis",
 					"item": [
 						{
-							"name": "测试分布式锁",
+							"name": "通过分布式锁执行同步操作",
 							"request": {
 								"method": "GET",
 								"header": [],

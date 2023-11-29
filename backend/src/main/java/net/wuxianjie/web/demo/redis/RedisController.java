@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Redis 分布式锁示例。
+ */
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/test/redis")
@@ -22,10 +25,10 @@ public class RedisController {
   private final RedisLock redisLock;
 
   /**
-   * 测试分布式锁。
+   * 通过分布式锁执行同步操作。
    */
   @GetMapping("/lock")
-  public ResponseEntity<Void> sendMessage() {
+  public ResponseEntity<Void> doSyncBiz() {
     new Thread(this::executeSync).start();
     new Thread(this::executeSync).start();
     new Thread(this::executeSync).start();
@@ -70,7 +73,7 @@ public class RedisController {
       System.out.printf("[%s] 完成业务逻辑%n", threadName);
     } finally {
       redisLock.unlock(LOCK_KEY, identifier);
-     
+
       System.out.printf("🔓[%s] 解锁成功%n", threadName);
     }
   }
