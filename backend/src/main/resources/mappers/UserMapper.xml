@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.wuxianjie.web.user.UserMapper">
   <select id="selectById" resultType="net.wuxianjie.web.user.User">
     SELECT id,
@@ -68,9 +68,9 @@
     FROM user
     <include refid="whereQuery" />
     <if
-        test="p.sortColumn != null
-              and p.sortColumn == 'createdAt'
-              or p.sortColumn == 'updatedAt'"
+      test="p.sortColumn != null
+            and p.sortColumn == 'createdAt'
+            or p.sortColumn == 'updatedAt'"
     >
       ORDER BY ${p.sortColumn} ${p.sortOrder}
     </if>
@@ -91,7 +91,7 @@
       <if test="q.nickname != null and q.nickname != ''">
         AND nickname LIKE #{q.nickname}
       </if>
-      <!-- 不要使用 `<if test="q.status != null and q.status != ''">`，因为 `0` 会被认识为空 -->
+      <!-- 不要使用 `<if test="q.status != ''">`，因为 `0` 会被认识为空字符串 -->
       <if test="q.status != null">
         AND status = #{q.status}
       </if>

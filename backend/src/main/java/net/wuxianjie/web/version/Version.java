@@ -10,9 +10,9 @@ import java.time.LocalDateTime;
  * @param version   项目版本号
  * @param builtAt   构建时间
  */
-public record VersionInfo(
-    String name,
-    String developer,
-    String version,
-    LocalDateTime builtAt
+public record Version(
+  String name,
+  String developer,
+  String version,
+  LocalDateTime builtAt
 ) {}

@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * MyBatis 测试。
+ */
 @Validated
 @RestController
 @RequestMapping("/api/v1/test/mybatis")
@@ -17,17 +20,7 @@ public class MyBatisController {
   private final MyBatisMapper myBatisMapper;
 
   /**
-   * 测试数据库清空表。
-   */
-  @DeleteMapping
-  public ResponseEntity<Void> deleteAllData() {
-    myBatisMapper.truncateTable();
-
-    return ResponseEntity.noContent().build();
-  }
-
-  /**
-   * 测试数据库查询。
+   * 查询。
    */
   @GetMapping
   public List<MyBatisData> getAllData() {
@@ -35,7 +28,7 @@ public class MyBatisController {
   }
 
   /**
-   * 测试数据库新增。
+   * 新增。
    */
   @PostMapping
   public MyBatisData addData(@RequestBody @Valid final MyBatisData data) {
@@ -44,5 +37,14 @@ public class MyBatisController {
     myBatisMapper.insertData(data);
 
     return data;
+  }
+
+  /**
+   * 清空表。
+   */
+  @DeleteMapping
+  public ResponseEntity<Void> deleteAllData() {
+    myBatisMapper.truncateTable();
+    return ResponseEntity.noContent().build();
   }
 }

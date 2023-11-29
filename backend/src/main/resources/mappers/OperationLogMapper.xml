@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.wuxianjie.web.shared.operationlog.OperationLogMapper">
   <select
-      id="selectByQueryLimit"
-      resultType="net.wuxianjie.web.shared.operationlog.OperationLog"
+    id="selectByQueryLimit"
+    resultType="net.wuxianjie.web.shared.operationlog.OperationLog"
   >
     SELECT id,
            requested_at as requestedAt,
@@ -42,7 +42,13 @@
   </sql>
 
   <insert id="insert">
-    INSERT INTO operation_log (requested_at, client_ip, username, message)
-    VALUES (#{requestedAt}, #{clientIp}, #{username}, #{message})
+    INSERT INTO operation_log (requested_at,
+                               client_ip,
+                               username,
+                               message)
+    VALUES (#{requestedAt},
+            #{clientIp},
+            #{username},
+            #{message})
   </insert>
 </mapper>

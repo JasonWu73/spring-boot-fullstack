@@ -6,6 +6,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import net.wuxianjie.web.shared.mybatis.EnumType;
 
+/**
+ * 测试枚举值与数据库值的映射。
+ */
 @Getter
 @ToString
 @RequiredArgsConstructor
