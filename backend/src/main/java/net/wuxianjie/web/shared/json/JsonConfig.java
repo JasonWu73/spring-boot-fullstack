@@ -15,21 +15,30 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * JSON 配置。
+ */
 @Configuration
 public class JsonConfig {
 
+  /**
+   * 配置使用自定义 {@link #objectMapper()} 的 {@link MappingJackson2HttpMessageConverter}。
+   *
+   * <p>用于配置 {@link org.springframework.web.client.RestClient}。
+   *
+   * @return {@link MappingJackson2HttpMessageConverter}
+   */
   @Bean
   public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {
-    final MappingJackson2HttpMessageConverter converter =
-      new MappingJackson2HttpMessageConverter();
-
+    final MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
     converter.setObjectMapper(objectMapper());
-
     return converter;
   }
 
   /**
    * 配置 Jackson 的 {@code ObjectMapper}，即 Spring Boot 默认使用的 JSON 序列化与反序列化工具。
+   *
+   * @return {@code ObjectMapper}
    */
   @Bean
   public ObjectMapper objectMapper() {
