@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project
-    xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd"
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd"
 >
-
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -27,7 +26,9 @@
 
 
   <dependencies>
-    <!-- Jasypt 项目配置文件加密库，此外还需添加 Jasypt Maven 插件 -->
+    <!-- Jasypt：用于加密 Spring Boot 配置文件，
+      对应 Jasypt Maven 插件：`com.github.ulisesbocchio:jasypt-maven-plugin`
+    -->
     <dependency>
       <groupId>com.github.ulisesbocchio</groupId>
       <artifactId>jasypt-spring-boot-starter</artifactId>
@@ -117,14 +118,13 @@
         </configuration>
       </plugin>
 
-      <!--
-        Jasypt Maven 插件（还需要在项目中添加 Jasypt Compile 依赖）
+      <!-- Jasypt Maven 插件
+        对应 Jasypt Compile 依赖：`com.github.ulisesbocchio:jasypt-spring-boot-starter`
 
         1. 加密字符串：
 
         ```
-        mvn \
-        jasypt:encrypt-value \
+        mvn jasypt:encrypt-value \
         -Djasypt.encryptor.password=wxj#secret_ \
         -Djasypt.plugin.value=pass123
         ```
@@ -132,8 +132,7 @@
         2. 解密字符串：
 
         ```
-        mvn \
-        jasypt:decrypt-value \
+        mvn jasypt:decrypt-value \
         -Djasypt.encryptor.password=wxj#secret_ \
         -Djasypt.plugin.value=KOTlCZ7eoNB0p1NfdIyj/c+k5cA3KgVm5e+Wee0EuU4LaI6WfGOau9PCwCqJxZ0I
         ```
@@ -147,8 +146,7 @@
         3.1 使用新密钥重新加密 Spring Boot 配置文件：
 
         ```
-        mvn \
-        jasypt:reencrypt \
+        mvn jasypt:reencrypt \
         -Djasypt.plugin.old.password=wxj#secret_ \
         -Djasypt.encryptor.password=new-wxj#secret_
         ```
@@ -162,7 +160,7 @@
         4. 提供密钥以运行 Spring Boot 应用程序：
 
         ```
-        java -Djasypt.encryptor.password=wxj#secret_ -jar web.jar
+        java -Djasypt.encryptor.password=wxj#secret_ -jar app.jar
         ```
       -->
       <plugin>
