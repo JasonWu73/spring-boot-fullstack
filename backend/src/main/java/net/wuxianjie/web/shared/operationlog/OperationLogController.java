@@ -2,7 +2,7 @@ package net.wuxianjie.web.shared.operationlog;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import net.wuxianjie.web.shared.auth.Admin;
+import net.wuxianjie.web.shared.auth.annotation.Admin;
 import net.wuxianjie.web.shared.pagination.PaginationParam;
 import net.wuxianjie.web.shared.pagination.PaginationResult;
 import org.springframework.web.bind.annotation.GetMapping;

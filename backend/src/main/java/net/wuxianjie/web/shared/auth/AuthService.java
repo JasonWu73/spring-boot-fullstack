@@ -1,5 +1,7 @@
 package net.wuxianjie.web.shared.auth;
 
+import net.wuxianjie.web.shared.auth.dto.LoginParam;
+
 /**
  * 身份验证相关接口。
  */

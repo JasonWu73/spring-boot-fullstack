@@ -10,7 +10,7 @@ import java.util.List;
  * @param nickname     昵称
  * @param authorities  功能权限列表
  * @param accessToken  访问令牌，用于访问接口时的身份验证
- * @param refreshToken 刷新令牌，用于刷新访问令牌
+ * @param refreshToken 刷新令牌，用于刷新身份验证信息的令牌
  */
 public record CachedAuth(
   long userId,

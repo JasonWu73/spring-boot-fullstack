@@ -2,8 +2,8 @@ package net.wuxianjie.web.user;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import net.wuxianjie.web.shared.auth.Admin;
-import net.wuxianjie.web.shared.auth.Root;
+import net.wuxianjie.web.shared.auth.annotation.Admin;
+import net.wuxianjie.web.shared.auth.annotation.Root;
 import net.wuxianjie.web.shared.pagination.PaginationParam;
 import net.wuxianjie.web.shared.pagination.PaginationResult;
 import net.wuxianjie.web.user.dto.*;
