@@ -43,7 +43,7 @@ public class PaginationParam {
   private String sortColumn;
 
   /**
-   * 排序方式。
+   * 排序方式，只能是 `asc` 或 `desc。`
    */
   @EnumValidator(value = SortOrder.class, message = "排序方式只能是 asc 或 desc")
   private String sortOrder;
