@@ -27,7 +27,7 @@ import { Textarea } from '@/shared/components/ui/Textarea'
 import { cn, tw } from '@/shared/utils/helpers'
 
 /**
- * 当参数校验不通过时的输入框样式。
+ * 当参数验证不通过时的输入框样式。
  */
 function inputErrorClasses(isError: boolean) {
   return isError

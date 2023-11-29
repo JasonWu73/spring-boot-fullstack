@@ -130,11 +130,11 @@ public class GlobalExceptionHandler {
   /**
    * 处理因请求参数不合法而产生的异常。
    *
-   * <p>触发本异常的校验方式：
+   * <p>触发本异常的验证方式：
    *
    * <ul>
    *   <li>Controller 类必须有 {@link Validated} 注解</li>
-   *   <li>直接对 Controller 方法参数使用校验注解，如 {@code @NotBlank}</li>
+   *   <li>直接对 Controller 方法参数使用验证注解，如 {@code @NotBlank}</li>
    * </ul>
    */
   @ExceptionHandler(ConstraintViolationException.class)
@@ -162,7 +162,7 @@ public class GlobalExceptionHandler {
   /**
    * 处理因请求参数不合法而产生的异常。
    *
-   * <p>触发本异常的校验方式：
+   * <p>触发本异常的验证方式：
    *
    * <ul>
    *   <li>对方法参数使用 {@link Valid} 注解</li>

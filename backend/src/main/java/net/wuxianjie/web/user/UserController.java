@@ -75,13 +75,13 @@ public class UserController {
   /**
    * 新增用户。
    *
-   * @param params 新增用户参数
+   * @param param 新增用户参数
    * @return 204 No Content
    */
   @Admin
   @PostMapping
-  public ResponseEntity<Void> addUser(@Valid @RequestBody final AddUserParam params) {
-    userService.addUser(params);
+  public ResponseEntity<Void> addUser(@Valid @RequestBody final AddUserParam param) {
+    userService.addUser(param);
     return ResponseEntity.noContent().build();
   }
 

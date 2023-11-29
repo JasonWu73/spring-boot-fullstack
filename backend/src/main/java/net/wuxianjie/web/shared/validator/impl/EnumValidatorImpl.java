@@ -11,13 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 实现枚举值校验注解的处理逻辑。
+ * 实现枚举值验证注解的处理逻辑。
  **/
 @Slf4j
 public class EnumValidatorImpl implements ConstraintValidator<EnumValidator, Object> {
 
   /**
-   * 需要校验的枚举值所对应的方法名。
+   * 需要验证的枚举值所对应的方法名。
    */
   public static final String METHOD_NAME = "getCode";
 
@@ -30,7 +30,7 @@ public class EnumValidatorImpl implements ConstraintValidator<EnumValidator, Obj
     final Class<? extends Enum<?>> enumClass = enumValidator.value();
 
     if (!enumClass.isEnum()) {
-      log.warn("忽略枚举值校验 [{} 不是枚举类]", enumClass.getName());
+      log.warn("忽略枚举值验证 [{} 不是枚举类]", enumClass.getName());
 
       isPassed = true;
 
@@ -50,17 +50,17 @@ public class EnumValidatorImpl implements ConstraintValidator<EnumValidator, Obj
         isPassed = true;
 
         log.warn(
-            "忽略枚举值校验 [{} 不存在 {} 方法]",
-            enumClass.getName(),
-            METHOD_NAME
+          "忽略枚举值验证 [{} 不存在 {} 方法]",
+          enumClass.getName(),
+          METHOD_NAME
         );
       } catch (InvocationTargetException | IllegalAccessException e) {
         isPassed = true;
 
         log.warn(
-            "忽略枚举值校验 [{}.{} 方法执行出错]",
-            enumClass.getName(),
-            METHOD_NAME
+          "忽略枚举值验证 [{}.{} 方法执行出错]",
+          enumClass.getName(),
+          METHOD_NAME
         );
       }
     }

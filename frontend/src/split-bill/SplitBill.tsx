@@ -309,7 +309,7 @@ function useWatchFriendExpense(form: UseFormReturn<FormSchema>) {
   const watchedUserExpense = form.watch('userExpense')
 
   React.useEffect(() => {
-    // 虽然通过 `Zod` 的校验最终从 `handleSubmit` 得到的是 `number`
+    // 虽然通过 `Zod` 的验证最终从 `handleSubmit` 得到的是 `number`
     // 但在这里的值仍然是 `string`，所以需要转换
     const bill = Number(watchedBill)
     const userExpense = Number(watchedUserExpense)
@@ -320,14 +320,14 @@ function useWatchFriendExpense(form: UseFormReturn<FormSchema>) {
   }, [watchedBill, watchedUserExpense, form])
 }
 
-// 为测试校验, 添加一个不在 options 中的值
+// 为测试验证, 添加一个不在 options 中的值
 function getWhoIsPayingOptions(friend: string) {
   const options = whoIsPayingOptions.map(({ value, label }) => ({
     value,
     label: value === 'friend' ? friend : label
   }))
 
-  // 添加一个额外选项，用于测试表单校验
+  // 添加一个额外选项，用于测试表单验证
   options.push({ value: 'anonymous', label: '匿名' })
   return options
 }

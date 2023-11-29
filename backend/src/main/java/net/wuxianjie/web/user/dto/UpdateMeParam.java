@@ -17,6 +17,8 @@ public class UpdateMeParam {
 
   /**
    * 加密后的旧密码。
+   *
+   * <p>`oldPassword` 与 `newPassword` 要么同时存在，要么同时不存在。
    */
   private String oldPassword;
 

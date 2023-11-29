@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 import static java.lang.annotation.ElementType.*;
 
 /**
- * 枚举值校验注解（需要枚举值对应的方法名为 {@value EnumValidatorImpl#METHOD_NAME}）。
+ * 枚举值验证注解（需要枚举值对应的方法名为 {@value EnumValidatorImpl#METHOD_NAME}）。
  *
  * <p>注意：{@code null} 值被认为是合法的。
  **/

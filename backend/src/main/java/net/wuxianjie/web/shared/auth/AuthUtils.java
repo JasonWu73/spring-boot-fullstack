@@ -19,6 +19,8 @@ public class AuthUtils {
 
   /**
    * 从 Spring Security Context 中获取当前登录用户信息。
+   *
+   * @return 当前登录用户信息
    */
   public static Optional<CachedAuth> getCurrentUser() {
     final Authentication auth = SecurityContextHolder.getContext().getAuthentication();

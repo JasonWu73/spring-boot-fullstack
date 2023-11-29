@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
@@ -55,7 +56,7 @@ public class RedisLock {
     // 解锁
     final String currentValue = stringRedisTemplate.opsForValue().get(key);
 
-    if (currentValue == null || !currentValue.equals(value)) return;
+    if (!Objects.equals(currentValue, value)) return;
 
     stringRedisTemplate.delete(key);
 
@@ -73,7 +74,7 @@ public class RedisLock {
         // 若非当前锁的持有者，则直接退出线程
         final String currentValue = stringRedisTemplate.opsForValue().get(key);
 
-        if (currentValue == null || !currentValue.equals(value)) break;
+        if (!Objects.equals(currentValue, value)) break;
 
         // 锁续期
         stringRedisTemplate.expire(key, LOCK_TIMEOUT_SECONDS, TimeUnit.SECONDS);

@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -114,7 +115,7 @@ public class AuthServiceImpl implements AuthService {
     final CachedAuth oldAuth = AuthUtils.getCurrentUser().orElseThrow();
 
     // 检查刷新令牌是否正确
-    if (!oldAuth.refreshToken().equals(refreshToken)) {
+    if (!Objects.equals(oldAuth.refreshToken(), refreshToken)) {
       throw new ApiException(HttpStatus.UNAUTHORIZED, "刷新令牌错误");
     }
 
@@ -193,7 +194,6 @@ public class AuthServiceImpl implements AuthService {
   }
 
   private void checkUserUsability(final AccountStatus status) {
-    // 检查账号可用性
     if (status == AccountStatus.DISABLED) {
       throw new ApiException(HttpStatus.FORBIDDEN, "账号已被禁用");
     }
