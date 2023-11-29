@@ -9,7 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Slf4j
 @Disabled
-class SecurityConfigTest {
+class PasswordEncoderTest {
 
   private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 

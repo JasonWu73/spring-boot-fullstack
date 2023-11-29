@@ -38,8 +38,8 @@ public class RsaUtils {
 
     // 使用 Base64 编码密钥对
     return new RsaKeyPair(
-        Base64.getEncoder().encodeToString(keyPair.getPublic().getEncoded()),
-        Base64.getEncoder().encodeToString(keyPair.getPrivate().getEncoded())
+      Base64.getEncoder().encodeToString(keyPair.getPublic().getEncoded()),
+      Base64.getEncoder().encodeToString(keyPair.getPrivate().getEncoded())
     );
   }
 
@@ -140,8 +140,8 @@ public class RsaUtils {
       rsa = KeyPairGenerator.getInstance(RSA_CRYPTO_ALGORITHM);
     } catch (NoSuchAlgorithmException e) {
       throw new RuntimeException(
-          "不支持的加密算法 [%s]".formatted(RSA_CRYPTO_ALGORITHM),
-          e
+        "不支持的加密算法 [%s]".formatted(RSA_CRYPTO_ALGORITHM),
+        e
       );
     }
 
@@ -179,8 +179,8 @@ public class RsaUtils {
       cipher = Cipher.getInstance(RSA_CRYPTO_ALGORITHM);
     } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
       throw new RuntimeException(
-          "不支持加密算法 [%s]".formatted(RSA_CRYPTO_ALGORITHM),
-          e
+        "不支持加密算法 [%s]".formatted(RSA_CRYPTO_ALGORITHM),
+        e
       );
     }
 
@@ -194,8 +194,8 @@ public class RsaUtils {
       keyFactory = KeyFactory.getInstance(RSA_CRYPTO_ALGORITHM);
     } catch (NoSuchAlgorithmException e) {
       throw new RuntimeException(
-          "不支持加密算法 [%s]".formatted(RSA_CRYPTO_ALGORITHM),
-          e
+        "不支持加密算法 [%s]".formatted(RSA_CRYPTO_ALGORITHM),
+        e
       );
     }
 
