@@ -1,8 +1,12 @@
-package net.wuxianjie.web.user;
+package net.wuxianjie.web.user.dto;
 
 import lombok.Data;
 import net.wuxianjie.web.shared.validator.EnumValidator;
+import net.wuxianjie.web.user.AccountStatus;
 
+/**
+ * 查询用户参数。
+ */
 @Data
 public class GetUserParam {
 

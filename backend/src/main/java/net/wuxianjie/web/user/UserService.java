@@ -10,6 +10,8 @@ import net.wuxianjie.web.shared.pagination.PaginationParam;
 import net.wuxianjie.web.shared.pagination.PaginationResult;
 import net.wuxianjie.web.shared.util.RsaUtils;
 import net.wuxianjie.web.shared.util.StrUtils;
+import net.wuxianjie.web.user.dto.AddUserParam;
+import net.wuxianjie.web.user.dto.GetUserParam;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

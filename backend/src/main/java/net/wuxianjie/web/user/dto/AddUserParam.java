@@ -1,10 +1,13 @@
-package net.wuxianjie.web.user;
+package net.wuxianjie.web.user.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 import java.util.List;
 
+/**
+ * 新增用户参数。
+ */
 @Data
 public class AddUserParam {
 
@@ -21,7 +24,7 @@ public class AddUserParam {
   private String nickname;
 
   /**
-   * 密码。
+   * 加密后的密码。
    */
   @NotBlank(message = "密码不能为空")
   private String password;

@@ -1,6 +1,7 @@
 package net.wuxianjie.web.user;
 
 import net.wuxianjie.web.shared.pagination.PaginationParam;
+import net.wuxianjie.web.user.dto.GetUserParam;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
