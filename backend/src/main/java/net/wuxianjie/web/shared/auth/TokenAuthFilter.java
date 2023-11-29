@@ -14,6 +14,9 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
 
+/**
+ * 访问令牌（Access Token）身份验证过滤器。
+ */
 @RequiredArgsConstructor
 public class TokenAuthFilter extends OncePerRequestFilter {
 
@@ -41,7 +44,6 @@ public class TokenAuthFilter extends OncePerRequestFilter {
 
     if (authorization == null) {
       filterChain.doFilter(request, response);
-
       return;
     }
 
@@ -58,7 +60,6 @@ public class TokenAuthFilter extends OncePerRequestFilter {
           )
         )
       );
-
       return;
     }
 
@@ -76,7 +77,6 @@ public class TokenAuthFilter extends OncePerRequestFilter {
         null,
         new ApiException(HttpStatus.UNAUTHORIZED, "登录过期", e)
       );
-
       return;
     }
 
