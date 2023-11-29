@@ -30,10 +30,8 @@ public class EnumValidatorImpl implements ConstraintValidator<EnumValidator, Obj
     final Class<? extends Enum<?>> enumClass = enumValidator.value();
 
     if (!enumClass.isEnum()) {
-      log.warn("忽略枚举值验证 [{} 不是枚举类]", enumClass.getName());
-
       isPassed = true;
-
+      log.warn("忽略枚举值验证 [{} 不是枚举类]", enumClass.getName());
       return;
     }
 
@@ -42,13 +40,10 @@ public class EnumValidatorImpl implements ConstraintValidator<EnumValidator, Obj
     for (final Enum<?> theEnum : enumConstants) {
       try {
         final Method method = theEnum.getClass().getDeclaredMethod(METHOD_NAME);
-
         method.setAccessible(true);
-
         values.add(method.invoke(theEnum));
       } catch (NoSuchMethodException e) {
         isPassed = true;
-
         log.warn(
           "忽略枚举值验证 [{} 不存在 {} 方法]",
           enumClass.getName(),
@@ -56,7 +51,6 @@ public class EnumValidatorImpl implements ConstraintValidator<EnumValidator, Obj
         );
       } catch (InvocationTargetException | IllegalAccessException e) {
         isPassed = true;
-
         log.warn(
           "忽略枚举值验证 [{}.{} 方法执行出错]",
           enumClass.getName(),
