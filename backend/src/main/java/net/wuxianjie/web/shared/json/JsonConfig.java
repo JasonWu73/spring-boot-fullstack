@@ -1,10 +1,11 @@
-package net.wuxianjie.web.shared.config;
+package net.wuxianjie.web.shared.json;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import net.wuxianjie.web.shared.config.Constants;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -20,7 +21,7 @@ public class JsonConfig {
   @Bean
   public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {
     final MappingJackson2HttpMessageConverter converter =
-        new MappingJackson2HttpMessageConverter();
+      new MappingJackson2HttpMessageConverter();
 
     converter.setObjectMapper(objectMapper());
 
@@ -36,17 +37,17 @@ public class JsonConfig {
     final JavaTimeModule timeModule = getJavaTimeModule();
 
     return JsonMapper.builder()
-        // 若空字符串转换为 POJO 时（非 `String` 类型），则会转换为 `null`
-        .enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT)
-        // 忽略未知的 JSON 字段，即遇到未知字段时不抛出异常
-        .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-        // 对 Java 8 `LocalDateTime` 与 `LocalDate` 有效
-        .addModule(timeModule)
-        // 仅对 `java.util.Date` 有效
-        .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
-        .build()
-        // 仅对 `java.util.Date` 有效
-        .setDateFormat(new SimpleDateFormat(Constants.DATE_TIME_PATTERN));
+      // 若空字符串转换为 POJO 时（非 `String` 类型），则会转换为 `null`
+      .enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT)
+      // 忽略未知的 JSON 字段，即遇到未知字段时不抛出异常
+      .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+      // 对 Java 8 `LocalDateTime` 与 `LocalDate` 有效
+      .addModule(timeModule)
+      // 仅对 `java.util.Date` 有效
+      .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
+      .build()
+      // 仅对 `java.util.Date` 有效
+      .setDateFormat(new SimpleDateFormat(Constants.DATE_TIME_PATTERN));
   }
 
   /**
@@ -59,12 +60,12 @@ public class JsonConfig {
 
       @Override
       public void serialize(
-          final LocalDateTime value,
-          final JsonGenerator gen,
-          final SerializerProvider serializers
+        final LocalDateTime value,
+        final JsonGenerator gen,
+        final SerializerProvider serializers
       ) throws IOException {
         gen.writeString(
-            value.format(DateTimeFormatter.ofPattern(Constants.DATE_TIME_PATTERN))
+          value.format(DateTimeFormatter.ofPattern(Constants.DATE_TIME_PATTERN))
         );
       }
     });
@@ -73,12 +74,12 @@ public class JsonConfig {
 
       @Override
       public LocalDateTime deserialize(
-          final JsonParser p,
-          final DeserializationContext ctx
+        final JsonParser p,
+        final DeserializationContext ctx
       ) throws IOException {
         return LocalDateTime.parse(
-            p.getValueAsString(),
-            DateTimeFormatter.ofPattern(Constants.DATE_TIME_PATTERN)
+          p.getValueAsString(),
+          DateTimeFormatter.ofPattern(Constants.DATE_TIME_PATTERN)
         );
       }
     });

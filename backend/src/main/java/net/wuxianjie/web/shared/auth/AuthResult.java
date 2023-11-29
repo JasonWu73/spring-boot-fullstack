@@ -3,7 +3,7 @@ package net.wuxianjie.web.shared.auth;
 import java.util.List;
 
 /**
- * 通过身份验证后的响应数据。
+ * 身份验证结果。
  *
  * @param accessToken      访问令牌，用于访问接口时的身份验证
  * @param refreshToken     刷新令牌，用于刷新访问令牌
@@ -11,10 +11,10 @@ import java.util.List;
  * @param nickname         昵称
  * @param authorities      功能权限列表
  */
-public record AuthResponse(
-    String accessToken,
-    String refreshToken,
-    int expiresInSeconds,
-    String nickname,
-    List<String> authorities
+public record AuthResult(
+  String accessToken,
+  String refreshToken,
+  int expiresInSeconds,
+  String nickname,
+  List<String> authorities
 ) {}

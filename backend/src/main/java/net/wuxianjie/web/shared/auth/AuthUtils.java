@@ -12,6 +12,9 @@ import org.springframework.util.StringUtils;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * 身份验证工具类。
+ */
 public class AuthUtils {
 
   /**
@@ -30,21 +33,23 @@ public class AuthUtils {
 
   /**
    * 将登录信息写入 Spring Security Context。
+   *
+   * @param auth    登录信息
+   * @param request HTTP 请求
    */
   public static void setAuthenticatedContext(
-      final CachedAuth auth,
-      final HttpServletRequest request
+    final CachedAuth auth,
+    final HttpServletRequest request
   ) {
     final List<String> rawAuthorities = auth.authorities();
 
-    final List<SimpleGrantedAuthority> authorities = rawAuthorities
-        .stream()
-        .filter(StringUtils::hasText)
-        .map(SimpleGrantedAuthority::new)
-        .toList();
+    final List<SimpleGrantedAuthority> authorities = rawAuthorities.stream()
+      .filter(StringUtils::hasText)
+      .map(SimpleGrantedAuthority::new)
+      .toList();
 
     final UsernamePasswordAuthenticationToken token =
-        new UsernamePasswordAuthenticationToken(auth, null, authorities);
+      new UsernamePasswordAuthenticationToken(auth, null, authorities);
 
     token.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 

@@ -3,7 +3,7 @@ package net.wuxianjie.web.shared.auth;
 import java.util.List;
 
 /**
- * 用户登录成功后缓存的身份验证信息。
+ * 缓存的登录信息。
  *
  * @param userId       用户 id
  * @param username     用户名
@@ -13,10 +13,10 @@ import java.util.List;
  * @param refreshToken 刷新令牌，用于刷新访问令牌
  */
 public record CachedAuth(
-    long userId,
-    String username,
-    String nickname,
-    List<String> authorities,
-    String accessToken,
-    String refreshToken
+  long userId,
+  String username,
+  String nickname,
+  List<String> authorities,
+  String accessToken,
+  String refreshToken
 ) {}
