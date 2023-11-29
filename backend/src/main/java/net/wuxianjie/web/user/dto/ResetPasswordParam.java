@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 /**
- * 重置用户密码参数。
+ * 重置密码参数。
  */
 @Data
 public class ResetPasswordParam {

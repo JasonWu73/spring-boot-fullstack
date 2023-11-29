@@ -5,7 +5,7 @@ import net.wuxianjie.web.shared.validator.EnumValidator;
 import net.wuxianjie.web.user.AccountStatus;
 
 /**
- * 查询用户参数。
+ * 用户查询参数。
  */
 @Data
 public class GetUserParam {
