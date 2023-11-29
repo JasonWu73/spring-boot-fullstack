@@ -8,12 +8,23 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestClient;
 
+/**
+ * API 调用配置。
+ */
 @Configuration
 @RequiredArgsConstructor
 public class ApiCallerConfig {
 
+  /**
+   * 自定义的 `MappingJackson2HttpMessageConverter`。
+   */
   private final MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter;
 
+  /**
+   * 自定义的 `RestClient`。
+   *
+   * @return `RestClient` 实例
+   */
   @Bean
   public RestClient restClient() {
     return RestClient
