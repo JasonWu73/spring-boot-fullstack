@@ -5,7 +5,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 /**
- * 操作日志。
+ * 操作日志数据库表。
  */
 @Data
 public class OperationLog {

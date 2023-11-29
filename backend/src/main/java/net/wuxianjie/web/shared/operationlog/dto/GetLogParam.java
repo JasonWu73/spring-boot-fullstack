@@ -1,4 +1,4 @@
-package net.wuxianjie.web.shared.operationlog;
+package net.wuxianjie.web.shared.operationlog.dto;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -9,6 +9,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
+/**
+ * 操作日志查询参数。
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
