@@ -1,19 +1,31 @@
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 
+/**
+ * NProgress 加载计数器，防止因多个异步请求导致 NProgress 过早结束。
+ */
 let counter = 0
 
+/**
+ * 全局配置 NProgress。
+ */
 function configureNProgress() {
   NProgress.configure({
     showSpinner: false
   })
 }
 
+/**
+ * 开始 NProgress 加载。
+ */
 function startNProgress() {
   counter++
   NProgress.start()
 }
 
+/**
+ * 结束 NProgress 加载。
+ */
 function endNProgress() {
   counter--
 
