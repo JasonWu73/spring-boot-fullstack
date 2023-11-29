@@ -1,6 +1,7 @@
 package net.wuxianjie.web.shared.auth;
 
 import jakarta.servlet.http.HttpServletRequest;
+import net.wuxianjie.web.shared.auth.dto.CachedAuth;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

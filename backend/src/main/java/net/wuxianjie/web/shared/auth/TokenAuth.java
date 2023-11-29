@@ -1,5 +1,7 @@
 package net.wuxianjie.web.shared.auth;
 
+import net.wuxianjie.web.shared.auth.dto.CachedAuth;
+
 /**
  * 访问令牌身份验证接口。
  */

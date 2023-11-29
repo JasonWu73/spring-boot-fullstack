@@ -1,5 +1,6 @@
 package net.wuxianjie.web.shared.auth;
 
+import net.wuxianjie.web.shared.auth.dto.AuthResult;
 import net.wuxianjie.web.shared.auth.dto.LoginParam;
 
 /**

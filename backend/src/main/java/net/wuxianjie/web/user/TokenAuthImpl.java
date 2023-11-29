@@ -1,7 +1,7 @@
 package net.wuxianjie.web.user;
 
 import lombok.RequiredArgsConstructor;
-import net.wuxianjie.web.shared.auth.CachedAuth;
+import net.wuxianjie.web.shared.auth.dto.CachedAuth;
 import net.wuxianjie.web.shared.auth.TokenAuth;
 import net.wuxianjie.web.shared.exception.ApiException;
 import net.wuxianjie.web.shared.json.JsonConverter;

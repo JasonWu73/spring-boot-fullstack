@@ -1,4 +1,4 @@
-package net.wuxianjie.web.shared.auth;
+package net.wuxianjie.web.shared.auth.dto;
 
 import java.util.List;
 

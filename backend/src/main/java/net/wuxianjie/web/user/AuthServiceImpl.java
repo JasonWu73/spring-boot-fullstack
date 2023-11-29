@@ -3,6 +3,8 @@ package net.wuxianjie.web.user;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import net.wuxianjie.web.shared.auth.*;
+import net.wuxianjie.web.shared.auth.dto.AuthResult;
+import net.wuxianjie.web.shared.auth.dto.CachedAuth;
 import net.wuxianjie.web.shared.auth.dto.LoginParam;
 import net.wuxianjie.web.shared.config.Constants;
 import net.wuxianjie.web.shared.exception.ApiException;

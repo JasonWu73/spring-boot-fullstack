@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import net.wuxianjie.web.shared.auth.dto.CachedAuth;
 import net.wuxianjie.web.shared.exception.ApiException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

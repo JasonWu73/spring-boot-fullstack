@@ -2,6 +2,7 @@ package net.wuxianjie.web.shared.auth;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import net.wuxianjie.web.shared.auth.dto.AuthResult;
 import net.wuxianjie.web.shared.auth.dto.LoginParam;
 import net.wuxianjie.web.shared.operationlog.Operation;
 import org.springframework.http.ResponseEntity;
