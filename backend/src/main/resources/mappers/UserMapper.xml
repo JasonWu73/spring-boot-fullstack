@@ -30,7 +30,7 @@
     WHERE username = #{username}
   </select>
 
-  <resultMap id="userBaseMap" type="net.wuxianjie.web.user.UserInfo">
+  <resultMap id="userBaseMap" type="net.wuxianjie.web.user.dto.UserInfo">
     <constructor>
       <idArg column="id" javaType="long" />
       <arg column="createdAt" javaType="java.time.LocalDateTime" />

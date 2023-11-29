@@ -4,6 +4,9 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
+/**
+ * 用户数据库表。
+ */
 @Data
 public class User {
 

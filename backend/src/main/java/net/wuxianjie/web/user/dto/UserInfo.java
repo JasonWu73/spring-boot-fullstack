@@ -1,12 +1,16 @@
-package net.wuxianjie.web.user;
+package net.wuxianjie.web.user.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.wuxianjie.web.user.AccountStatus;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * 用户信息。
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -54,26 +58,26 @@ public class UserInfo {
 
   // 用于 MyBatis 的构造函数
   public UserInfo(
-      final Long id,
-      final LocalDateTime createdAt,
-      final LocalDateTime updatedAt,
-      final String remark,
-      final String username,
-      final String nickname,
-      final AccountStatus status,
-      final String authorities
+    final Long id,
+    final LocalDateTime createdAt,
+    final LocalDateTime updatedAt,
+    final String remark,
+    final String username,
+    final String nickname,
+    final AccountStatus status,
+    final String authorities
   ) {
     this(
-        id,
-        createdAt,
-        updatedAt,
-        remark,
-        username,
-        nickname,
-        status,
-        authorities != null
-            ? List.of(authorities.split(","))
-            : List.of()
+      id,
+      createdAt,
+      updatedAt,
+      remark,
+      username,
+      nickname,
+      status,
+      authorities != null
+        ? List.of(authorities.split(","))
+        : List.of()
     );
   }
 }
