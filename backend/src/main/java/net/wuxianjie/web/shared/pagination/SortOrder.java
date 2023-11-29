@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -38,12 +39,17 @@ public enum SortOrder {
   @JsonValue
   private final String code;
 
+  /**
+   * 根据编码解析排序方式。
+   *
+   * @param code 排序方式编码
+   * @return 排序方式
+   */
   public static Optional<SortOrder> resolve(final String code) {
-    if (code == null) return Optional.empty();
-
-    return Arrays
-        .stream(VALUES)
-        .filter(value -> value.code.equals(code))
-        .findFirst();
+    return Optional.ofNullable(code)
+      .flatMap(theCode -> Arrays.stream(VALUES)
+        .filter(theEnum -> Objects.equals(theEnum.code, theCode))
+        .findFirst()
+      );
   }
 }
