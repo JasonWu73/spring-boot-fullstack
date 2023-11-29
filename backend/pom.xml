@@ -26,7 +26,7 @@
 
 
   <dependencies>
-    <!-- Jasypt：用于加密 Spring Boot 配置文件，
+    <!-- Jasypt：加解密 Spring Boot 配置文件，
       对应 Jasypt Maven 插件：`com.github.ulisesbocchio:jasypt-maven-plugin`
     -->
     <dependency>
@@ -35,64 +35,64 @@
       <version>${jasypt.version}</version>
     </dependency>
 
-    <!-- Lombok -->
+    <!-- Lombok：通过注解的方式来简化某些样板代码 -->
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <optional>true</optional>
     </dependency>
 
-    <!-- web 项目基础依赖（Spring MVC、内嵌 Tomcat 等）-->
+    <!-- Web 应用启动器：包含 Spring MVC、内嵌 Tomcat 等 -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
 
-    <!-- Spring Security -->
+    <!-- Spring Security 启动器：提供认证（Authentication）和授权（Authorization）功能 -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-security</artifactId>
     </dependency>
 
-    <!-- 参数校验 -->
+    <!-- 数据验证启动器：基于 Java 的 Bean Validation 规范 -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-validation</artifactId>
     </dependency>
 
-    <!-- Spring AOP -->
+    <!-- 面向切面编程启动器：包含了 Spring AOP 依赖和 AspectJ -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-aop</artifactId>
     </dependency>
 
-    <!-- 提供对自定义配置项的 Javadoc 支持 -->
+    <!-- 元数据工具：支持配置属性的自动补全、配置提示和文档化支持 -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-configuration-processor</artifactId>
       <optional>true</optional>
     </dependency>
 
-    <!-- MyBatis -->
+    <!-- 简化在 Spring Boot 中集成 MyBatis -->
     <dependency>
       <groupId>org.mybatis.spring.boot</groupId>
       <artifactId>mybatis-spring-boot-starter</artifactId>
       <version>${mybatis-spring-boot.version}</version>
     </dependency>
 
-    <!-- MySQL JDBC 驱动 -->
+    <!-- MySQL JDBC 驱动程序 -->
     <dependency>
       <groupId>com.mysql</groupId>
       <artifactId>mysql-connector-j</artifactId>
     </dependency>
 
-    <!-- Redis -->
+    <!-- Redis 启动器：默认使用 Lettuce 作为客户端 -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-redis</artifactId>
     </dependency>
 
-    <!-- Spring Boot 测试框架 -->
+    <!-- 测试套件启动器：包括了多种测试库和工具，支持单元测试、集成测试等 -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
@@ -105,10 +105,12 @@
     <finalName>backend</finalName>
 
     <plugins>
+      <!-- Spring Boot 应用打包和运行的 Maven 插件 -->
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
         <configuration>
+          <!-- 在构建最终的应用包（如 JAR 文件）时，避免在运行时环境中包含不必要的依赖 -->
           <excludes>
             <exclude>
               <groupId>org.projectlombok</groupId>
