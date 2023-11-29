@@ -31,7 +31,7 @@ public class MyBatisController {
    * 新增。
    */
   @PostMapping
-  public MyBatisData addData(@RequestBody @Valid final MyBatisData data) {
+  public MyBatisData addData(@Valid @RequestBody final MyBatisData data) {
     data.setType(MyBatisType.TYPE_2);
 
     myBatisMapper.insertData(data);

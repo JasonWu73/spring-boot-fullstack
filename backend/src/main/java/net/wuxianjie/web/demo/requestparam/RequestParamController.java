@@ -20,7 +20,7 @@ import java.time.ZoneOffset;
 import java.util.Date;
 
 /**
- * 测试常用的请求参数接收方式。
+ * 测试几种常用的请求参数接收方式。
  */
 @Slf4j
 @Validated
@@ -39,37 +39,37 @@ public class RequestParamController {
    */
   @RequestMapping
   public OuterData getData(
-      @RequestParam final String name,
-      @NotNull(message = "num 不能为 null") final Integer num,
-      @EnumValidator(value = Type.class, message = "type 值不合法") final Integer type,
-      @DateTimeFormat(pattern = Constants.DATE_TIME_PATTERN) final LocalDateTime dateTime
+    @RequestParam final String name,
+    @NotNull(message = "num 不能为 null") final Integer num,
+    @EnumValidator(value = Type.class, message = "type 值不合法") final Integer type,
+    @DateTimeFormat(pattern = Constants.DATE_TIME_PATTERN) final LocalDateTime dateTime
   ) {
     log.info("name={}, num={}, type={}, dateTime={}", name, num, type, dateTime);
 
-    final LocalDateTime returnDateTime = dateTime == null
-        ? LocalDateTime.now()
-        : dateTime;
+    final LocalDateTime returned = dateTime == null ? LocalDateTime.now() : dateTime;
 
     return new OuterData(
-        100L,
-        name,
-        new InnerData(
-            Date.from(returnDateTime.toInstant(ZoneOffset.ofHours(8))),
-            returnDateTime.toLocalDate(),
-            returnDateTime
-        )
+      100L,
+      name,
+      new InnerData(
+        Date.from(returned.toInstant(ZoneOffset.ofHours(8))),
+        returned.toLocalDate(),
+        returned
+      )
     );
   }
 
   /**
-   * 上传文件。
+   * POST form-data 上传文件。
    */
   @PostMapping("/upload")
   public Uploaded uploadFile(
-      @NotBlank final String message,
-      @RequestParam final MultipartFile file
+    @NotBlank final String message,
+    @RequestParam final MultipartFile file
   ) {
-    if (file == null || file.isEmpty()) return new Uploaded(false, null, message);
+    if (file == null || file.isEmpty()) {
+      return new Uploaded(false, null, message);
+    }
 
     return new Uploaded(true, file.getOriginalFilename(), message);
   }
@@ -78,7 +78,7 @@ public class RequestParamController {
    * POST JSON 传参。
    */
   @PostMapping("/json")
-  public OuterData postJsonData(@RequestBody @Valid final OuterData data) {
+  public OuterData postJsonData(@Valid @RequestBody final OuterData data) {
     return data;
   }
 

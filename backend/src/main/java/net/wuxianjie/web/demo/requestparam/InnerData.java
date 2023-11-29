@@ -11,6 +11,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
+/**
+ * 嵌套在外部数据中的内部数据。
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
