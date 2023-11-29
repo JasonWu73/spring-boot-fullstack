@@ -38,7 +38,7 @@ public class SecurityConfig {
   /**
    * 配置上下级权限。
    *
-   * <p>`root`: 超级管理员权限，不但意味着能访问系统所有功能，也会忽略所有关于数据权限的限制。
+   * <p>`root`：超级管理员权限，不但意味着能访问系统所有功能，也会忽略所有关于数据权限的限制。
    */
   public static final String HIERARCHY = """
     root > admin
@@ -48,6 +48,13 @@ public class SecurityConfig {
 
   private final TokenAuth tokenAuth;
 
+  /**
+   * 配置 Spring Security 过滤器链。
+   *
+   * @param http Spring Security HTTP 配置
+   * @return Spring Security 过滤器链
+   * @throws Exception 配置失败时抛出
+   */
   @Bean
   public SecurityFilterChain filterChain(final HttpSecurity http) throws Exception {
     // 以下配置仅对 API 请求（即以 `/api/` 为前缀的 Path）生效
@@ -115,7 +122,9 @@ public class SecurityConfig {
   }
 
   /**
-   * 在 Spring Security 中集成 CORS 支持。
+   * 配置 Spring Security 中集成的 CORS。
+   *
+   * @return CORS 配置
    */
   @Bean
   CorsConfigurationSource corsConfigurationSource() {
@@ -128,7 +137,6 @@ public class SecurityConfig {
     configuration.setAllowedHeaders(List.of("*"));
 
     final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-
     source.registerCorsConfiguration("/**", configuration);
 
     return source;
@@ -136,6 +144,8 @@ public class SecurityConfig {
 
   /**
    * 密码哈希算法。
+   *
+   * @return 密码哈希算法
    */
   @Bean
   public PasswordEncoder passwordEncoder() {
@@ -146,25 +156,25 @@ public class SecurityConfig {
    * 配置拥有上下级关系的功能权限。
    *
    * <p>Spring Boot 3 即 Spring Security 6 开始，还需要创建 {@link #expressionHandler()}。
+   *
+   * @return 拥有上下级关系的功能权限
    */
   @Bean
   public RoleHierarchy roleHierarchy() {
     final RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
-
     roleHierarchy.setHierarchy(HIERARCHY);
-
     return roleHierarchy;
   }
 
   /**
-   * 使用拥有上下级关系的功能权限。
+   * Spring Boot 3 即 Spring Security 6 开始，配置 {@link #roleHierarchy()} 的必要 Bean。
+   *
+   * @return {@link #roleHierarchy()} 的必要 Bean
    */
   @Bean
   public DefaultMethodSecurityExpressionHandler expressionHandler() {
     final DefaultMethodSecurityExpressionHandler handler = new DefaultMethodSecurityExpressionHandler();
-
     handler.setRoleHierarchy(roleHierarchy());
-
     return handler;
   }
 }

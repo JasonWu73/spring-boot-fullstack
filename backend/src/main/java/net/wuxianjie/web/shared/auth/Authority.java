@@ -10,7 +10,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * 权限。
+ * 系统可用权限。
  */
 @Getter
 @ToString
@@ -20,7 +20,7 @@ public enum Authority {
   /**
    * 超级管理员。
    *
-   * <p>`root`: 超级管理员权限，不但意味着能访问系统所有功能，也会忽略所有关于数据权限的限制。
+   * <p>`root`：超级管理员权限，不但意味着能访问系统所有功能，也会忽略所有关于数据权限的限制。
    *
    * <p>故该权限账号不能由管理界面进行创建，而是由系统内置一个。
    */
