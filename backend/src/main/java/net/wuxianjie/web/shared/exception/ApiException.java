@@ -14,13 +14,30 @@ public class ApiException extends RuntimeException {
   private final HttpStatus status;
   private final String reason;
 
+  /**
+   * 构造 API 调用异常。
+   *
+   * @param status HTTP 响应状态码
+   * @param reason 错误信息
+   */
   public ApiException(final HttpStatus status, final String reason) {
     super(reason);
     this.status = status;
     this.reason = reason;
   }
 
-  public ApiException(final HttpStatus status, final String reason, final Throwable cause) {
+  /**
+   * 构造 API 调用异常。
+   *
+   * @param status HTTP 响应状态码
+   * @param reason 错误信息
+   * @param cause  嵌套异常
+   */
+  public ApiException(
+    final HttpStatus status,
+    final String reason,
+    final Throwable cause
+  ) {
     super(reason, cause);
     this.status = status;
     this.reason = reason;
@@ -42,11 +59,11 @@ public class ApiException extends RuntimeException {
     final StringBuilder stringBuilder = new StringBuilder();
 
     stringBuilder
-        .append("嵌套异常 [")
-        .append(cause.getClass().getName())
-        .append(": ")
-        .append(cause.getMessage())
-        .append("]");
+      .append("嵌套异常 [")
+      .append(cause.getClass().getName())
+      .append(": ")
+      .append(cause.getMessage())
+      .append("]");
 
     final StringBuilder nestedMessage = getNestedMessage(cause.getCause());
 

@@ -17,17 +17,30 @@ import java.util.Objects;
  */
 public record ApiError(LocalDateTime timestamp, int status, String error, String path) {
 
+  /**
+   * 构造 API 错误响应。
+   *
+   * @param status HTTP 响应状态码
+   * @param error  错误信息
+   */
   public ApiError(final HttpStatus status, final String error) {
     this(LocalDateTime.now(), status.value(), error, getRequestPath());
   }
 
+  /**
+   * 构造 API 错误响应。
+   *
+   * @param status HTTP 响应状态码
+   * @param error  错误信息
+   * @param path   请求地址
+   */
   public ApiError(final HttpStatus status, final String error, final String path) {
     this(LocalDateTime.now(), status.value(), error, path);
   }
 
   private static String getRequestPath() {
     final ServletRequestAttributes requestAttributes =
-        (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+      (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
     return Objects.requireNonNull(requestAttributes).getRequest().getRequestURI();
   }
 }

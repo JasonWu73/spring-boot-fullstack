@@ -34,6 +34,9 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
+/**
+ * 全局异常处理器。
+ */
 @Slf4j
 @ControllerAdvice
 @RequiredArgsConstructor
@@ -73,11 +76,12 @@ public class GlobalExceptionHandler {
    *   <li>{@code src/main/resources/public/}</li>
    * </ol>
    *
+   * @param request HTTP 请求
    * @return JSON 数据或 SPA 首页
    */
   @ExceptionHandler({NoResourceFoundException.class, NoHandlerFoundException.class})
   public ResponseEntity<?> handleNoResourceFoundException(
-      final HttpServletRequest request
+    final HttpServletRequest request
   ) {
     // 若为 API 或 JSON 请求，则返回 JSON 数据
     final String requestPath = request.getRequestURI();
@@ -85,46 +89,50 @@ public class GlobalExceptionHandler {
 
     if (isJsonRequest(requestPath, accept)) {
       return ResponseEntity
-          .status(HttpStatus.NOT_FOUND)
-          .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-          .body(new ApiError(HttpStatus.NOT_FOUND, "未找到请求的资源", requestPath));
+        .status(HttpStatus.NOT_FOUND)
+        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+        .body(new ApiError(HttpStatus.NOT_FOUND, "未找到请求的资源", requestPath));
     }
 
     // 其他情况，返回 SPA 首页内容，由前端处理 404
     return ResponseEntity
-        .status(HttpStatus.OK)
-        .header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_HTML_VALUE)
-        .body(getIndexHtml());
+      .status(HttpStatus.OK)
+      .header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_HTML_VALUE)
+      .body(getIndexHtml());
   }
 
   /**
    * 处理自定义 API 异常。
+   *
+   * @param e 自定义 API 异常
+   * @return JSON 数据
    */
   @ExceptionHandler(ApiException.class)
   public ResponseEntity<ApiError> handleApiException(final ApiException e) {
     writeToLog(e);
 
     return ResponseEntity
-        .status(e.getStatus())
-        .body(new ApiError(e.getStatus(), e.getReason()));
+      .status(e.getStatus())
+      .body(new ApiError(e.getStatus(), e.getReason()));
   }
 
   /**
    * 处理所有未被特定 {@code handleXxxException(...)} 捕获的异常。
+   *
+   * @param e 异常超类
+   * @return JSON 数据
    */
   @ExceptionHandler(Throwable.class)
   public ResponseEntity<ApiError> handleFailedException(final Throwable e) {
     // 不要处理 `org.springframework.security.access.AccessDeniedException`
     // 否则会导致 Spring Security 无法处理 403
-    if (e instanceof AccessDeniedException springSecurity403Exception) {
-      throw springSecurity403Exception;
-    }
+    if (e instanceof AccessDeniedException ex) throw ex;
 
     log.error("落空的服务异常: {}", e.getMessage(), e);
 
     return ResponseEntity
-        .status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .body(new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, "服务异常"));
+      .status(HttpStatus.INTERNAL_SERVER_ERROR)
+      .body(new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, "服务异常"));
   }
 
   /**
@@ -136,26 +144,28 @@ public class GlobalExceptionHandler {
    *   <li>Controller 类必须有 {@link Validated} 注解</li>
    *   <li>直接对 Controller 方法参数使用验证注解，如 {@code @NotBlank}</li>
    * </ul>
+   *
+   * @param e 请求参数不合法异常
+   * @return JSON 数据
    */
   @ExceptionHandler(ConstraintViolationException.class)
   public ResponseEntity<ApiError> handleConstraintViolationException(
-      final ConstraintViolationException e
+    final ConstraintViolationException e
   ) {
     final StringBuilder stringBuilder = new StringBuilder();
 
-    Optional
-        .ofNullable(e.getConstraintViolations())
-        .ifPresent(violations -> violations.forEach(violation -> {
-              if (!stringBuilder.isEmpty()) {
-                stringBuilder.append(ApiException.MESSAGE_SEPARATOR);
-              }
+    Optional.ofNullable(e.getConstraintViolations())
+      .ifPresent(violations -> violations.forEach(violation -> {
+          if (!stringBuilder.isEmpty()) {
+            stringBuilder.append(ApiException.MESSAGE_SEPARATOR);
+          }
 
-              stringBuilder.append(violation.getMessage());
-            })
-        );
+          stringBuilder.append(violation.getMessage());
+        })
+      );
 
     return handleApiException(
-        new ApiException(HttpStatus.BAD_REQUEST, stringBuilder.toString(), e)
+      new ApiException(HttpStatus.BAD_REQUEST, stringBuilder.toString(), e)
     );
   }
 
@@ -168,48 +178,52 @@ public class GlobalExceptionHandler {
    *   <li>对方法参数使用 {@link Valid} 注解</li>
    *   <li>方法参数是 POJO 类，且还可在嵌套属性上使用 {@link Valid}</li>
    * </ul>
+   *
+   * @param e 请求参数不合法异常
+   * @return JSON 数据
    */
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public ResponseEntity<ApiError> handleMethodArgumentNotValidException(
-      final MethodArgumentNotValidException e
+    final MethodArgumentNotValidException e
   ) {
     final StringBuilder stringBuilder = new StringBuilder();
 
-    e
-        .getBindingResult()
-        .getFieldErrors()
-        .forEach(error -> {
-          if (!stringBuilder.isEmpty()) {
-            stringBuilder.append(ApiException.MESSAGE_SEPARATOR);
-          }
+    e.getBindingResult()
+      .getFieldErrors()
+      .forEach(error -> {
+        if (!stringBuilder.isEmpty()) {
+          stringBuilder.append(ApiException.MESSAGE_SEPARATOR);
+        }
 
-          if (error.isBindingFailure()) {
-            final String field = error.getField();
-            final Object rejectedValue = error.getRejectedValue();
-            final String reason = "参数值不合法 [%s=%s]".formatted(field, rejectedValue);
+        if (error.isBindingFailure()) {
+          final String field = error.getField();
+          final Object rejectedValue = error.getRejectedValue();
+          final String reason = "参数值不合法 [%s=%s]".formatted(field, rejectedValue);
 
-            stringBuilder.append(reason);
+          stringBuilder.append(reason);
+          return;
+        }
 
-            return;
-          }
-
-          stringBuilder.append(error.getDefaultMessage());
-        });
+        stringBuilder.append(error.getDefaultMessage());
+      });
 
     return handleApiException(
-        new ApiException(HttpStatus.BAD_REQUEST, stringBuilder.toString(), e)
+      new ApiException(HttpStatus.BAD_REQUEST, stringBuilder.toString(), e)
     );
   }
 
   /**
    * 处理因缺少请求参数（{@code @RequestParam} 默认为必填参数）而产生的异常。
+   *
+   * @param e 缺少请求参数异常
+   * @return JSON 数据
    */
   @ExceptionHandler({
-      MissingServletRequestParameterException.class,
-      MissingServletRequestPartException.class
+    MissingServletRequestParameterException.class,
+    MissingServletRequestPartException.class
   })
   public ResponseEntity<ApiError> handleMissingServletRequestParameterException(
-      final Exception e
+    final Exception e
   ) {
     final String paramName;
 
@@ -228,10 +242,13 @@ public class GlobalExceptionHandler {
 
   /**
    * 处理因请求参数值不合法而产生的异常。
+   *
+   * @param e 请求参数值不合法异常
+   * @return JSON 数据
    */
   @ExceptionHandler(MethodArgumentTypeMismatchException.class)
   public ResponseEntity<ApiError> handleMethodArgumentTypeMismatchException(
-      final MethodArgumentTypeMismatchException e
+    final MethodArgumentTypeMismatchException e
   ) {
     final String paramName = e.getName();
     final Object paramValue = e.getValue();
@@ -242,23 +259,30 @@ public class GlobalExceptionHandler {
 
   /**
    * 处理因请求体内容（如 JSON）不合法而产生的异常。
+   *
+   * @param e 请求体内容不合法异常
+   * @return JSON 数据
    */
   @ExceptionHandler(HttpMessageNotReadableException.class)
   public ResponseEntity<ApiError> handleHttpMessageNotReadableException(
-      final HttpMessageNotReadableException e
+    final HttpMessageNotReadableException e
   ) {
     return handleApiException(
-        new ApiException(HttpStatus.BAD_REQUEST, "无法解析请求体内容", e)
+      new ApiException(HttpStatus.BAD_REQUEST, "无法解析请求体内容", e)
     );
   }
 
   /**
    * 处理因不支持请求方法而产生的异常。
+   *
+   * @param e       不支持请求方法异常
+   * @param request HTTP 请求
+   * @return JSON 数据
    */
   @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
   public ResponseEntity<ApiError> handleHttpRequestMethodNotSupportedException(
-      final HttpRequestMethodNotSupportedException e,
-      final HttpServletRequest request
+    final HttpRequestMethodNotSupportedException e,
+    final HttpServletRequest request
   ) {
     final String reason = "不支持的请求方法 [%s]".formatted(request.getMethod());
 
@@ -267,15 +291,19 @@ public class GlobalExceptionHandler {
 
   /**
    * 处理因不支持请求头中指定的 MIME Content-Type 而产生的异常。
+   *
+   * @param e       不支持的 MIME Content-Type 异常
+   * @param request HTTP 请求
+   * @return JSON 数据
    */
   @ExceptionHandler(HttpMediaTypeException.class)
   public ResponseEntity<ApiError> handleHttpMediaTypeException(
-      final HttpMediaTypeException e,
-      final HttpServletRequest request
+    final HttpMediaTypeException e,
+    final HttpServletRequest request
   ) {
     final String reason = "不支持的媒体类型 [%s: %s]".formatted(
-        HttpHeaders.CONTENT_TYPE,
-        request.getHeader(HttpHeaders.CONTENT_TYPE)
+      HttpHeaders.CONTENT_TYPE,
+      request.getHeader(HttpHeaders.CONTENT_TYPE)
     );
 
     return handleApiException(new ApiException(HttpStatus.NOT_ACCEPTABLE, reason, e));
@@ -283,19 +311,24 @@ public class GlobalExceptionHandler {
 
   /**
    * 处理因非 Multipart 请求而产生的异常。
+   *
+   * @param e 非 Multipart 请求异常
+   * @return JSON 数据
    */
   @ExceptionHandler(MultipartException.class)
   public ResponseEntity<ApiError> handleMultipartException(final MultipartException e) {
     return handleApiException(
-        new ApiException(HttpStatus.NOT_ACCEPTABLE, "仅支持 Multipart 请求", e)
+      new ApiException(HttpStatus.NOT_ACCEPTABLE, "仅支持 Multipart 请求", e)
     );
   }
 
   /**
    * 处理网络连接因请求处理过程中被中断而产生的异常。
+   *
+   * @return 204 No Content
    */
   @ExceptionHandler(ClientAbortException.class)
-  public ResponseEntity<String> handleClientAbortException() {
+  public ResponseEntity<Void> handleClientAbortException() {
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
@@ -306,7 +339,6 @@ public class GlobalExceptionHandler {
 
     if (isClientError) {
       log.warn("客户端异常: {}", e.getMessage());
-
       return;
     }
 
@@ -316,7 +348,7 @@ public class GlobalExceptionHandler {
 
   private static boolean isJsonRequest(final String originalPath, final String accept) {
     return originalPath.startsWith(API_PATH_PREFIX)
-        || accept.contains(MediaType.APPLICATION_JSON_VALUE);
+      || accept.contains(MediaType.APPLICATION_JSON_VALUE);
   }
 
   private String getIndexHtml() {
@@ -324,16 +356,16 @@ public class GlobalExceptionHandler {
 
     if (!resource.exists()) {
       throw new ApiException(
-          HttpStatus.INTERNAL_SERVER_ERROR,
-          "未找到 SPA 首页文件 [%s]".formatted(SPA_INDEX_PAGE)
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        "未找到 SPA 首页文件 [%s]".formatted(SPA_INDEX_PAGE)
       );
     }
 
     try (
-        final InputStreamReader reader = new InputStreamReader(
-            resource.getInputStream(),
-            StandardCharsets.UTF_8
-        )
+      final InputStreamReader reader = new InputStreamReader(
+        resource.getInputStream(),
+        StandardCharsets.UTF_8
+      )
     ) {
       return FileCopyUtils.copyToString(reader);
     } catch (IOException e) {
