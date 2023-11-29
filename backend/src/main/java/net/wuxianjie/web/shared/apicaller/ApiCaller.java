@@ -14,13 +14,13 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.function.Supplier;
 
+/**
+ * API 调用工具类。
+ */
 @Component
 @RequiredArgsConstructor
 public class ApiCaller {
 
-  /**
-   * 注入自定义的 {@link RestClient}。
-   */
   private final RestClient restClient;
 
   /**
@@ -33,19 +33,19 @@ public class ApiCaller {
    * @return 响应结果
    */
   public <T> ApiResponse<T> sendGetRequest(
-      final String url,
-      final Map<String, String> urlParams,
-      final Class<T> responseType
+    final String url,
+    final Map<String, String> urlParams,
+    final Class<T> responseType
   ) {
     return executeRequest(() -> restClient
-        .get()
-        .uri(url, uriBuilder -> {
-          urlParams.forEach(uriBuilder::queryParam);
+      .get()
+      .uri(url, uriBuilder -> {
+        urlParams.forEach(uriBuilder::queryParam);
 
-          return uriBuilder.build();
-        })
-        .retrieve()
-        .toEntity(responseType)
+        return uriBuilder.build();
+      })
+      .retrieve()
+      .toEntity(responseType)
     );
   }
 
@@ -60,17 +60,17 @@ public class ApiCaller {
    * @return 响应结果
    */
   public <T> ApiResponse<T> sendFormRequest(
-      final HttpMethod method,
-      final String url,
-      final LinkedMultiValueMap<String, String> formData,
-      final Class<T> responseType) {
+    final HttpMethod method,
+    final String url,
+    final LinkedMultiValueMap<String, String> formData,
+    final Class<T> responseType) {
     return executeRequest(() -> restClient
-        .method(method)
-        .uri(url)
-        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-        .body(formData)
-        .retrieve()
-        .toEntity(responseType)
+      .method(method)
+      .uri(url)
+      .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+      .body(formData)
+      .retrieve()
+      .toEntity(responseType)
     );
   }
 
@@ -85,18 +85,18 @@ public class ApiCaller {
    * @return 响应结果
    */
   public <T> ApiResponse<T> sendUploadRequest(
-      final HttpMethod method,
-      final String url,
-      final MultipartBodyBuilder formDataBuilder,
-      final Class<T> responseType
+    final HttpMethod method,
+    final String url,
+    final MultipartBodyBuilder formDataBuilder,
+    final Class<T> responseType
   ) {
     return executeRequest(() -> restClient
-        .method(method)
-        .uri(url)
-        .contentType(MediaType.MULTIPART_FORM_DATA)
-        .body(formDataBuilder.build())
-        .retrieve()
-        .toEntity(responseType)
+      .method(method)
+      .uri(url)
+      .contentType(MediaType.MULTIPART_FORM_DATA)
+      .body(formDataBuilder.build())
+      .retrieve()
+      .toEntity(responseType)
     );
   }
 
@@ -111,37 +111,37 @@ public class ApiCaller {
    * @return 响应结果
    */
   public <T> ApiResponse<T> sendJsonRequest(
-      final HttpMethod method,
-      final String url,
-      final Object jsonData,
-      final Class<T> responseType
+    final HttpMethod method,
+    final String url,
+    final Object jsonData,
+    final Class<T> responseType
   ) {
     return executeRequest(() -> restClient
-        .method(method)
-        .uri(url)
-        .contentType(MediaType.APPLICATION_JSON)
-        .body(jsonData)
-        .retrieve()
-        .toEntity(responseType)
+      .method(method)
+      .uri(url)
+      .contentType(MediaType.APPLICATION_JSON)
+      .body(jsonData)
+      .retrieve()
+      .toEntity(responseType)
     );
   }
 
   public <T> ApiResponse<T> executeRequest(
-      final Supplier<ResponseEntity<T>> requestSupplier
+    final Supplier<ResponseEntity<T>> requestSupplier
   ) {
     try {
       ResponseEntity<T> response = requestSupplier.get();
 
       return new ApiResponse<>(
-          response.getStatusCode(),
-          response.getBody(),
-          null
+        response.getStatusCode(),
+        response.getBody(),
+        null
       );
     } catch (RestClientResponseException e) {
       return new ApiResponse<>(
-          e.getStatusCode(),
-          null,
-          e.getResponseBodyAsString(StandardCharsets.UTF_8)
+        e.getStatusCode(),
+        null,
+        e.getResponseBodyAsString(StandardCharsets.UTF_8)
       );
     }
   }

@@ -17,13 +17,13 @@ public class ApiCallerConfig {
   @Bean
   public RestClient restClient() {
     return RestClient
-        .builder()
-        // 默认请求只接收 JSON 响应结果
-        .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
-        // 注入自定义的 `MappingJackson2HttpMessageConverter`
-        .messageConverters(converters ->
-            converters.add(0, mappingJackson2HttpMessageConverter)
-        )
-        .build();
+      .builder()
+      // 默认请求只接收 JSON 响应结果
+      .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
+      // 注入自定义的 `MappingJackson2HttpMessageConverter`
+      .messageConverters(converters ->
+        converters.add(0, mappingJackson2HttpMessageConverter)
+      )
+      .build();
   }
 }

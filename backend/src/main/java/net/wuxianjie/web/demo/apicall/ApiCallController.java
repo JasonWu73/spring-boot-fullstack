@@ -24,7 +24,7 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * 测试常用的 API 调用方式。
+ * 测试几种常用的 API 调用方式。
  */
 @RestController
 @RequestMapping("/api/v1/test/api-call")
@@ -46,9 +46,9 @@ public class ApiCallController {
     final Map<String, String> urlParams = getSendGetRequestParams();
 
     return apiCaller.sendGetRequest(
-        "http://localhost:%s/api/v1/test/params".formatted(port),
-        urlParams,
-        OuterData.class
+      "http://localhost:%s/api/v1/test/params".formatted(port),
+      urlParams,
+      OuterData.class
     );
   }
 
@@ -60,10 +60,10 @@ public class ApiCallController {
     final LinkedMultiValueMap<String, String> formData = getSendPostFormRequestParams();
 
     return apiCaller.sendFormRequest(
-        HttpMethod.POST,
-        "http://localhost:%s/api/v1/test/params".formatted(port),
-        formData,
-        OuterData.class
+      HttpMethod.POST,
+      "http://localhost:%s/api/v1/test/params".formatted(port),
+      formData,
+      OuterData.class
     );
   }
 
@@ -75,10 +75,10 @@ public class ApiCallController {
     final MultipartBodyBuilder formDataBuilder = getSendPostUploadRequest();
 
     return apiCaller.sendUploadRequest(
-        HttpMethod.POST,
-        "http://localhost:%s/api/v1/test/params/upload".formatted(port),
-        formDataBuilder,
-        Uploaded.class
+      HttpMethod.POST,
+      "http://localhost:%s/api/v1/test/params/upload".formatted(port),
+      formDataBuilder,
+      Uploaded.class
     );
   }
 
@@ -90,19 +90,19 @@ public class ApiCallController {
     final OuterData jsonData = getSendPostJsonRequestParams();
 
     return apiCaller.sendJsonRequest(
-        HttpMethod.POST,
-        "http://localhost:%s/api/v1/test/params/json".formatted(port),
-        jsonData,
-        OuterData.class
+      HttpMethod.POST,
+      "http://localhost:%s/api/v1/test/params/json".formatted(port),
+      jsonData,
+      OuterData.class
     );
   }
 
   private static Map<String, String> getSendGetRequestParams() {
     return Map.of(
-        "name", "张三",
-        "num", "123",
-        "type", "1",
-        "dateTime", getNow()
+      "name", "张三",
+      "num", "123",
+      "type", "1",
+      "dateTime", getNow()
     );
   }
 
@@ -122,8 +122,8 @@ public class ApiCallController {
 
     formDataBuilder.part("message", "测试上传文件");
     formDataBuilder.part(
-        "file",
-        resourceLoader.getResource("file:/Users/wxj/Downloads/README.md")
+      "file",
+      resourceLoader.getResource("file:/Users/wxj/Downloads/README.md")
     );
 
     return formDataBuilder;
@@ -131,19 +131,19 @@ public class ApiCallController {
 
   private static OuterData getSendPostJsonRequestParams() {
     return new OuterData(
-        100L,
-        "张三",
-        new InnerData(
-            new Date(),
-            LocalDate.now(),
-            LocalDateTime.now()
-        )
+      100L,
+      "张三",
+      new InnerData(
+        new Date(),
+        LocalDate.now(),
+        LocalDateTime.now()
+      )
     );
   }
 
   private static String getNow() {
     return LocalDateTime.now().format(
-        DateTimeFormatter.ofPattern(Constants.DATE_TIME_PATTERN)
+      DateTimeFormatter.ofPattern(Constants.DATE_TIME_PATTERN)
     );
   }
 }
