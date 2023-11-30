@@ -28,13 +28,13 @@ type ApiResponse<TData, TError> = {
  * @template TData - 成功响应时的数据类型
  * @template TError - 错误响应时的数据类型
  *
- * @param Request - 请求的配置属性
- * @param Request.url - URL 地址
- * @param Request.method - 请求方法，默认为 `GET`
- * @param Request.contentType - 请求体的内容类型，默认为 `JSON`
- * @param Request.headers - HTTP 请求头
- * @param Request.urlParams - URL 参数
- * @param Request.bodyData - 请求体数据
+ * @param options - 请求的配置属性
+ * @param options.url - URL 地址
+ * @param options.method - 请求方法，默认为 `GET`
+ * @param options.contentType - 请求体的内容类型，默认为 `JSON`
+ * @param options.headers - HTTP 请求头
+ * @param options.urlParams - URL 参数
+ * @param options.bodyData - 请求体数据
  * @returns {Promise<Response<TData, TError>>} - 以 JSON 数据格式解析后的正常或异常响应数据
  */
 async function sendRequest<TData, TError>({
