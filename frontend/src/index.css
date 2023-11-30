@@ -34,6 +34,7 @@
     --nprogress-dark-color: #dc2626;
   }
 
+  /* ----- 开始：自定义标题的预设样式 ----- */
   h1 {
     @apply text-xl;
     @apply font-semibold;
@@ -48,6 +49,7 @@
     @apply text-base;
     @apply font-semibold;
   }
+  /* ----- 结束：自定义标题的预设样式 ----- */
 }
 
 @tailwind components;
@@ -59,7 +61,7 @@ html.dark {
   @apply text-snow;
 }
 
-/* ----- nprogress 样式 ----- */
+/* ----- 开始：NProgress 样式 ----- */
 #nprogress .bar {
   background-color: var(--nprogress-color);
 }
@@ -75,7 +77,7 @@ html.dark {
   border-left-color: var(--nprogress-color);
 }
 
-/* 暗色主题 */
+/* NProgress 暗色主题下的样式 */
 html.dark #nprogress .bar {
   background-color: var(--nprogress-dark-color);
 }
@@ -90,3 +92,4 @@ html.dark #nprogress .spinner-icon {
   border-top-color: var(--nprogress-dark-color);
   border-left-color: var(--nprogress-dark-color);
 }
+/* ----- 结束：NProgress 样式 ----- */
