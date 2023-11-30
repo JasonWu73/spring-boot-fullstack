@@ -23,7 +23,7 @@ type FormSchema = z.infer<typeof formSchema>
 const defaultValues: FormSchema = {
   name: '',
   image: 'https://i.pravatar.cc/150',
-  birthday: undefined as unknown as Date
+  birthday: null as unknown as Date
 }
 
 function AddFriend() {

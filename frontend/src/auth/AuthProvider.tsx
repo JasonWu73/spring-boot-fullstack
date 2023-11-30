@@ -78,7 +78,7 @@ type AuthProviderState = {
   requestApi: <T>(request: ApiRequest, type?: string) => Promise<FetchResponse<T>>
 }
 
-const AuthProviderContext = React.createContext(undefined as unknown as AuthProviderState)
+const AuthProviderContext = React.createContext(null as unknown as AuthProviderState)
 
 type AuthProviderProps = {
   children: React.ReactNode

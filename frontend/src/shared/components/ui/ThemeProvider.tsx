@@ -7,9 +7,7 @@ type ThemeProviderState = {
   setTheme: (theme: Theme) => void
 }
 
-const ThemeProviderContext = React.createContext(
-  undefined as unknown as ThemeProviderState
-)
+const ThemeProviderContext = React.createContext(null as unknown as ThemeProviderState)
 
 type ThemeProviderProps = {
   children: React.ReactNode

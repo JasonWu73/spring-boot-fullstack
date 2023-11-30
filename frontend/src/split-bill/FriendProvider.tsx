@@ -17,9 +17,7 @@ type FriendProviderState = {
   dispatch: React.Dispatch<Action>
 }
 
-const FriendProviderContext = React.createContext(
-  undefined as unknown as FriendProviderState
-)
+const FriendProviderContext = React.createContext(null as unknown as FriendProviderState)
 
 type FriendProviderProps = {
   children: React.ReactNode

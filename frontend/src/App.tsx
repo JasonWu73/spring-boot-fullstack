@@ -14,14 +14,14 @@ import { wait } from '@/shared/utils/helpers'
 import { FriendProvider } from '@/split-bill/FriendProvider'
 import { VersionProvider } from '@/version/VersionProvider'
 
+const NotFoundPage = React.lazy(() => import('@/shared/components/ui/NotFoundPage'))
 const LoginPage = React.lazy(() => import('@/auth/LoginPage'))
+const ProfilePage = React.lazy(() => import('@/user/ProfilePage'))
 const RandomProductPage = React.lazy(() => import('@/product/RandomProductPage'))
 const SplitBillPage = React.lazy(() => import('@/split-bill/SplitBillPage'))
-const NotFoundPage = React.lazy(() => import('@/shared/components/ui/NotFoundPage'))
 const UserListPage = React.lazy(() => import('@/user/UserListPage'))
 const AddUserPage = React.lazy(() => import('@/user/AddUserPage'))
 const UpdateUserPage = React.lazy(() => import('@/user/UpdateUserPage'))
-const ProfilePage = React.lazy(() => import('@/user/ProfilePage'))
 const OperationLogListPage = React.lazy(
   () => import('@/operation-log/OperationLogListPage')
 )

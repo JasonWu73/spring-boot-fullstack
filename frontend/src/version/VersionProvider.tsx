@@ -13,7 +13,7 @@ type Version = {
 type VersionProviderState = Version
 
 const VersionProviderContext = React.createContext(
-  undefined as unknown as VersionProviderState
+  null as unknown as VersionProviderState
 )
 
 type VersionProviderProps = {
