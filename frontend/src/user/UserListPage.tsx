@@ -1,7 +1,8 @@
 import React from 'react'
 import { useSearchParams } from 'react-router-dom'
 
-import { useAuth, type PaginationData, type PaginationParams } from '@/auth/AuthProvider'
+import type { PaginationData, PaginationParams } from '@/shared/apis/types'
+import { useAuth } from '@/shared/auth/AuthProvider'
 import {
   Card,
   CardContent,
@@ -12,15 +13,15 @@ import {
 import { Code } from '@/shared/components/ui/Code'
 import { DEFAULT_PAGE_NUM, DEFAULT_PAGE_SIZE } from '@/shared/components/ui/DataTable'
 import { useToast } from '@/shared/components/ui/use-toast'
-import { useFetch } from '@/shared/hooks/use-fetch'
-import { useRefresh } from '@/shared/hooks/use-refresh'
-import { useTitle } from '@/shared/hooks/use-title'
 import {
   URL_QUERY_KEY_PAGE_NUM,
   URL_QUERY_KEY_PAGE_SIZE,
   URL_QUERY_KEY_SORT_COLUMN,
   URL_QUERY_KEY_SORT_ORDER
-} from '@/shared/utils/constants'
+} from '@/shared/constants'
+import { useFetch } from '@/shared/hooks/use-fetch'
+import { useRefresh } from '@/shared/hooks/use-refresh'
+import { useTitle } from '@/shared/hooks/use-title'
 import { UserSearch } from '@/user/UserSearch'
 import { UserTable } from '@/user/UserTable'
 

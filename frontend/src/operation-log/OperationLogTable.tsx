@@ -9,7 +9,7 @@ import {
   URL_QUERY_KEY_PAGE_SIZE,
   URL_QUERY_KEY_SORT_COLUMN,
   URL_QUERY_KEY_SORT_ORDER
-} from '@/shared/utils/constants'
+} from '@/shared/constants'
 
 type OperationLogTableProps = {
   logs: OperationLog[]

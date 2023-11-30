@@ -9,7 +9,7 @@ import { z } from 'zod'
 import { Button } from '@/shared/components/ui/Button'
 import { FormCalendar, FormInput } from '@/shared/components/ui/CustomFormField'
 import { Form } from '@/shared/components/ui/Form'
-import { URL_QUERY_KEY_PAGE_NUM, URL_QUERY_KEY_PAGE_SIZE } from '@/shared/utils/constants'
+import { URL_QUERY_KEY_PAGE_NUM, URL_QUERY_KEY_PAGE_SIZE } from '@/shared/constants'
 
 const formSchema = z.object({
   startAt: z

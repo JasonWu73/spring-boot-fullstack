@@ -4,7 +4,8 @@ import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 
-import { ADMIN, useAuth, USER } from '@/auth/AuthProvider'
+import { useAuth } from '@/shared/auth/AuthProvider'
+import { ADMIN, USER } from '@/shared/auth/constants'
 import { Button } from '@/shared/components/ui/Button'
 import {
   Card,
@@ -21,9 +22,9 @@ import {
 } from '@/shared/components/ui/CustomFormField'
 import { Form } from '@/shared/components/ui/Form'
 import { useToast } from '@/shared/components/ui/use-toast'
+import { RSA_PUBLIC_KEY } from '@/shared/constants'
 import { useFetch } from '@/shared/hooks/use-fetch'
 import { useTitle } from '@/shared/hooks/use-title'
-import { RSA_PUBLIC_KEY } from '@/shared/utils/constants'
 import { encrypt } from '@/shared/utils/rsa'
 
 const AUTHORITY_OPTIONS = [ADMIN, USER]

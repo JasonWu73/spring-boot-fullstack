@@ -4,7 +4,8 @@ import { useForm } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
 import { z } from 'zod'
 
-import { ADMIN, ROOT, useAuth, USER } from '@/auth/AuthProvider'
+import { useAuth } from '@/shared/auth/AuthProvider'
+import { ADMIN, ROOT, USER } from '@/shared/auth/constants'
 import { Alert, AlertDescription, AlertTitle } from '@/shared/components/ui/Alert'
 import { Button } from '@/shared/components/ui/Button'
 import {

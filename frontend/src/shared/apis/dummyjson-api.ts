@@ -2,7 +2,7 @@ import { sendRequest, type ApiRequest } from '@/shared/utils/http'
 
 const BASE_URL = 'https://dummyjson.com'
 
-export type ApiError = {
+type ApiError = {
   message: string
   name?: string
   expiredAt?: string

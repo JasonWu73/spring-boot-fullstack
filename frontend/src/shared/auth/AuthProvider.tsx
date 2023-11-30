@@ -1,35 +1,8 @@
 import React from 'react'
 
+import { ADMIN, ROOT, USER } from '@/shared/auth/constants'
 import type { FetchResponse } from '@/shared/hooks/use-fetch'
 import { sendRequest, type ApiRequest } from '@/shared/utils/http'
-
-// 分页参数类型
-type PaginationParams = {
-  pageNum: number
-  pageSize: number
-  sortColumn?: string
-  sortOrder?: 'asc' | 'desc'
-}
-
-// 分页结果类型
-type PaginationData<T> = {
-  pageNum: number
-  pageSize: number
-  total: number
-  list: T[]
-}
-
-type Authority = 'root' | 'admin' | 'user'
-
-type AuthorityOption = {
-  value: Authority
-  label: string
-}
-
-// 可分配的功能权限，其中 `root` 权限不可手动分配
-const ROOT: AuthorityOption = { value: 'root', label: '超级管理员' }
-const ADMIN: AuthorityOption = { value: 'admin', label: '管理员' }
-const USER: AuthorityOption = { value: 'user', label: '用户' }
 
 const STORAGE_KEY = 'demo-auth'
 
@@ -41,7 +14,7 @@ const PROD_BACKEND_BASE_URL = `${window.location.origin}`
 const BASE_URL =
   window.location.port === DEV_PORT ? DEV_BACKEND_BASE_URL : PROD_BACKEND_BASE_URL
 
-// 错误响应数据类型
+// 后端 API 在请求失败时返回的错误数据类型
 type ApiError = {
   timestamp: string
   status: number
@@ -49,6 +22,7 @@ type ApiError = {
   path: string
 }
 
+// 后端返回的身份验证数据类型
 type AuthResponse = {
   accessToken: string
   refreshToken: string
@@ -57,6 +31,7 @@ type AuthResponse = {
   authorities: string[]
 }
 
+// 前端存储的身份验证数据类型
 type Auth = {
   accessToken: string
   refreshToken: string
@@ -66,25 +41,25 @@ type Auth = {
 }
 
 type AuthProviderState = {
-  auth: Auth | null
-  isRoot: boolean
-  isAdmin: boolean
-  isUser: boolean
+  auth: Auth | null // 前端存储的身份验证数据
+  isRoot: boolean // 是否为超级管理员
+  isAdmin: boolean // 是否为管理员
+  isUser: boolean // 是否为普通用户
 
-  setAuth: (data: AuthResponse) => void
-  deleteAuth: () => void
-  updateAuth: (callback: (prevAuth: Auth) => Auth) => void
+  setAuth: (data: AuthResponse) => void // 设置前端存储的身份验证数据，即前端登录
+  deleteAuth: () => void // 删除前端存储的身份验证数据，即前端退出登录
+  updateAuth: (callback: (prevAuth: Auth) => Auth) => void // 更新前端存在的身份验证数据
 
-  requestApi: <T>(request: ApiRequest, type?: string) => Promise<FetchResponse<T>>
+  requestApi: <T>(request: ApiRequest) => Promise<FetchResponse<T>> // 发送后端 API 请求
 }
 
-const AuthProviderContext = React.createContext(null as unknown as AuthProviderState)
+const AuthProviderContext = React.createContext(undefined as unknown as AuthProviderState)
 
 type AuthProviderProps = {
   children: React.ReactNode
 }
 
-function AuthProvider({ children }: AuthProviderProps) {
+function AuthProvider({ children }: AuthProviderProps): React.JSX.Element {
   const [auth, setAuth] = React.useState(getStorageAuth)
   const refreshedAtRef = React.useRef<number>(0)
 
@@ -92,11 +67,8 @@ function AuthProvider({ children }: AuthProviderProps) {
   const isAdmin = isRoot || (auth?.authorities.includes(ADMIN.value) ?? false)
   const isUser = isRoot || isAdmin || (auth?.authorities.includes(USER.value) ?? false)
 
-  /**
-   * 需要使用访问令牌的 API 请求。
-   */
   async function requestApi<T>(request: ApiRequest): Promise<FetchResponse<T>> {
-    // 请求无需拥有访问令牌的开放 API
+    // 请求无需访问令牌的开放 API
     if (!auth) return await requestBackendApi<T>(request)
 
     // 请求需要访问令牌的 API（涉及自动刷新机制）
@@ -111,7 +83,6 @@ function AuthProvider({ children }: AuthProviderProps) {
     // 检查是否需要重新登录
     if (response.status === 401) {
       setAuthCache(null)
-
       return { status: response.status, error: '登录过期' }
     }
 
@@ -127,8 +98,8 @@ function AuthProvider({ children }: AuthProviderProps) {
   async function refreshAuth() {
     if (!auth) return
 
-    // 防止因同时发起多个请求，从而触发了多次刷新，从而因读取了旧令牌而导致身份验证失败
-    // 1 分钟内只允许刷新一次
+    // 防止在一个页面同时发起多个 API 请求时，即多次触发刷新，而导致身份验证失败（因为 JS 闭包读取了旧数据）
+    // 故设置 1 分钟内只允许刷新一次
     if (Date.now() - refreshedAtRef.current < 60 * 1000) return
 
     refreshedAtRef.current = Date.now()
@@ -141,13 +112,11 @@ function AuthProvider({ children }: AuthProviderProps) {
 
     if (error) {
       setAuthCache(null)
-
       return
     }
 
     if (data) {
       const auth = toStorageAuth(data)
-
       setAuthCache(auth)
     }
   }
@@ -165,18 +134,18 @@ function AuthProvider({ children }: AuthProviderProps) {
 
     setAuth: (data: AuthResponse) => {
       const auth = toStorageAuth(data)
-
       setAuthCache(auth)
     },
-    deleteAuth: async () => {
+
+    deleteAuth: () => {
       // 不论后端退出登录是否成功，前端都要退出登录
       setAuthCache(null)
     },
+
     updateAuth: (callback) => {
       if (auth == null) return
 
       const newAuth = callback(auth)
-
       setAuthCache(newAuth)
     },
 
@@ -188,7 +157,7 @@ function AuthProvider({ children }: AuthProviderProps) {
   )
 }
 
-function useAuth() {
+function useAuth(): AuthProviderState {
   const context = React.useContext(AuthProviderContext)
 
   if (context === undefined) {
@@ -209,7 +178,6 @@ function getStorageAuth(): Auth | null {
 function setStorageAuth(auth: Auth | null) {
   if (!auth) {
     localStorage.removeItem(STORAGE_KEY)
-
     return
   }
 
@@ -235,22 +203,10 @@ async function requestBackendApi<T>(request: ApiRequest): Promise<FetchResponse<
   })
 
   if (error) {
-    if (typeof error === 'string') return { status, error }
-
-    return { status, error: error.error }
+    return { status, error: typeof error === 'string' ? error : error.error }
   }
 
   return { status, data }
 }
 
-export {
-  ADMIN,
-  AuthProvider,
-  ROOT,
-  USER,
-  useAuth,
-  type AuthResponse,
-  type Authority,
-  type PaginationData,
-  type PaginationParams
-}
+export { AuthProvider, useAuth, type AuthResponse }

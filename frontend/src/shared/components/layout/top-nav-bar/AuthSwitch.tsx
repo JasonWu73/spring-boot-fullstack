@@ -2,7 +2,7 @@ import { CircleUserRound, LayoutDashboard } from 'lucide-react'
 import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
 
-import { useAuth } from '@/auth/AuthProvider'
+import { useAuth } from '@/shared/auth/AuthProvider'
 import { LoginButton } from '@/shared/components/layout/top-nav-bar/LoginButton'
 import { LogoutButton } from '@/shared/components/layout/top-nav-bar/LogoutButton'
 import { buttonVariants } from '@/shared/components/ui/Button'

@@ -4,7 +4,9 @@ import { MoreHorizontal } from 'lucide-react'
 import React from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 
-import { ADMIN, ROOT, USER, useAuth, type PaginationData } from '@/auth/AuthProvider'
+import type { PaginationData } from '@/shared/apis/types'
+import { useAuth } from '@/shared/auth/AuthProvider'
+import { ADMIN, ROOT, USER } from '@/shared/auth/constants'
 import { Badge } from '@/shared/components/ui/Badge'
 import { Button, buttonVariants } from '@/shared/components/ui/Button'
 import { Checkbox } from '@/shared/components/ui/Checkbox'
@@ -22,14 +24,14 @@ import {
 } from '@/shared/components/ui/DropdownMenu'
 import { Switch } from '@/shared/components/ui/Switch'
 import { useToast } from '@/shared/components/ui/use-toast'
-import type { SetStateAction } from '@/shared/hooks/use-fetch'
-import { useFetch } from '@/shared/hooks/use-fetch'
 import {
   URL_QUERY_KEY_PAGE_NUM,
   URL_QUERY_KEY_PAGE_SIZE,
   URL_QUERY_KEY_SORT_COLUMN,
   URL_QUERY_KEY_SORT_ORDER
-} from '@/shared/utils/constants'
+} from '@/shared/constants'
+import type { SetStateAction } from '@/shared/hooks/use-fetch'
+import { useFetch } from '@/shared/hooks/use-fetch'
 import { cn } from '@/shared/utils/helpers'
 import { ResetPasswordDialog } from '@/user/ResetPasswordDialog'
 import type { User } from '@/user/UserListPage'

@@ -1,7 +1,7 @@
 import clsx, { type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 
-import { ELLIPSIS } from '@/shared/utils/constants'
+import { ELLIPSIS } from '@/shared/constants'
 
 /**
  * 合并 Tailwind CSS 类名（可覆盖之前的类），由 `npx shadcn-ui@latest init` 自动生成。

@@ -2,7 +2,7 @@ import { BugOff, FileClock, ShoppingCart, UserCog2 } from 'lucide-react'
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 
-import { useAuth } from '@/auth/AuthProvider'
+import { useAuth } from '@/shared/auth/AuthProvider'
 import { ScrollArea } from '@/shared/components/ui/ScrollArea'
 import { Separator } from '@/shared/components/ui/Separator'
 import { cn } from '@/shared/utils/helpers'

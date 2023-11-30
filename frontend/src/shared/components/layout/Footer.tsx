@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { cn } from '@/shared/utils/helpers'
-import { useVersion } from '@/version/VersionProvider'
+import { useVersion } from '@/shared/version/VersionProvider'
 
 type FooterProps = React.ComponentPropsWithoutRef<'footer'>
 

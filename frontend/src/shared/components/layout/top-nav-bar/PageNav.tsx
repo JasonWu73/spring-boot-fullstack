@@ -1,7 +1,7 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 
-import { useAuth } from '@/auth/AuthProvider'
+import { useAuth } from '@/shared/auth/AuthProvider'
 import {
   NavigationMenu,
   NavigationMenuItem,

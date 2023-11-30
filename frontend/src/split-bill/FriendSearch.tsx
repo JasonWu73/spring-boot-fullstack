@@ -2,8 +2,8 @@ import React from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
 import { Input } from '@/shared/components/ui/Input'
+import { URL_QUERY_KEY_QUERY } from '@/shared/constants'
 import { useKeypress } from '@/shared/hooks/use-keypress'
-import { URL_QUERY_KEY_QUERY } from '@/shared/utils/constants'
 import ShortcutTip from '@/split-bill/ShortcutTip'
 
 function FriendSearch() {

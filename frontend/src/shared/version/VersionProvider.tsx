@@ -1,7 +1,8 @@
-import { useAuth } from '@/auth/AuthProvider'
+import React from 'react'
+
+import { useAuth } from '@/shared/auth/AuthProvider'
 import { useFetch } from '@/shared/hooks/use-fetch'
 import { useInitial } from '@/shared/hooks/use-refresh'
-import React from 'react'
 
 type Version = {
   name: string
@@ -13,7 +14,7 @@ type Version = {
 type VersionProviderState = Version
 
 const VersionProviderContext = React.createContext(
-  null as unknown as VersionProviderState
+  undefined as unknown as VersionProviderState
 )
 
 type VersionProviderProps = {

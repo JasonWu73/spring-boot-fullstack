@@ -1,8 +1,8 @@
 import React from 'react'
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
 
-import { AuthProvider } from '@/auth/AuthProvider'
-import { SecureRoute } from '@/auth/SecureRoute'
+import { AuthProvider } from '@/shared/auth/AuthProvider'
+import { SecureRoute } from '@/shared/auth/SecureRoute'
 import AdminLayout from '@/shared/components/layout/AdminLayout'
 import LoginLayout from '@/shared/components/layout/LoginLayout'
 import MainLayout from '@/shared/components/layout/MainLayout'
@@ -11,11 +11,11 @@ import { Spinner } from '@/shared/components/ui/Spinner'
 import { ThemeProvider } from '@/shared/components/ui/ThemeProvider'
 import { Toaster } from '@/shared/components/ui/Toaster'
 import { wait } from '@/shared/utils/helpers'
+import { VersionProvider } from '@/shared/version/VersionProvider'
 import { FriendProvider } from '@/split-bill/FriendProvider'
-import { VersionProvider } from '@/version/VersionProvider'
 
 const NotFoundPage = React.lazy(() => import('@/shared/components/ui/NotFoundPage'))
-const LoginPage = React.lazy(() => import('@/auth/LoginPage'))
+const LoginPage = React.lazy(() => import('@/shared/auth/LoginPage'))
 const ProfilePage = React.lazy(() => import('@/user/ProfilePage'))
 const RandomProductPage = React.lazy(() => import('@/product/RandomProductPage'))
 const SplitBillPage = React.lazy(() => import('@/split-bill/SplitBillPage'))
@@ -102,17 +102,15 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <>
-      <ThemeProvider defaultTheme="system" storageKey="demo-ui-theme">
-        <AuthProvider>
-          <VersionProvider>
-            <RouterProvider router={router} />
+    <ThemeProvider defaultTheme="system" storageKey="demo-ui-theme">
+      <AuthProvider>
+        <VersionProvider>
+          <RouterProvider router={router} />
 
-            <Toaster />
-          </VersionProvider>
-        </AuthProvider>
-      </ThemeProvider>
-    </>
+          <Toaster />
+        </VersionProvider>
+      </AuthProvider>
+    </ThemeProvider>
   )
 }
 

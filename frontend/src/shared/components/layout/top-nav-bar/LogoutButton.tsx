@@ -1,7 +1,7 @@
 import { ReloadIcon } from '@radix-ui/react-icons'
 import { LogOut } from 'lucide-react'
 
-import { useAuth } from '@/auth/AuthProvider'
+import { useAuth } from '@/shared/auth/AuthProvider'
 import { Button } from '@/shared/components/ui/Button'
 import { useFetch } from '@/shared/hooks/use-fetch'
 

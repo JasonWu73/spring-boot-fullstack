@@ -1,9 +1,10 @@
 import { addDays, format } from 'date-fns'
 import { useSearchParams } from 'react-router-dom'
 
-import { useAuth, type PaginationData, type PaginationParams } from '@/auth/AuthProvider'
 import { OperationLogSearch } from '@/operation-log/OperationLogSearch'
 import { OperationLogTable } from '@/operation-log/OperationLogTable'
+import type { PaginationData, PaginationParams } from '@/shared/apis/types'
+import { useAuth } from '@/shared/auth/AuthProvider'
 import {
   Card,
   CardContent,
@@ -12,15 +13,15 @@ import {
   CardTitle
 } from '@/shared/components/ui/Card'
 import { DEFAULT_PAGE_NUM, DEFAULT_PAGE_SIZE } from '@/shared/components/ui/DataTable'
-import { useFetch } from '@/shared/hooks/use-fetch'
-import { useRefresh } from '@/shared/hooks/use-refresh'
-import { useTitle } from '@/shared/hooks/use-title'
 import {
   URL_QUERY_KEY_PAGE_NUM,
   URL_QUERY_KEY_PAGE_SIZE,
   URL_QUERY_KEY_SORT_COLUMN,
   URL_QUERY_KEY_SORT_ORDER
-} from '@/shared/utils/constants'
+} from '@/shared/constants'
+import { useFetch } from '@/shared/hooks/use-fetch'
+import { useRefresh } from '@/shared/hooks/use-refresh'
+import { useTitle } from '@/shared/hooks/use-title'
 
 type OperationLog = {
   id: number

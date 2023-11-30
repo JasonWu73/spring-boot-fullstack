@@ -1,7 +1,5 @@
 import { endNProgress, startNProgress } from '@/shared/utils/nprogress'
 
-const ERROR_CODE = 999
-
 type ContentType = 'JSON' | 'URLENCODED' | 'FILE'
 
 type UrlParams = Record<string, string | number | boolean | undefined | null>
@@ -16,7 +14,7 @@ type ApiRequest = {
 }
 
 type ApiResponse<TData, TError> = {
-  status: number
+  status?: number // HTTP 状态码
   data?: TData
   error?: TError | string
 }
@@ -49,45 +47,21 @@ async function sendRequest<TData, TError>({
 }: ApiRequest): Promise<ApiResponse<TData, TError>> {
   try {
     // 追加 URL 参数
-    const urlObj = new URL(url)
-    if (urlParams) {
-      Object.keys(urlParams).forEach((key) =>
-        urlObj.searchParams.append(key, urlParams[key]?.toString() || '')
-      )
-    }
-
-    // 构造请求配置
-    const options: RequestInit = {
-      method,
-      headers: {
-        ...headers,
-        Accept: 'application/json',
-        'content-Type':
-          contentType === 'FILE'
-            ? '' // 不要设置 Content-Type，让浏览器自动设置
-            : contentType === 'URLENCODED'
-            ? 'application/x-www-form-urlencoded'
-            : 'application/json'
-      },
-      body:
-        contentType === 'FILE'
-          ? (bodyData as FormData)
-          : contentType === 'URLENCODED'
-          ? Object.keys(bodyData as UrlParams)
-              .map(
-                (key) =>
-                  `${encodeURIComponent(key)}=${encodeURIComponent(
-                    (bodyData as UrlParams)[key] || ''
-                  )}`
-              )
-              .join('&')
-          : JSON.stringify(bodyData)
-    }
+    const targetUrl = appendUrlParams(url, urlParams)
 
     startNProgress()
 
     // 发送 HTTP 请求
-    const response = await fetch(urlObj, options)
+    const response = await fetch(targetUrl, {
+      method,
+      headers: getHeaders(headers, contentType),
+      body:
+        contentType === 'FILE'
+          ? (bodyData as FormData)
+          : contentType === 'URLENCODED'
+          ? getUrlEncodedData(bodyData as UrlParams)
+          : JSON.stringify(bodyData)
+    })
 
     // 如果 HTTP 状态码为 204，表示请求成功，但无响应数据
     if (response.status === 204) {
@@ -102,19 +76,57 @@ async function sendRequest<TData, TError>({
 
     return { status: response.status, data: responseData }
   } catch (error) {
-    if (error instanceof Error && error.name === 'AbortError') {
-      return {
-        status: ERROR_CODE,
-        error: '用户中途放弃了请求'
-      }
-    }
-
-    if (error instanceof Error) return { status: ERROR_CODE, error: error.message }
-
-    return { status: ERROR_CODE, error: String(error) }
+    return { error: error instanceof Error ? error.message : String(error) }
   } finally {
     endNProgress()
   }
 }
 
-export { ERROR_CODE, sendRequest, type ApiRequest, type ContentType, type UrlParams }
+function appendUrlParams(url: string, urlParams?: UrlParams) {
+  if (!urlParams) return url
+
+  const urlObj = new URL(url)
+
+  Object.keys(urlParams).forEach((key) =>
+    urlObj.searchParams.append(key, urlParams[key]?.toString() || '')
+  )
+
+  return urlObj.toString()
+}
+
+function getHeaders(headers: Record<string, string>, contentType?: ContentType) {
+  const jsonAcceptHeaders = {
+    ...headers,
+    Accept: 'application/json'
+  }
+
+  const contentTypeValue = getContentTypeValue(contentType)
+
+  if (!contentTypeValue) return jsonAcceptHeaders
+
+  return {
+    ...jsonAcceptHeaders,
+    'Content-Type': contentTypeValue
+  }
+}
+
+function getContentTypeValue(contentType?: ContentType) {
+  switch (contentType) {
+    case 'FILE':
+      return undefined // 不要设置 Content-Type，让浏览器自动设置
+    case 'URLENCODED':
+      return 'application/x-www-form-urlencoded'
+    case 'JSON':
+      return 'application/json'
+    default:
+      return undefined
+  }
+}
+
+function getUrlEncodedData(bodyData: UrlParams) {
+  return Object.keys(bodyData)
+    .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(bodyData[key] || '')}`)
+    .join('&')
+}
+
+export { sendRequest, type ApiRequest }

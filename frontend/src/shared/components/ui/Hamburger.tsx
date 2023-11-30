@@ -6,9 +6,7 @@ type HamburgerProps = {
   onToggle: (isOpen: boolean) => void
 }
 
-/**
- * 汉堡菜单图标，常用于移动端展示顶部导航栏内容。
- */
+// 汉堡菜单图标，常用于移动端展示顶部导航栏内容
 function Hamburger({ isOpen, onToggle }: HamburgerProps) {
   const line = tw`my-1 h-[2px] w-[1.2rem] bg-white duration-300 group-hover:bg-slate-800 group-hover:dark:bg-white`
 

@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form'
 import { Navigate, useLocation } from 'react-router-dom'
 import { z } from 'zod'
 
-import { useAuth, type AuthResponse } from '@/auth/AuthProvider'
+import { useAuth, type AuthResponse } from '@/shared/auth/AuthProvider'
 import { Button } from '@/shared/components/ui/Button'
 import {
   Card,
@@ -16,9 +16,9 @@ import {
 import { FormInput } from '@/shared/components/ui/CustomFormField'
 import { Form } from '@/shared/components/ui/Form'
 import { useToast } from '@/shared/components/ui/use-toast'
+import { RSA_PUBLIC_KEY } from '@/shared/constants'
 import { useFetch } from '@/shared/hooks/use-fetch'
 import { useTitle } from '@/shared/hooks/use-title'
-import { RSA_PUBLIC_KEY } from '@/shared/utils/constants'
 import { encrypt } from '@/shared/utils/rsa'
 import { ShieldPlus } from 'lucide-react'
 

@@ -3,9 +3,7 @@ import { PanelLeftClose, PanelLeftOpen } from 'lucide-react'
 import { usePanelFold } from '@/shared/components/layout/panel-fold/PanelFoldProvider'
 import { Button } from '@/shared/components/ui/Button'
 
-/**
- * 折叠或展开面板的图标，常用于折叠或展开侧边导航栏。
- */
+// 折叠或展开面板的图标，常用于折叠或展开侧边导航栏
 function PanelFold() {
   const { folded, setFolded } = usePanelFold()
 

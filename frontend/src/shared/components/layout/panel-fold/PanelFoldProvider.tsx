@@ -6,7 +6,7 @@ type PanelFoldProviderState = {
 }
 
 const PanelFoldProviderContext = React.createContext(
-  null as unknown as PanelFoldProviderState
+  undefined as unknown as PanelFoldProviderState
 )
 
 type PanelFoldProviderProps = {

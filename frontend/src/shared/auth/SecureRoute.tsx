@@ -1,18 +1,22 @@
+import React from 'react'
 import { Navigate, Outlet } from 'react-router-dom'
 
-import { ADMIN, ROOT, USER, useAuth, type Authority } from '@/auth/AuthProvider'
+import { useAuth } from '@/shared/auth/AuthProvider'
+import { ADMIN, ROOT, USER } from '@/shared/auth/constants'
 
 type SecureRouteProps = {
-  authority?: Authority
+  authority?: 'root' | 'admin' | 'user'
 }
 
-function SecureRoute({ authority }: SecureRouteProps) {
+function SecureRoute({ authority }: SecureRouteProps): React.JSX.Element {
   const { auth, isRoot, isAdmin, isUser } = useAuth()
 
+  // 未登录，则跳转到登录页面
   if (!auth) {
     return <Navigate to="/login" replace state={{ from: window.location.pathname }} />
   }
 
+  // 若用户已登录，但未拥有组件的访问权限，则跳转到 404 页面
   if (authority === ROOT.value && !isRoot) {
     return <Navigate to="/404" replace />
   }
@@ -25,6 +29,7 @@ function SecureRoute({ authority }: SecureRouteProps) {
     return <Navigate to="/404" replace />
   }
 
+  // 若用户已登录，且拥有组件的访问权限，则渲染子组件
   return <Outlet />
 }
 
