@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
 import type { PaginationData } from '@/shared/apis/types'
-import { useAuth } from '@/shared/auth/AuthProvider'
+import { PUBLIC_KEY, useAuth } from '@/shared/auth/AuthProvider'
 import { Alert, AlertDescription, AlertTitle } from '@/shared/components/ui/Alert'
 import { Button } from '@/shared/components/ui/Button'
 import { Code } from '@/shared/components/ui/Code'
@@ -21,7 +21,6 @@ import {
 } from '@/shared/components/ui/Dialog'
 import { Form } from '@/shared/components/ui/Form'
 import { useToast } from '@/shared/components/ui/use-toast'
-import { RSA_PUBLIC_KEY } from '@/shared/constants'
 import type { SetStateAction } from '@/shared/hooks/use-fetch'
 import { useFetch } from '@/shared/hooks/use-fetch'
 import { encrypt } from '@/shared/utils/rsa'
@@ -75,7 +74,7 @@ function ResetPasswordDialog({
     return await fetchData({
       url: `/api/v1/users/${userId}/password`,
       method: 'PUT',
-      bodyData: { password: encrypt(RSA_PUBLIC_KEY, password) }
+      bodyData: { password: encrypt(PUBLIC_KEY, password) }
     })
   }
 

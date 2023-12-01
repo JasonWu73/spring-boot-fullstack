@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 
-import { useAuth } from '@/shared/auth/AuthProvider'
+import { PUBLIC_KEY, useAuth } from '@/shared/auth/AuthProvider'
 import { ADMIN, USER } from '@/shared/auth/constants'
 import { Button } from '@/shared/components/ui/Button'
 import {
@@ -22,7 +22,6 @@ import {
 } from '@/shared/components/ui/CustomFormField'
 import { Form } from '@/shared/components/ui/Form'
 import { useToast } from '@/shared/components/ui/use-toast'
-import { RSA_PUBLIC_KEY } from '@/shared/constants'
 import { useFetch } from '@/shared/hooks/use-fetch'
 import { useTitle } from '@/shared/hooks/use-title'
 import { encrypt } from '@/shared/utils/rsa'
@@ -88,7 +87,7 @@ function AddUserPage() {
       bodyData: {
         username,
         nickname,
-        password: encrypt(RSA_PUBLIC_KEY, password),
+        password: encrypt(PUBLIC_KEY, password),
         authorities,
         remark
       }

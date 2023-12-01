@@ -3,7 +3,6 @@ package net.wuxianjie.web.user;
 import lombok.RequiredArgsConstructor;
 import net.wuxianjie.web.shared.auth.AuthUtils;
 import net.wuxianjie.web.shared.auth.Authority;
-import net.wuxianjie.web.shared.config.Constants;
 import net.wuxianjie.web.shared.exception.ApiException;
 import net.wuxianjie.web.shared.pagination.PaginationParam;
 import net.wuxianjie.web.shared.pagination.PaginationResult;
@@ -289,7 +288,7 @@ public class UserService {
     final String password;
 
     try {
-      password = RsaUtils.decrypt(encryptedPassword, Constants.RSA_PRIVATE_KEY);
+      password = RsaUtils.decrypt(encryptedPassword, AuthServiceImpl.PRIVATE_KEY);
     } catch (Exception e) {
       throw new ApiException(HttpStatus.BAD_REQUEST, "密码错误");
     }

@@ -3,7 +3,7 @@ import { ExclamationTriangleIcon, ReloadIcon } from '@radix-ui/react-icons'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
-import { useAuth } from '@/shared/auth/AuthProvider'
+import { PUBLIC_KEY, useAuth } from '@/shared/auth/AuthProvider'
 import {
   Accordion,
   AccordionContent,
@@ -23,7 +23,6 @@ import { FormInput } from '@/shared/components/ui/CustomFormField'
 import { Form } from '@/shared/components/ui/Form'
 import { Skeleton } from '@/shared/components/ui/Skeleton'
 import { useToast } from '@/shared/components/ui/use-toast'
-import { RSA_PUBLIC_KEY } from '@/shared/constants'
 import { useFetch } from '@/shared/hooks/use-fetch'
 import { useInitial } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
@@ -117,8 +116,8 @@ function UpdateUserPage() {
       method: 'PUT',
       bodyData: {
         nickname,
-        oldPassword: oldPassword ? encrypt(RSA_PUBLIC_KEY, oldPassword) : null,
-        newPassword: newPassword ? encrypt(RSA_PUBLIC_KEY, newPassword) : null
+        oldPassword: oldPassword ? encrypt(PUBLIC_KEY, oldPassword) : null,
+        newPassword: newPassword ? encrypt(PUBLIC_KEY, newPassword) : null
       }
     })
   }

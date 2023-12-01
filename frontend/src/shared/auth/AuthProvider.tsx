@@ -4,6 +4,12 @@ import { ADMIN, ROOT, USER } from '@/shared/auth/constants'
 import type { FetchResponse } from '@/shared/hooks/use-fetch'
 import { sendRequest, type ApiRequest } from '@/shared/utils/http'
 
+/**
+ * 用户名和密码的加密公钥。
+ */
+const PUBLIC_KEY =
+  'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArbGWjwR4QAjBiJwMi5QNe+X8oPEFBfX3z5K6dSv9tU2kF9SVkf8uGGJwXeihQQ0o9aUk42zO58VL3MqDOaWHU6wm52pN9ZBbH0XJefqxtgyXrYAm279MU6EY4sywkUT9KOOgk/qDHB93IoEDL1fosYc7TRsAONuMGiyTJojn1FCPtJbbj7J56yCaFhUpuDunBFETQ32usRaK4KCWx9w0HZ6WmbX8QdcJkVjJ2FCLuGkvbKmUQ5h/GXXnNgbxIn3z2lX7snGRMhIFvW0Qjkn8YmOq6HUj7TU0jKm9VhZirVQXh8trvi2ivY7s6yJoF8N72Ekn94WSpSRVeC0XpXf2LQIDAQAB'
+
 const STORAGE_KEY = 'demo-auth'
 
 // 这里假设 Vite 运行时使用默认的 5173 端口
@@ -209,4 +215,4 @@ async function requestBackendApi<T>(request: ApiRequest): Promise<FetchResponse<
   return { status, data }
 }
 
-export { AuthProvider, useAuth, type AuthResponse }
+export { AuthProvider, PUBLIC_KEY, useAuth, type AuthResponse }
