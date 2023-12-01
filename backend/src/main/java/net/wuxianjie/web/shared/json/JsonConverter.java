@@ -16,6 +16,9 @@ public class JsonConverter {
 
   /**
    * 将对象转换为 JSON 字符串。
+   *
+   * @param obj 需要转换的对象
+   * @return JSON 字符串
    */
   public String toJson(final Object obj) {
     try {
@@ -28,10 +31,10 @@ public class JsonConverter {
   /**
    * 将 JSON 字符串转换为对象。
    *
-   * @param json      JSON 字符串
-   * @param valueType 对象类型
-   * @param <T>       对象类型
-   * @return 对象
+   * @param json 需要转换的 JSON 字符串
+   * @param valueType 目标对象的类类型
+   * @param <T> 目标对象类
+   * @return 指定类型的对象
    */
   public <T> T parseJson(final String json, final Class<T> valueType) {
     try {
@@ -42,12 +45,12 @@ public class JsonConverter {
   }
 
   /**
-   * 将 JSON 字符串转换为包含泛型的对象。
+   * 将 JSON 字符串转换为指定泛型的对象。
    *
-   * @param json         JSON 字符串
-   * @param valueTypeRef 泛型对象类型
-   * @param <T>          泛型对象类型
-   * @return 包含泛型的对象
+   * @param json 需要转换的 JSON 字符串
+   * @param valueTypeRef 目标对象的泛型引用
+   * @param <T> 目标对象的泛型类
+   * @return 指定泛型的对象
    */
   public <T> T parseJson(final String json, final TypeReference<T> valueTypeRef) {
     try {
