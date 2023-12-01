@@ -28,8 +28,8 @@ public class ApiCaller {
    *
    * @param url 请求地址
    * @param urlParams URL 参数
-   * @param responseType 响应结果类型
-   * @param <T> 响应结果类型
+   * @param responseType 响应结果的类类型
+   * @param <T> 响应结果的泛型类型参数
    * @return 响应结果
    */
   public <T> ApiResponse<T> sendGetRequest(
@@ -55,8 +55,8 @@ public class ApiCaller {
    * @param method 请求方法
    * @param url 请求地址
    * @param formData 表单请求体
-   * @param responseType 响应结果类型
-   * @param <T> 响应结果类型
+   * @param responseType 响应结果的类类型
+   * @param <T> 响应结果的泛型类型参数
    * @return 响应结果
    */
   public <T> ApiResponse<T> sendFormRequest(
@@ -80,8 +80,8 @@ public class ApiCaller {
    * @param method 请求方法
    * @param url 请求地址
    * @param formDataBuilder 表单请求体生成器
-   * @param responseType 响应结果类型
-   * @param <T> 响应结果类型
+   * @param responseType 响应结果的类类型
+   * @param <T> 响应结果的泛型类型参数
    * @return 响应结果
    */
   public <T> ApiResponse<T> sendUploadRequest(
@@ -106,8 +106,8 @@ public class ApiCaller {
    * @param method 请求方法
    * @param url 请求地址
    * @param jsonData JSON 请求体
-   * @param responseType 响应结果类型
-   * @param <T> 响应结果类型
+   * @param responseType 响应结果的类类型
+   * @param <T> 响应结果的泛型类型参数
    * @return 响应结果
    */
   public <T> ApiResponse<T> sendJsonRequest(

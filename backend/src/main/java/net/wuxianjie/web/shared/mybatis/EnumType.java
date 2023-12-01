@@ -1,16 +1,14 @@
 package net.wuxianjie.web.shared.mybatis;
 
 /**
- * 数据库枚举类型值映射接口。
- *
- * <p>MyBatis 会自动处理实现了该接口的枚举值与数据库值的转换。
+ * 实现该接口的枚举类，可完成枚举值与数据库中 int 类型值的自动进行转换。
  */
 public interface EnumType {
 
   /**
-   * 获取枚举类型值所对应的整数值。
+   * 获取枚举值所对应的整数值。
    *
-   * @return 类型的整数值
+   * @return 枚举值所对应的整数值
    */
   int getCode();
 }

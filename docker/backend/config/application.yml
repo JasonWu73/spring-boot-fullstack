@@ -1,4 +1,5 @@
 # 部署时，置于与 Jar 同级目录的 `config/application.yml`
+
 spring:
   datasource:
     url: jdbc:mysql://demo-db:3306/demo

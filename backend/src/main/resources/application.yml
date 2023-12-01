@@ -1,4 +1,5 @@
 # 部署时，可提取部分需要修改的配置项到与 Jar 同级目录的 `config/application.yml` 中
+
 server:
   port: 8080
 spring:

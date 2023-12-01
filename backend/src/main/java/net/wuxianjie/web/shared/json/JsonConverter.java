@@ -33,7 +33,7 @@ public class JsonConverter {
    *
    * @param json 需要转换的 JSON 字符串
    * @param valueType 目标对象的类类型
-   * @param <T> 目标对象类
+   * @param <T> 目标对象的泛型类型参数
    * @return 指定类型的对象
    */
   public <T> T parseJson(final String json, final Class<T> valueType) {
@@ -49,7 +49,7 @@ public class JsonConverter {
    *
    * @param json 需要转换的 JSON 字符串
    * @param valueTypeRef 目标对象的泛型引用
-   * @param <T> 目标对象的泛型类
+   * @param <T> 目标对象的泛型类型参数
    * @return 指定泛型的对象
    */
   public <T> T parseJson(final String json, final TypeReference<T> valueTypeRef) {

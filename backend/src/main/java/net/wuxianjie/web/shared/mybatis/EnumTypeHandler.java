@@ -14,7 +14,7 @@ import java.util.Arrays;
 import java.util.Optional;
 
 /**
- * 枚举类型与数据库 int 类型的类型转换器。
+ * 实现枚举值与数据库中 int 类型值的自动进行转换。
  */
 @Component
 @NoArgsConstructor
