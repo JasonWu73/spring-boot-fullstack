@@ -9,6 +9,9 @@ import org.springframework.http.HttpStatus;
 @Getter
 public class ApiException extends RuntimeException {
 
+  /**
+   * 多个异常信息之间的分隔符。
+   */
   public static final String MESSAGE_SEPARATOR = "; ";
 
   private final HttpStatus status;

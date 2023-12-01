@@ -43,47 +43,34 @@ import java.util.Optional;
 public class GlobalExceptionHandler {
 
   private static final String API_PATH_PREFIX = "/api/";
-  public static final String SPA_INDEX_PAGE = "classpath:/static/index.html";
+  private static final String SPA_INDEX_PAGE_PATH = "classpath:/static/index.html";
 
   private final ResourceLoader resourceLoader;
 
   /**
-   * 单页应用（SPA）处理，按规则返回 JSON 数据或页面。
-   *
-   * <p>由 {@link DefaultHandlerExceptionResolver} 可知 Spring 中默认对应 404 的异常有哪些。
-   *
-   * <p>返回 JSON 数据：
+   * Spring Boot 404 处理，即配置单页应用（SPA），按规则返回 JSON 数据或页面。
+   * <p>
+   * 由 {@link DefaultHandlerExceptionResolver} 可知 Spring 中默认对应 404 的异常有哪些。
+   * <p>
+   * 返回 JSON 数据的情况：
    *
    * <ol>
-   *   <li>请求头 {@value HttpHeaders#ACCEPT} 中存在 {@value MediaType#APPLICATION_JSON_VALUE}</li>
+   *   <li>请求头 {@value HttpHeaders#ACCEPT} 中明确指定了 {@value MediaType#APPLICATION_JSON_VALUE}</li>
    *   <li>请求 URI 以 {@value #API_PATH_PREFIX} 开头</li>
    * </ol>
    *
-   * <p>其他情况一律返回页面，因为前端 SPA 单页面应用已作为静态资源打包在了 Jar 中。
+   * 其他情况一律返回页面，因为前端 SPA（单页面应用）已作为静态资源打包在了 Jar 中。因为 Spring Boot 默认会将 {@code src/main/resources/static/} 中的内容作为 Web 静态资源提供。而我们约定 SPA 的页面入口地址为：{@value #SPA_INDEX_PAGE_PATH}。
    *
-   * <p>Spring Boot 默认会将 {@code src/main/resources/static/} 中的内容作为 Web 静态资源提供。
-   *
-   * <p>约定 SPA 的页面入口：{@value #SPA_INDEX_PAGE}。
-   *
-   * <p><h2>扩展说明
-   *
-   * <p>Spring Boot Web 静态资源查找目录，由优先级高到低排序：
-   *
-   * <ol>
-   *   <li>{@code src/main/resources/META-INF/resources/}</li>
-   *   <li>{@code src/main/resources/resources/}</li>
-   *   <li>{@code src/main/resources/static/}</li>
-   *   <li>{@code src/main/resources/public/}</li>
-   * </ol>
-   *
-   * @param request HTTP 请求
+   * @param request HTTP 请求对象
    * @return JSON 数据或 SPA 首页
    */
-  @ExceptionHandler({NoResourceFoundException.class, NoHandlerFoundException.class})
+  @ExceptionHandler({
+    NoResourceFoundException.class,
+    NoHandlerFoundException.class
+  })
   public ResponseEntity<?> handleNoResourceFoundException(
     final HttpServletRequest request
   ) {
-    // 若为 API 或 JSON 请求，则返回 JSON 数据
     final String requestPath = request.getRequestURI();
     final String accept = request.getHeader(HttpHeaders.ACCEPT);
 
@@ -94,7 +81,6 @@ public class GlobalExceptionHandler {
         .body(new ApiError(HttpStatus.NOT_FOUND, "未找到请求的资源", requestPath));
     }
 
-    // 其他情况，返回 SPA 首页内容，由前端处理 404
     return ResponseEntity
       .status(HttpStatus.OK)
       .header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_HTML_VALUE)
@@ -105,7 +91,7 @@ public class GlobalExceptionHandler {
    * 处理自定义 API 异常。
    *
    * @param e 自定义 API 异常
-   * @return JSON 数据
+   * @return API 错误信息
    */
   @ExceptionHandler(ApiException.class)
   public ResponseEntity<ApiError> handleApiException(final ApiException e) {
@@ -120,7 +106,7 @@ public class GlobalExceptionHandler {
    * 处理所有未被特定 {@code handleXxxException(...)} 捕获的异常。
    *
    * @param e 异常超类
-   * @return JSON 数据
+   * @return API 错误信息
    */
   @ExceptionHandler(Throwable.class)
   public ResponseEntity<ApiError> handleFailedException(final Throwable e) {
@@ -137,16 +123,16 @@ public class GlobalExceptionHandler {
 
   /**
    * 处理因请求参数不合法而产生的异常。
-   *
-   * <p>触发本异常的验证方式：
+   * <p>
+   * 触发本异常的验证方式：
    *
    * <ul>
    *   <li>Controller 类必须有 {@link Validated} 注解</li>
    *   <li>直接对 Controller 方法参数使用验证注解，如 {@code @NotBlank}</li>
    * </ul>
    *
-   * @param e 请求参数不合法异常
-   * @return JSON 数据
+   * @param e {@link ConstraintViolationException}
+   * @return API 错误信息
    */
   @ExceptionHandler(ConstraintViolationException.class)
   public ResponseEntity<ApiError> handleConstraintViolationException(
@@ -154,8 +140,10 @@ public class GlobalExceptionHandler {
   ) {
     final StringBuilder stringBuilder = new StringBuilder();
 
-    Optional.ofNullable(e.getConstraintViolations())
-      .ifPresent(violations -> violations.forEach(violation -> {
+    Optional
+      .ofNullable(e.getConstraintViolations())
+      .ifPresent(violations ->
+        violations.forEach(violation -> {
           if (!stringBuilder.isEmpty()) {
             stringBuilder.append(ApiException.MESSAGE_SEPARATOR);
           }
@@ -171,16 +159,16 @@ public class GlobalExceptionHandler {
 
   /**
    * 处理因请求参数不合法而产生的异常。
-   *
-   * <p>触发本异常的验证方式：
+   * <p>
+   * 触发本异常的验证方式：
    *
    * <ul>
    *   <li>对方法参数使用 {@link Valid} 注解</li>
-   *   <li>方法参数是 POJO 类，且还可在嵌套属性上使用 {@link Valid}</li>
+   *   <li>方法参数是 POJO 类，此外还可在嵌套属性上使用 {@link Valid}</li>
    * </ul>
    *
-   * @param e 请求参数不合法异常
-   * @return JSON 数据
+   * @param e {@link MethodArgumentNotValidException}
+   * @return API 错误信息
    */
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public ResponseEntity<ApiError> handleMethodArgumentNotValidException(
@@ -188,7 +176,8 @@ public class GlobalExceptionHandler {
   ) {
     final StringBuilder stringBuilder = new StringBuilder();
 
-    e.getBindingResult()
+    e
+      .getBindingResult()
       .getFieldErrors()
       .forEach(error -> {
         if (!stringBuilder.isEmpty()) {
@@ -214,9 +203,11 @@ public class GlobalExceptionHandler {
 
   /**
    * 处理因缺少请求参数（{@code @RequestParam} 默认为必填参数）而产生的异常。
+   * <p>
+   * 因为 {@code @RequestParam} 可用于 Multi-Part 请求，故需要处理 {@link MissingServletRequestPartException}。
    *
-   * @param e 缺少请求参数异常
-   * @return JSON 数据
+   * @param e {@link MissingServletRequestParameterException}
+   * @return API 错误信息
    */
   @ExceptionHandler({
     MissingServletRequestParameterException.class,
@@ -243,8 +234,8 @@ public class GlobalExceptionHandler {
   /**
    * 处理因请求参数值不合法而产生的异常。
    *
-   * @param e 请求参数值不合法异常
-   * @return JSON 数据
+   * @param e {@link MethodArgumentTypeMismatchException}
+   * @return API 错误信息
    */
   @ExceptionHandler(MethodArgumentTypeMismatchException.class)
   public ResponseEntity<ApiError> handleMethodArgumentTypeMismatchException(
@@ -258,26 +249,26 @@ public class GlobalExceptionHandler {
   }
 
   /**
-   * 处理因请求体内容（如 JSON）不合法而产生的异常。
+   * 处理因无法解析请求体内容（如 JSON 格式有误）而产生的异常。
    *
-   * @param e 请求体内容不合法异常
-   * @return JSON 数据
+   * @param e {@link HttpMessageNotReadableException}
+   * @return API 错误信息
    */
   @ExceptionHandler(HttpMessageNotReadableException.class)
   public ResponseEntity<ApiError> handleHttpMessageNotReadableException(
     final HttpMessageNotReadableException e
   ) {
     return handleApiException(
-      new ApiException(HttpStatus.BAD_REQUEST, "无法解析请求体内容", e)
+      new ApiException(HttpStatus.BAD_REQUEST, "请求体内容不合法", e)
     );
   }
 
   /**
    * 处理因不支持请求方法而产生的异常。
    *
-   * @param e       不支持请求方法异常
-   * @param request HTTP 请求
-   * @return JSON 数据
+   * @param e {@link HttpRequestMethodNotSupportedException}
+   * @param request HTTP 请求对象
+   * @return API 错误信息
    */
   @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
   public ResponseEntity<ApiError> handleHttpRequestMethodNotSupportedException(
@@ -292,9 +283,9 @@ public class GlobalExceptionHandler {
   /**
    * 处理因不支持请求头中指定的 MIME Content-Type 而产生的异常。
    *
-   * @param e       不支持的 MIME Content-Type 异常
-   * @param request HTTP 请求
-   * @return JSON 数据
+   * @param e {@link HttpMediaTypeException}
+   * @param request HTTP 请求对象
+   * @return API 错误信息
    */
   @ExceptionHandler(HttpMediaTypeException.class)
   public ResponseEntity<ApiError> handleHttpMediaTypeException(
@@ -310,10 +301,10 @@ public class GlobalExceptionHandler {
   }
 
   /**
-   * 处理因非 Multipart 请求而产生的异常。
+   * 处理因非 Multi-Part 请求而产生的异常。
    *
-   * @param e 非 Multipart 请求异常
-   * @return JSON 数据
+   * @param e {@link MultipartException}
+   * @return API 错误信息
    */
   @ExceptionHandler(MultipartException.class)
   public ResponseEntity<ApiError> handleMultipartException(final MultipartException e) {
@@ -323,7 +314,7 @@ public class GlobalExceptionHandler {
   }
 
   /**
-   * 处理网络连接因请求处理过程中被中断而产生的异常。
+   * 处理网络连接因在请求处理过程中被中断而产生的异常。
    *
    * @return 204 No Content
    */
@@ -334,9 +325,9 @@ public class GlobalExceptionHandler {
 
   private void writeToLog(final ApiException e) {
     // 因为是已经识别了的异常，故不需要记录错误的堆栈信息
-    // 以 WARN 级别记录客户端异常
     final boolean isClientError = e.getStatus().is4xxClientError();
 
+    // 以 WARN 级别记录客户端异常
     if (isClientError) {
       log.warn("客户端异常: {}", e.getMessage());
       return;
@@ -346,18 +337,19 @@ public class GlobalExceptionHandler {
     log.error("服务端异常: {}", e.getMessage());
   }
 
-  private static boolean isJsonRequest(final String originalPath, final String accept) {
-    return originalPath.startsWith(API_PATH_PREFIX)
-      || accept.contains(MediaType.APPLICATION_JSON_VALUE);
+  private static boolean isJsonRequest(final String requestPath, final String accept) {
+    return
+      requestPath.startsWith(API_PATH_PREFIX) ||
+      accept.contains(MediaType.APPLICATION_JSON_VALUE);
   }
 
   private String getIndexHtml() {
-    final Resource resource = resourceLoader.getResource(SPA_INDEX_PAGE);
+    final Resource resource = resourceLoader.getResource(SPA_INDEX_PAGE_PATH);
 
     if (!resource.exists()) {
       throw new ApiException(
         HttpStatus.INTERNAL_SERVER_ERROR,
-        "未找到 SPA 首页文件 [%s]".formatted(SPA_INDEX_PAGE)
+        "未找到 SPA 首页文件 [%s]".formatted(SPA_INDEX_PAGE_PATH)
       );
     }
 

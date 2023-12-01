@@ -33,7 +33,8 @@ public class RedisLock {
    * @return 是否上锁成功
    */
   public boolean lock(final String key, final String value) {
-    final Boolean locked = stringRedisTemplate.opsForValue()
+    final Boolean locked = stringRedisTemplate
+      .opsForValue()
       .setIfAbsent(key, value, LOCK_TIMEOUT_SECONDS, TimeUnit.SECONDS);
 
     if (locked == null || !locked) return false;
