@@ -63,7 +63,7 @@ public class UserController {
   /**
    * 获取用户详情。
    *
-   * @param userId 用户 id
+   * @param userId 用户 ID
    * @return 用户详情
    */
   @Admin
@@ -88,7 +88,7 @@ public class UserController {
   /**
    * 更新用户。
    *
-   * @param userId 用户 id
+   * @param userId 用户 ID
    * @param param  更新用户参数
    * @return 204 No Content
    */
@@ -105,7 +105,7 @@ public class UserController {
   /**
    * 重置用户密码。
    *
-   * @param userId 用户 id
+   * @param userId 用户 ID
    * @param param  重置密码参数
    * @return 204 No Content
    */
@@ -122,7 +122,7 @@ public class UserController {
   /**
    * 禁用/启用用户。
    *
-   * @param userId 用户 id
+   * @param userId 用户 ID
    * @param param  更新用户状态参数
    * @return 204 No Content
    */
@@ -139,7 +139,7 @@ public class UserController {
   /**
    * 删除用户。
    *
-   * @param userId 用户 id
+   * @param userId 用户 ID
    * @return 204 No Content
    */
   @Root

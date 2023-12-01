@@ -133,7 +133,7 @@ public class UserService {
   /**
    * 获取用户详情。
    *
-   * @param userId 用户 id
+   * @param userId 用户 ID
    * @return 用户详情
    */
   public UserInfo getUserInfo(final long userId) {
@@ -185,7 +185,7 @@ public class UserService {
   /**
    * 更新用户。
    *
-   * @param userId 用户 id
+   * @param userId 用户 ID
    * @param param  更新用户参数
    */
   public void updateUser(final long userId, final UpdateUserParam param) {
@@ -216,7 +216,7 @@ public class UserService {
   /**
    * 重置用户密码。
    *
-   * @param userId 用户 id
+   * @param userId 用户 ID
    * @param param  重置密码参数
    */
   public void resetPassword(final long userId, final ResetPasswordParam param) {
@@ -244,7 +244,7 @@ public class UserService {
   /**
    * 更新用户状态。
    *
-   * @param userId 用户 id
+   * @param userId 用户 ID
    * @param param  更新用户状态参数
    */
   public void updateUserStatus(final long userId, final UpdateUserStatusParam param) {
@@ -264,7 +264,7 @@ public class UserService {
   /**
    * 删除用户。
    *
-   * @param userId 用户 id
+   * @param userId 用户 ID
    */
   public void deleteUser(final long userId) {
     // 从数据库中查询用户数据

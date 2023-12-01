@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 public class OperationLog {
 
   /**
-   * 日志 id。
+   * 日志 ID。
    */
   private Long id;
 

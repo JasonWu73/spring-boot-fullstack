@@ -17,7 +17,7 @@ import java.util.List;
 public class UserInfo {
 
   /**
-   * 用户 id。
+   * 用户 ID。
    */
   private Long id;
 

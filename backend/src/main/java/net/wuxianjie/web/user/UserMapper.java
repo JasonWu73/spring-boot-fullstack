@@ -15,9 +15,9 @@ import java.util.List;
 public interface UserMapper {
 
   /**
-   * 根据用户 id 查询用户。
+   * 根据用户 ID 查询用户。
    *
-   * @param userId 用户 id
+   * @param userId 用户 ID
    * @return 用户表数据
    */
   User selectById(long userId);
@@ -31,9 +31,9 @@ public interface UserMapper {
   User selectByUsername(String username);
 
   /**
-   * 根据用户 id 查询用户信息。
+   * 根据用户 ID 查询用户信息。
    *
-   * @param userId 用户 id
+   * @param userId 用户 ID
    * @return 用户信息
    */
   UserInfo selectInfoById(long userId);
@@ -66,16 +66,16 @@ public interface UserMapper {
   void insert(User user);
 
   /**
-   * 根据用户 id 更新用户。
+   * 根据用户 ID 更新用户。
    *
    * @param user 最新的用户数据
    */
   void updateById(User user);
 
   /**
-   * 根据用户 id 删除用户。
+   * 根据用户 ID 删除用户。
    *
-   * @param userId 用户 id
+   * @param userId 用户 ID
    */
   void deleteById(long userId);
 }
