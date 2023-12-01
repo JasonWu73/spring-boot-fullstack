@@ -5,7 +5,6 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import net.wuxianjie.web.shared.config.Constants;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -20,6 +19,11 @@ import java.time.format.DateTimeFormatter;
  */
 @Configuration
 public class JsonConfig {
+
+  /**
+   * 系统中使用的日期时间格式。
+   */
+  public static final String DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
 
   /**
    * 配置使用自定义 {@link #objectMapper()} 的 {@link MappingJackson2HttpMessageConverter} 实例。
@@ -56,7 +60,7 @@ public class JsonConfig {
       .addModule(timeModule)
       .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
       .build()
-      .setDateFormat(new SimpleDateFormat(Constants.DATE_TIME_PATTERN));
+      .setDateFormat(new SimpleDateFormat(DATE_TIME_PATTERN));
   }
 
   private static JavaTimeModule getJavaTimeModule() {
@@ -71,7 +75,7 @@ public class JsonConfig {
         final SerializerProvider serializers
       ) throws IOException {
         gen.writeString(
-          value.format(DateTimeFormatter.ofPattern(Constants.DATE_TIME_PATTERN))
+          value.format(DateTimeFormatter.ofPattern(DATE_TIME_PATTERN))
         );
       }
     });
@@ -85,7 +89,7 @@ public class JsonConfig {
       ) throws IOException {
         return LocalDateTime.parse(
           p.getValueAsString(),
-          DateTimeFormatter.ofPattern(Constants.DATE_TIME_PATTERN)
+          DateTimeFormatter.ofPattern(DATE_TIME_PATTERN)
         );
       }
     });

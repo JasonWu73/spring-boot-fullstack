@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.wuxianjie.web.shared.config.Constants;
+import net.wuxianjie.web.shared.json.JsonConfig;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
@@ -19,12 +19,12 @@ import java.util.Date;
 @AllArgsConstructor
 public class InnerData {
 
-  @DateTimeFormat(pattern = Constants.DATE_TIME_PATTERN)
+  @DateTimeFormat(pattern = JsonConfig.DATE_TIME_PATTERN)
   Date date;
 
   LocalDate localDate;
 
   @NotNull(message = "dateTime 不能为 null")
-  @DateTimeFormat(pattern = Constants.DATE_TIME_PATTERN)
+  @DateTimeFormat(pattern = JsonConfig.DATE_TIME_PATTERN)
   LocalDateTime dateTime;
 }

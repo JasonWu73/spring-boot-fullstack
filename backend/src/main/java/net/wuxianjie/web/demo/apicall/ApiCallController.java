@@ -6,7 +6,7 @@ import net.wuxianjie.web.demo.requestparam.OuterData;
 import net.wuxianjie.web.demo.requestparam.Uploaded;
 import net.wuxianjie.web.shared.apicaller.ApiCaller;
 import net.wuxianjie.web.shared.apicaller.ApiResponse;
-import net.wuxianjie.web.shared.config.Constants;
+import net.wuxianjie.web.shared.json.JsonConfig;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpMethod;
@@ -143,7 +143,7 @@ public class ApiCallController {
 
   private static String getNow() {
     return LocalDateTime.now().format(
-      DateTimeFormatter.ofPattern(Constants.DATE_TIME_PATTERN)
+      DateTimeFormatter.ofPattern(JsonConfig.DATE_TIME_PATTERN)
     );
   }
 }

@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import net.wuxianjie.web.shared.config.Constants;
+import net.wuxianjie.web.shared.json.JsonConfig;
 import net.wuxianjie.web.shared.validator.EnumValidator;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
@@ -42,7 +42,7 @@ public class RequestParamController {
     @RequestParam final String name,
     @NotNull(message = "num 不能为 null") final Integer num,
     @EnumValidator(value = Type.class, message = "type 值不合法") final Integer type,
-    @DateTimeFormat(pattern = Constants.DATE_TIME_PATTERN) final LocalDateTime dateTime
+    @DateTimeFormat(pattern = JsonConfig.DATE_TIME_PATTERN) final LocalDateTime dateTime
   ) {
     log.info("name={}, num={}, type={}, dateTime={}", name, num, type, dateTime);
 
