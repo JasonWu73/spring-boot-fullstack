@@ -23,7 +23,7 @@ public class StrUtils {
    *
    * <ul>
    *   <li>
-   *     当 {@code value} 不为空时，则将字符串中的任意数量空白字符替换为 {@code %}，例如：
+   *     当 {@code value} 不为空时，则将字符串中的任意数量的空白字符替换为 {@code %}，例如：
    *     <pre>{@code "  KeyOne    KeyTwo  " -> "%KeyOne%KeyTwo%"}</pre>
    *   </li>
    *   <li>当 {@code value} 为空时，则返回 {@code null}</li>
