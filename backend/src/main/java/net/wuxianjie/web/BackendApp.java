@@ -9,8 +9,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  * 后端服务启动类。
  *
  * <ul>
- *   <li>`@EnableScheduling`：开启定时任务执行功能</li>
- *   <li>`UserDetailsServiceAutoConfiguration.class`：排除以避免在控制台打印临时密码</li>
+ *   <li>{@code @EnableScheduling}：开启定时任务执行功能</li>
+ *   <li>{@code exclude=UserDetailsServiceAutoConfiguration.class}：排除以避免在控制台打印 Spring Security 的临时密码</li>
  * </ul>
  */
 @EnableScheduling
