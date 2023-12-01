@@ -34,21 +34,21 @@ public enum SortOrder {
   }
 
   /**
-   * 排序方式编码。
+   * 排序方式对应的字符串值。
    */
   @JsonValue
   private final String code;
 
   /**
-   * 根据编码解析排序方式。
+   * 将字符串值解析为排序方式枚举值。
    *
-   * @param code 排序方式编码
-   * @return 排序方式
+   * @param value 需要解析的字符串值
+   * @return 排序方式枚举值
    */
-  public static Optional<SortOrder> resolve(final String code) {
-    return Optional.ofNullable(code)
-      .flatMap(theCode -> Arrays.stream(VALUES)
-        .filter(theEnum -> Objects.equals(theEnum.code, theCode))
+  public static Optional<SortOrder> resolve(final String value) {
+    return Optional.ofNullable(value)
+      .flatMap(val -> Arrays.stream(VALUES)
+        .filter(theEnum -> Objects.equals(theEnum.code, val))
         .findFirst()
       );
   }

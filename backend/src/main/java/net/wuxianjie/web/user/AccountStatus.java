@@ -34,21 +34,21 @@ public enum AccountStatus implements EnumType {
   }
 
   /**
-   * 账号状态编码。
+   * 账号状态对应的整数值。
    */
   @JsonValue
   private final int code;
 
   /**
-   * 根据编码解析账号状态。
+   * 将整数值解析为账号状态枚举值。
    *
-   * @param code 账号状态编码
-   * @return 账号状态
+   * @param value 需要解析的整数值
+   * @return 账号状态枚举值
    */
-  public static Optional<AccountStatus> resolve(final Integer code) {
-    return Optional.ofNullable(code)
-      .flatMap(theCode -> Arrays.stream(VALUES)
-        .filter(theEnum -> theEnum.code == theCode)
+  public static Optional<AccountStatus> resolve(final Integer value) {
+    return Optional.ofNullable(value)
+      .flatMap(val -> Arrays.stream(VALUES)
+        .filter(theEnum -> theEnum.code == val)
         .findFirst()
       );
   }
