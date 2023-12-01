@@ -41,7 +41,8 @@ public class UserService {
     final long userId = AuthUtils.getCurrentUser().orElseThrow().userId();
 
     // 从数据库中查询用户信息并返回
-    return Optional.ofNullable(userMapper.selectInfoById(userId))
+    return Optional
+      .ofNullable(userMapper.selectInfoById(userId))
       .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "用户不存在"));
   }
 
@@ -57,7 +58,8 @@ public class UserService {
     final long userId = AuthUtils.getCurrentUser().orElseThrow().userId();
 
     // 从数据库中查询当前用户数据
-    final User user = Optional.ofNullable(userMapper.selectById(userId))
+    final User user = Optional
+      .ofNullable(userMapper.selectById(userId))
       .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "用户不存在"));
 
     // 更新用户字段
@@ -136,7 +138,8 @@ public class UserService {
    */
   public UserInfo getUserInfo(final long userId) {
     // 从数据库中查询用户详情并返回
-    return Optional.ofNullable(userMapper.selectInfoById(userId))
+    return Optional
+      .ofNullable(userMapper.selectInfoById(userId))
       .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "用户不存在"));
   }
 
@@ -147,9 +150,9 @@ public class UserService {
    */
   public void addUser(final AddUserParam param) {
     // 检查用户名是否已存在
-    final boolean usernameExists = Optional.ofNullable(
-      userMapper.selectByUsername(param.getUsername())
-    ).isPresent();
+    final boolean usernameExists = Optional
+      .ofNullable(userMapper.selectByUsername(param.getUsername()))
+      .isPresent();
 
     if (usernameExists) {
       throw new ApiException(HttpStatus.CONFLICT, "用户名已存在");
@@ -187,7 +190,8 @@ public class UserService {
    */
   public void updateUser(final long userId, final UpdateUserParam param) {
     // 从数据库中查询用户数据
-    final User user = Optional.ofNullable(userMapper.selectById(userId))
+    final User user = Optional
+      .ofNullable(userMapper.selectById(userId))
       .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "用户不存在"));
 
     // 检查是否为 `root` 账号
@@ -220,7 +224,8 @@ public class UserService {
     final String password = decryptPassword(param.getPassword());
 
     // 从数据库中查询用户数据
-    final User user = Optional.ofNullable(userMapper.selectById(userId))
+    final User user = Optional
+      .ofNullable(userMapper.selectById(userId))
       .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "用户不存在"));
 
     // 更新用户字段
@@ -244,7 +249,8 @@ public class UserService {
    */
   public void updateUserStatus(final long userId, final UpdateUserStatusParam param) {
     // 从数据库中查询用户数据
-    final User user = Optional.ofNullable(userMapper.selectById(userId))
+    final User user = Optional
+      .ofNullable(userMapper.selectById(userId))
       .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "用户不存在"));
 
     // 更新用户字段
@@ -262,7 +268,8 @@ public class UserService {
    */
   public void deleteUser(final long userId) {
     // 从数据库中查询用户数据
-    final User user = Optional.ofNullable(userMapper.selectById(userId))
+    final User user = Optional
+      .ofNullable(userMapper.selectById(userId))
       .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "用户不存在"));
 
     // 从数据库中删除用户数据

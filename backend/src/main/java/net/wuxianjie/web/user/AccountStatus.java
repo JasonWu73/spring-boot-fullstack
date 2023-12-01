@@ -46,10 +46,13 @@ public enum AccountStatus implements EnumType {
    * @return 账号状态枚举值
    */
   public static Optional<AccountStatus> resolve(final Integer value) {
-    return Optional.ofNullable(value)
-      .flatMap(val -> Arrays.stream(VALUES)
-        .filter(theEnum -> theEnum.code == val)
-        .findFirst()
+    return Optional
+      .ofNullable(value)
+      .flatMap(val ->
+        Arrays
+          .stream(VALUES)
+          .filter(theEnum -> theEnum.code == val)
+          .findFirst()
       );
   }
 }

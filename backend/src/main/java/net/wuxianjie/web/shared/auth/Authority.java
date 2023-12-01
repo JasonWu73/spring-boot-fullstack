@@ -55,10 +55,13 @@ public enum Authority {
    * @return 权限枚举值
    */
   public static Optional<Authority> resolve(final String value) {
-    return Optional.ofNullable(value)
-      .flatMap(val -> Arrays.stream(VALUES)
-        .filter(theEnum -> Objects.equals(theEnum.code, val))
-        .findFirst()
+    return Optional
+      .ofNullable(value)
+      .flatMap(val ->
+        Arrays
+          .stream(VALUES)
+          .filter(theEnum -> Objects.equals(theEnum.code, val))
+          .findFirst()
       );
   }
 }
