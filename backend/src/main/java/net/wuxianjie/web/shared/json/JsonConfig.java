@@ -54,7 +54,8 @@ public class JsonConfig {
   public ObjectMapper objectMapper() {
     final JavaTimeModule timeModule = getJavaTimeModule();
 
-    return JsonMapper.builder()
+    return JsonMapper
+      .builder()
       .enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT)
       .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
       .addModule(timeModule)
