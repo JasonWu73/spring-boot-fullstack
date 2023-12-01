@@ -26,10 +26,10 @@ public class ApiCaller {
   /**
    * 发送 HTTP GET 请求。
    *
-   * @param url          请求地址
-   * @param urlParams    URL 参数
+   * @param url 请求地址
+   * @param urlParams URL 参数
    * @param responseType 响应结果类型
-   * @param <T>          响应结果类型
+   * @param <T> 响应结果类型
    * @return 响应结果
    */
   public <T> ApiResponse<T> sendGetRequest(
@@ -52,11 +52,11 @@ public class ApiCaller {
   /**
    * 发送 HTTP x-www-form-urlencoded 请求。
    *
-   * @param method       请求方法
-   * @param url          请求地址
-   * @param formData     表单请求体
+   * @param method 请求方法
+   * @param url 请求地址
+   * @param formData 表单请求体
    * @param responseType 响应结果类型
-   * @param <T>          响应结果类型
+   * @param <T> 响应结果类型
    * @return 响应结果
    */
   public <T> ApiResponse<T> sendFormRequest(
@@ -77,11 +77,11 @@ public class ApiCaller {
   /**
    * 发送 HTTP form-data 请求。
    *
-   * @param method          请求方法
-   * @param url             请求地址
+   * @param method 请求方法
+   * @param url 请求地址
    * @param formDataBuilder 表单请求体生成器
-   * @param responseType    响应结果类型
-   * @param <T>             响应结果类型
+   * @param responseType 响应结果类型
+   * @param <T> 响应结果类型
    * @return 响应结果
    */
   public <T> ApiResponse<T> sendUploadRequest(
@@ -103,11 +103,11 @@ public class ApiCaller {
   /**
    * 发送 HTTP JSON 请求。
    *
-   * @param method       请求方法
-   * @param url          请求地址
-   * @param jsonData     JSON 请求体
+   * @param method 请求方法
+   * @param url 请求地址
+   * @param jsonData JSON 请求体
    * @param responseType 响应结果类型
-   * @param <T>          响应结果类型
+   * @param <T> 响应结果类型
    * @return 响应结果
    */
   public <T> ApiResponse<T> sendJsonRequest(
@@ -130,7 +130,7 @@ public class ApiCaller {
     final Supplier<ResponseEntity<T>> requestSupplier
   ) {
     try {
-      ResponseEntity<T> response = requestSupplier.get();
+      final ResponseEntity<T> response = requestSupplier.get();
 
       return new ApiResponse<>(
         response.getStatusCode(),
@@ -141,7 +141,7 @@ public class ApiCaller {
       return new ApiResponse<>(
         e.getStatusCode(),
         null,
-        e.getResponseBodyAsString(StandardCharsets.UTF_8)
+        e.getResponseBodyAsString(StandardCharsets.UTF_8) // 要指定编码，否则中文会乱码
       );
     }
   }

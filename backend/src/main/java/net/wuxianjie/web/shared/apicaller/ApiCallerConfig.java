@@ -16,22 +16,25 @@ import org.springframework.web.client.RestClient;
 public class ApiCallerConfig {
 
   /**
-   * 自定义的 `MappingJackson2HttpMessageConverter`。
+   * 注入自定义的 {@link MappingJackson2HttpMessageConverter}。
    */
   private final MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter;
 
   /**
-   * 自定义的 `RestClient`。
+   * 自定义符合以下条件的 {@link RestClient} 实例：
    *
-   * @return `RestClient` 实例
+   * <ul>
+   *   <li>只接收 JSON 响应结果</li>
+   *   <li>使用自定义的 JSON 解析策略</li>
+   * </ul>
+   *
+   * @return {@link RestClient} 实例
    */
   @Bean
   public RestClient restClient() {
     return RestClient
       .builder()
-      // 默认请求只接收 JSON 响应结果
       .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
-      // 注入自定义的 `MappingJackson2HttpMessageConverter`
       .messageConverters(converters ->
         converters.add(0, mappingJackson2HttpMessageConverter)
       )
