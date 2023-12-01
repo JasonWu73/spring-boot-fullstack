@@ -5,6 +5,7 @@ import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.wuxianjie.web.shared.auth.SecurityConfig;
 import org.apache.catalina.connector.ClientAbortException;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -42,7 +43,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class GlobalExceptionHandler {
 
-  private static final String API_PATH_PREFIX = "/api/";
   private static final String SPA_INDEX_PAGE_PATH = "classpath:/static/index.html";
 
   private final ResourceLoader resourceLoader;
@@ -56,7 +56,7 @@ public class GlobalExceptionHandler {
    *
    * <ol>
    *   <li>请求头 {@value HttpHeaders#ACCEPT} 中明确指定了 {@value MediaType#APPLICATION_JSON_VALUE}</li>
-   *   <li>请求 URI 以 {@value #API_PATH_PREFIX} 开头</li>
+   *   <li>请求 URI 以 {@value net.wuxianjie.web.shared.auth.SecurityConfig#API_PATH_PREFIX} 开头</li>
    * </ol>
    *
    * 其他情况一律返回页面，因为前端 SPA（单页面应用）已作为静态资源打包在了 Jar 中。因为 Spring Boot 默认会将 {@code src/main/resources/static/} 中的内容作为 Web 静态资源提供。而我们约定 SPA 的页面入口地址为：{@value #SPA_INDEX_PAGE_PATH}。
@@ -339,7 +339,7 @@ public class GlobalExceptionHandler {
 
   private static boolean isJsonRequest(final String requestPath, final String accept) {
     return
-      requestPath.startsWith(API_PATH_PREFIX) ||
+      requestPath.startsWith(SecurityConfig.API_PATH_PREFIX) ||
       accept.contains(MediaType.APPLICATION_JSON_VALUE);
   }
 

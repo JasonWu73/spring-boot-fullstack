@@ -36,11 +36,11 @@ import java.util.List;
 public class SecurityConfig {
 
   /**
-   * 配置上下级权限。
-   *
-   * <p>`root`：超级管理员权限，不但意味着能访问系统所有功能，也会忽略所有关于数据权限的限制。
+   * API 请求路径前缀。
    */
-  public static final String HIERARCHY = """
+  public static final String API_PATH_PREFIX = "/api/";
+
+  private static final String AUTH_HIERARCHY = """
     root > admin
     admin > user""";
 
@@ -50,8 +50,28 @@ public class SecurityConfig {
 
   /**
    * 配置 Spring Security 过滤器链。
+   * <p>
+   * <h2>对所有请求都生效的通用配置</h2>
    *
-   * @param http Spring Security HTTP 配置
+   * <ul>
+   *   <li>默认所有请求所有人都可访问（保证 SPA 前端资源可用）</li>
+   *   <li>支持 CORS</li>
+   *   <li>禁用 CSRF</li>
+   *   <li>允许浏览器在同源策略下使用 {@code <frame>} 或 {@code <iframe>}</li>
+   *   <li>无状态会话，即不向客户端发送 {@code JSESSIONID} Cookie</li>
+   *   <li>认证（Authentication）401 和授权（Authorization）403 异常处理</li>
+   * </ul>
+   *
+   * <h2>仅对特定请求（即以 {@value API_PATH_PREFIX} 为前缀的请求路径）生效的特殊配置</h2>
+   *
+   * <ul>
+   *   <li>开放登录 API</li>
+   *   <li>开放公开的 API</li>
+   *   <li>默认所有 API 都需要登录才能访问</li>
+   *   <li>自定义 Token 身份验证过滤器</li>
+   * </ul>
+   *
+   * @param http Spring Security HTTP 配置对象
    * @return Spring Security 过滤器链
    * @throws Exception 配置失败时抛出
    */
@@ -64,10 +84,8 @@ public class SecurityConfig {
       .authorizeHttpRequests(auth -> {
         // 开放登录 API
         auth.requestMatchers("/api/v1/auth/login").permitAll()
-          // 开放获取项目版本号 API
-          .requestMatchers("/api/v1/version").permitAll()
-          // 开放测试 API
-          .requestMatchers("/api/v1/test/**").permitAll()
+          // 开放公开的 API
+          .requestMatchers("/api/v1/public/**").permitAll()
           // 默认所有 API 都需要登录才能访问
           .requestMatchers("/**").authenticated();
       })
@@ -99,8 +117,8 @@ public class SecurityConfig {
       // 身份验证和权限异常处理
       .exceptionHandling(exceptionHandling -> {
         // 未通过身份验证，对应 401 HTTP 状态码
-        exceptionHandling.authenticationEntryPoint(
-          (request, response, e) -> handlerExceptionResolver.resolveException(
+        exceptionHandling.authenticationEntryPoint((request, response, e) ->
+          handlerExceptionResolver.resolveException(
             request,
             response,
             null,
@@ -109,13 +127,14 @@ public class SecurityConfig {
         );
 
         // 通过身份验证，但权限不足，对应 403 HTTP 状态码
-        exceptionHandling.accessDeniedHandler(
-          (request, response, e) -> handlerExceptionResolver.resolveException(
+        exceptionHandling.accessDeniedHandler((request, response, e) ->
+          handlerExceptionResolver.resolveException(
             request,
             response,
             null,
             new ApiException(HttpStatus.FORBIDDEN, "权限鉴权失败", e)
-          ));
+          )
+        );
       });
 
     return http.build();
@@ -162,7 +181,7 @@ public class SecurityConfig {
   @Bean
   public RoleHierarchy roleHierarchy() {
     final RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
-    roleHierarchy.setHierarchy(HIERARCHY);
+    roleHierarchy.setHierarchy(AUTH_HIERARCHY);
     return roleHierarchy;
   }
 

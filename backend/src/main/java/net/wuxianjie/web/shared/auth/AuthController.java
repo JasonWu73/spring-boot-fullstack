@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * 身份验证相关接口。
+ * 身份验证相关 API。
  */
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -44,7 +44,7 @@ public class AuthController {
   /**
    * 刷新身份验证信息。
    *
-   * @param refreshToken 用于刷新的刷新令牌
+   * @param refreshToken 刷新令牌，用于刷新身份验证信息的令牌
    * @return 身份验证结果
    */
   @PostMapping("/refresh/{refreshToken}")

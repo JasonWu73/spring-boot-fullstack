@@ -25,7 +25,7 @@ import java.util.Date;
 @Slf4j
 @Validated
 @RestController
-@RequestMapping("/api/v1/test/params")
+@RequestMapping("/api/v1/public/params")
 public class RequestParamController {
 
   /**

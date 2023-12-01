@@ -4,7 +4,7 @@ import net.wuxianjie.web.shared.auth.dto.AuthResult;
 import net.wuxianjie.web.shared.auth.dto.LoginParam;
 
 /**
- * 身份验证相关接口。
+ * 身份验证相关的业务接口。
  */
 public interface AuthService {
 
@@ -17,7 +17,7 @@ public interface AuthService {
   AuthResult login(LoginParam param);
 
   /**
-   * 退出。
+   * 退出登录。
    */
   void logout();
 

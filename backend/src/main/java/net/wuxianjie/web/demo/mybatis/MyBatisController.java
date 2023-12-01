@@ -13,7 +13,7 @@ import java.util.List;
  */
 @Validated
 @RestController
-@RequestMapping("/api/v1/test/mybatis")
+@RequestMapping("/api/v1/public/mybatis")
 @RequiredArgsConstructor
 public class MyBatisController {
 

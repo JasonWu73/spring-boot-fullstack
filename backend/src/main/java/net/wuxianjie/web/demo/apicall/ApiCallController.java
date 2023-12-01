@@ -27,7 +27,7 @@ import java.util.Map;
  * 测试几种常用的 API 调用方式。
  */
 @RestController
-@RequestMapping("/api/v1/test/api-call")
+@RequestMapping("/api/v1/public/api-call")
 @RequiredArgsConstructor
 public class ApiCallController {
 
@@ -46,7 +46,7 @@ public class ApiCallController {
     final Map<String, String> urlParams = getSendGetRequestParams();
 
     return apiCaller.sendGetRequest(
-      "http://localhost:%s/api/v1/test/params".formatted(port),
+      "http://localhost:%s/api/v1/public/params".formatted(port),
       urlParams,
       OuterData.class
     );
@@ -61,7 +61,7 @@ public class ApiCallController {
 
     return apiCaller.sendFormRequest(
       HttpMethod.POST,
-      "http://localhost:%s/api/v1/test/params".formatted(port),
+      "http://localhost:%s/api/v1/public/params".formatted(port),
       formData,
       OuterData.class
     );
@@ -76,7 +76,7 @@ public class ApiCallController {
 
     return apiCaller.sendUploadRequest(
       HttpMethod.POST,
-      "http://localhost:%s/api/v1/test/params/upload".formatted(port),
+      "http://localhost:%s/api/v1/public/params/upload".formatted(port),
       formDataBuilder,
       Uploaded.class
     );
@@ -91,7 +91,7 @@ public class ApiCallController {
 
     return apiCaller.sendJsonRequest(
       HttpMethod.POST,
-      "http://localhost:%s/api/v1/test/params/json".formatted(port),
+      "http://localhost:%s/api/v1/public/params/json".formatted(port),
       jsonData,
       OuterData.class
     );

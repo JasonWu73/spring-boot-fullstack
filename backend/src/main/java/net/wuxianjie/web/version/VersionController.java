@@ -42,7 +42,7 @@ public class VersionController {
    *
    * <p>每次在生产环境中发布新包时都要更新版本号及构建时间。
    */
-  @GetMapping("/version")
+  @GetMapping("/public/version")
   public Version getVersion() {
     return new Version(NAME, DEVELOPER, VERSION, BUILT_AT);
   }

@@ -33,12 +33,11 @@ public class AuthUtils {
     return Optional.of((CachedAuth) auth.getPrincipal());
   }
 
-
   /**
    * 将登录信息写入 Spring Security Context。
    *
-   * @param auth    登录信息
-   * @param request HTTP 请求
+   * @param auth 登录信息
+   * @param request HTTP 请求对象
    */
   public static void setAuthenticatedContext(
     final CachedAuth auth,
@@ -46,7 +45,8 @@ public class AuthUtils {
   ) {
     final List<String> rawAuthorities = auth.authorities();
 
-    final List<SimpleGrantedAuthority> authorities = rawAuthorities.stream()
+    final List<SimpleGrantedAuthority> authorities = rawAuthorities
+      .stream()
       .filter(StringUtils::hasText)
       .map(SimpleGrantedAuthority::new)
       .toList();

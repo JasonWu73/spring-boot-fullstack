@@ -27,7 +27,7 @@ function VersionProvider({ children }: VersionProviderProps) {
   const { requestApi } = useAuth()
   const { fetchData, discardFetch } = useFetch(requestApi<Version>)
 
-  const url = '/api/v1/version'
+  const url = '/api/v1/public/version'
 
   useInitial(() => {
     const timestamp = Date.now()
