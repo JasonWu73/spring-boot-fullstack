@@ -110,8 +110,8 @@ public class UserService {
     final GetUserParam userParam
   ) {
     // 设置模糊查询参数
-    userParam.setUsername(StrUtils.toNullableLikeValue(userParam.getUsername()));
-    userParam.setNickname(StrUtils.toNullableLikeValue(userParam.getNickname()));
+    userParam.setUsername(StrUtils.toLikeValue(userParam.getUsername()));
+    userParam.setNickname(StrUtils.toLikeValue(userParam.getNickname()));
 
     // 从数据库中查询符合条件的用户列表
     final List<UserInfo> list = userMapper.selectByQueryLimit(paginationParam, userParam);

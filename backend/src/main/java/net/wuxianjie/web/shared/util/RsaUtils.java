@@ -16,27 +16,22 @@ import java.util.Base64;
  */
 public class RsaUtils {
 
-  /**
-   * RSA 加密算法。
-   */
-  public static final String RSA_CRYPTO_ALGORITHM = "RSA";
+  private static final String RSA_CRYPTO_ALGORITHM = "RSA";
 
   /**
-   * 生成新的 RSA 1024 位密钥对。
+   * 生成新的 RSA 2048 位密钥对，密钥对使用 Base64 编码。
+   * <p>
+   * 虽然 1024 位的密钥长度被认为是相对安全的，但 2048 或 4096 位更加安全。
    *
-   * @return Base64 公钥和私钥
+   * @return Base64 编码的密钥对
    */
   public static RsaKeyPair generateKeyPair() {
-    // 获取 RSA 密钥对生成器
     final KeyPairGenerator rsa = getKeyPairGenerator();
 
-    // 初始化 RSA 密钥对生成器，设置其生成 2048 位长的密钥对
     rsa.initialize(2048);
 
-    // 生成密钥对
     final KeyPair keyPair = rsa.generateKeyPair();
 
-    // 使用 Base64 编码密钥对
     return new RsaKeyPair(
       Base64.getEncoder().encodeToString(keyPair.getPublic().getEncoded()),
       Base64.getEncoder().encodeToString(keyPair.getPrivate().getEncoded())
@@ -46,15 +41,13 @@ public class RsaUtils {
   /**
    * 使用公钥加密字符串。
    *
-   * @param raw       原始字符串
+   * @param raw 需要加密的原始字符串，使用 UTF-8 编码
    * @param publicKey Base64 公钥字符串
    * @return Base64 编码的密文
    */
   public static String encrypt(final String raw, final String publicKey) {
-    // 获取加密 `Cipher` 实例
     final Cipher encryptCipher = getEncryptCipher(publicKey);
 
-    // 加密
     final byte[] messageBytes = raw.getBytes(StandardCharsets.UTF_8);
     final byte[] bytes;
 
@@ -64,25 +57,20 @@ public class RsaUtils {
       throw new RuntimeException(e);
     }
 
-    // 使用 Base64 编码显示加密结果
     return Base64.getEncoder().encodeToString(bytes);
   }
 
   /**
    * 使用私钥解密字符串。
    *
-   * @param encrypted  密文
+   * @param encrypted 需要解密的密文
    * @param privateKey Base64 私钥字符串
-   * @return 原始字符串
+   * @return UTF-8 编码的原始字符串
    */
   public static String decrypt(final String encrypted, final String privateKey) {
-    // 获取解密 `Cipher` 实例
     final Cipher decryptCipher = getDecryptCipher(privateKey);
 
-    // 使用 Base64 解码密文
     final byte[] encryptedBytes = Base64.getDecoder().decode(encrypted);
-
-    // 解密
     final byte[] bytes;
 
     try {
@@ -91,12 +79,11 @@ public class RsaUtils {
       throw new RuntimeException(e);
     }
 
-    // 返回解密结果字符串
     return new String(bytes, StandardCharsets.UTF_8);
   }
 
   /**
-   * 从 Base64 公钥字符串中获取公钥。
+   * 从 Base64 公钥字符串中解析出公钥。
    *
    * @param base64PublicKey Base64 公钥字符串
    * @return 公钥
@@ -115,7 +102,7 @@ public class RsaUtils {
   }
 
   /**
-   * 从 Base64 私钥字符串中获取私钥。
+   * 从 Base64 私钥字符串中解析出私钥。
    *
    * @param base64PrivateKey Base64 私钥字符串
    * @return 私钥

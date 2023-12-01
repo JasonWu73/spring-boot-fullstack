@@ -30,9 +30,9 @@ public class OperationLogService {
     final GetLogParam logParam
   ) {
     // 设置模糊查询参数
-    logParam.setClientIp(StrUtils.toNullableLikeValue(logParam.getClientIp()));
-    logParam.setUsername(StrUtils.toNullableLikeValue(logParam.getUsername()));
-    logParam.setMessage(StrUtils.toNullableLikeValue(logParam.getMessage()));
+    logParam.setClientIp(StrUtils.toLikeValue(logParam.getClientIp()));
+    logParam.setUsername(StrUtils.toLikeValue(logParam.getUsername()));
+    logParam.setMessage(StrUtils.toLikeValue(logParam.getMessage()));
 
     // 从数据库中查询符合条件的操作日志列表
     final List<OperationLog> list = operationLogMapper.selectByQueryLimit(
