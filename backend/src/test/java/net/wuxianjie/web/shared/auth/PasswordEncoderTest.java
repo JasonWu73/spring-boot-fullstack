@@ -19,6 +19,7 @@ class PasswordEncoderTest {
     final String hashedPassword = passwordEncoder.encode(rawPassword);
 
     Assertions.assertThat(hashedPassword).isNotBlank();
+
     log.info("原密码: {}\n哈希密码: {}", rawPassword, hashedPassword);
   }
 }

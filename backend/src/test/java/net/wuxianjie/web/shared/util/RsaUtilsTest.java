@@ -21,6 +21,7 @@ class RsaUtilsTest {
 
     Assertions.assertThat(keyPair.publicKey()).isNotBlank().isBase64();
     Assertions.assertThat(keyPair.privateKey()).isNotBlank().isBase64();
+
     log.info("公钥: {}\n私钥: {}", keyPair.publicKey(), keyPair.privateKey());
   }
 
@@ -30,6 +31,7 @@ class RsaUtilsTest {
     final String decrypted = RsaUtils.decrypt(encrypted, PRIVATE_KEY);
 
     Assertions.assertThat(decrypted).isEqualTo(RAW);
+
     log.info("原文: {}\n密文: {}", RAW, encrypted);
   }
 

@@ -35,7 +35,7 @@
       <version>${jasypt.version}</version>
     </dependency>
 
-    <!-- Lombok：通过注解的方式来简化某些样板代码 -->
+    <!-- Lombok：通过注解的方式来简化样板代码，尤其是 POJO 类 -->
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
@@ -66,7 +66,7 @@
       <artifactId>spring-boot-starter-aop</artifactId>
     </dependency>
 
-    <!-- 元数据工具：支持配置属性的自动补全、配置提示和文档化支持 -->
+    <!-- 元数据工具：支持 `application.yml` 中配置属性的自动补全、配置提示和文档化支持 -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-configuration-processor</artifactId>
@@ -127,16 +127,16 @@
 
         ```
         mvn jasypt:encrypt-value \
-        -Djasypt.encryptor.password=wxj#secret_ \
-        -Djasypt.plugin.value=pass123
+          -Djasypt.encryptor.password=wxj#secret_ \
+          -Djasypt.plugin.value=pass123
         ```
 
         2. 解密字符串：
 
         ```
         mvn jasypt:decrypt-value \
-        -Djasypt.encryptor.password=wxj#secret_ \
-        -Djasypt.plugin.value=KOTlCZ7eoNB0p1NfdIyj/c+k5cA3KgVm5e+Wee0EuU4LaI6WfGOau9PCwCqJxZ0I
+          -Djasypt.encryptor.password=wxj#secret_ \
+          -Djasypt.plugin.value=KOTlCZ7eoNB0p1NfdIyj/c+k5cA3KgVm5e+Wee0EuU4LaI6WfGOau9PCwCqJxZ0I
         ```
 
         3. 加密 Spring Boot 配置文件中属性值（`DEC(raw)` -> `ENC(encrypted)`）：
@@ -149,8 +149,8 @@
 
         ```
         mvn jasypt:reencrypt \
-        -Djasypt.plugin.old.password=wxj#secret_ \
-        -Djasypt.encryptor.password=new-wxj#secret_
+          -Djasypt.plugin.old.password=wxj#secret_ \
+          -Djasypt.encryptor.password=new-wxj#secret_
         ```
 
         3.2 解密并打印 Spring Boot 配置文件内容：
