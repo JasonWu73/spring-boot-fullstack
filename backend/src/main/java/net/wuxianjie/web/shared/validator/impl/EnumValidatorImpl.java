@@ -11,22 +11,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 实现枚举值验证注解的处理逻辑。
+ * 实现 {@link EnumValidator} 注解的验证逻辑。
  **/
 @Slf4j
 public class EnumValidatorImpl implements ConstraintValidator<EnumValidator, Object> {
 
   /**
-   * 需要验证的枚举值所对应的方法名。
+   * 枚举类中返回所对应验证值的方法名。
    */
   public static final String METHOD_NAME = "getCode";
 
-  private boolean isPassed = false;
-
-  private final List<Object> values = new ArrayList<>();
+  private boolean isPassed;
+  private List<Object> values;
 
   @Override
   public void initialize(final EnumValidator enumValidator) {
+    isPassed = false;
+    values = new ArrayList<>();
     final Class<? extends Enum<?>> enumClass = enumValidator.value();
 
     if (!enumClass.isEnum()) {
@@ -35,9 +36,9 @@ public class EnumValidatorImpl implements ConstraintValidator<EnumValidator, Obj
       return;
     }
 
-    final Enum<?>[] enumConstants = enumClass.getEnumConstants();
+    final Enum<?>[] enums = enumClass.getEnumConstants();
 
-    for (final Enum<?> theEnum : enumConstants) {
+    for (final Enum<?> theEnum : enums) {
       try {
         final Method method = theEnum.getClass().getDeclaredMethod(METHOD_NAME);
         method.setAccessible(true);

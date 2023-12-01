@@ -12,9 +12,11 @@ import java.lang.annotation.Target;
 import static java.lang.annotation.ElementType.*;
 
 /**
- * 枚举值验证注解（需要枚举值对应的方法名为 {@value EnumValidatorImpl#METHOD_NAME}）。
- *
- * <p>注意：{@code null} 值被认为是合法的。
+ * 枚举值验证注解，即用枚举类验证值是否合法。
+ * <p>
+ * 前提：作为 {@code value} 值的枚举类存在名为 {@value EnumValidatorImpl#METHOD_NAME}）的方法，且该方法的返回值就是需要验证的值。
+ * <p>
+ * 注意：{@code null} 值被认为是合法的。
  **/
 @Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE})
 @Retention(RetentionPolicy.RUNTIME)
