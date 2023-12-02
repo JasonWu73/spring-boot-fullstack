@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * 操作日志相关业务逻辑。
+ * 操作日志业务逻辑实现。
  */
 @Service
 @RequiredArgsConstructor
@@ -22,33 +22,33 @@ public class OperationLogService {
    * 获取操作日志分页列表。
    *
    * @param paginationParam 分页参数
-   * @param logParam        查询参数
+   * @param logParam 查询参数
    * @return 操作日志分页列表
    */
   public PaginationResult<OperationLog> getLogs(
     final PaginationParam paginationParam,
     final GetLogParam logParam
   ) {
-    // 设置模糊查询参数
-    logParam.setClientIp(StrUtils.toLikeValue(logParam.getClientIp()));
-    logParam.setUsername(StrUtils.toLikeValue(logParam.getUsername()));
-    logParam.setMessage(StrUtils.toLikeValue(logParam.getMessage()));
+    setFuzzyQuery(logParam);
 
-    // 从数据库中查询符合条件的操作日志列表
     final List<OperationLog> list = operationLogMapper.selectByQueryLimit(
       paginationParam,
       logParam
     );
 
-    // 从数据库中查询符合条件的操作日志总数
     final long total = operationLogMapper.countByQuery(logParam);
 
-    // 返回操作日志分页列表
     return new PaginationResult<>(
       paginationParam.getPageNum(),
       paginationParam.getPageSize(),
       total,
       list
     );
+  }
+
+  private void setFuzzyQuery(final GetLogParam logParam) {
+    logParam.setClientIp(StrUtils.toLikeValue(logParam.getClientIp()));
+    logParam.setUsername(StrUtils.toLikeValue(logParam.getUsername()));
+    logParam.setMessage(StrUtils.toLikeValue(logParam.getMessage()));
   }
 }

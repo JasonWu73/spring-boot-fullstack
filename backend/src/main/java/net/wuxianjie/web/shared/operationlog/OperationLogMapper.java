@@ -15,9 +15,16 @@ public interface OperationLogMapper {
 
   /**
    * 根据查询条件获取操作日志分页列表。
+   * <p>
+   * 排序规则：
+   *
+   * <ul>
+   *   <li>由分页参数决定是否按照某个列进行排序</li>
+   *   <li>支持排序的列有：请求时间</li>
+   * </ul>
    *
    * @param paginationParam 分页参数
-   * @param logParam        查询条件
+   * @param logParam 查询条件
    * @return 操作日志分页列表
    */
   List<OperationLog> selectByQueryLimit(

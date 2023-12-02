@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 操作日志相关接口。
+ * 操作日志 API。
  */
 @RestController
 @RequestMapping("/api/v1/operation-logs")
@@ -22,9 +22,11 @@ public class OperationLogController {
 
   /**
    * 获取操作日志分页列表。
+   * <p>
+   * 权限要求：管理员。
    *
    * @param paginationParam 分页参数
-   * @param logParam        查询参数
+   * @param logParam 查询参数
    * @return 操作日志分页列表
    */
   @Admin

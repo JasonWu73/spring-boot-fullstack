@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * 身份验证相关 API。
+ * 身份验证 API。
  */
 @RestController
 @RequestMapping("/api/v1/auth")

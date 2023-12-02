@@ -6,11 +6,12 @@
     id="selectByQueryLimit"
     resultType="net.wuxianjie.web.shared.operationlog.OperationLog"
   >
-    SELECT id,
-           requested_at as requestedAt,
-           client_ip as clientIp,
-           username,
-           message
+    SELECT
+      id,
+      requested_at as requestedAt,
+      client_ip as clientIp,
+      username,
+      message
     FROM operation_log
     <include refid="whereQuery" />
     <if test="p.sortColumn != null and p.sortColumn == 'requestedAt'">
@@ -42,13 +43,17 @@
   </sql>
 
   <insert id="insert">
-    INSERT INTO operation_log (requested_at,
-                               client_ip,
-                               username,
-                               message)
-    VALUES (#{requestedAt},
-            #{clientIp},
-            #{username},
-            #{message})
+    INSERT INTO operation_log (
+      requested_at,
+      client_ip,
+      username,
+      message
+    )
+    VALUES (
+      #{requestedAt},
+      #{clientIp},
+      #{username},
+      #{message}
+    )
   </insert>
 </mapper>
