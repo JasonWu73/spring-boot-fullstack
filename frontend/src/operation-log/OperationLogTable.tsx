@@ -94,8 +94,7 @@ function OperationLogTable({
       }}
       onPaginate={handlePaginate}
       sortColumn={{
-        id:
-          searchParams.get(URL_QUERY_KEY_SORT_COLUMN) === 'requestedAt' ? '请求时间' : '',
+        id: '请求时间',
         desc: searchParams.get(URL_QUERY_KEY_SORT_ORDER) !== 'asc'
       }}
       onSorting={handleSorting}
