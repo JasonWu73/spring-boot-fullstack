@@ -20,7 +20,7 @@ public interface MyBatisMapper {
   /**
    * 新增。
    *
-   * @param data 新增的数据
+   * @param data 需要新增的数据
    */
   void insertData(MyBatisData data);
 

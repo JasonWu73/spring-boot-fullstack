@@ -15,10 +15,10 @@ import java.util.Date;
  * MyBatis 测试。
  *
  * <ul>
- *   <li>MysQL 中的 `int unsigned` 映射为 Java `Long`</li>
+ *   <li>MysQL 中的 {@code int unsigned} 映射为 Java {@code Long}</li>
  *   <li>自定义的枚举值映射 {@link net.wuxianjie.web.shared.mybatis.EnumType}</li>
- *   <li>MySQL 中的 `datetime` 映射为 Java `Date` 或 `LocalDateTime`</li>
- *   <li>MySQL 中的 `date` 映射为 Java `LocalDate`</li>
+ *   <li>MySQL 中的 {@code datetime} 映射为 Java {@code Date} 或 {@code LocalDateTime}</li>
+ *   <li>MySQL 中的 {@code date} 映射为 Java {@code LocalDate}</li>
  * </ul>
  */
 @Data
