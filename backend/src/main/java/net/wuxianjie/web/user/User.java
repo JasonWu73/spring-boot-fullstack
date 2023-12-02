@@ -51,7 +51,7 @@ public class User {
   private AccountStatus status;
 
   /**
-   * 以英文逗号分隔的字符串。
+   * 以英文逗号分隔的权限字符串。
    */
   private String authorities;
 }

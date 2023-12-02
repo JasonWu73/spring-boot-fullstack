@@ -54,32 +54,6 @@
 					"response": []
 				},
 				{
-					"name": "退出登录",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{accessToken}}",
-								"type": "default"
-							}
-						],
-						"url": {
-							"raw": "{{BASE_URL}}/api/v1/auth/logout",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"auth",
-								"logout"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "刷新身份验证信息",
 					"event": [
 						{
@@ -123,6 +97,32 @@
 									"key": "refreshToken",
 									"value": "{{refreshToken}}"
 								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "退出登录",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/auth/logout",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"logout"
 							]
 						}
 					},
@@ -565,14 +565,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{BASE_URL}}/api/v1/test/mybatis",
+									"raw": "{{BASE_URL}}/api/v1/public/mybatis",
 									"host": [
 										"{{BASE_URL}}"
 									],
 									"path": [
 										"api",
 										"v1",
-										"test",
+										"public",
 										"mybatis"
 									]
 								}
@@ -601,14 +601,14 @@
 									}
 								},
 								"url": {
-									"raw": "{{BASE_URL}}/api/v1/test/mybatis",
+									"raw": "{{BASE_URL}}/api/v1/public/mybatis",
 									"host": [
 										"{{BASE_URL}}"
 									],
 									"path": [
 										"api",
 										"v1",
-										"test",
+										"public",
 										"mybatis"
 									]
 								}
@@ -637,14 +637,14 @@
 									}
 								},
 								"url": {
-									"raw": "{{BASE_URL}}/api/v1/test/mybatis",
+									"raw": "{{BASE_URL}}/api/v1/public/mybatis",
 									"host": [
 										"{{BASE_URL}}"
 									],
 									"path": [
 										"api",
 										"v1",
-										"test",
+										"public",
 										"mybatis"
 									]
 								}
@@ -662,14 +662,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{BASE_URL}}/api/v1/test/redis/lock",
+									"raw": "{{BASE_URL}}/api/v1/public/redis/lock",
 									"host": [
 										"{{BASE_URL}}"
 									],
 									"path": [
 										"api",
 										"v1",
-										"test",
+										"public",
 										"redis",
 										"lock"
 									]
@@ -688,14 +688,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{BASE_URL}}/api/v1/test/api-call/params",
+									"raw": "{{BASE_URL}}/api/v1/public/api-call/params",
 									"host": [
 										"{{BASE_URL}}"
 									],
 									"path": [
 										"api",
 										"v1",
-										"test",
+										"public",
 										"api-call",
 										"params"
 									]
@@ -709,14 +709,14 @@
 								"method": "POST",
 								"header": [],
 								"url": {
-									"raw": "{{BASE_URL}}/api/v1/test/api-call/form",
+									"raw": "{{BASE_URL}}/api/v1/public/api-call/form",
 									"host": [
 										"{{BASE_URL}}"
 									],
 									"path": [
 										"api",
 										"v1",
-										"test",
+										"public",
 										"api-call",
 										"form"
 									]
@@ -730,14 +730,14 @@
 								"method": "POST",
 								"header": [],
 								"url": {
-									"raw": "{{BASE_URL}}/api/v1/test/api-call/upload",
+									"raw": "{{BASE_URL}}/api/v1/public/api-call/upload",
 									"host": [
 										"{{BASE_URL}}"
 									],
 									"path": [
 										"api",
 										"v1",
-										"test",
+										"public",
 										"api-call",
 										"upload"
 									]
@@ -751,14 +751,14 @@
 								"method": "POST",
 								"header": [],
 								"url": {
-									"raw": "{{BASE_URL}}/api/v1/test/api-call/json",
+									"raw": "{{BASE_URL}}/api/v1/public/api-call/json",
 									"host": [
 										"{{BASE_URL}}"
 									],
 									"path": [
 										"api",
 										"v1",
-										"test",
+										"public",
 										"api-call",
 										"json"
 									]
@@ -777,14 +777,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{BASE_URL}}/api/v1/test/params?name=GET 传参&num=0&type=1&dateTime=2023-02-28 11:11:11",
+									"raw": "{{BASE_URL}}/api/v1/public/params?name=GET 传参&num=0&type=1&dateTime=2023-02-28 11:11:11",
 									"host": [
 										"{{BASE_URL}}"
 									],
 									"path": [
 										"api",
 										"v1",
-										"test",
+										"public",
 										"params"
 									],
 									"query": [
@@ -840,14 +840,14 @@
 									]
 								},
 								"url": {
-									"raw": "{{BASE_URL}}/api/v1/test/params",
+									"raw": "{{BASE_URL}}/api/v1/public/params",
 									"host": [
 										"{{BASE_URL}}"
 									],
 									"path": [
 										"api",
 										"v1",
-										"test",
+										"public",
 										"params"
 									]
 								}
@@ -885,14 +885,14 @@
 									]
 								},
 								"url": {
-									"raw": "{{BASE_URL}}/api/v1/test/params",
+									"raw": "{{BASE_URL}}/api/v1/public/params",
 									"host": [
 										"{{BASE_URL}}"
 									],
 									"path": [
 										"api",
 										"v1",
-										"test",
+										"public",
 										"params"
 									]
 								}
@@ -927,14 +927,14 @@
 									]
 								},
 								"url": {
-									"raw": "{{BASE_URL}}/api/v1/test/params/upload",
+									"raw": "{{BASE_URL}}/api/v1/public/params/upload",
 									"host": [
 										"{{BASE_URL}}"
 									],
 									"path": [
 										"api",
 										"v1",
-										"test",
+										"public",
 										"params",
 										"upload"
 									]
@@ -964,14 +964,14 @@
 									}
 								},
 								"url": {
-									"raw": "{{BASE_URL}}/api/v1/test/params/json",
+									"raw": "{{BASE_URL}}/api/v1/public/params/json",
 									"host": [
 										"{{BASE_URL}}"
 									],
 									"path": [
 										"api",
 										"v1",
-										"test",
+										"public",
 										"params",
 										"json"
 									]
@@ -989,13 +989,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{BASE_URL}}/api/v1/version",
+					"raw": "{{BASE_URL}}/api/v1/public/version",
 					"host": [
 						"{{BASE_URL}}"
 					],
 					"path": [
 						"api",
 						"v1",
+						"public",
 						"version"
 					]
 				}

@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * 用户相关接口。
+ * 用户 API。
  */
 @RestController
 @RequiredArgsConstructor
@@ -22,8 +22,8 @@ public class UserController {
 
   /**
    * 获取当前用户数据。
-   *
-   * <p>主要用于用户查看自己的个人资料。
+   * <p>
+   * 主要用于用户查看自己的个人资料。
    */
   @GetMapping("/me")
   public UserInfo getMe() {
@@ -32,8 +32,8 @@ public class UserController {
 
   /**
    * 更新当前用户信息。
-   *
-   * <p>主要用于用户更新自己的个人资料。
+   * <p>
+   * 主要用于用户更新自己的个人资料。
    *
    * @param param 更新当前用户信息参数
    * @return 204 No Content
@@ -46,9 +46,11 @@ public class UserController {
 
   /**
    * 获取用户分页列表。
+   * <p>
+   * 权限要求：管理员。
    *
    * @param paginationParam 分页参数
-   * @param userParam       用户查询参数
+   * @param userParam 用户查询参数
    * @return 用户分页列表
    */
   @Admin
@@ -62,6 +64,8 @@ public class UserController {
 
   /**
    * 获取用户详情。
+   * <p>
+   * 权限要求：管理员。
    *
    * @param userId 用户 ID
    * @return 用户详情
@@ -74,6 +78,8 @@ public class UserController {
 
   /**
    * 新增用户。
+   * <p>
+   * 权限要求：管理员。
    *
    * @param param 新增用户参数
    * @return 204 No Content
@@ -87,9 +93,11 @@ public class UserController {
 
   /**
    * 更新用户。
+   * <p>
+   * 权限要求：管理员。
    *
-   * @param userId 用户 ID
-   * @param param  更新用户参数
+   * @param userId 需要更新数据的用户 ID
+   * @param param 更新用户参数
    * @return 204 No Content
    */
   @Admin
@@ -104,9 +112,11 @@ public class UserController {
 
   /**
    * 重置用户密码。
+   * <p>
+   * 权限要求：超级管理员。
    *
-   * @param userId 用户 ID
-   * @param param  重置密码参数
+   * @param userId 需要重置密码的用户 ID
+   * @param param 重置密码参数
    * @return 204 No Content
    */
   @Root
@@ -121,9 +131,11 @@ public class UserController {
 
   /**
    * 禁用/启用用户。
+   * <p>
+   * 权限要求：管理员。
    *
-   * @param userId 用户 ID
-   * @param param  更新用户状态参数
+   * @param userId 需要更新数据的用户 ID
+   * @param param 更新用户状态参数
    * @return 204 No Content
    */
   @Admin
@@ -138,8 +150,10 @@ public class UserController {
 
   /**
    * 删除用户。
+   * <p>
+   * 权限要求：超级管理员。
    *
-   * @param userId 用户 ID
+   * @param userId 需要删除的用户 ID
    * @return 204 No Content
    */
   @Root

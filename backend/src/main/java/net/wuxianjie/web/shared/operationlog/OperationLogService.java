@@ -20,6 +20,8 @@ public class OperationLogService {
 
   /**
    * 获取操作日志分页列表。
+   * <p>
+   * 需要构造符合数据库 Like 条件的模糊查询参数。
    *
    * @param paginationParam 分页参数
    * @param logParam 查询参数

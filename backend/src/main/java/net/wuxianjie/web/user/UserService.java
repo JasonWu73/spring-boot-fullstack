@@ -21,7 +21,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * 用户相关业务逻辑。
+ * 用户业务逻辑实现。
  */
 @Service
 @RequiredArgsConstructor
@@ -33,14 +33,12 @@ public class UserService {
 
   /**
    * 获取当前用户数据。
-   *
-   * <p>主要用于用户查看自己的个人资料。
+   * <p>
+   * 从 Spring Security 中获取当前用户的 id，然后从数据库中查询用户数据并返回。
    */
   public UserInfo getMe() {
-    // 从 Spring Security 中获取当前用户的 id
     final long userId = AuthUtils.getCurrentUser().orElseThrow().userId();
 
-    // 从数据库中查询用户信息并返回
     return Optional
       .ofNullable(userMapper.selectInfoById(userId))
       .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "用户不存在"));
@@ -48,53 +46,45 @@ public class UserService {
 
   /**
    * 更新当前用户信息。
-   *
-   * <p>主要用于用户更新自己的个人资料。
+   * <p>
+   * 从 Spring Security 中获取当前用户的 id，然后从数据库中查询用户数据并更新。
+   * <p>
+   * 如果更新了密码，则需要重新登录。
    *
    * @param param 更新当前用户信息参数
    */
   public void updateMe(final UpdateMeParam param) {
-    // 从 Spring Security 中获取当前用户的 id
     final long userId = AuthUtils.getCurrentUser().orElseThrow().userId();
 
-    // 从数据库中查询当前用户数据
     final User user = Optional
       .ofNullable(userMapper.selectById(userId))
       .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "用户不存在"));
 
-    // 更新用户字段
     user.setUpdatedAt(LocalDateTime.now());
     user.setNickname(param.getNickname());
 
-    // 检查是否需要更新密码
     final boolean needsUpdatePassword = checkIfNeedsUpdatePassword(
       param.getOldPassword(),
       param.getNewPassword()
     );
 
     if (needsUpdatePassword) {
-      // 解密密码
       final String oldPassword = decryptPassword(param.getOldPassword());
       final String newPassword = decryptPassword(param.getNewPassword());
 
-      // 检查新密码是否与旧密码相同
       if (Objects.equals(newPassword, oldPassword)) {
         throw new ApiException(HttpStatus.BAD_REQUEST, "新密码不能与旧密码相同");
       }
 
-      // 检查旧密码是否正确
       if (!passwordEncoder.matches(oldPassword, user.getHashedPassword())) {
         throw new ApiException(HttpStatus.BAD_REQUEST, "旧密码错误");
       }
 
-      // 将明文密码进行 Hash 计算后再更新用户密码字段
       user.setHashedPassword(passwordEncoder.encode(newPassword));
     }
 
-    // 更新数据库中的用户数据
     userMapper.updateById(user);
 
-    // 在密码更新后，需要重新登录
     if (needsUpdatePassword) {
       authService.logout();
     }
@@ -102,6 +92,8 @@ public class UserService {
 
   /**
    * 获取用户分页列表。
+   * <p>
+   * 需要构造符合数据库 Like 条件的模糊查询参数。
    *
    * @param paginationParam 分页参数
    * @param userParam       用户查询参数
@@ -111,17 +103,15 @@ public class UserService {
     final PaginationParam paginationParam,
     final GetUserParam userParam
   ) {
-    // 设置模糊查询参数
-    userParam.setUsername(StrUtils.toLikeValue(userParam.getUsername()));
-    userParam.setNickname(StrUtils.toLikeValue(userParam.getNickname()));
+    setFuzzyQuery(userParam);
 
-    // 从数据库中查询符合条件的用户列表
-    final List<UserInfo> list = userMapper.selectByQueryLimit(paginationParam, userParam);
+    final List<UserInfo> list = userMapper.selectByQueryLimit(
+      paginationParam,
+      userParam
+    );
 
-    // 从数据库中查询符合条件的用户总数
     final long total = userMapper.countByQuery(userParam);
 
-    // 返回用户分页列表
     return new PaginationResult<>(
       paginationParam.getPageNum(),
       paginationParam.getPageSize(),
@@ -137,7 +127,6 @@ public class UserService {
    * @return 用户详情
    */
   public UserInfo getUserInfo(final long userId) {
-    // 从数据库中查询用户详情并返回
     return Optional
       .ofNullable(userMapper.selectInfoById(userId))
       .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "用户不存在"));
@@ -146,10 +135,14 @@ public class UserService {
   /**
    * 新增用户。
    *
+   * <ul>
+   *   <li>不允许创建相同用户名的用户</li>
+   *   <li>不允许创建超级管理员账号</li>
+   * </ul>
+   *
    * @param param 新增用户参数
    */
   public void addUser(final AddUserParam param) {
-    // 检查用户名是否已存在
     final boolean usernameExists = Optional
       .ofNullable(userMapper.selectByUsername(param.getUsername()))
       .isPresent();
@@ -158,121 +151,103 @@ public class UserService {
       throw new ApiException(HttpStatus.CONFLICT, "用户名已存在");
     }
 
-    // 构造需要保存的用户数据
     final User user = new User();
     user.setCreatedAt(LocalDateTime.now());
     user.setUpdatedAt(LocalDateTime.now());
     user.setRemark(param.getRemark());
     user.setUsername(param.getUsername());
     user.setNickname(param.getNickname());
-
-    // 解密密码
-    final String password = decryptPassword(param.getPassword());
-
-    // 将明文密码进行 Hash 计算后再保存
-    user.setHashedPassword(passwordEncoder.encode(password));
-
-    // 设置账号状态
     user.setStatus(AccountStatus.ENABLED);
-
-    // 保存用户功能权限
     user.setAuthorities(checkAuthorities(param.getAuthorities(), false));
 
-    // 保存用户至数据库
+    final String password = decryptPassword(param.getPassword());
+    user.setHashedPassword(passwordEncoder.encode(password));
+
     userMapper.insert(user);
   }
 
   /**
    * 更新用户。
    *
-   * @param userId 用户 ID
+   * <ul>
+   *   <li>不允许更新超级管理员账号的权限</li>
+   * </ul>
+   *
+   * @param userId 需要更新数据的用户 ID
    * @param param  更新用户参数
    */
   public void updateUser(final long userId, final UpdateUserParam param) {
-    // 从数据库中查询用户数据
     final User user = Optional
       .ofNullable(userMapper.selectById(userId))
       .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "用户不存在"));
 
-    // 检查是否为 `root` 账号
     final String newAuthorities = checkAuthorities(param.getAuthorities(), true);
 
-    if (isRootAccount(user.getAuthorities())
-      && !Objects.equals(user.getAuthorities(), newAuthorities)
+    if (
+      isRootAccount(user.getAuthorities()) &&
+      !Objects.equals(user.getAuthorities(), newAuthorities)
     ) {
       throw new ApiException(HttpStatus.FORBIDDEN, "超级管理员账号不允许再调整权限");
     }
 
-    // 更新用户字段
     user.setUpdatedAt(LocalDateTime.now());
     user.setNickname(param.getNickname());
     user.setAuthorities(newAuthorities);
     user.setRemark(param.getRemark());
 
-    // 更新数据库中的用户数据
     userMapper.updateById(user);
   }
 
   /**
    * 重置用户密码。
+   * <p>
+   * 重置密码后，需要重新登录。
    *
-   * @param userId 用户 ID
+   * @param userId 需要重置密码的用户 ID
    * @param param  重置密码参数
    */
   public void resetPassword(final long userId, final ResetPasswordParam param) {
-    // 解密密码
     final String password = decryptPassword(param.getPassword());
 
-    // 从数据库中查询用户数据
     final User user = Optional
       .ofNullable(userMapper.selectById(userId))
       .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "用户不存在"));
 
-    // 更新用户字段
     user.setUpdatedAt(LocalDateTime.now());
-
-    // 将明文密码进行 Hash 计算后再保存
     user.setHashedPassword(passwordEncoder.encode(password));
 
-    // 更新数据库中的用户数据
     userMapper.updateById(user);
 
-    // 在密码更新后，需要重新登录
     authService.logout(user.getUsername());
   }
 
   /**
    * 更新用户状态。
    *
-   * @param userId 用户 ID
-   * @param param  更新用户状态参数
+   * @param userId 需要更新数据的用户 ID
+   * @param param 更新用户状态参数
    */
   public void updateUserStatus(final long userId, final UpdateUserStatusParam param) {
-    // 从数据库中查询用户数据
     final User user = Optional
       .ofNullable(userMapper.selectById(userId))
       .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "用户不存在"));
 
-    // 更新用户字段
     user.setUpdatedAt(LocalDateTime.now());
     user.setStatus(AccountStatus.resolve(param.getStatus()).orElseThrow());
 
-    // 更新数据库中的用户数据
     userMapper.updateById(user);
   }
 
   /**
    * 删除用户。
    *
-   * @param userId 用户 ID
+   * @param userId 需要删除的用户 ID
    */
   public void deleteUser(final long userId) {
-    // 从数据库中查询用户数据
     final User user = Optional
       .ofNullable(userMapper.selectById(userId))
       .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "用户不存在"));
 
-    // 从数据库中删除用户数据
     userMapper.deleteById(user.getId());
   }
 
@@ -336,6 +311,11 @@ public class UserService {
       })
       .map(String::trim)
       .collect(Collectors.joining(","));
+  }
+
+  private void setFuzzyQuery(final GetUserParam userParam) {
+    userParam.setUsername(StrUtils.toLikeValue(userParam.getUsername()));
+    userParam.setNickname(StrUtils.toLikeValue(userParam.getNickname()));
   }
 
   private static boolean isRootAccount(final String authorities) {

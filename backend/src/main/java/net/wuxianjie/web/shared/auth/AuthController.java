@@ -31,17 +31,6 @@ public class AuthController {
   }
 
   /**
-   * 退出登录。
-   *
-   * @return 204 No Content
-   */
-  @DeleteMapping("/logout")
-  public ResponseEntity<Void> logout() {
-    authService.logout();
-    return ResponseEntity.noContent().build();
-  }
-
-  /**
    * 刷新身份验证信息。
    *
    * @param refreshToken 刷新令牌，用于刷新身份验证信息的令牌
@@ -50,5 +39,16 @@ public class AuthController {
   @PostMapping("/refresh/{refreshToken}")
   public AuthResult refresh(@PathVariable final String refreshToken) {
     return authService.refresh(refreshToken);
+  }
+
+  /**
+   * 退出登录。
+   *
+   * @return 204 No Content
+   */
+  @DeleteMapping("/logout")
+  public ResponseEntity<Void> logout() {
+    authService.logout();
+    return ResponseEntity.noContent().build();
   }
 }

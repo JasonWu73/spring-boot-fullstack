@@ -11,22 +11,18 @@ import net.wuxianjie.web.shared.exception.ApiException;
 import net.wuxianjie.web.shared.json.JsonConverter;
 import net.wuxianjie.web.shared.util.RsaUtils;
 import net.wuxianjie.web.shared.util.StrUtils;
-import org.springframework.data.redis.connection.RedisStringCommands;
-import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.core.types.Expiration;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 身份验证实现。
+ * 身份验证业务逻辑实现。
  */
 @Service
 @RequiredArgsConstructor
@@ -36,7 +32,7 @@ public class AuthServiceImpl implements AuthService {
   // public static final String PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArbGWjwR4QAjBiJwMi5QNe+X8oPEFBfX3z5K6dSv9tU2kF9SVkf8uGGJwXeihQQ0o9aUk42zO58VL3MqDOaWHU6wm52pN9ZBbH0XJefqxtgyXrYAm279MU6EY4sywkUT9KOOgk/qDHB93IoEDL1fosYc7TRsAONuMGiyTJojn1FCPtJbbj7J56yCaFhUpuDunBFETQ32usRaK4KCWx9w0HZ6WmbX8QdcJkVjJ2FCLuGkvbKmUQ5h/GXXnNgbxIn3z2lX7snGRMhIFvW0Qjkn8YmOq6HUj7TU0jKm9VhZirVQXh8trvi2ivY7s6yJoF8N72Ekn94WSpSRVeC0XpXf2LQIDAQAB";
 
   /**
-   * 私钥用于后端解密由前端传入用户名和密码，不要泄露。
+   * 私钥用于后端解密由前端传入的用户名和密码，不要泄露。
    */
   public static final String PRIVATE_KEY = "MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCtsZaPBHhACMGInAyLlA175fyg8QUF9ffPkrp1K/21TaQX1JWR/y4YYnBd6KFBDSj1pSTjbM7nxUvcyoM5pYdTrCbnak31kFsfRcl5+rG2DJetgCbbv0xToRjizLCRRP0o46CT+oMcH3cigQMvV+ixhztNGwA424waLJMmiOfUUI+0ltuPsnnrIJoWFSm4O6cEURNDfa6xForgoJbH3DQdnpaZtfxB1wmRWMnYUIu4aS9sqZRDmH8Zdec2BvEiffPaVfuycZEyEgW9bRCOSfxiY6rodSPtNTSMqb1WFmKtVBeHy2u+LaK9juzrImgXw3vYSSf3hZKlJFV4LReld/YtAgMBAAECggEARUFg6cd7dvTGzgSCkAjJU5SBJV7UhOrtEyvLArs2ntrFSecueBcKNxjQ+vCtkzV/FmrxiWiyGwG03OU2a37PtZIXtP/S883KN27pBaTqxM7Cj6BgXhApi9LZDF1XLaUXV/1i4n3pVwZIx04vieoAUwC7qWPRs9n+Q9VwGtZNsX6Baxu1Le5qfg/zbRofODpLQa0XuLA8M5+ieBzwNrjrHvYQQ0GGaNxqvyoZaxx9SCBtvGwE8T0vHF+lXTYaotbazrtGT3OneWza4Qa0HRjgZKBHKyOzsZWpjiw8ISQxzpG0hD6o7+YeYpC3zt7ZLwuZOZOG0QPvzBioPvhDJP75tQKBgQDJtFlkeRanpF054rKLm32Udm4B1E43U/fjwgAM+X3jUN3PaXmpNKUFQTtB+symi20eTpw6HDumRNCi5q644wyjdF2nVDHi6lcAl63NLT0x7+431IHlrqd4UGnzh+T8pN3yiNvqlUrDYpXoKtSeRCJfbUCvLjwi8LHwzbbN7nOLRwKBgQDccv0bc+DL5N6JmfjMn7/851QKc4ugMrsJwZe/VE8Sxwop5dTBiTb1UXMAhUG+UMt03qtXav0b+3F5SFhZO/M+GhpVdVIPbyjPTjE/XUc+VBUIED+NT7vWbv+lTwcEpTwMdxTqrO1GHfURGWO0CiaPbkS6YVrn5sI71iQXe/YE6wKBgQDIBV64chPzPt1sL9Da/OD1vtOsYLsHxu8GHzYpp6gdKe4sZu5My3Xx1hRLg8g6R/13loD6Z1EHuyoiwRv3IMFBvn25F5c47SZF4iRqWThcMxBKsSP3ftF4UFYhOFvt5hhrESj0YgP36eW6i+6429wyQYdpsTHVfFcY8wcbBCH0tQKBgCp6LbMgfOxMyWSSOpKTJZdBq7vnz7uqiseyed7wC9x+ZcL0+i3glqpma1ZqVuSpBMscLL/HacX+iTrpabyoBJKuzOwykwFOVfq8AllHS/cClJrdJqG//12uPaxIsf1/KTbtqyYc9AtSsmn9Dm0el5eDk9Kl97I/kKWe+Y1c4WbJAoGBAKzMJSbxfDXpnwb48RWUAQK/o5b7Jyz2ZBmL9+UsoUG9hoqC9NngBOGR5NGE+xGJRfwBPyXZim4fL9hr7Xurw0cd39d86DikL+3l804thbSiegAQtHhn6Ko/UMjVTkPmjsdvY5OaWO2SQGhhzbfhaMqgiaUBOsQP4DAoJd5faQlu";
 
@@ -48,7 +44,7 @@ public class AuthServiceImpl implements AuthService {
   /**
    * 已登录用户在 Redis 中的键前缀。
    * <p>
-   * 用于清除旧的登录信息（{@link #ACCESS_TOKEN_KEY_PREFIX}），防止同一个用户不停地往 Redis 中写入登录信息。
+   * 用于清除旧的登录信息（{@link #ACCESS_TOKEN_KEY_PREFIX}），以防止同一个用户通过不停登录或刷新身份验证信息，从而不断往 Redis 中写入登录信息。
    */
   public static final String LOGGED_IN_KEY_PREFIX = "loggedIn:";
 
@@ -61,9 +57,24 @@ public class AuthServiceImpl implements AuthService {
   private final JsonConverter jsonConverter;
   private final UserMapper userMapper;
 
+  /**
+   * 登录。
+   *
+   * <ol>
+   *   <li>使用私钥解密传入的用户名和密码</li>
+   *   <li>验证用户账号是否已被禁用</li>
+   *   <li>验证密码是否正确</li>
+   *   <li>在身份验证通过后，删除旧的 {@link #ACCESS_TOKEN_KEY_PREFIX} 缓存，以防止同一个用户通过不断登录，从而不断往 Redis 中写入登录信息</li>
+   *   <li>生成新的访问令牌和刷新令牌</li>
+   *   <li>将登录信息写入 Spring Security Context，以便像 {@link net.wuxianjie.web.shared.operationlog.OperationLogAspect} 这样的 AOP 可以获取到当前登录用户的信息</li>
+   *   <li>将登录信息写入 Redis</li>
+   * </ol>
+   *
+   * @param param 登录参数
+   * @return 身份验证结果
+   */
   @Override
   public AuthResult login(final LoginParam param) {
-    // 解密用户名和密码
     final String username;
     final String password;
 
@@ -74,91 +85,120 @@ public class AuthServiceImpl implements AuthService {
       throw new ApiException(HttpStatus.UNAUTHORIZED, "用户名或密码错误", e);
     }
 
-    // 从数据库中查询用户信息
     final User user = Optional
       .ofNullable(userMapper.selectByUsername(username))
       .orElseThrow(() -> new ApiException(HttpStatus.UNAUTHORIZED, "用户名或密码错误"));
 
-    // 检查账号可用性
     checkUserUsability(user.getStatus());
 
-    // 检查密码是否正确
     if (!passwordEncoder.matches(password, user.getHashedPassword())) {
       throw new ApiException(HttpStatus.UNAUTHORIZED, "用户名或密码错误");
     }
 
-    // 身份验证通过，删除旧的登录缓存
-    deleteLoginCache(user.getUsername());
+    deleteAccessTokenCache(username);
 
-    // 生成访问令牌和刷新令牌
     final String accessToken = StrUtils.generateUuid();
     final String refreshToken = StrUtils.generateUuid();
 
-    // 将登录信息写入缓存中
     final CachedAuth auth = getCachedAuth(user, accessToken, refreshToken);
     saveLoginCache(auth);
 
-    // 返回响应数据
-    return getAuthResponse(accessToken, refreshToken, auth);
-  }
-
-  @Override
-  public void logout() {
-    // 从 Spring Security Context 中获取当前登录信息
-    final CachedAuth auth = AuthUtils.getCurrentUser().orElseThrow();
-
-    // 退出登录
-    logout(auth.username());
+    return getAuthResult(accessToken, refreshToken, auth);
   }
 
   /**
-   * 通过用户名退出登录。
+   * 刷新身份验证信息。
    *
-   * @param username 需要退出登录的用户名
+   * <ol>
+   *   <li>从 Spring Security Context 中获取当前登录信息</li>
+   *   <li>验证刷新令牌是否与缓存中的刷新停牌一致</li>
+   *   <li>在刷新令牌验证通过后，删除旧的 {@link #ACCESS_TOKEN_KEY_PREFIX} 缓存，以防止同一个用户通过不断刷新身份验证信息，从而不断往 Redis 中写入登录信息</li>
+   *   <li>验证用户账号是否已被禁用</li>
+   *   <li>生成新的访问令牌和刷新令牌</li>
+   *   <li>将登录信息写入 Spring Security Context，以便像 {@link net.wuxianjie.web.shared.operationlog.OperationLogAspect} 这样的 AOP 可以获取到当前登录用户的信息</li>
+   *   <li>将登录信息写入 Redis</li>
+   * </ol>
+   *
+   * @param refreshToken 刷新令牌
+   * @return 身份验证结果
    */
-  public void logout(final String username) {
-    // 删除登录缓存
-    deleteLoginCache(username);
-  }
-
   @Override
   public AuthResult refresh(final String refreshToken) {
-    // 从 Spring Security Context 中获取当前登录信息
     final CachedAuth oldAuth = AuthUtils.getCurrentUser().orElseThrow();
 
-    // 检查刷新令牌是否正确
     if (!Objects.equals(oldAuth.refreshToken(), refreshToken)) {
       throw new ApiException(HttpStatus.UNAUTHORIZED, "刷新令牌错误");
     }
 
-    // 身份验证通过，删除旧的登录缓存
-    deleteLoginCache(oldAuth.username());
+    deleteAccessTokenCache(oldAuth.username());
 
-    // 从数据库中查询用户信息
     final User user = Optional
       .ofNullable(userMapper.selectById(oldAuth.userId()))
       .orElseThrow(() -> new ApiException(HttpStatus.UNAUTHORIZED, "用户不存在"));
 
-    // 检查账号可用性
     checkUserUsability(user.getStatus());
 
-    // 生成新的访问令牌和刷新令牌
     final String newAccessToken = StrUtils.generateUuid();
     final String newRefreshToken = StrUtils.generateUuid();
 
-    // 将登录信息写入缓存中
     final CachedAuth newAuth = getCachedAuth(user, newAccessToken, newRefreshToken);
     saveLoginCache(newAuth);
 
-    // 返回响应数据
-    return getAuthResponse(newAccessToken, newRefreshToken, newAuth);
+    return getAuthResult(newAccessToken, newRefreshToken, newAuth);
   }
 
   /**
-   * 删除登录缓存。
+   * 退出登录。
    *
-   * @param username 需要删除登录缓存的用户名
+   * <ul>
+   *   <li>从 Spring Security Context 中获取当前登录信息</li>
+   *   <li>删除登录缓存</li>
+   * </ul>
    */
+  @Override
+  public void logout() {
+    final CachedAuth auth = AuthUtils.getCurrentUser().orElseThrow();
+    logout(auth.username());
+  }
+
+  /**
+   * 将指定用户名的用户从系统中退出登录。
+   *
+   * @param username 需要退出登录的用户名
+   */
+  public void logout(final String username) {
+    deleteLoginCache(username);
+  }
+
+  private void deleteAccessTokenCache(final String username) {
+    final String loggedInKey = LOGGED_IN_KEY_PREFIX + username;
+    final String accessToken = stringRedisTemplate.opsForValue().get(loggedInKey);
+
+    if (accessToken != null) {
+      stringRedisTemplate.delete(ACCESS_TOKEN_KEY_PREFIX + accessToken);
+    }
+  }
+
+  private void saveLoginCache(final CachedAuth auth) {
+    AuthUtils.setAuthenticatedContext(auth, request);
+
+    final String accessToken = auth.accessToken();
+
+    stringRedisTemplate.opsForValue().set(
+      LOGGED_IN_KEY_PREFIX + auth.username(),
+      accessToken,
+      TOKEN_EXPIRES_IN_SECONDS,
+      TimeUnit.SECONDS
+    );
+
+    stringRedisTemplate.opsForValue().set(
+      ACCESS_TOKEN_KEY_PREFIX + accessToken,
+      jsonConverter.toJson(auth),
+      TOKEN_EXPIRES_IN_SECONDS,
+      TimeUnit.SECONDS
+    );
+  }
+
   private void deleteLoginCache(final String username) {
     final String loggedInKey = LOGGED_IN_KEY_PREFIX + username;
     final String accessToken = stringRedisTemplate.opsForValue().get(loggedInKey);
@@ -169,41 +209,6 @@ public class AuthServiceImpl implements AuthService {
       ACCESS_TOKEN_KEY_PREFIX + accessToken,
       loggedInKey
     ));
-  }
-
-  /**
-   * 保存登录缓存。
-   *
-   * @param auth 登录信息
-   */
-  private void saveLoginCache(final CachedAuth auth) {
-    // 将登录信息写入 Spring Security Context
-    AuthUtils.setAuthenticatedContext(auth, request);
-
-    // 保存登录信息至 Redis
-    stringRedisTemplate.executePipelined((RedisCallback<?>) connection -> {
-      connection.stringCommands()
-        .set(
-          (ACCESS_TOKEN_KEY_PREFIX + auth.accessToken())
-            .getBytes(StandardCharsets.UTF_8),
-          jsonConverter.toJson(auth)
-            .getBytes(StandardCharsets.UTF_8),
-          Expiration.from(TOKEN_EXPIRES_IN_SECONDS, TimeUnit.SECONDS),
-          RedisStringCommands.SetOption.UPSERT
-        );
-
-      connection.stringCommands()
-        .set(
-          (LOGGED_IN_KEY_PREFIX + auth.username())
-            .getBytes(StandardCharsets.UTF_8),
-          auth.accessToken()
-            .getBytes(StandardCharsets.UTF_8),
-          Expiration.from(TOKEN_EXPIRES_IN_SECONDS, TimeUnit.SECONDS),
-          RedisStringCommands.SetOption.UPSERT
-        );
-
-      return null;
-    });
   }
 
   private void checkUserUsability(final AccountStatus status) {
@@ -229,7 +234,7 @@ public class AuthServiceImpl implements AuthService {
     );
   }
 
-  private static AuthResult getAuthResponse(
+  private static AuthResult getAuthResult(
     final String accessToken,
     final String refreshToken,
     final CachedAuth auth
