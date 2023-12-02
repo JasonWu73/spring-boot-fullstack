@@ -73,7 +73,7 @@ public class SecurityConfig {
    *
    * @param http Spring Security HTTP 配置对象
    * @return Spring Security 过滤器链
-   * @throws Exception 配置失败时抛出
+   * @throws Exception 配置错误时抛出
    */
   @Bean
   public SecurityFilterChain filterChain(final HttpSecurity http) throws Exception {

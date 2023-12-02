@@ -24,9 +24,7 @@ public class TokenAuthFilter extends OncePerRequestFilter {
   /**
    * 携带访问令牌（Access Token）的请求头值前缀：
    *
-   * <pre>{@code
-   *   "Authorization: Bearer {{accessToken}}"
-   * }</pre>
+   * <pre>{@code "Authorization: Bearer {{accessToken}}" }</pre>
    */
   private static final String BEARER_PREFIX = "Bearer ";
 
@@ -34,6 +32,21 @@ public class TokenAuthFilter extends OncePerRequestFilter {
 
   private final TokenAuth tokenAuth;
 
+  /**
+   * 执行身份验证。
+   *
+   * <ul>
+   *   <li>从 HTTP 请求头中获取访问令牌：{@code "Authorization: Bearer {{accessToken}}" }</li>
+   *   <li>对 {@code accessToken} 执行身份验证</li>
+   *   <li>在身份验证通过后，会将登录信息写入 Spring Security Context</li>
+   * </ul>
+   *
+   * @param request HTTP 请求对象
+   * @param response HTTP 响应对象
+   * @param filterChain 过滤器链
+   * @throws ServletException Servlet 执行错误时抛出
+   * @throws IOException IO 操作错误时抛出
+   */
   @Override
   protected void doFilterInternal(
     @NonNull final HttpServletRequest request,
