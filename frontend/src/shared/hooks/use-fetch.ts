@@ -1,6 +1,6 @@
 import React from 'react'
 
-import type { ApiRequest } from '@/shared/utils/http'
+import type { ApiRequest } from '@/shared/utils/fetch'
 
 type State<T> = {
   status?: number // HTTP 响应状态码
