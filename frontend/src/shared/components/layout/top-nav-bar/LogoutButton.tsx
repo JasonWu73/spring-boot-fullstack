@@ -3,7 +3,7 @@ import { LogOut } from 'lucide-react'
 
 import { useAuth } from '@/shared/auth/AuthProvider'
 import { Button } from '@/shared/components/ui/Button'
-import { useFetch } from '@/shared/hooks/use-fetch'
+import { useFetch } from '@/shared/hooks/use-api'
 
 function LogoutButton() {
   const { requestApi, deleteAuth } = useAuth()

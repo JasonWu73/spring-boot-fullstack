@@ -21,8 +21,8 @@ import {
 } from '@/shared/components/ui/Dialog'
 import { Form } from '@/shared/components/ui/Form'
 import { useToast } from '@/shared/components/ui/use-toast'
-import type { SetStateAction } from '@/shared/hooks/use-fetch'
-import { useFetch } from '@/shared/hooks/use-fetch'
+import type { SetStateAction } from '@/shared/hooks/use-api'
+import { useFetch } from '@/shared/hooks/use-api'
 import { encrypt } from '@/shared/utils/rsa'
 import type { User } from '@/user/UserListPage'
 

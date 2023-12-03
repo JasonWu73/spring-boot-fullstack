@@ -30,8 +30,8 @@ import {
   URL_QUERY_KEY_SORT_COLUMN,
   URL_QUERY_KEY_SORT_ORDER
 } from '@/shared/constants'
-import type { SetStateAction } from '@/shared/hooks/use-fetch'
-import { useFetch } from '@/shared/hooks/use-fetch'
+import type { SetStateAction } from '@/shared/hooks/use-api'
+import { useFetch } from '@/shared/hooks/use-api'
 import { cn } from '@/shared/utils/helpers'
 import { ResetPasswordDialog } from '@/user/ResetPasswordDialog'
 import type { User } from '@/user/UserListPage'

@@ -10,13 +10,14 @@ type Keypress = {
 }
 
 /**
- * 用于监听按键的 Hook。
+ * 用于监听键盘按键的 Hook。
  *
- * @param key - 按键
- * @param modifiers - 修饰键
- * @param callback - 回调函数
+ * @param keypress 键盘按键配置属性
+ * @param keypress.key 按键
+ * @param keypress.modifiers 修饰键
+ * @param callback 按键触发后的回调函数
  */
-function useKeypress({ key, modifiers = [] }: Keypress, callback: () => void) {
+export function useKeypress({ key, modifiers = [] }: Keypress, callback: () => void) {
   const keypressRef = useSavedRef({ key, modifiers, callback })
 
   React.useEffect(() => {
@@ -36,5 +37,3 @@ function useKeypress({ key, modifiers = [] }: Keypress, callback: () => void) {
     return () => document.removeEventListener('keydown', handleKeydown)
   }, [keypressRef])
 }
-
-export { useKeypress }

@@ -15,9 +15,7 @@ async function requestApi<T>(request: ApiRequest) {
   })
 
   if (error) {
-    if (typeof error === 'string') return { status, error }
-
-    return { status, error: error.message }
+    return { status, error: typeof error === 'string' ? error : error.message }
   }
 
   return { status, data }

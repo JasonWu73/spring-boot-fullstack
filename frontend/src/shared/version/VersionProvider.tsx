@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { useAuth } from '@/shared/auth/AuthProvider'
-import { useFetch } from '@/shared/hooks/use-fetch'
+import { useFetch } from '@/shared/hooks/use-api'
 import { useInitial } from '@/shared/hooks/use-refresh'
 
 type Version = {

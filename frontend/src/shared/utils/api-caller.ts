@@ -5,9 +5,11 @@ type Headers = Record<string, string>
 type UrlParams = Record<string, string>
 type BodyData = UrlParams | FormData
 
+export type Method = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'
+
 export type ApiRequest = {
   url: string
-  method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'
+  method?: Method
   contentType?: ContentType
   headers?: Headers
   urlParams?: UrlParams

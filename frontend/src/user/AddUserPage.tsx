@@ -22,7 +22,7 @@ import {
 } from '@/shared/components/ui/CustomFormField'
 import { Form } from '@/shared/components/ui/Form'
 import { useToast } from '@/shared/components/ui/use-toast'
-import { useFetch } from '@/shared/hooks/use-fetch'
+import { useFetch } from '@/shared/hooks/use-api'
 import { useTitle } from '@/shared/hooks/use-title'
 import { encrypt } from '@/shared/utils/rsa'
 

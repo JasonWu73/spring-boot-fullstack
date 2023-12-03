@@ -24,7 +24,7 @@ import {
 import { Form } from '@/shared/components/ui/Form'
 import { Skeleton } from '@/shared/components/ui/Skeleton'
 import { useToast } from '@/shared/components/ui/use-toast'
-import { useFetch } from '@/shared/hooks/use-fetch'
+import { useFetch } from '@/shared/hooks/use-api'
 import { useInitial } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
 import type { User } from '@/user/UserListPage'

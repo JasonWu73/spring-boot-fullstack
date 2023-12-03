@@ -1,6 +1,6 @@
 import React from 'react'
 
-import type { ApiRequest } from '@/shared/utils/api-caller'
+import type { ApiRequest, Method } from '@/shared/utils/api-caller'
 
 type State<T> = {
   status?: number // HTTP 响应状态码
@@ -49,7 +49,7 @@ function reducer<T>(state: State<T>, action: Action<T>): State<T> {
       }
     }
 
-    // 用于后端 API 请求后，对前端的数据更新
+    // 用于在完成后端 API 请求后，对前端的数据进行更新
     case 'UPDATE_STATE': {
       return {
         ...state,
@@ -63,16 +63,24 @@ function reducer<T>(state: State<T>, action: Action<T>): State<T> {
   }
 }
 
-// Fetch API 的响应数据类型
-type FetchResponse<T> = {
-  status?: number // HTTP 响应状态码
+export type ApiResponse<T> = {
+  /**
+   * HTTP 响应状态码。
+   */
+  status?: number
+
+  /**
+   * API 响应数据。
+   */
   data?: T
+
+  /**
+   * API 响应错误信息。
+   */
   error?: string
 }
 
-type SetStateAction<T> = State<T> | ((prevState: State<T>) => State<T>)
-
-type Method = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'
+export type SetStateAction<T> = State<T> | ((prevState: State<T>) => State<T>)
 
 type PrevFetch = {
   url: string
@@ -82,29 +90,47 @@ type PrevFetch = {
 
 type DiscardRequestParams = { url: string; method?: Method }
 
-type UseFetch<T> = {
-  status?: number // HTTP 响应状态码
-  data?: T // API 响应数据
-  error?: string // API 响应错误信息
-  loading: boolean // 是否正在加载数据
-  fetchData: (params: ApiRequest) => Promise<FetchResponse<T>> // 发起 HTTP 请求，获取 API 数据
-  discardFetch: (params: DiscardRequestParams, timestamp: number) => void // 丢弃请求，即不发送请求
-  updateState: (state: SetStateAction<T>) => void // 更新前端数据
+type UseApi<T> = {
+  /**
+   * HTTP 响应状态码。
+   */
+  status?: number
+
+  /**
+   * API 响应数据。
+   */
+  data?: T
+
+  /**
+   * API 响应错误信息。
+   */
+  error?: string
+
+  /**
+   * 是否正在加载数据。
+   */
+  loading: boolean
+  fetchData: (request: ApiRequest) => Promise<ApiResponse<T>>
+  discardFetch: (params: DiscardRequestParams, timestamp: number) => void
+  updateState: (state: SetStateAction<T>) => void
 }
 
 /**
  * 获取数据的自定义 Hook。
  *
- * <p>主要用于页面初始化时获取数据。
+ * <ul>
+ *   <li>提供了常用的状态，如 HTTP 响应状态码、响应数据、是否正在加载中等</li>
+ *   <li>提供了发起 HTTP 请求的方法</li>
+ *   <li>提供了丢弃请求的方法，即 50 毫秒内不发送请求，主要用于 React Strict Mode 下的重复提交</li>
+ *   <li>提供了更新前端数据的方法</li>
+ * </ul>
  *
- * @template T - 返回的数据类型
- *
- * @param callback - 获取数据的回调函数
- * @returns 数据、错误信息、加载状态、获取数据的回调函数
+ * @param callback 通过 HTTP 请求获取后端数据的回调函数
+ * @returns useApi<T> API 相关数据及方法
  */
-function useFetch<T>(
-  callback: (params: ApiRequest) => Promise<FetchResponse<T>>
-): UseFetch<T> {
+export function useFetch<T>(
+  callback: (params: ApiRequest) => Promise<ApiResponse<T>>
+): UseApi<T> {
   const [state, dispatch] = React.useReducer(
     reducer as React.Reducer<State<T>, Action<T>>,
     initialState as State<T>
@@ -113,7 +139,13 @@ function useFetch<T>(
 
   const { status, data, error, loading } = state
 
-  async function fetchData(request: ApiRequest): Promise<FetchResponse<T>> {
+  /**
+   * 发起 HTTP 请求，获取 API 数据。
+   *
+   * @param request 请求的配置属性
+   * @returns Promise<ApiResponse<T>> HTTP 响应数据
+   */
+  async function fetchData(request: ApiRequest): Promise<ApiResponse<T>> {
     dispatch({ type: 'START_LOADING' })
 
     // 丢弃请求，即 50 毫秒内不发送请求，主要用于 React Strict Mode 下的重复提交
@@ -147,11 +179,23 @@ function useFetch<T>(
     return response
   }
 
-  // 丢弃请求，即 50 毫秒内不发送请求，主要用于 React Strict Mode 下的重复提交
+  /**
+   * 丢弃请求，即 50 毫秒内不发送请求，主要用于 React Strict Mode 下的重复提交。
+   *
+   * @param params API Endpoint 信息
+   * @param params.url API Endpoint URL
+   * @param params.method 请求方法
+   * @param timestamp 请求的时间戳
+   */
   function discardFetch({ url, method }: DiscardRequestParams, timestamp: number) {
     discardFetchRef.current = { url, method, timestamp }
   }
 
+  /**
+   * 更新前端数据。
+   *
+   * @param newState 更新的数据或更新函数
+   */
   function updateState(newState: SetStateAction<T>) {
     if (typeof newState === 'function') {
       const updater = newState as (prevData: State<T>) => State<T>
@@ -172,5 +216,3 @@ function useFetch<T>(
 
   return { status, data, error, loading, fetchData, discardFetch, updateState }
 }
-
-export { useFetch, type FetchResponse, type SetStateAction }

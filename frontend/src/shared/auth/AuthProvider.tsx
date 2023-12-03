@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { ADMIN, ROOT, USER } from '@/shared/auth/constants'
-import type { FetchResponse } from '@/shared/hooks/use-fetch'
+import type { ApiResponse } from '@/shared/hooks/use-api'
 import { sendRequest, type ApiRequest } from '@/shared/utils/api-caller'
 
 /**
@@ -56,7 +56,7 @@ type AuthProviderState = {
   deleteAuth: () => void // 删除前端存储的身份验证数据，即前端退出登录
   updateAuth: (callback: (prevAuth: Auth) => Auth) => void // 更新前端存在的身份验证数据
 
-  requestApi: <T>(request: ApiRequest) => Promise<FetchResponse<T>> // 发送后端 API 请求
+  requestApi: <T>(request: ApiRequest) => Promise<ApiResponse<T>> // 发送后端 API 请求
 }
 
 const AuthProviderContext = React.createContext(undefined as unknown as AuthProviderState)
@@ -73,7 +73,7 @@ function AuthProvider({ children }: AuthProviderProps): React.JSX.Element {
   const isAdmin = isRoot || (auth?.authorities.includes(ADMIN.value) ?? false)
   const isUser = isRoot || isAdmin || (auth?.authorities.includes(USER.value) ?? false)
 
-  async function requestApi<T>(request: ApiRequest): Promise<FetchResponse<T>> {
+  async function requestApi<T>(request: ApiRequest): Promise<ApiResponse<T>> {
     // 请求无需访问令牌的开放 API
     if (!auth) return await requestBackendApi<T>(request)
 
@@ -200,7 +200,7 @@ function toStorageAuth(data: AuthResponse): Auth {
   }
 }
 
-async function requestBackendApi<T>(request: ApiRequest): Promise<FetchResponse<T>> {
+async function requestBackendApi<T>(request: ApiRequest): Promise<ApiResponse<T>> {
   const baseUrl = /^https?:\/\/.+/.test(request.url) ? request.url : BASE_URL
 
   const { status, data, error } = await sendRequest<T, ApiError>({

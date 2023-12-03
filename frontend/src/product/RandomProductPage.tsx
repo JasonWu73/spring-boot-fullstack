@@ -3,7 +3,7 @@ import React from 'react'
 
 import { requestApi } from '@/shared/apis/dummyjson-api'
 import { Button } from '@/shared/components/ui/Button'
-import { useFetch } from '@/shared/hooks/use-fetch'
+import { useFetch } from '@/shared/hooks/use-api'
 import { useRefresh } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
 import { cn } from '@/shared/utils/helpers'
