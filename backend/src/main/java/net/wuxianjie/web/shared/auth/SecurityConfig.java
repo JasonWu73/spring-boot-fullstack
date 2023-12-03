@@ -173,8 +173,8 @@ public class SecurityConfig {
 
   /**
    * 配置拥有上下级关系的功能权限。
-   *
-   * <p>Spring Boot 3 即 Spring Security 6 开始，还需要创建 {@link #expressionHandler()}。
+   * <p>
+   * Spring Boot 3 即 Spring Security 6 开始，还需要创建 {@link #expressionHandler()}。
    *
    * @return 拥有上下级关系的功能权限
    */

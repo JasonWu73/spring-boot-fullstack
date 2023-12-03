@@ -2,7 +2,7 @@ import React from 'react'
 
 import { ADMIN, ROOT, USER } from '@/shared/auth/constants'
 import type { FetchResponse } from '@/shared/hooks/use-fetch'
-import { sendRequest, type ApiRequest } from '@/shared/utils/fetch'
+import { sendRequest, type ApiRequest } from '@/shared/utils/api-caller'
 
 /**
  * 用户名和密码的加密公钥。

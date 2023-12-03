@@ -8,8 +8,12 @@ let counter = 0
 
 /**
  * 全局配置 NProgress。
+ *
+ * <ul>
+ *   <li>不显示 NProgress Spinner 图标</li>
+ * </ul>
  */
-function configureNProgress() {
+export function configureNProgress() {
   NProgress.configure({
     showSpinner: false
   })
@@ -18,7 +22,7 @@ function configureNProgress() {
 /**
  * 开始 NProgress 加载。
  */
-function startNProgress() {
+export function startNProgress() {
   counter++
   NProgress.start()
 }
@@ -26,7 +30,7 @@ function startNProgress() {
 /**
  * 结束 NProgress 加载。
  */
-function endNProgress() {
+export function endNProgress() {
   counter--
 
   if (counter > 0) return
@@ -34,5 +38,3 @@ function endNProgress() {
   counter = 0
   NProgress.done()
 }
-
-export { configureNProgress, endNProgress, startNProgress }

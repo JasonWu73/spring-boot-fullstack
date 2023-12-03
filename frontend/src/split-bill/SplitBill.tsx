@@ -25,7 +25,7 @@ import {
 import { useFetch } from '@/shared/hooks/use-fetch'
 import { useRefresh } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
-import type { ApiRequest } from '@/shared/utils/fetch'
+import type { ApiRequest } from '@/shared/utils/api-caller'
 import { wait } from '@/shared/utils/helpers'
 import { endNProgress, startNProgress } from '@/shared/utils/nprogress'
 import { getFriendsFromStorage, useFriends } from '@/split-bill/FriendProvider'

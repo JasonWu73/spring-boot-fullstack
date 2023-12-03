@@ -175,12 +175,15 @@ function HalfStart({ color = '#f59e0b', isFilled, size = 20 }: StarProps) {
 
 function getSizePx(size: Size) {
   switch (size) {
-    case 'sm':
+    case 'sm': {
       return 16
-    case 'lg':
+    }
+    case 'lg': {
       return 22
-    default:
+    }
+    default: {
       return 20
+    }
   }
 }
 

@@ -1,4 +1,4 @@
-import { sendRequest, type ApiRequest } from '@/shared/utils/fetch'
+import { sendRequest, type ApiRequest } from '@/shared/utils/api-caller'
 
 const BASE_URL = 'https://dummyjson.com'
 

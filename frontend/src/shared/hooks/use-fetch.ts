@@ -1,6 +1,6 @@
 import React from 'react'
 
-import type { ApiRequest } from '@/shared/utils/fetch'
+import type { ApiRequest } from '@/shared/utils/api-caller'
 
 type State<T> = {
   status?: number // HTTP 响应状态码
@@ -100,7 +100,7 @@ type UseFetch<T> = {
  * @template T - 返回的数据类型
  *
  * @param callback - 获取数据的回调函数
- * @returns {UseFetch} - 数据、错误信息、加载状态、获取数据的回调函数
+ * @returns 数据、错误信息、加载状态、获取数据的回调函数
  */
 function useFetch<T>(
   callback: (params: ApiRequest) => Promise<FetchResponse<T>>
