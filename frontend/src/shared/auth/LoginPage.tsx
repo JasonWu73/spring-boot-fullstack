@@ -35,7 +35,7 @@ const defaultValues: FormSchema = {
   password: ''
 }
 
-function LoginPage() {
+export default function LoginPage() {
   useTitle('登录')
 
   const form = useForm<FormSchema>({
@@ -128,5 +128,3 @@ function LoginPage() {
     </Card>
   )
 }
-
-export default LoginPage

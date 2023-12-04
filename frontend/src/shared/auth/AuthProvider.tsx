@@ -7,7 +7,7 @@ import { sendRequest, type ApiRequest } from '@/shared/utils/api-caller'
 /**
  * 用户名和密码的加密公钥。
  */
-const PUBLIC_KEY =
+export const PUBLIC_KEY =
   'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArbGWjwR4QAjBiJwMi5QNe+X8oPEFBfX3z5K6dSv9tU2kF9SVkf8uGGJwXeihQQ0o9aUk42zO58VL3MqDOaWHU6wm52pN9ZBbH0XJefqxtgyXrYAm279MU6EY4sywkUT9KOOgk/qDHB93IoEDL1fosYc7TRsAONuMGiyTJojn1FCPtJbbj7J56yCaFhUpuDunBFETQ32usRaK4KCWx9w0HZ6WmbX8QdcJkVjJ2FCLuGkvbKmUQ5h/GXXnNgbxIn3z2lX7snGRMhIFvW0Qjkn8YmOq6HUj7TU0jKm9VhZirVQXh8trvi2ivY7s6yJoF8N72Ekn94WSpSRVeC0XpXf2LQIDAQAB'
 
 const STORAGE_KEY = 'demo-auth'
@@ -20,7 +20,9 @@ const PROD_BACKEND_BASE_URL = `${window.location.origin}`
 const BASE_URL =
   window.location.port === DEV_PORT ? DEV_BACKEND_BASE_URL : PROD_BACKEND_BASE_URL
 
-// 后端 API 在请求失败时返回的错误数据类型
+/**
+ * 后端 API 在请求失败时返回的错误数据类型。
+ */
 type ApiError = {
   timestamp: string
   status: number
@@ -28,8 +30,10 @@ type ApiError = {
   path: string
 }
 
-// 后端返回的身份验证数据类型
-type AuthResponse = {
+/**
+ * 后端返回的身份验证数据类型。
+ */
+export type AuthResponse = {
   accessToken: string
   refreshToken: string
   expiresInSeconds: number
@@ -37,7 +41,9 @@ type AuthResponse = {
   authorities: string[]
 }
 
-// 前端存储的身份验证数据类型
+/**
+ * 前端存储的身份验证数据类型。
+ */
 type Auth = {
   accessToken: string
   refreshToken: string
@@ -47,16 +53,16 @@ type Auth = {
 }
 
 type AuthProviderState = {
-  auth: Auth | null // 前端存储的身份验证数据
-  isRoot: boolean // 是否为超级管理员
-  isAdmin: boolean // 是否为管理员
-  isUser: boolean // 是否为普通用户
+  auth: Auth | null
+  isRoot: boolean
+  isAdmin: boolean
+  isUser: boolean
 
-  setAuth: (data: AuthResponse) => void // 设置前端存储的身份验证数据，即前端登录
-  deleteAuth: () => void // 删除前端存储的身份验证数据，即前端退出登录
-  updateAuth: (callback: (prevAuth: Auth) => Auth) => void // 更新前端存在的身份验证数据
+  setAuth: (data: AuthResponse) => void
+  deleteAuth: () => void
+  updateAuth: (callback: (prevAuth: Auth) => Auth) => void
 
-  requestApi: <T>(request: ApiRequest) => Promise<ApiResponse<T>> // 发送后端 API 请求
+  requestApi: <T>(request: ApiRequest) => Promise<ApiResponse<T>>
 }
 
 const AuthProviderContext = React.createContext(undefined as unknown as AuthProviderState)
@@ -65,7 +71,7 @@ type AuthProviderProps = {
   children: React.ReactNode
 }
 
-function AuthProvider({ children }: AuthProviderProps): React.JSX.Element {
+export function AuthProvider({ children }: AuthProviderProps) {
   const [auth, setAuth] = React.useState(getStorageAuth)
   const refreshedAtRef = React.useRef<number>(0)
 
@@ -73,14 +79,24 @@ function AuthProvider({ children }: AuthProviderProps): React.JSX.Element {
   const isAdmin = isRoot || (auth?.authorities.includes(ADMIN.value) ?? false)
   const isUser = isRoot || isAdmin || (auth?.authorities.includes(USER.value) ?? false)
 
+  /**
+   * 发送 API 请求。
+   * <p>
+   * 使用此方法发送请求，会自动处理以下情况：
+   *
+   * <ul>
+   *   <li>当访问令牌存在时，会自动添加到请求头中</li>
+   *   <li>当访问令牌快过期时，会自动刷新访问令牌</li>
+   *   <li>当访问令牌过期时，会自动退出登录</li>
+   * </ul>
+   *
+   * @param request
+   */
   async function requestApi<T>(request: ApiRequest): Promise<ApiResponse<T>> {
-    // 请求无需访问令牌的开放 API
     if (!auth) return await requestBackendApi<T>(request)
 
-    // 请求需要访问令牌的 API（涉及自动刷新机制）
     const { expiresAt, accessToken } = auth
 
-    // 发送请求
     const response = await requestBackendApi<T>({
       ...request,
       headers: { ...request.headers, Authorization: `Bearer ${accessToken}` }
@@ -144,7 +160,7 @@ function AuthProvider({ children }: AuthProviderProps): React.JSX.Element {
     },
 
     deleteAuth: () => {
-      // 不论后端退出登录是否成功，前端都要退出登录
+      // 前端退出登录
       setAuthCache(null)
     },
 
@@ -163,7 +179,7 @@ function AuthProvider({ children }: AuthProviderProps): React.JSX.Element {
   )
 }
 
-function useAuth(): AuthProviderState {
+export function useAuth(): AuthProviderState {
   const context = React.useContext(AuthProviderContext)
 
   if (context === undefined) {
@@ -214,5 +230,3 @@ async function requestBackendApi<T>(request: ApiRequest): Promise<ApiResponse<T>
 
   return { status, data }
 }
-
-export { AuthProvider, PUBLIC_KEY, useAuth, type AuthResponse }

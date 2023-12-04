@@ -1,4 +1,3 @@
-import React from 'react'
 import { Navigate, Outlet } from 'react-router-dom'
 
 import { useAuth } from '@/shared/auth/AuthProvider'
@@ -8,7 +7,7 @@ type SecureRouteProps = {
   authority?: 'root' | 'admin' | 'user'
 }
 
-function SecureRoute({ authority }: SecureRouteProps): React.JSX.Element {
+function SecureRoute({ authority }: SecureRouteProps) {
   const { auth, isRoot, isAdmin, isUser } = useAuth()
 
   // 未登录，则跳转到登录页面
