@@ -1,4 +1,6 @@
-// 分页参数类型
+/**
+ * 分页参数类型。
+ */
 export type PaginationParams = {
   pageNum: number
   pageSize: number
@@ -6,7 +8,9 @@ export type PaginationParams = {
   sortOrder?: 'asc' | 'desc'
 }
 
-// 分页数据类型
+/**
+ * 分页数据类型。
+ */
 export type PaginationData<T> = {
   pageNum: number
   pageSize: number

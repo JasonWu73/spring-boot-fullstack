@@ -8,7 +8,7 @@ type ApiError = {
   expiredAt?: string
 }
 
-async function requestApi<T>(request: ApiRequest) {
+export async function requestApi<T>(request: ApiRequest) {
   const { status, data, error } = await sendRequest<T, ApiError>({
     ...request,
     url: `${BASE_URL}${request.url}`
@@ -20,5 +20,3 @@ async function requestApi<T>(request: ApiRequest) {
 
   return { status, data }
 }
-
-export { requestApi }
