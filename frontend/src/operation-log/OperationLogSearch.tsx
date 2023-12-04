@@ -37,7 +37,7 @@ const defaultValues: FormSchema = {
   message: ''
 }
 
-function OperationLogSearch({ loading }: OperationLogSearchProps) {
+export function OperationLogSearch({ loading }: OperationLogSearchProps) {
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues
@@ -159,5 +159,3 @@ function OperationLogSearch({ loading }: OperationLogSearchProps) {
     </Form>
   )
 }
-
-export { OperationLogSearch }

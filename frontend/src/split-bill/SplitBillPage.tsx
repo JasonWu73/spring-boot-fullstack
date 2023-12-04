@@ -18,7 +18,7 @@ const AddFriend = React.lazy(() =>
   )
 )
 
-function SplitBillPage() {
+export default function SplitBillPage() {
   useTitle('分摊账单')
 
   const navigate = useNavigate()
@@ -59,5 +59,3 @@ function SplitBillPage() {
     </div>
   )
 }
-
-export default SplitBillPage

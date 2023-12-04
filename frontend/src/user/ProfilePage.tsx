@@ -64,7 +64,7 @@ const defaultValues: FormSchema = {
   confirmPassword: ''
 }
 
-function UpdateUserPage() {
+export default function UpdateUserPage() {
   useTitle('个人资料')
 
   const form = useForm<FormSchema>({
@@ -263,5 +263,3 @@ function FormSkeleton() {
     </div>
   )
 }
-
-export default UpdateUserPage

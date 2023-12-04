@@ -61,7 +61,7 @@ const defaultValues: FormSchema = {
   remark: ''
 }
 
-function AddUserPage() {
+export default function AddUserPage() {
   useTitle('新增用户')
 
   const form = useForm<FormSchema>({
@@ -219,5 +219,3 @@ function AddUserPage() {
     </Card>
   )
 }
-
-export default AddUserPage

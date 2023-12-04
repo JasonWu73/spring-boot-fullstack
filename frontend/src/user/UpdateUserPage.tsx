@@ -51,7 +51,7 @@ const defaultValues: FormSchema = {
   remark: ''
 }
 
-function UpdateUserPage() {
+export default function UpdateUserPage() {
   useTitle('用户详情')
 
   const form = useForm<FormSchema>({
@@ -282,5 +282,3 @@ function FormSkeleton() {
     </div>
   )
 }
-
-export default UpdateUserPage

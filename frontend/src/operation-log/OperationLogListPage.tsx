@@ -23,7 +23,7 @@ import { useApi } from '@/shared/hooks/use-api'
 import { useRefresh } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
 
-type OperationLog = {
+export type OperationLog = {
   id: number
   requestedAt: string
   clientIp: string
@@ -39,7 +39,7 @@ type GetLogsParams = PaginationParams & {
   message?: string
 }
 
-function OperationLogListPage() {
+export default function OperationLogListPage() {
   useTitle('操作日志')
 
   const [searchParams] = useSearchParams()
@@ -111,7 +111,3 @@ function OperationLogListPage() {
     </Card>
   )
 }
-
-export default OperationLogListPage
-
-export { type OperationLog }

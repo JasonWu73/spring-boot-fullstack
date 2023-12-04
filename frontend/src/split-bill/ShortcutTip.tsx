@@ -6,7 +6,7 @@ import {
 } from '@/shared/components/ui/Accordion'
 import { Code } from '@/shared/components/ui/Code'
 
-function ShortcutTip() {
+export function ShortcutTip() {
   return (
     <Accordion type="single" collapsible>
       <AccordionItem value="item-1">
@@ -26,5 +26,3 @@ function ShortcutTip() {
     </Accordion>
   )
 }
-
-export default ShortcutTip

@@ -50,7 +50,7 @@ const defaultValues: FormSchema = {
   confirmPassword: ''
 }
 
-function ResetPasswordDialog({
+export function ResetPasswordDialog({
   open,
   onOpenChange,
   user,
@@ -200,5 +200,3 @@ function ResetPasswordDialog({
     </Dialog>
   )
 }
-
-export { ResetPasswordDialog }

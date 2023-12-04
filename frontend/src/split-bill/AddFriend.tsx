@@ -26,7 +26,7 @@ const defaultValues: FormSchema = {
   birthday: undefined as unknown as Date
 }
 
-function AddFriend() {
+export function AddFriend() {
   useTitle('添加好友')
 
   const form = useForm<FormSchema>({
@@ -105,5 +105,3 @@ function AddFriend() {
     </Card>
   )
 }
-
-export { AddFriend }

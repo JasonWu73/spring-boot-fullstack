@@ -2,7 +2,7 @@ import React from 'react'
 
 const STORAGE_KEY = 'demo-friends'
 
-type Friend = {
+export type Friend = {
   id: number
   name: string
   image: string
@@ -126,7 +126,7 @@ function reducer(state: State, action: Action) {
   }
 }
 
-function FriendProvider({ children }: FriendProviderProps) {
+export function FriendProvider({ children }: FriendProviderProps) {
   const [{ friends, showAddFriend }, dispatch] = React.useReducer(
     reducer,
     null,
@@ -146,7 +146,7 @@ function FriendProvider({ children }: FriendProviderProps) {
   )
 }
 
-function useFriends() {
+export function useFriends() {
   const context = React.useContext(FriendProviderContext)
 
   if (context === undefined) {
@@ -156,8 +156,6 @@ function useFriends() {
   return context
 }
 
-function getFriendsFromStorage(): Friend[] {
+export function getFriendsFromStorage(): Friend[] {
   return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]')
 }
-
-export { FriendProvider, getFriendsFromStorage, useFriends, type Friend }

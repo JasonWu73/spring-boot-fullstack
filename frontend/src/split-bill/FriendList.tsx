@@ -17,7 +17,7 @@ import { FriendItem } from '@/split-bill/FriendItem'
 import { useFriends, type Friend } from '@/split-bill/FriendProvider'
 import { FriendSearch } from '@/split-bill/FriendSearch'
 
-function FriendList() {
+export function FriendList() {
   useTitle('好友列表')
 
   const [searchParams] = useSearchParams()
@@ -135,5 +135,3 @@ function FriendList() {
     </>
   )
 }
-
-export { FriendList }

@@ -50,7 +50,7 @@ const columns: ColumnDef<OperationLog>[] = [
   }
 ]
 
-function OperationLogTable({
+export function OperationLogTable({
   logs,
   error,
   loading,
@@ -101,5 +101,3 @@ function OperationLogTable({
     />
   )
 }
-
-export { OperationLogTable }

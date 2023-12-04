@@ -39,7 +39,7 @@ const defaultValues: FormSchema = {
   authority: ''
 }
 
-function UserSearch({ loading }: UserSearchProps) {
+export function UserSearch({ loading }: UserSearchProps) {
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues
@@ -142,5 +142,3 @@ function UserSearch({ loading }: UserSearchProps) {
     </Form>
   )
 }
-
-export { UserSearch }

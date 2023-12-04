@@ -81,7 +81,7 @@ const defaultValues: FormSchema = {
   whoIsPaying: whoIsPayingOptions[0].value
 }
 
-function SplitBill() {
+export function SplitBill() {
   useTitle('分摊账单')
 
   const form = useForm<FormSchema>({
@@ -331,5 +331,3 @@ function getWhoIsPayingOptions(friend: string) {
   options.push({ value: 'anonymous', label: '匿名' })
   return options
 }
-
-export { SplitBill }

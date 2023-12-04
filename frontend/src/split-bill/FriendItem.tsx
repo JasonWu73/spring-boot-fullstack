@@ -18,7 +18,7 @@ type FriendItemProps = {
   onDeleteFriend: (friend: Friend) => void
 }
 
-function FriendItem({ friend, onDeleteFriend }: FriendItemProps) {
+export function FriendItem({ friend, onDeleteFriend }: FriendItemProps) {
   const params = useParams()
 
   const { dispatch } = useFriends()
@@ -109,5 +109,3 @@ function FriendItem({ friend, onDeleteFriend }: FriendItemProps) {
     </li>
   )
 }
-
-export { FriendItem }

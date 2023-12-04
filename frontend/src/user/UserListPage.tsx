@@ -25,7 +25,7 @@ import { useTitle } from '@/shared/hooks/use-title'
 import { UserSearch } from '@/user/UserSearch'
 import { UserTable } from '@/user/UserTable'
 
-type User = {
+export type User = {
   id: number
   createdAt: string
   updatedAt: string
@@ -43,7 +43,7 @@ type GetUsersParams = PaginationParams & {
   authority?: string
 }
 
-function UserListPage() {
+export default function UserListPage() {
   useTitle('用户管理')
 
   const [searchParams] = useSearchParams()
@@ -143,7 +143,3 @@ function UserListPage() {
     </Card>
   )
 }
-
-export default UserListPage
-
-export { type User }

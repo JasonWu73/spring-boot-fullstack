@@ -50,7 +50,7 @@ type UserTableProps = {
   updateState: UpdateState
 }
 
-function UserTable({
+export function UserTable({
   users,
   error,
   loading,
@@ -452,5 +452,3 @@ function UserTable({
     </>
   )
 }
-
-export { UserTable }
