@@ -15,8 +15,8 @@ const initialState: State<unknown> = {
 
 type Action<T> =
   | { type: 'START_LOADING' }
-  | { type: 'FETCH_SUCCESS'; payload: { status?: number; data?: T } }
-  | { type: 'FETCH_FAILED'; payload: { status?: number; error?: string } }
+  | { type: 'REQUEST_SUCCESS'; payload: { status?: number; data?: T } }
+  | { type: 'REQUEST_FAILED'; payload: { status?: number; error?: string } }
   | { type: 'UPDATE_STATE'; payload: State<T> }
 
 function reducer<T>(state: State<T>, action: Action<T>): State<T> {
@@ -30,7 +30,7 @@ function reducer<T>(state: State<T>, action: Action<T>): State<T> {
         loading: true
       }
     }
-    case 'FETCH_SUCCESS': {
+    case 'REQUEST_SUCCESS': {
       return {
         ...state,
         status: action.payload.status,
@@ -39,7 +39,7 @@ function reducer<T>(state: State<T>, action: Action<T>): State<T> {
         loading: false
       }
     }
-    case 'FETCH_FAILED': {
+    case 'REQUEST_FAILED': {
       return {
         ...state,
         status: action.payload.status,
@@ -164,7 +164,7 @@ export function useFetch<T>(
 
     if (response.error) {
       dispatch({
-        type: 'FETCH_FAILED',
+        type: 'REQUEST_FAILED',
         payload: { status: response.status, error: response.error }
       })
 
@@ -172,7 +172,7 @@ export function useFetch<T>(
     }
 
     dispatch({
-      type: 'FETCH_SUCCESS',
+      type: 'REQUEST_SUCCESS',
       payload: { status: response.status, data: response.data }
     })
 
