@@ -2,12 +2,13 @@ import React from 'react'
 import { NavLink } from 'react-router-dom'
 
 import { useAuth } from '@/shared/auth/AuthProvider'
+import { buttonVariants } from '@/shared/components/ui/Button'
 import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuList
 } from '@/shared/components/ui/NavigationMenu'
-import { cn } from '@/shared/utils/helpers'
+import { cn, tw } from '@/shared/utils/helpers'
 
 type PageNavProps = {
   isOpen: boolean
@@ -41,7 +42,7 @@ function NavItemList() {
 
   return (
     <>
-      <NavItem link="/split-bill">全面的表单</NavItem>
+      <NavItem link="/split-bill">账单 App</NavItem>
       {isUser && <NavItem link="/fetch">自定义 useFetch</NavItem>}
     </>
   )
@@ -54,10 +55,16 @@ type NavItemProps = {
 
 function NavItem({ children, link }: NavItemProps) {
   return (
-    <NavigationMenuItem className="font-bold hover:text-sky-500 hover:dark:text-sky-600">
+    <NavigationMenuItem className=" hover:text-sky-500 hover:dark:text-sky-600">
       <NavLink
         to={link}
-        className={({ isActive }) => (isActive ? 'text-sky-500 dark:text-sky-600' : '')}
+        className={({ isActive }) =>
+          cn(
+            buttonVariants({ variant: 'link' }),
+            tw`text-base font-bold text-snow hover:text-sky-500 hover:no-underline dark:text-snow dark:hover:text-sky-600`,
+            isActive && 'text-sky-500 dark:text-sky-600'
+          )
+        }
       >
         {children}
       </NavLink>

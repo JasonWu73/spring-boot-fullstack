@@ -40,7 +40,7 @@ export function AuthSwitch() {
             onPointerEnter={(event) => event.preventDefault()}
             onPointerLeave={(event) => event.preventDefault()}
           >
-            <ul className="grid min-w-max grid-flow-row grid-cols-1 py-1">
+            <ul className="grid min-w-max grid-flow-row grid-cols-1 p-1">
               <NavItem link="/profile">
                 <CircleUserRound className="h-4 w-4" />
                 个人资料

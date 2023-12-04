@@ -8,7 +8,7 @@ type AsideProps = React.ComponentPropsWithoutRef<'header'>
 export function Aside({ className, ...props }: AsideProps) {
   return (
     <aside
-      className={cn('bg-slate-700 p-4 text-snow dark:bg-night-1', className)}
+      className={cn('dark bg-night-1 p-4 text-snow dark:bg-night-1', className)}
       {...props}
     >
       <SideNavBar />
