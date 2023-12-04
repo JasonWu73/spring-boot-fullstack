@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 
-function NotFoundPage() {
+export default function NotFoundPage() {
   return (
     <div className="mt-8 flex flex-col items-center gap-4">
       <h1>页面不存在 😞</h1>
@@ -10,5 +10,3 @@ function NotFoundPage() {
     </div>
   )
 }
-
-export default NotFoundPage

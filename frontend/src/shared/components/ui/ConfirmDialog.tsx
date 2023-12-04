@@ -22,7 +22,7 @@ type ConfirmDialogProps = {
   onConfirm: () => void
 }
 
-function ConfirmDialog({
+export function ConfirmDialog({
   open,
   onOpenChange,
   trigger,
@@ -56,5 +56,3 @@ function ConfirmDialog({
     </AlertDialog>
   )
 }
-
-export { ConfirmDialog }

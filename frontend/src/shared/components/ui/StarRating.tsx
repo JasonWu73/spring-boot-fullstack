@@ -14,7 +14,10 @@ type StarRatingProps = {
   className?: string
 }
 
-function StarRating({
+/**
+ * 评分组件，支持半星。
+ */
+export function StarRating({
   onRate,
   maxRating = 5,
   defaultRating = 0,
@@ -186,5 +189,3 @@ function getSizePx(size: Size) {
     }
   }
 }
-
-export { StarRating }

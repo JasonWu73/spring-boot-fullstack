@@ -26,8 +26,13 @@ import {
 import { Textarea } from '@/shared/components/ui/Textarea'
 import { cn, tw } from '@/shared/utils/helpers'
 
-// 当参数验证不通过时的输入框样式
-function inputErrorClasses(isError: boolean) {
+/**
+ * 当参数验证不通过时的文本框样式。
+ *
+ * @param isError 是否验证不通过
+ * @returns Tailwind CSS 类名字符串
+ */
+export function inputErrorClasses(isError: boolean) {
   return isError
     ? tw`border-red-500 focus:ring-red-500 focus-visible:ring-red-500 dark:border-red-600 dark:focus:ring-red-600 dark:focus-visible:ring-red-700`
     : tw`border-slate-200 focus-visible:ring-slate-950 dark:border-slate-800 dark:focus-visible:ring-slate-300`
@@ -50,7 +55,7 @@ type FormTextareaProps<T extends FieldValues> = Omit<FormInputProps<T>, 'inputRe
   textareaRef?: React.MutableRefObject<HTMLTextAreaElement | null>
 }
 
-function FormInput<T extends FieldValues>({
+export function FormInput<T extends FieldValues>({
   control,
   name,
   label,
@@ -99,7 +104,7 @@ function FormInput<T extends FieldValues>({
   )
 }
 
-function FormTextarea<T extends FieldValues>({
+export function FormTextarea<T extends FieldValues>({
   control,
   name,
   label,
@@ -158,7 +163,7 @@ type FormSelectProps<T extends FieldValues> = Omit<FormInputProps<T>, 'type'> & 
 /**
  * 下拉组件不需要考虑 `placeholder`，因为应该给它默认值。
  */
-function FormSelect<T extends FieldValues>({
+export function FormSelect<T extends FieldValues>({
   control,
   name,
   label,
@@ -205,7 +210,7 @@ function FormSelect<T extends FieldValues>({
   )
 }
 
-function FormMultiSelect<T extends FieldValues>({
+export function FormMultiSelect<T extends FieldValues>({
   control,
   name,
   label,
@@ -251,7 +256,7 @@ type FormCalendarProps<T extends FieldValues> = Omit<FormInputProps<T>, 'type'> 
   disabledWhen: (date: Date) => boolean
 }
 
-function FormCalendar<T extends FieldValues>({
+export function FormCalendar<T extends FieldValues>({
   control,
   name,
   label,
@@ -306,13 +311,4 @@ function FormCalendar<T extends FieldValues>({
       )}
     />
   )
-}
-
-export {
-  FormCalendar,
-  FormInput,
-  FormMultiSelect,
-  FormSelect,
-  FormTextarea,
-  inputErrorClasses
 }

@@ -7,7 +7,10 @@ type CodeProps = {
   className?: string
 }
 
-function Code({ children, className }: CodeProps) {
+/**
+ * 行内代码组件。
+ */
+export function Code({ children, className }: CodeProps) {
   return (
     <code
       className={cn(
@@ -19,5 +22,3 @@ function Code({ children, className }: CodeProps) {
     </code>
   )
 }
-
-export { Code }

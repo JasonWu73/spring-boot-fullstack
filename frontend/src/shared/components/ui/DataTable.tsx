@@ -23,12 +23,12 @@ import {
   TableRow
 } from '@/shared/components/ui/Table'
 
-const DEFAULT_PAGE_NUM = 1
-const DEFAULT_PAGE_SIZE = 10
+export const DEFAULT_PAGE_NUM = 1
+export const DEFAULT_PAGE_SIZE = 10
 
 type Pagination = { pageNum: number; pageSize: number; total: number }
 
-type Paging = Omit<Pagination, 'pageCount' | 'total'>
+export type Paging = Omit<Pagination, 'total'>
 
 type DataTableProps<TData, TValue> = {
   columns: ColumnDef<TData, TValue>[]
@@ -51,12 +51,28 @@ type DataTableProps<TData, TValue> = {
 }
 
 /**
- * {@link https://ui.shadcn.com/docs/components/data-table|DataTable - shadcn/ui}
+ * 数据表格组件。
+ *
+ * @param props 组件属性
+ * @param props.columns 列定义
+ * @param props.data 列表数据
+ * @param props.error 数据获取失败时的错误信息
+ * @param props.loading 是否正在加载数据，默认为 `false`
+ * @param props.manualPagination 是否手动分页，默认为 `true`
+ * @param props.pagination 分页信息
+ * @param props.onPaginate 点击分页按钮时的回调函数
+ * @param props.manualSorting 是否手动排序，默认为 `true`
+ * @param props.sortColumn 排序信息
+ * @param props.onSorting 点击排序按钮时的回调函数
+ * @param props.enableRowSelection 是否启用行选择，默认为 `false`
+ * @param props.onSelect 选择行时的回调函数
+ * @param props.children 放置在表格上方的内容，常用于放置新增、导出等操作按钮
+ * @see <a href="https://ui.shadcn.com/docs/components/data-table">DataTable - shadcn/ui</a>
  */
-function DataTable<TData, TValue>({
+export function DataTable<TData, TValue>({
   columns,
   data,
-  error = '',
+  error,
   loading = false,
 
   manualPagination = true,
@@ -223,5 +239,3 @@ function ErrorRow({ columnLen, error }: ErrorRowProps) {
     </TableRow>
   )
 }
-
-export { DEFAULT_PAGE_NUM, DEFAULT_PAGE_SIZE, DataTable, type Paging }

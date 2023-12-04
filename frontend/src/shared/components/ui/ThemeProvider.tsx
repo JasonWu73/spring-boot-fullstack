@@ -20,7 +20,7 @@ type ThemeProviderProps = {
 /**
  * {@link https://ui.shadcn.com/docs/dark-mode/vite | Vite - shadcn/ui}
  */
-function ThemeProvider({
+export function ThemeProvider({
   children,
   defaultTheme = 'system',
   storageKey = 'app-ui-theme',
@@ -50,7 +50,7 @@ function ThemeProvider({
 /**
  * {@link https://ui.shadcn.com/docs/dark-mode/vite | Vite - shadcn/ui}
  */
-function useTheme() {
+export function useTheme() {
   const context = React.useContext(ThemeProviderContext)
 
   if (context === undefined) {
@@ -80,7 +80,10 @@ function useResetTheme(theme: Theme) {
 function handleToggleTheme(darkMatchEvent: MediaQueryListEvent) {
   resetTheme()
 
-  if (darkMatchEvent.matches) return applyTheme('dark')
+  if (darkMatchEvent.matches) {
+    applyTheme('dark')
+    return
+  }
 
   applyTheme('light')
 }
@@ -92,5 +95,3 @@ function resetTheme() {
 function applyTheme(theme: Theme) {
   document.documentElement.classList.add(theme)
 }
-
-export { ThemeProvider, useTheme }

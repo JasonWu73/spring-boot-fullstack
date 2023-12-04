@@ -7,13 +7,8 @@ type SpinnerProps = {
   className?: string
 }
 
-function Spinner({ className }: SpinnerProps) {
-  // NProgress 加载动画
-  React.useEffect(() => {
-    startNProgress()
-
-    return () => endNProgress()
-  }, [])
+export function Spinner({ className }: SpinnerProps) {
+  useNProgress()
 
   return (
     <div role="status">
@@ -39,6 +34,12 @@ function Spinner({ className }: SpinnerProps) {
       <span className="sr-only">加载中...</span>
     </div>
   )
-}
 
-export { Spinner }
+  function useNProgress() {
+    React.useEffect(() => {
+      startNProgress()
+
+      return () => endNProgress()
+    }, [])
+  }
+}
