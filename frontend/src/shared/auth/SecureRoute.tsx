@@ -7,7 +7,7 @@ type SecureRouteProps = {
   authority?: 'root' | 'admin' | 'user'
 }
 
-function SecureRoute({ authority }: SecureRouteProps) {
+export function SecureRoute({ authority }: SecureRouteProps) {
   const { auth, isRoot, isAdmin, isUser } = useAuth()
 
   // 未登录，则跳转到登录页面
@@ -31,5 +31,3 @@ function SecureRoute({ authority }: SecureRouteProps) {
   // 若用户已登录，且拥有组件的访问权限，则渲染子组件
   return <Outlet />
 }
-
-export { SecureRoute }
