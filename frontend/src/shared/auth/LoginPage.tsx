@@ -16,7 +16,7 @@ import {
 import { FormInput } from '@/shared/components/ui/CustomFormField'
 import { Form } from '@/shared/components/ui/Form'
 import { useToast } from '@/shared/components/ui/use-toast'
-import { useFetch } from '@/shared/hooks/use-api'
+import { useApi } from '@/shared/hooks/use-api'
 import { useTitle } from '@/shared/hooks/use-title'
 import { encrypt } from '@/shared/utils/rsa'
 import { ShieldPlus } from 'lucide-react'
@@ -45,7 +45,7 @@ function LoginPage() {
   const location = useLocation()
 
   const { auth, requestApi, setAuth } = useAuth()
-  const { loading, requestData } = useFetch(requestApi<AuthResponse>)
+  const { loading, requestData } = useApi(requestApi<AuthResponse>)
   const { toast } = useToast()
 
   const targetUrl = location.state?.from || DEFAULT_REDIRECT_URL

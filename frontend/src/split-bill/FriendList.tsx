@@ -10,7 +10,7 @@ import { ScrollArea } from '@/shared/components/ui/ScrollArea'
 import { Separator } from '@/shared/components/ui/Separator'
 import { useToast } from '@/shared/components/ui/use-toast'
 import { URL_QUERY_KEY_QUERY } from '@/shared/constants'
-import { useFetch } from '@/shared/hooks/use-api'
+import { useApi } from '@/shared/hooks/use-api'
 import { useRefresh } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
 import { FriendItem } from '@/split-bill/FriendItem'
@@ -25,7 +25,7 @@ function FriendList() {
   const navigate = useNavigate()
 
   const { friends, dispatch } = useFriends()
-  const { error, loading, requestData, discardRequest } = useFetch(requestApi<Friend[]>)
+  const { error, loading, requestData, discardRequest } = useApi(requestApi<Friend[]>)
   const { toast } = useToast()
 
   const nameQuery = searchParams.get(URL_QUERY_KEY_QUERY) || ''

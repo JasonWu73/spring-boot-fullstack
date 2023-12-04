@@ -23,7 +23,7 @@ import { FormInput } from '@/shared/components/ui/CustomFormField'
 import { Form } from '@/shared/components/ui/Form'
 import { Skeleton } from '@/shared/components/ui/Skeleton'
 import { useToast } from '@/shared/components/ui/use-toast'
-import { useFetch } from '@/shared/hooks/use-api'
+import { useApi } from '@/shared/hooks/use-api'
 import { useInitial } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
 import { encrypt } from '@/shared/utils/rsa'
@@ -79,8 +79,8 @@ function UpdateUserPage() {
     loading,
     requestData: fetchUser,
     discardRequest
-  } = useFetch(requestApi<User>)
-  const { loading: submitting, requestData: fetchUpdate } = useFetch(requestApi<void>)
+  } = useApi(requestApi<User>)
+  const { loading: submitting, requestData: fetchUpdate } = useApi(requestApi<void>)
   const { toast } = useToast()
 
   const url = '/api/v1/users/me'

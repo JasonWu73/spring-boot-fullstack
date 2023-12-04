@@ -19,7 +19,7 @@ import {
   URL_QUERY_KEY_SORT_COLUMN,
   URL_QUERY_KEY_SORT_ORDER
 } from '@/shared/constants'
-import { useFetch } from '@/shared/hooks/use-api'
+import { useApi } from '@/shared/hooks/use-api'
 import { useRefresh } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
 import { UserSearch } from '@/user/UserSearch'
@@ -57,7 +57,7 @@ function UserListPage() {
     requestData,
     discardRequest,
     updateState
-  } = useFetch(requestApi<PaginationData<User>>)
+  } = useApi(requestApi<PaginationData<User>>)
   const { toast } = useToast()
 
   const url = '/api/v1/users'

@@ -31,7 +31,7 @@ import {
   URL_QUERY_KEY_SORT_ORDER
 } from '@/shared/constants'
 import type { SetStateAction } from '@/shared/hooks/use-api'
-import { useFetch } from '@/shared/hooks/use-api'
+import { useApi } from '@/shared/hooks/use-api'
 import { cn } from '@/shared/utils/helpers'
 import { ResetPasswordDialog } from '@/user/ResetPasswordDialog'
 import type { User } from '@/user/UserListPage'
@@ -67,7 +67,7 @@ function UserTable({
   const currentUserRef = React.useRef<User | null>(null)
 
   const { isRoot, requestApi } = useAuth()
-  const { loading: submitting, requestData } = useFetch(requestApi<void>)
+  const { loading: submitting, requestData } = useApi(requestApi<void>)
   const { toast } = useToast()
 
   // 对话框不应该放在表格内部，否则会导致在表格刷新时（当刷新身份验证信息时）,对话框就会被关闭

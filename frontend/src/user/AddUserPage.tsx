@@ -22,7 +22,7 @@ import {
 } from '@/shared/components/ui/CustomFormField'
 import { Form } from '@/shared/components/ui/Form'
 import { useToast } from '@/shared/components/ui/use-toast'
-import { useFetch } from '@/shared/hooks/use-api'
+import { useApi } from '@/shared/hooks/use-api'
 import { useTitle } from '@/shared/hooks/use-title'
 import { encrypt } from '@/shared/utils/rsa'
 
@@ -71,7 +71,7 @@ function AddUserPage() {
   const navigate = useNavigate()
 
   const { requestApi } = useAuth()
-  const { loading: submitting, requestData } = useFetch(requestApi<void>)
+  const { loading: submitting, requestData } = useApi(requestApi<void>)
   const { toast } = useToast()
 
   async function addUser({

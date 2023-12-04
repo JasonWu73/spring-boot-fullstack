@@ -1,16 +1,7 @@
-const ELLIPSIS = '…'
+export const ELLIPSIS = '…'
 
-const URL_QUERY_KEY_QUERY = 'q'
-const URL_QUERY_KEY_PAGE_NUM = 'p'
-const URL_QUERY_KEY_PAGE_SIZE = 's'
-const URL_QUERY_KEY_SORT_COLUMN = 'b'
-const URL_QUERY_KEY_SORT_ORDER = 'o'
-
-export {
-  ELLIPSIS,
-  URL_QUERY_KEY_PAGE_NUM,
-  URL_QUERY_KEY_PAGE_SIZE,
-  URL_QUERY_KEY_QUERY,
-  URL_QUERY_KEY_SORT_COLUMN,
-  URL_QUERY_KEY_SORT_ORDER
-}
+export const URL_QUERY_KEY_QUERY = 'q'
+export const URL_QUERY_KEY_PAGE_NUM = 'p'
+export const URL_QUERY_KEY_PAGE_SIZE = 's'
+export const URL_QUERY_KEY_SORT_COLUMN = 'b'
+export const URL_QUERY_KEY_SORT_ORDER = 'o'

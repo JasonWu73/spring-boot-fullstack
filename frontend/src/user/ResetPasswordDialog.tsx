@@ -22,7 +22,7 @@ import {
 import { Form } from '@/shared/components/ui/Form'
 import { useToast } from '@/shared/components/ui/use-toast'
 import type { SetStateAction } from '@/shared/hooks/use-api'
-import { useFetch } from '@/shared/hooks/use-api'
+import { useApi } from '@/shared/hooks/use-api'
 import { encrypt } from '@/shared/utils/rsa'
 import type { User } from '@/user/UserListPage'
 
@@ -67,7 +67,7 @@ function ResetPasswordDialog({
     loading,
     requestData,
     updateState: updateResetState
-  } = useFetch(requestApi<void>)
+  } = useApi(requestApi<void>)
   const { toast } = useToast()
 
   async function resetPassword(userId: number, password: string) {

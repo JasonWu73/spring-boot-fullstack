@@ -19,7 +19,7 @@ import {
   URL_QUERY_KEY_SORT_COLUMN,
   URL_QUERY_KEY_SORT_ORDER
 } from '@/shared/constants'
-import { useFetch } from '@/shared/hooks/use-api'
+import { useApi } from '@/shared/hooks/use-api'
 import { useRefresh } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
 
@@ -51,7 +51,7 @@ function OperationLogListPage() {
     loading,
     requestData,
     discardRequest
-  } = useFetch(requestApi<PaginationData<OperationLog>>)
+  } = useApi(requestApi<PaginationData<OperationLog>>)
 
   const url = '/api/v1/operation-logs'
 

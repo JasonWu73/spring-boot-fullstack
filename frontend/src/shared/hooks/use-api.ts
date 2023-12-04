@@ -116,7 +116,7 @@ type UseApi<T> = {
 }
 
 /**
- * 获取数据的自定义 Hook。
+ * 获取 API 数据的自定义 Hook。
  *
  * <ul>
  *   <li>提供了常用的状态，如 HTTP 响应状态码、响应数据、是否正在加载中等</li>
@@ -128,7 +128,7 @@ type UseApi<T> = {
  * @param callback 通过 HTTP 请求获取后端数据的回调函数
  * @returns useApi<T> API 相关数据及方法
  */
-export function useFetch<T>(
+export function useApi<T>(
   callback: (params: ApiRequest) => Promise<ApiResponse<T>>
 ): UseApi<T> {
   const [state, dispatch] = React.useReducer(
@@ -185,7 +185,7 @@ export function useFetch<T>(
    * @param params API Endpoint 信息
    * @param params.url API Endpoint URL
    * @param params.method 请求方法
-   * @param timestamp 请求的时间戳
+   * @param timestamp 请求发起时的时间戳
    */
   function discardRequest({ url, method }: DiscardRequestParams, timestamp: number) {
     discardFetchRef.current = { url, method, timestamp }

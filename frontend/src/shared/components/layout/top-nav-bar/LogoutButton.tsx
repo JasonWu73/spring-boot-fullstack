@@ -3,12 +3,12 @@ import { LogOut } from 'lucide-react'
 
 import { useAuth } from '@/shared/auth/AuthProvider'
 import { Button } from '@/shared/components/ui/Button'
-import { useFetch } from '@/shared/hooks/use-api'
+import { useApi } from '@/shared/hooks/use-api'
 
 function LogoutButton() {
   const { requestApi, deleteAuth } = useAuth()
 
-  const { loading, requestData } = useFetch(requestApi<void>)
+  const { loading, requestData } = useApi(requestApi<void>)
 
   async function handleLogout() {
     await requestData({
