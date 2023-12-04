@@ -49,8 +49,8 @@ function OperationLogListPage() {
     data: logPaging,
     error,
     loading,
-    fetchData,
-    discardFetch
+    requestData,
+    discardRequest
   } = useFetch(requestApi<PaginationData<OperationLog>>)
 
   const url = '/api/v1/operation-logs'
@@ -60,7 +60,7 @@ function OperationLogListPage() {
 
     getLogs().then()
 
-    return () => discardFetch({ url }, timestamp)
+    return () => discardRequest({ url }, timestamp)
   })
 
   const pageNum = Number(searchParams.get(URL_QUERY_KEY_PAGE_NUM)) || DEFAULT_PAGE_NUM
@@ -86,7 +86,7 @@ function OperationLogListPage() {
     if (username) urlParams.username = username
     if (message) urlParams.message = message
 
-    return await fetchData({ url, urlParams })
+    return await requestData({ url, urlParams })
   }
 
   return (

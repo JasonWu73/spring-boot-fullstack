@@ -2,8 +2,8 @@ import { endNProgress, startNProgress } from '@/shared/utils/nprogress'
 
 type ContentType = 'JSON' | 'URLENCODED' | 'FILE'
 type Headers = Record<string, string>
-type UrlParams = Record<string, string>
-type BodyData = UrlParams | FormData
+type UrlParams = Record<string, string | number | null | undefined>
+type BodyData = Record<string, unknown> | FormData
 
 export type Method = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'
 
@@ -101,9 +101,11 @@ function appendUrlParams(url: string, urlParams?: UrlParams) {
 
   const urlObj = new URL(url)
 
-  Object.keys(urlParams).forEach((key) =>
-    urlObj.searchParams.append(key, urlParams[key] ?? '')
-  )
+  Object.keys(urlParams).forEach((key) => {
+    const value = urlParams[key]
+
+    urlObj.searchParams.append(key, value ? String(value) : '')
+  })
 
   return urlObj.toString()
 }

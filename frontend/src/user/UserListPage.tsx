@@ -54,8 +54,8 @@ function UserListPage() {
     data: userPaging,
     error,
     loading,
-    fetchData,
-    discardFetch,
+    requestData,
+    discardRequest,
     updateState
   } = useFetch(requestApi<PaginationData<User>>)
   const { toast } = useToast()
@@ -67,7 +67,7 @@ function UserListPage() {
 
     getUsers().then()
 
-    return () => discardFetch({ url }, timestamp)
+    return () => discardRequest({ url }, timestamp)
   })
 
   const pageNum = Number(searchParams.get(URL_QUERY_KEY_PAGE_NUM)) || DEFAULT_PAGE_NUM
@@ -90,7 +90,7 @@ function UserListPage() {
     if (status) urlParams.status = status
     if (authority) urlParams.authority = authority
 
-    return await fetchData({ url, urlParams })
+    return await requestData({ url, urlParams })
   }
 
   function handleShowSelection() {

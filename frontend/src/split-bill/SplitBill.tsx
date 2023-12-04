@@ -99,7 +99,7 @@ function SplitBill() {
     data: friend,
     error,
     loading,
-    fetchData,
+    requestData,
     updateState
   } = useFetch(getFriendFakeApi)
   const { dispatch } = useFriends()
@@ -121,7 +121,7 @@ function SplitBill() {
   })
 
   async function getFriend() {
-    return await fetchData({ url: '/fake', urlParams: { id: friendId } })
+    return await requestData({ url: '/fake', urlParams: { id: friendId } })
   }
 
   function onSubmit(values: FormSchema) {

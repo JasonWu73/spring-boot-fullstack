@@ -77,10 +77,10 @@ function UpdateUserPage() {
     data: user,
     error,
     loading,
-    fetchData: fetchUser,
-    discardFetch
+    requestData: fetchUser,
+    discardRequest
   } = useFetch(requestApi<User>)
-  const { loading: submitting, fetchData: fetchUpdate } = useFetch(requestApi<void>)
+  const { loading: submitting, requestData: fetchUpdate } = useFetch(requestApi<void>)
   const { toast } = useToast()
 
   const url = '/api/v1/users/me'
@@ -94,7 +94,7 @@ function UpdateUserPage() {
       }
     })
 
-    return () => discardFetch({ url }, timestamp)
+    return () => discardRequest({ url }, timestamp)
   })
 
   async function getUser() {

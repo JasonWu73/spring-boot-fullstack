@@ -7,7 +7,7 @@ import React from 'react'
  *
  * @param objFn 函数或对象
  */
-function useSavedRef<T>(objFn: T) {
+export function useSavedRef<T>(objFn: T) {
   const callbackRef = React.useRef(objFn)
 
   React.useLayoutEffect(() => {
@@ -16,5 +16,3 @@ function useSavedRef<T>(objFn: T) {
 
   return callbackRef
 }
-
-export { useSavedRef }

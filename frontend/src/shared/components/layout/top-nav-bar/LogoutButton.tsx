@@ -8,10 +8,10 @@ import { useFetch } from '@/shared/hooks/use-api'
 function LogoutButton() {
   const { requestApi, deleteAuth } = useAuth()
 
-  const { loading, fetchData } = useFetch(requestApi<void>)
+  const { loading, requestData } = useFetch(requestApi<void>)
 
   async function handleLogout() {
-    await fetchData({
+    await requestData({
       url: '/api/v1/auth/logout',
       method: 'DELETE'
     })

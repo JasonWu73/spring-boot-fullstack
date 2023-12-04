@@ -67,7 +67,7 @@ function UserTable({
   const currentUserRef = React.useRef<User | null>(null)
 
   const { isRoot, requestApi } = useAuth()
-  const { loading: submitting, fetchData } = useFetch(requestApi<void>)
+  const { loading: submitting, requestData } = useFetch(requestApi<void>)
   const { toast } = useToast()
 
   // 对话框不应该放在表格内部，否则会导致在表格刷新时（当刷新身份验证信息时）,对话框就会被关闭
@@ -259,7 +259,7 @@ function UserTable({
   }
 
   async function changeStatus(userId: number, status: number) {
-    return await fetchData({
+    return await requestData({
       url: `/api/v1/users/${userId}/status`,
       method: 'PUT',
       bodyData: { status }
@@ -267,7 +267,7 @@ function UserTable({
   }
 
   async function deleteUser(userId: number) {
-    return await fetchData({
+    return await requestData({
       url: `/api/v1/users/${userId}`,
       method: 'DELETE'
     })

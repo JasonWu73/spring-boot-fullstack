@@ -71,7 +71,7 @@ function AddUserPage() {
   const navigate = useNavigate()
 
   const { requestApi } = useAuth()
-  const { loading: submitting, fetchData } = useFetch(requestApi<void>)
+  const { loading: submitting, requestData } = useFetch(requestApi<void>)
   const { toast } = useToast()
 
   async function addUser({
@@ -81,7 +81,7 @@ function AddUserPage() {
     authorities,
     remark
   }: AddUserParams) {
-    return await fetchData({
+    return await requestData({
       url: '/api/v1/users',
       method: 'POST',
       bodyData: {

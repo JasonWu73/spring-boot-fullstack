@@ -45,7 +45,7 @@ function LoginPage() {
   const location = useLocation()
 
   const { auth, requestApi, setAuth } = useAuth()
-  const { loading, fetchData } = useFetch(requestApi<AuthResponse>)
+  const { loading, requestData } = useFetch(requestApi<AuthResponse>)
   const { toast } = useToast()
 
   const targetUrl = location.state?.from || DEFAULT_REDIRECT_URL
@@ -53,7 +53,7 @@ function LoginPage() {
   if (auth) return <Navigate to={targetUrl} replace />
 
   async function login(username: string, password: string) {
-    return await fetchData({
+    return await requestData({
       url: '/api/v1/auth/login',
       method: 'POST',
       bodyData: {

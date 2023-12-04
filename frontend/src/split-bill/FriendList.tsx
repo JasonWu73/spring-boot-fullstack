@@ -25,7 +25,7 @@ function FriendList() {
   const navigate = useNavigate()
 
   const { friends, dispatch } = useFriends()
-  const { error, loading, fetchData, discardFetch } = useFetch(requestApi<Friend[]>)
+  const { error, loading, requestData, discardRequest } = useFetch(requestApi<Friend[]>)
   const { toast } = useToast()
 
   const nameQuery = searchParams.get(URL_QUERY_KEY_QUERY) || ''
@@ -62,11 +62,11 @@ function FriendList() {
       }
     })
 
-    return () => discardFetch({ url }, timestamp)
+    return () => discardRequest({ url }, timestamp)
   })
 
   async function getFriends() {
-    return await fetchData({ url })
+    return await requestData({ url })
   }
 
   function handleDeleteFriend(friend: Friend) {

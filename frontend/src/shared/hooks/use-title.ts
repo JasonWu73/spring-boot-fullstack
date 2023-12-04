@@ -7,7 +7,7 @@ import React from 'react'
  *
  * @param title 页面标题
  */
-function useTitle(title: string) {
+export function useTitle(title: string) {
   React.useEffect(() => {
     const prevTitle = document.title
 
@@ -18,5 +18,3 @@ function useTitle(title: string) {
     }
   }, [title])
 }
-
-export { useTitle }

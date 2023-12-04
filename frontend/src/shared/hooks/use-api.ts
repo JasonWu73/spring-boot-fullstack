@@ -110,8 +110,8 @@ type UseApi<T> = {
    * 是否正在加载数据。
    */
   loading: boolean
-  fetchData: (request: ApiRequest) => Promise<ApiResponse<T>>
-  discardFetch: (params: DiscardRequestParams, timestamp: number) => void
+  requestData: (request: ApiRequest) => Promise<ApiResponse<T>>
+  discardRequest: (params: DiscardRequestParams, timestamp: number) => void
   updateState: (state: SetStateAction<T>) => void
 }
 
@@ -145,7 +145,7 @@ export function useFetch<T>(
    * @param request 请求的配置属性
    * @returns Promise<ApiResponse<T>> HTTP 响应数据
    */
-  async function fetchData(request: ApiRequest): Promise<ApiResponse<T>> {
+  async function requestData(request: ApiRequest): Promise<ApiResponse<T>> {
     dispatch({ type: 'START_LOADING' })
 
     // 丢弃请求，即 50 毫秒内不发送请求，主要用于 React Strict Mode 下的重复提交
@@ -187,7 +187,7 @@ export function useFetch<T>(
    * @param params.method 请求方法
    * @param timestamp 请求的时间戳
    */
-  function discardFetch({ url, method }: DiscardRequestParams, timestamp: number) {
+  function discardRequest({ url, method }: DiscardRequestParams, timestamp: number) {
     discardFetchRef.current = { url, method, timestamp }
   }
 
@@ -214,5 +214,13 @@ export function useFetch<T>(
     })
   }
 
-  return { status, data, error, loading, fetchData, discardFetch, updateState }
+  return {
+    status,
+    data,
+    error,
+    loading,
+    requestData,
+    discardRequest,
+    updateState
+  }
 }

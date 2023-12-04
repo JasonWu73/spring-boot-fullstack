@@ -32,8 +32,8 @@ function RandomProductPage() {
     data: product,
     loading,
     error,
-    fetchData,
-    discardFetch
+    requestData,
+    discardRequest
   } = useFetch(requestApi<Product>)
 
   const randomId = Math.floor(Math.random() * 110)
@@ -44,11 +44,11 @@ function RandomProductPage() {
 
     getProduct().then()
 
-    return () => discardFetch({ url }, timestamp)
+    return () => discardRequest({ url }, timestamp)
   })
 
   async function getProduct() {
-    const { data } = await fetchData({ url })
+    const { data } = await requestData({ url })
 
     if (data) {
       setCount((prevCount) => prevCount + 1)

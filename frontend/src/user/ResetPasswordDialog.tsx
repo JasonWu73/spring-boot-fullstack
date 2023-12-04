@@ -65,13 +65,13 @@ function ResetPasswordDialog({
   const {
     error,
     loading,
-    fetchData,
+    requestData,
     updateState: updateResetState
   } = useFetch(requestApi<void>)
   const { toast } = useToast()
 
   async function resetPassword(userId: number, password: string) {
-    return await fetchData({
+    return await requestData({
       url: `/api/v1/users/${userId}/password`,
       method: 'PUT',
       bodyData: { password: encrypt(PUBLIC_KEY, password) }

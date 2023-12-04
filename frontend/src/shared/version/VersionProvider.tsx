@@ -25,7 +25,7 @@ function VersionProvider({ children }: VersionProviderProps) {
   const [version, setVersion] = React.useState<Version>()
 
   const { requestApi } = useAuth()
-  const { fetchData, discardFetch } = useFetch(requestApi<Version>)
+  const { requestData, discardRequest } = useFetch(requestApi<Version>)
 
   const url = '/api/v1/public/version'
 
@@ -38,11 +38,11 @@ function VersionProvider({ children }: VersionProviderProps) {
       }
     })
 
-    return () => discardFetch({ url: url }, timestamp)
+    return () => discardRequest({ url: url }, timestamp)
   })
 
   async function getVersion() {
-    return await fetchData({ url: url })
+    return await requestData({ url: url })
   }
 
   const value: VersionProviderState = {
