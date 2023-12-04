@@ -11,7 +11,7 @@ type TopNavBarProps = {
   showPanelFold?: boolean
 }
 
-function TopNavBar({ showPanelFold = false }: TopNavBarProps) {
+export function TopNavBar({ showPanelFold = false }: TopNavBarProps) {
   const [isHamburgerOpen, setIsHamburgerOpen] = React.useState(false)
 
   function handleClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
@@ -39,5 +39,3 @@ function TopNavBar({ showPanelFold = false }: TopNavBarProps) {
     </nav>
   )
 }
-
-export { TopNavBar }

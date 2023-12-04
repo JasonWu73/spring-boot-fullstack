@@ -13,7 +13,7 @@ type PanelFoldProviderProps = {
   children: React.ReactNode
 }
 
-function PanelFoldProvider({ children }: PanelFoldProviderProps) {
+export function PanelFoldProvider({ children }: PanelFoldProviderProps) {
   const [folded, setFolded] = React.useState(false)
 
   useScreenChange(setFolded)
@@ -30,7 +30,7 @@ function PanelFoldProvider({ children }: PanelFoldProviderProps) {
   )
 }
 
-function usePanelFold() {
+export function usePanelFold() {
   const context = React.useContext(PanelFoldProviderContext)
 
   if (context === undefined) {
@@ -57,5 +57,3 @@ function useScreenChange(setFolded: React.Dispatch<React.SetStateAction<boolean>
     return () => largeScreen.removeEventListener('change', handleScreenChange)
   }, [setFolded])
 }
-
-export { PanelFoldProvider, usePanelFold }

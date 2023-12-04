@@ -5,7 +5,7 @@ import { useAuth } from '@/shared/auth/AuthProvider'
 import { Button } from '@/shared/components/ui/Button'
 import { useApi } from '@/shared/hooks/use-api'
 
-function LogoutButton() {
+export function LogoutButton() {
   const { requestApi, deleteAuth } = useAuth()
 
   const { loading, requestData } = useApi(requestApi<void>)
@@ -32,5 +32,3 @@ function LogoutButton() {
     </Button>
   )
 }
-
-export { LogoutButton }

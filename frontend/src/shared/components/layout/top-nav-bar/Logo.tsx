@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 
 import reactLogo from '@/shared/assets/react.svg'
 
-function Logo() {
+export function Logo() {
   return (
     <Link to="/">
       <span className="flex items-center gap-2">
@@ -12,5 +12,3 @@ function Logo() {
     </Link>
   )
 }
-
-export { Logo }

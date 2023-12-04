@@ -13,7 +13,7 @@ type PageNavProps = {
   isOpen: boolean
 }
 
-function PageNav({ isOpen }: PageNavProps) {
+export function PageNav({ isOpen }: PageNavProps) {
   return (
     <>
       <NavigationMenu className="hidden max-w-full justify-start lg:flex">
@@ -64,5 +64,3 @@ function NavItem({ children, link }: NavItemProps) {
     </NavigationMenuItem>
   )
 }
-
-export { PageNav }

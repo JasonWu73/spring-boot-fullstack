@@ -5,7 +5,7 @@ import { Footer } from '@/shared/components/layout/Footer'
 import { Header } from '@/shared/components/layout/Header'
 import { SpinnerFullPage } from '@/shared/components/ui/SpinnerFullPage'
 
-function LoginLayout() {
+export function LoginLayout() {
   return (
     <div className="flex min-h-screen flex-col">
       <Header className="dark:bg-night-1" />
@@ -20,5 +20,3 @@ function LoginLayout() {
     </div>
   )
 }
-
-export default LoginLayout

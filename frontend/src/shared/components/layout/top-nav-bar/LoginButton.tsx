@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { Button } from '@/shared/components/ui/Button'
 import { LogIn } from 'lucide-react'
 
-function LoginButton() {
+export function LoginButton() {
   return (
     <Link to="/login">
       <Button>
@@ -13,5 +13,3 @@ function LoginButton() {
     </Link>
   )
 }
-
-export { LoginButton }

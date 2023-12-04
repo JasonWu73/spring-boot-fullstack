@@ -15,7 +15,7 @@ import {
 } from '@/shared/components/ui/NavigationMenu'
 import { cn } from '@/shared/utils/helpers'
 
-function AuthSwitch() {
+export function AuthSwitch() {
   const location = useLocation()
 
   const { auth, isAdmin } = useAuth()
@@ -84,5 +84,3 @@ function NavItem({ children, link }: NavItemProps) {
     </li>
   )
 }
-
-export { AuthSwitch }

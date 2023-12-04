@@ -5,7 +5,7 @@ import { useVersion } from '@/shared/version/VersionProvider'
 
 type FooterProps = React.ComponentPropsWithoutRef<'footer'>
 
-function Footer({ className, ...props }: FooterProps) {
+export function Footer({ className, ...props }: FooterProps) {
   const { name, developer, version, builtAt } = useVersion()
 
   return (
@@ -29,5 +29,3 @@ type MessageProps = {
 function Message({ children }: MessageProps) {
   return <p className="text-center text-sm">{children}</p>
 }
-
-export { Footer }

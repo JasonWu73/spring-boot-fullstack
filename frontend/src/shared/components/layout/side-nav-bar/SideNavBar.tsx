@@ -7,7 +7,7 @@ import { ScrollArea } from '@/shared/components/ui/ScrollArea'
 import { Separator } from '@/shared/components/ui/Separator'
 import { cn } from '@/shared/utils/helpers'
 
-function SideNavBar() {
+export function SideNavBar() {
   const { isRoot } = useAuth()
 
   return (
@@ -85,5 +85,3 @@ function MenuItem({ children, link }: MenuItemProps) {
 function MenuSeparator() {
   return <Separator className="my-2 w-4/5 dark:bg-night-4" />
 }
-
-export { SideNavBar }
