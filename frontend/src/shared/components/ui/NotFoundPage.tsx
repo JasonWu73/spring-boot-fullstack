@@ -1,21 +1,26 @@
 import { Link } from 'react-router-dom'
 
-import { buttonVariants } from '@/shared/components/ui/Button'
-import { cn, tw } from '@/shared/utils/helpers'
-
 export default function NotFoundPage() {
   return (
-    <div className="mt-8 flex flex-col items-center gap-4">
-      <h1>页面不存在 😞</h1>
-      <Link
-        to="/"
-        className={cn(
-          buttonVariants({ variant: 'link' }),
-          tw`text-base text-sky-500 dark:text-sky-600`
-        )}
-      >
-        返回首页
-      </Link>
+    <div className="relative mt-8 flex flex-col items-center gap-4 text-slate-950 dark:text-snow">
+      <h1 className="text-9xl font-extrabold tracking-widest">404</h1>
+
+      <div className="absolute top-[5.5rem] rotate-12 rounded-sm bg-orange-600 px-2 text-sm text-snow">
+        Page Not Found
+      </div>
+
+      <button className="mt-5">
+        <Link
+          to="/"
+          className="group relative inline-block text-sm font-medium text-orange-600 focus:outline-none focus:ring active:text-orange-500"
+        >
+          <span className="absolute inset-0 translate-x-0.5 translate-y-0.5 rounded-md bg-orange-600 transition-transform group-hover:translate-x-0 group-hover:translate-y-0"></span>
+
+          <span className="relative block rounded-md border border-current bg-night px-8 py-3">
+            返回首页
+          </span>
+        </Link>
+      </button>
     </div>
   )
 }
