@@ -13,12 +13,12 @@ export function Loading() {
       <span className="sr-only">Loading...</span>
     </div>
   )
+}
 
-  function useNProgress() {
-    React.useEffect(() => {
-      startNProgress()
+function useNProgress() {
+  React.useEffect(() => {
+    startNProgress()
 
-      return () => endNProgress()
-    }, [])
-  }
+    return () => endNProgress()
+  }, [])
 }
