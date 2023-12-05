@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { cn } from '@/shared/utils/helpers'
+import { cn, tw } from '@/shared/utils/helpers'
 
 type CodeProps = {
   children: React.ReactNode
@@ -14,7 +14,7 @@ export function Code({ children, className }: CodeProps) {
   return (
     <code
       className={cn(
-        'rounded bg-slate-100 px-1 py-0.5 font-mono text-red-500 dark:bg-night-3 dark:text-[#88C0D0]',
+        tw`rounded bg-slate-100 px-1 py-0.5 font-mono text-sm text-red-500 dark:bg-night-3 dark:text-[#88C0D0]`,
         className
       )}
     >
