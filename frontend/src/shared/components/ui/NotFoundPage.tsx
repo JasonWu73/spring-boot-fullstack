@@ -9,10 +9,10 @@ export default function NotFoundPage() {
         Page Not Found
       </div>
 
-      <button className="mt-5">
+      <div className="mt-5">
         <Link
           to="/"
-          className="group relative inline-block text-sm font-medium text-orange-600 focus:outline-none focus:ring active:text-orange-500"
+          className="group relative inline-block text-sm font-medium text-orange-600 focus-visible:rounded-md focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-orange-600 active:text-orange-500"
         >
           <span className="absolute inset-0 translate-x-0.5 translate-y-0.5 rounded-md bg-orange-600 transition-transform group-hover:translate-x-0 group-hover:translate-y-0"></span>
 
@@ -20,7 +20,7 @@ export default function NotFoundPage() {
             返回首页
           </span>
         </Link>
-      </button>
+      </div>
     </div>
   )
 }
