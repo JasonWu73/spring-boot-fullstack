@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="net.wuxianjie.web.user.UserMapper">
-  <select id="selectById" resultType="net.wuxianjie.web.user.User">
+<mapper namespace="net.wuxianjie.backend.user.UserMapper">
+  <select id="selectById" resultType="net.wuxianjie.backend.user.User">
     SELECT
       id,
       created_at AS createdAt,
@@ -17,7 +17,7 @@
     WHERE id = #{id}
   </select>
 
-  <select id="selectByUsername" resultType="net.wuxianjie.web.user.User">
+  <select id="selectByUsername" resultType="net.wuxianjie.backend.user.User">
     SELECT
       id,
       created_at AS createdAt,
@@ -32,7 +32,7 @@
     WHERE username = #{username}
   </select>
 
-  <resultMap id="userBaseMap" type="net.wuxianjie.web.user.dto.UserInfo">
+  <resultMap id="userBaseMap" type="net.wuxianjie.backend.user.dto.UserInfo">
     <constructor>
       <idArg column="id" javaType="long" />
       <arg column="createdAt" javaType="java.time.LocalDateTime" />
@@ -40,7 +40,7 @@
       <arg column="remark" javaType="string" />
       <arg column="username" javaType="string" />
       <arg column="nickname" javaType="string" />
-      <arg column="status" javaType="net.wuxianjie.web.user.AccountStatus" />
+      <arg column="status" javaType="net.wuxianjie.backend.user.AccountStatus" />
       <arg column="authorities" javaType="string" />
     </constructor>
   </resultMap>

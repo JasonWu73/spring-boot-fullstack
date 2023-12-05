@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="net.wuxianjie.web.demo.mybatis.MyBatisMapper">
-  <select id="selectAllData" resultType="net.wuxianjie.web.demo.mybatis.MyBatisData">
+<mapper namespace="net.wuxianjie.backend.demo.mybatis.MyBatisMapper">
+  <select id="selectAllData" resultType="net.wuxianjie.backend.demo.mybatis.MyBatisData">
     SELECT
       id,
       name,
