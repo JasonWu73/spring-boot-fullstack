@@ -3,7 +3,7 @@ import { Outlet } from 'react-router-dom'
 
 import { Footer } from '@/shared/components/layout/Footer'
 import { Header } from '@/shared/components/layout/Header'
-import { SpinnerFullPage } from '@/shared/components/ui/SpinnerFullPage'
+import { LoadingFullPage } from '@/shared/components/ui/LoadingFullPage'
 
 export function LoginLayout() {
   return (
@@ -11,7 +11,7 @@ export function LoginLayout() {
       <Header className="bg-night-1 dark:bg-night-1" />
 
       <main className="relative flex-grow bg-night bg-[url('/img/bg_login.png')] bg-[length:100%] bg-no-repeat p-4 text-snow">
-        <React.Suspense fallback={<SpinnerFullPage />}>
+        <React.Suspense fallback={<LoadingFullPage />}>
           <Outlet />
         </React.Suspense>
       </main>

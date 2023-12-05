@@ -7,7 +7,7 @@ import { AdminLayout } from '@/shared/components/layout/AdminLayout'
 import { LoginLayout } from '@/shared/components/layout/LoginLayout'
 import { MainLayout } from '@/shared/components/layout/MainLayout'
 import { PanelFoldProvider } from '@/shared/components/layout/panel-fold/PanelFoldProvider'
-import { Spinner } from '@/shared/components/ui/Spinner'
+import { Loading } from '@/shared/components/ui/Loading'
 import { ThemeProvider } from '@/shared/components/ui/ThemeProvider'
 import { Toaster } from '@/shared/components/ui/Toaster'
 import { wait } from '@/shared/utils/helpers'
@@ -64,7 +64,7 @@ const router = createBrowserRouter([
           {
             path: ':friendId',
             element: (
-              <React.Suspense fallback={<Spinner />}>
+              <React.Suspense fallback={<Loading />}>
                 <SplitBillForm />
               </React.Suspense>
             )

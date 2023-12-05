@@ -5,7 +5,7 @@ import { Aside } from '@/shared/components/layout/Aside'
 import { Footer } from '@/shared/components/layout/Footer'
 import { Header } from '@/shared/components/layout/Header'
 import { usePanelFold } from '@/shared/components/layout/panel-fold/PanelFoldProvider'
-import { SpinnerFullPage } from '@/shared/components/ui/SpinnerFullPage'
+import { LoadingFullPage } from '@/shared/components/ui/LoadingFullPage'
 import { cn } from '@/shared/utils/helpers'
 
 export function AdminLayout() {
@@ -19,7 +19,7 @@ export function AdminLayout() {
 
       <main className={cn('col-span-1 row-span-1 flex flex-col', folded && 'col-span-2')}>
         <div className="relative flex-grow p-4">
-          <React.Suspense fallback={<SpinnerFullPage />}>
+          <React.Suspense fallback={<LoadingFullPage />}>
             <Outlet />
           </React.Suspense>
         </div>
