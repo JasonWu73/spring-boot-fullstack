@@ -13,7 +13,7 @@ export function ShortcutTip() {
         <AccordionTrigger>查看可用快捷键</AccordionTrigger>
 
         <AccordionContent>
-          <ul className="space-y-2">
+          <ul className="mt-4 space-y-2">
             <li>
               <Code>Ctrl+\</Code>：定位到搜索框
             </li>
