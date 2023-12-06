@@ -17,8 +17,13 @@ import { Form } from '@/shared/components/ui/Form'
 import { useToast } from '@/shared/components/ui/use-toast'
 import { useApi } from '@/shared/hooks/use-api'
 import { useTitle } from '@/shared/hooks/use-title'
-import type { AuthResponse } from '@/shared/store/auth-state'
-import { PUBLIC_KEY, auth, requestApi, setAuth } from '@/shared/store/auth-state'
+import {
+  PUBLIC_KEY,
+  auth,
+  requestApi,
+  setAuth,
+  type AuthResponse
+} from '@/shared/store/auth-state'
 import { encrypt } from '@/shared/utils/rsa'
 import { ShieldPlus } from 'lucide-react'
 
@@ -72,11 +77,12 @@ export default function LoginPage() {
         description: error,
         variant: 'destructive'
       })
-
       return
     }
 
-    setAuth(data!)
+    if (data) {
+      setAuth(data)
+    }
 
     return <Navigate to={targetUrl} replace />
   }
