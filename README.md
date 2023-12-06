@@ -49,6 +49,9 @@ npm install react-router-dom
 
 # 安装 shadcn/ui
 npx shadcn-ui@latest init
+
+# 安装信号库（更好的状态管理库）
+npm install @preact/signals-react
 ```
 
 ## Tutorials

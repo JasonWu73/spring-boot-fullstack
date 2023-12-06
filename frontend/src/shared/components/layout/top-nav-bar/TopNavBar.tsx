@@ -6,6 +6,7 @@ import { Logo } from '@/shared/components/layout/top-nav-bar/Logo'
 import { PageNav } from '@/shared/components/layout/top-nav-bar/PageNav'
 import { Hamburger } from '@/shared/components/ui/Hamburger'
 import { ModeToggle } from '@/shared/components/ui/ModeToggle'
+import { setTheme } from '@/shared/store/theme-state'
 
 type TopNavBarProps = {
   showPanelFold?: boolean
@@ -33,7 +34,7 @@ export function TopNavBar({ showPanelFold = false }: TopNavBarProps) {
 
       <div className="flex gap-4">
         <AuthSwitch />
-        <ModeToggle />
+        <ModeToggle setTheme={setTheme} />
         <Hamburger isOpen={isHamburgerOpen} onToggle={setIsHamburgerOpen} />
       </div>
     </nav>

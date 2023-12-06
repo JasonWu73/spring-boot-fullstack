@@ -7,11 +7,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from '@/shared/components/ui/DropdownMenu'
-import { useTheme } from '@/shared/components/ui/ThemeProvider'
 
-export function ModeToggle() {
-  const { setTheme } = useTheme()
+export type Theme = 'dark' | 'light' | 'system'
 
+type ModeToggleProps = {
+  setTheme: (theme: Theme) => void
+}
+
+export function ModeToggle({ setTheme }: ModeToggleProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

@@ -8,8 +8,8 @@ import { LoginLayout } from '@/shared/components/layout/LoginLayout'
 import { MainLayout } from '@/shared/components/layout/MainLayout'
 import { PanelFoldProvider } from '@/shared/components/layout/panel-fold/PanelFoldProvider'
 import { Loading } from '@/shared/components/ui/Loading'
-import { ThemeProvider } from '@/shared/components/ui/ThemeProvider'
 import { Toaster } from '@/shared/components/ui/Toaster'
+import { createThemeState } from '@/shared/store/theme-state'
 import { wait } from '@/shared/utils/helpers'
 import { VersionProvider } from '@/shared/version/VersionProvider'
 import { FriendProvider } from '@/split-bill/FriendProvider'
@@ -101,15 +101,15 @@ const router = createBrowserRouter([
 ])
 
 export default function App() {
-  return (
-    <ThemeProvider defaultTheme="system" storageKey="demo-ui-theme">
-      <AuthProvider>
-        <VersionProvider>
-          <RouterProvider router={router} />
+  createThemeState('system', 'demo-ui-theme')
 
-          <Toaster />
-        </VersionProvider>
-      </AuthProvider>
-    </ThemeProvider>
+  return (
+    <AuthProvider>
+      <VersionProvider>
+        <RouterProvider router={router} />
+
+        <Toaster />
+      </VersionProvider>
+    </AuthProvider>
   )
 }
