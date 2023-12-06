@@ -4,7 +4,6 @@ import { useForm } from 'react-hook-form'
 import { Navigate, useLocation } from 'react-router-dom'
 import { z } from 'zod'
 
-import { PUBLIC_KEY, useAuth, type AuthResponse } from '@/shared/auth/AuthProvider'
 import { Button } from '@/shared/components/ui/Button'
 import {
   Card,
@@ -18,6 +17,8 @@ import { Form } from '@/shared/components/ui/Form'
 import { useToast } from '@/shared/components/ui/use-toast'
 import { useApi } from '@/shared/hooks/use-api'
 import { useTitle } from '@/shared/hooks/use-title'
+import type { AuthResponse } from '@/shared/store/auth-state'
+import { PUBLIC_KEY, auth, requestApi, setAuth } from '@/shared/store/auth-state'
 import { encrypt } from '@/shared/utils/rsa'
 import { ShieldPlus } from 'lucide-react'
 
@@ -44,13 +45,12 @@ export default function LoginPage() {
   })
   const location = useLocation()
 
-  const { auth, requestApi, setAuth } = useAuth()
   const { loading, requestData } = useApi(requestApi<AuthResponse>)
   const { toast } = useToast()
 
   const targetUrl = location.state?.from || DEFAULT_REDIRECT_URL
 
-  if (auth) return <Navigate to={targetUrl} replace />
+  if (auth.value) return <Navigate to={targetUrl} replace />
 
   async function login(username: string, password: string) {
     return await requestData({

@@ -5,7 +5,6 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
 import type { PaginationData } from '@/shared/apis/types'
-import { PUBLIC_KEY, useAuth } from '@/shared/auth/AuthProvider'
 import { Alert, AlertDescription, AlertTitle } from '@/shared/components/ui/Alert'
 import { Button } from '@/shared/components/ui/Button'
 import { Code } from '@/shared/components/ui/Code'
@@ -23,6 +22,7 @@ import { Form } from '@/shared/components/ui/Form'
 import { useToast } from '@/shared/components/ui/use-toast'
 import type { SetStateAction } from '@/shared/hooks/use-api'
 import { useApi } from '@/shared/hooks/use-api'
+import { PUBLIC_KEY, requestApi } from '@/shared/store/auth-state'
 import { encrypt } from '@/shared/utils/rsa'
 import type { User } from '@/user/UserListPage'
 
@@ -61,7 +61,6 @@ export function ResetPasswordDialog({
     defaultValues
   })
 
-  const { requestApi } = useAuth()
   const {
     error,
     loading,

@@ -1,13 +1,13 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 
-import { useAuth } from '@/shared/auth/AuthProvider'
 import { buttonVariants } from '@/shared/components/ui/Button'
 import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuList
 } from '@/shared/components/ui/NavigationMenu'
+import { isUser } from '@/shared/store/auth-state'
 import { cn, tw } from '@/shared/utils/helpers'
 
 type PageNavProps = {
@@ -38,8 +38,6 @@ export function PageNav({ isOpen }: PageNavProps) {
 }
 
 function NavItemList() {
-  const { isUser } = useAuth()
-
   return (
     <>
       <NavItem link="/split-bill">账单 App</NavItem>

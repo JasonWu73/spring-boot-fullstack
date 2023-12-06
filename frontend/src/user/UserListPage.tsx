@@ -2,7 +2,6 @@ import React from 'react'
 import { useSearchParams } from 'react-router-dom'
 
 import type { PaginationData, PaginationParams } from '@/shared/apis/types'
-import { useAuth } from '@/shared/auth/AuthProvider'
 import {
   Card,
   CardContent,
@@ -22,6 +21,7 @@ import {
 import { useApi } from '@/shared/hooks/use-api'
 import { useRefresh } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
+import { requestApi } from '@/shared/store/auth-state'
 import { UserSearch } from '@/user/UserSearch'
 import { UserTable } from '@/user/UserTable'
 
@@ -49,7 +49,6 @@ export default function UserListPage() {
   const [searchParams] = useSearchParams()
   const [indexes, setIndexes] = React.useState<number[]>([]) // 选中的行的索引
 
-  const { requestApi } = useAuth()
   const {
     data: userPaging,
     error,

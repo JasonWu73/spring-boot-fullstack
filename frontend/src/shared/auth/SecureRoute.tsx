@@ -1,17 +1,21 @@
+import {
+  ADMIN,
+  ROOT,
+  USER,
+  auth,
+  isAdmin,
+  isRoot,
+  isUser
+} from '@/shared/store/auth-state'
 import { Navigate, Outlet } from 'react-router-dom'
-
-import { useAuth } from '@/shared/auth/AuthProvider'
-import { ADMIN, ROOT, USER } from '@/shared/auth/constants'
 
 type SecureRouteProps = {
   authority?: 'root' | 'admin' | 'user'
 }
 
 export function SecureRoute({ authority }: SecureRouteProps) {
-  const { auth, isRoot, isAdmin, isUser } = useAuth()
-
   // 未登录，则跳转到登录页面
-  if (!auth) {
+  if (!auth.value) {
     return <Navigate to="/login" replace state={{ from: window.location.pathname }} />
   }
 

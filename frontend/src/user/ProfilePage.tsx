@@ -3,7 +3,6 @@ import { ExclamationTriangleIcon, ReloadIcon } from '@radix-ui/react-icons'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
-import { PUBLIC_KEY, useAuth } from '@/shared/auth/AuthProvider'
 import {
   Accordion,
   AccordionContent,
@@ -26,6 +25,12 @@ import { useToast } from '@/shared/components/ui/use-toast'
 import { useApi } from '@/shared/hooks/use-api'
 import { useInitial } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
+import {
+  PUBLIC_KEY,
+  clearAuth,
+  requestApi,
+  updateNickname
+} from '@/shared/store/auth-state'
 import { encrypt } from '@/shared/utils/rsa'
 import type { User } from '@/user/UserListPage'
 
@@ -72,7 +77,6 @@ export default function UpdateUserPage() {
     defaultValues
   })
 
-  const { requestApi, deleteAuth, updateAuth } = useAuth()
   const {
     data: user,
     error,
@@ -149,13 +153,11 @@ export default function UpdateUserPage() {
     // 若修改了密码，则需要重新登录
     if (values.newPassword) {
       // 修改密码时，后端会自动退出登录，所以前端只要删除已保存的身份验证信息即可
-      deleteAuth()
+      clearAuth()
     }
 
     // 更新已保存的身份验证信息
-    updateAuth((prevAuth) => {
-      return { ...prevAuth, nickname: values.nickname }
-    })
+    updateNickname(values.nickname)
   }
 
   return (

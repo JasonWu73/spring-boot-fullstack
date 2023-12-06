@@ -16,7 +16,7 @@ export function setTheme(newTheme: Theme) {
 }
 
 /**
- * 创建保留在本地存储中的主题状态。
+ * 创建本地缓存的主题数据。
  *
  * @param defaultTheme 默认主题
  * @param storageKey 本地存储中的键，默认为 `app-ui-theme`

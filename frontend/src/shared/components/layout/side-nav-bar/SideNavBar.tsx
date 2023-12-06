@@ -2,15 +2,13 @@ import { BugOff, FileClock, ShoppingCart, UserCog2 } from 'lucide-react'
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 
-import { useAuth } from '@/shared/auth/AuthProvider'
 import { buttonVariants } from '@/shared/components/ui/Button'
 import { ScrollArea } from '@/shared/components/ui/ScrollArea'
 import { Separator } from '@/shared/components/ui/Separator'
+import { isRoot } from '@/shared/store/auth-state'
 import { cn, tw } from '@/shared/utils/helpers'
 
 export function SideNavBar() {
-  const { isRoot } = useAuth()
-
   return (
     <ScrollArea className="h-[calc(100vh-6rem)] w-48">
       <nav className="flex flex-col items-center gap-2">

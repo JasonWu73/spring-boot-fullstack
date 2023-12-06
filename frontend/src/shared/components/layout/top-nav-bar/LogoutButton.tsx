@@ -1,13 +1,11 @@
 import { ReloadIcon } from '@radix-ui/react-icons'
 import { LogOut } from 'lucide-react'
 
-import { useAuth } from '@/shared/auth/AuthProvider'
 import { Button } from '@/shared/components/ui/Button'
 import { useApi } from '@/shared/hooks/use-api'
+import { clearAuth, requestApi } from '@/shared/store/auth-state'
 
 export function LogoutButton() {
-  const { requestApi, deleteAuth } = useAuth()
-
   const { loading, requestData } = useApi(requestApi<void>)
 
   async function handleLogout() {
@@ -16,7 +14,7 @@ export function LogoutButton() {
       method: 'DELETE'
     })
 
-    deleteAuth()
+    clearAuth()
   }
 
   return (

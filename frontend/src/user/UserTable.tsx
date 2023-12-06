@@ -5,8 +5,6 @@ import React from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 
 import type { PaginationData } from '@/shared/apis/types'
-import { useAuth } from '@/shared/auth/AuthProvider'
-import { ADMIN, ROOT, USER } from '@/shared/auth/constants'
 import { Badge } from '@/shared/components/ui/Badge'
 import { Button, buttonVariants } from '@/shared/components/ui/Button'
 import { Checkbox } from '@/shared/components/ui/Checkbox'
@@ -32,6 +30,7 @@ import {
 } from '@/shared/constants'
 import type { SetStateAction } from '@/shared/hooks/use-api'
 import { useApi } from '@/shared/hooks/use-api'
+import { ADMIN, ROOT, USER, isRoot, requestApi } from '@/shared/store/auth-state'
 import { cn } from '@/shared/utils/helpers'
 import { ResetPasswordDialog } from '@/user/ResetPasswordDialog'
 import type { User } from '@/user/UserListPage'
@@ -66,7 +65,6 @@ export function UserTable({
   const [openResetPasswordDialog, setOpenResetPasswordDialog] = React.useState(false)
   const currentUserRef = React.useRef<User | null>(null)
 
-  const { isRoot, requestApi } = useAuth()
   const { loading: submitting, requestData } = useApi(requestApi<void>)
   const { toast } = useToast()
 

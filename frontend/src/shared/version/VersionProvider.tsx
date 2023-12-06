@@ -1,8 +1,8 @@
 import React from 'react'
 
-import { useAuth } from '@/shared/auth/AuthProvider'
 import { useApi } from '@/shared/hooks/use-api'
 import { useInitial } from '@/shared/hooks/use-refresh'
+import { requestApi } from '@/shared/store/auth-state'
 
 type Version = {
   name: string
@@ -24,7 +24,6 @@ type VersionProviderProps = {
 export function VersionProvider({ children }: VersionProviderProps) {
   const [version, setVersion] = React.useState<Version>()
 
-  const { requestApi } = useAuth()
   const { requestData, discardRequest } = useApi(requestApi<Version>)
 
   const url = '/api/v1/public/version'

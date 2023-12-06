@@ -5,11 +5,11 @@ import { useForm } from 'react-hook-form'
 import { useSearchParams } from 'react-router-dom'
 import { z } from 'zod'
 
-import { ADMIN, ROOT, USER } from '@/shared/auth/constants'
 import { Button } from '@/shared/components/ui/Button'
 import { FormInput, FormSelect } from '@/shared/components/ui/CustomFormField'
 import { Form } from '@/shared/components/ui/Form'
 import { URL_QUERY_KEY_PAGE_NUM, URL_QUERY_KEY_PAGE_SIZE } from '@/shared/constants'
+import { ADMIN, ROOT, USER } from '@/shared/store/auth-state'
 
 const statusOptions = [
   { value: '', label: '全部' },

@@ -1,7 +1,6 @@
 import React from 'react'
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
 
-import { AuthProvider } from '@/shared/auth/AuthProvider'
 import { SecureRoute } from '@/shared/auth/SecureRoute'
 import { AdminLayout } from '@/shared/components/layout/AdminLayout'
 import { LoginLayout } from '@/shared/components/layout/LoginLayout'
@@ -9,13 +8,14 @@ import { MainLayout } from '@/shared/components/layout/MainLayout'
 import { PanelFoldProvider } from '@/shared/components/layout/panel-fold/PanelFoldProvider'
 import { Loading } from '@/shared/components/ui/Loading'
 import { Toaster } from '@/shared/components/ui/Toaster'
+import { createAuthState } from '@/shared/store/auth-state'
 import { createThemeState } from '@/shared/store/theme-state'
 import { wait } from '@/shared/utils/helpers'
 import { VersionProvider } from '@/shared/version/VersionProvider'
 import { FriendProvider } from '@/split-bill/FriendProvider'
 
 const NotFoundPage = React.lazy(() => import('@/shared/components/ui/NotFoundPage'))
-const LoginPage = React.lazy(() => import('@/shared/auth/LoginPage'))
+const LoginPage = React.lazy(() => import('@/login/LoginPage'))
 const ProfilePage = React.lazy(() => import('@/user/ProfilePage'))
 const RandomProductPage = React.lazy(() => import('@/product/RandomProductPage'))
 const SplitBillPage = React.lazy(() => import('@/split-bill/SplitBillPage'))
@@ -102,14 +102,13 @@ const router = createBrowserRouter([
 
 export default function App() {
   createThemeState('system', 'demo-ui-theme')
+  createAuthState()
 
   return (
-    <AuthProvider>
-      <VersionProvider>
-        <RouterProvider router={router} />
+    <VersionProvider>
+      <RouterProvider router={router} />
 
-        <Toaster />
-      </VersionProvider>
-    </AuthProvider>
+      <Toaster />
+    </VersionProvider>
   )
 }

@@ -4,7 +4,6 @@ import { useSearchParams } from 'react-router-dom'
 import { OperationLogSearch } from '@/operation-log/OperationLogSearch'
 import { OperationLogTable } from '@/operation-log/OperationLogTable'
 import type { PaginationData, PaginationParams } from '@/shared/apis/types'
-import { useAuth } from '@/shared/auth/AuthProvider'
 import {
   Card,
   CardContent,
@@ -22,6 +21,7 @@ import {
 import { useApi } from '@/shared/hooks/use-api'
 import { useRefresh } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
+import { requestApi } from '@/shared/store/auth-state'
 
 export type OperationLog = {
   id: number
@@ -44,7 +44,6 @@ export default function OperationLogListPage() {
 
   const [searchParams] = useSearchParams()
 
-  const { requestApi } = useAuth()
   const {
     data: logPaging,
     error,
