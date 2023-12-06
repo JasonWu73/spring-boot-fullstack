@@ -1,9 +1,10 @@
-import { effect, signal, type Signal } from '@preact/signals-react'
+import { effect, signal } from '@preact/signals-react'
 
 import type { Theme } from '@/shared/components/ui/ModeToggle'
 
-let theme: Signal<Theme>
 let STORAGE_KEY: string
+
+const theme = signal<Theme>(undefined as unknown as Theme)
 
 /**
  * 设置主题。
@@ -22,10 +23,10 @@ export function setTheme(newTheme: Theme) {
  * @param storageKey 本地存储中的键，默认为 `app-ui-theme`
  */
 export function createThemeState(defaultTheme: Theme, storageKey = 'app-ui-theme') {
-  if (theme !== undefined) return
+  if (theme.value !== undefined) return
 
-  theme = signal(getTheme(defaultTheme))
   STORAGE_KEY = storageKey
+  theme.value = getTheme(defaultTheme)
 
   effect(() => {
     resetTheme()

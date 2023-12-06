@@ -1,4 +1,4 @@
-import { computed, effect, signal, type Signal } from '@preact/signals-react'
+import { computed, effect, signal } from '@preact/signals-react'
 
 import type { ApiResponse } from '@/shared/hooks/use-api'
 import { sendRequest, type ApiRequest } from '@/shared/utils/api-caller'
@@ -58,7 +58,7 @@ type Auth = {
 /**
  * 前端存储的身份验证数据。
  */
-export let auth: Signal<Auth | null>
+export const auth = signal<Auth | null>(undefined as unknown as Auth)
 
 // 上下级权限关系为：root > admin > user
 // 超级管理员权限，前端不可手动分配
@@ -116,9 +116,9 @@ export function updateNickname(nickname: string) {
  * 创建本地缓存的身份验证数据。
  */
 export function createAuthState() {
-  if (auth !== undefined) return
+  if (auth.value !== undefined) return
 
-  auth = signal(getStorageAuth())
+  auth.value = getStorageAuth()
 
   // 自动更新前端缓存的身份验证数据
   effect(() => {
@@ -165,6 +165,7 @@ export async function requestApi<T>(request: ApiRequest): Promise<ApiResponse<T>
   return response
 }
 
+// 上次刷新访问令牌的时间，用于防止短时间内的多次刷新
 let refreshedAt = 0
 
 async function refreshAuth() {

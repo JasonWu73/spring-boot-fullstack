@@ -10,8 +10,8 @@ import { Loading } from '@/shared/components/ui/Loading'
 import { Toaster } from '@/shared/components/ui/Toaster'
 import { createAuthState } from '@/shared/store/auth-state'
 import { createThemeState } from '@/shared/store/theme-state'
+import { createVersionState } from '@/shared/store/version-state'
 import { wait } from '@/shared/utils/helpers'
-import { VersionProvider } from '@/shared/version/VersionProvider'
 import { FriendProvider } from '@/split-bill/FriendProvider'
 
 const NotFoundPage = React.lazy(() => import('@/shared/components/ui/NotFoundPage'))
@@ -104,11 +104,13 @@ export default function App() {
   createThemeState('system', 'demo-ui-theme')
   createAuthState()
 
+  createVersionState().then()
+
   return (
-    <VersionProvider>
+    <>
       <RouterProvider router={router} />
 
       <Toaster />
-    </VersionProvider>
+    </>
   )
 }

@@ -121,7 +121,7 @@ type UseApi<T> = {
  * <ul>
  *   <li>提供了常用的状态，如 HTTP 响应状态码、响应数据、是否正在加载中等</li>
  *   <li>提供了发起 HTTP 请求的方法</li>
- *   <li>提供了丢弃请求的方法，即 50 毫秒内不发送请求，主要用于 React Strict Mode 下的重复提交</li>
+ *   <li>提供了丢弃请求的方法，即 500 毫秒内不发送请求，主要用于 React Strict Mode 下的重复提交</li>
  *   <li>提供了更新前端数据的方法</li>
  * </ul>
  *
@@ -148,14 +148,14 @@ export function useApi<T>(
   async function requestData(request: ApiRequest): Promise<ApiResponse<T>> {
     dispatch({ type: 'START_LOADING' })
 
-    // 丢弃请求，即 50 毫秒内不发送请求，主要用于 React Strict Mode 下的重复提交
+    // 丢弃请求，即 500 毫秒内不发送请求，主要用于 React Strict Mode 下的重复提交
     const discardRequest = discardFetchRef.current
 
     if (
       discardRequest &&
       discardRequest.url === request.url &&
       discardRequest.method === request.method &&
-      Date.now() - discardRequest.timestamp < 50
+      Date.now() - discardRequest.timestamp < 500
     ) {
       return {}
     }
@@ -180,7 +180,7 @@ export function useApi<T>(
   }
 
   /**
-   * 丢弃请求，即 50 毫秒内不发送请求，主要用于 React Strict Mode 下的重复提交。
+   * 丢弃请求，即 500 毫秒内不发送请求，主要用于 React Strict Mode 下的重复提交。
    *
    * @param params API Endpoint 信息
    * @param params.url API Endpoint URL
