@@ -110,8 +110,30 @@ type UseApi<T> = {
    * 是否正在加载数据。
    */
   loading: boolean
+
+  /**
+   * 发起 HTTP 请求，获取 API 数据。
+   *
+   * @param request 请求的配置属性
+   * @returns Promise<ApiResponse<T>> HTTP 响应数据
+   */
   requestData: (request: ApiRequest) => Promise<ApiResponse<T>>
+
+  /**
+   * 丢弃请求，即 500 毫秒内不发送请求，主要用于防止 React Strict Mode 下的重复提交。
+   *
+   * @param params API Endpoint 信息
+   * @param params.url API Endpoint URL
+   * @param params.method 请求方法
+   * @param timestamp 请求发起时的时间戳
+   */
   discardRequest: (params: DiscardRequestParams, timestamp: number) => void
+
+  /**
+   * 更新前端数据。
+   *
+   * @param newState 更新的数据或更新的回调函数
+   */
   updateState: (state: SetStateAction<T>) => void
 }
 
@@ -139,12 +161,6 @@ export function useApi<T>(
 
   const { status, data, error, loading } = state
 
-  /**
-   * 发起 HTTP 请求，获取 API 数据。
-   *
-   * @param request 请求的配置属性
-   * @returns Promise<ApiResponse<T>> HTTP 响应数据
-   */
   async function requestData(request: ApiRequest): Promise<ApiResponse<T>> {
     dispatch({ type: 'START_LOADING' })
 
@@ -179,23 +195,10 @@ export function useApi<T>(
     return response
   }
 
-  /**
-   * 丢弃请求，即 500 毫秒内不发送请求，主要用于 React Strict Mode 下的重复提交。
-   *
-   * @param params API Endpoint 信息
-   * @param params.url API Endpoint URL
-   * @param params.method 请求方法
-   * @param timestamp 请求发起时的时间戳
-   */
   function discardRequest({ url, method }: DiscardRequestParams, timestamp: number) {
     discardFetchRef.current = { url, method, timestamp }
   }
 
-  /**
-   * 更新前端数据。
-   *
-   * @param newState 更新的数据或更新函数
-   */
   function updateState(newState: SetStateAction<T>) {
     if (typeof newState === 'function') {
       const updater = newState as (prevData: State<T>) => State<T>
