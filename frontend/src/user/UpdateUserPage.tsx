@@ -4,8 +4,6 @@ import { useForm } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
 import { z } from 'zod'
 
-import { useAuth } from '@/shared/auth/AuthProvider'
-import { ADMIN, ROOT, USER } from '@/shared/auth/constants'
 import { Alert, AlertDescription, AlertTitle } from '@/shared/components/ui/Alert'
 import { Button } from '@/shared/components/ui/Button'
 import {
@@ -27,6 +25,7 @@ import { useToast } from '@/shared/components/ui/use-toast'
 import { useApi } from '@/shared/hooks/use-api'
 import { useInitial } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
+import { ADMIN, ROOT, USER, requestApi } from '@/shared/store/auth-state'
 import type { User } from '@/user/UserListPage'
 
 const AUTHORITY_OPTIONS = [ADMIN, USER]
@@ -63,7 +62,6 @@ export default function UpdateUserPage() {
 
   const userId = Number(params.userId)
 
-  const { requestApi } = useAuth()
   const {
     data: user,
     error,

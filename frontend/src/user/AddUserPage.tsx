@@ -4,8 +4,6 @@ import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 
-import { PUBLIC_KEY, useAuth } from '@/shared/auth/AuthProvider'
-import { ADMIN, USER } from '@/shared/auth/constants'
 import { Button } from '@/shared/components/ui/Button'
 import {
   Card,
@@ -24,6 +22,7 @@ import { Form } from '@/shared/components/ui/Form'
 import { useToast } from '@/shared/components/ui/use-toast'
 import { useApi } from '@/shared/hooks/use-api'
 import { useTitle } from '@/shared/hooks/use-title'
+import { ADMIN, PUBLIC_KEY, USER, requestApi } from '@/shared/store/auth-state'
 import { encrypt } from '@/shared/utils/rsa'
 
 const AUTHORITY_OPTIONS = [ADMIN, USER]
@@ -70,7 +69,6 @@ export default function AddUserPage() {
   })
   const navigate = useNavigate()
 
-  const { requestApi } = useAuth()
   const { loading: submitting, requestData } = useApi(requestApi<void>)
   const { toast } = useToast()
 

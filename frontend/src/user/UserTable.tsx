@@ -207,7 +207,7 @@ export function UserTable({
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>操作</DropdownMenuLabel>
 
-                <DropdownMenuItem className="p-0">
+                <DropdownMenuItem className="p-0" asChild>
                   <Link
                     to={`/users/${user.id}`}
                     className="inline-block w-full px-2 py-1.5"
@@ -220,7 +220,7 @@ export function UserTable({
                   <>
                     <DropdownMenuSeparator />
 
-                    <DropdownMenuItem className="p-0">
+                    <DropdownMenuItem className="p-0" asChild>
                       <button
                         onClick={() => {
                           setOpenDeleteDialog(true)
@@ -231,7 +231,8 @@ export function UserTable({
                         删除用户
                       </button>
                     </DropdownMenuItem>
-                    <DropdownMenuItem className="p-0">
+
+                    <DropdownMenuItem className="p-0" asChild>
                       <button
                         onClick={() => {
                           setOpenResetPasswordDialog(true)
