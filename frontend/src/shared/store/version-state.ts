@@ -23,7 +23,6 @@ let requestedAt = 0
 export async function createVersionState() {
   if (version.value !== undefined) return
 
-  console.log(requestedAt)
   // 500 毫秒内多次请求，只处理第一次请求
   if (Date.now() - requestedAt < 500) return
 

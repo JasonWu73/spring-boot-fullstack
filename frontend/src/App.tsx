@@ -5,10 +5,10 @@ import { SecureRoute } from '@/shared/auth/SecureRoute'
 import { AdminLayout } from '@/shared/components/layout/AdminLayout'
 import { LoginLayout } from '@/shared/components/layout/LoginLayout'
 import { MainLayout } from '@/shared/components/layout/MainLayout'
-import { PanelFoldProvider } from '@/shared/components/layout/panel-fold/PanelFoldProvider'
 import { Loading } from '@/shared/components/ui/Loading'
 import { Toaster } from '@/shared/components/ui/Toaster'
 import { createAuthState } from '@/shared/store/auth-state'
+import { createPanelFoldState } from '@/shared/store/panel-fold-state'
 import { createThemeState } from '@/shared/store/theme-state'
 import { createVersionState } from '@/shared/store/version-state'
 import { wait } from '@/shared/utils/helpers'
@@ -76,11 +76,7 @@ const router = createBrowserRouter([
   },
 
   {
-    element: (
-      <PanelFoldProvider>
-        <AdminLayout />
-      </PanelFoldProvider>
-    ),
+    element: <AdminLayout />,
     children: [
       {
         element: <SecureRoute authority="admin" />,
@@ -103,6 +99,7 @@ const router = createBrowserRouter([
 export default function App() {
   createThemeState('system', 'demo-ui-theme')
   createAuthState()
+  createPanelFoldState()
 
   createVersionState().then()
 

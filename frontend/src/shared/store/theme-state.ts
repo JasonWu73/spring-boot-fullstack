@@ -31,7 +31,10 @@ export function createThemeState(defaultTheme: Theme, storageKey = 'app-ui-theme
   effect(() => {
     resetTheme()
 
-    if (theme.value !== 'system') return applyTheme(theme.value)
+    if (theme.value !== 'system') {
+      applyTheme(theme.value)
+      return
+    }
 
     const darkQuery = window.matchMedia('(prefers-color-scheme: dark)')
     const selectedTheme = darkQuery.matches ? 'dark' : 'light'
