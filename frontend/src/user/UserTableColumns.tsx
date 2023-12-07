@@ -23,7 +23,7 @@ import { type User } from '@/user/UserListPage'
 type UserTableColumnProps = {
   submitting: boolean
   currentUserRef: React.MutableRefObject<User | null>
-  handleChangeStatus: (user: User, enabled: boolean) => void
+  onChangeStatus: (user: User, enabled: boolean) => void
   setOpenDeleteDialog: (open: boolean) => void
   setOpenResetPasswordDialog: (open: boolean) => void
 }
@@ -34,7 +34,7 @@ type UserTableColumnProps = {
 export function getUserTableColumns({
   submitting,
   currentUserRef,
-  handleChangeStatus,
+  onChangeStatus,
   setOpenDeleteDialog,
   setOpenResetPasswordDialog
 }: UserTableColumnProps) {
@@ -99,7 +99,7 @@ export function getUserTableColumns({
           <Switch
             checked={enabled}
             disabled={submitting}
-            onCheckedChange={() => handleChangeStatus(user, enabled)}
+            onCheckedChange={() => onChangeStatus(user, enabled)}
           />
         )
       }
