@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 
 import reactLogo from '@/shared/assets/react.svg'
 import { buttonVariants } from '@/shared/components/ui/Button'
-import { cn, tw } from '@/shared/utils/helpers'
+import { cn } from '@/shared/utils/helpers'
 
 export function Logo() {
   return (
@@ -10,7 +10,7 @@ export function Logo() {
       to="/"
       className={cn(
         buttonVariants({ variant: 'link' }),
-        tw`text-snow hover:no-underline dark:text-snow`
+        'text-snow hover:no-underline dark:text-snow'
       )}
     >
       <span className="flex items-center gap-2">

@@ -8,7 +8,7 @@ import {
   NavigationMenuList
 } from '@/shared/components/ui/NavigationMenu'
 import { isUser } from '@/shared/store/auth-state'
-import { cn, tw } from '@/shared/utils/helpers'
+import { cn } from '@/shared/utils/helpers'
 
 type PageNavProps = {
   isOpen: boolean
@@ -59,7 +59,7 @@ function NavItem({ children, link }: NavItemProps) {
         className={({ isActive }) =>
           cn(
             buttonVariants({ variant: 'link' }),
-            tw`text-base font-bold text-snow hover:text-sky-500 hover:no-underline dark:text-snow dark:hover:text-sky-600`,
+            'text-base font-bold text-snow hover:text-sky-500 hover:no-underline dark:text-snow dark:hover:text-sky-600',
             isActive && 'text-sky-500 dark:text-sky-600'
           )
         }

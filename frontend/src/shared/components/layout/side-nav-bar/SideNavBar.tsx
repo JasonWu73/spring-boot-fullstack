@@ -6,7 +6,7 @@ import { buttonVariants } from '@/shared/components/ui/Button'
 import { ScrollArea } from '@/shared/components/ui/ScrollArea'
 import { Separator } from '@/shared/components/ui/Separator'
 import { isRoot } from '@/shared/store/auth-state'
-import { cn, tw } from '@/shared/utils/helpers'
+import { cn } from '@/shared/utils/helpers'
 
 export function SideNavBar() {
   return (
@@ -70,7 +70,7 @@ function MenuItem({ children, link }: MenuItemProps) {
         className={({ isActive }) =>
           cn(
             buttonVariants({ variant: 'link' }),
-            tw`grid grid-cols-[16px_1fr] grid-rows-1 items-center gap-2 rounded px-4 py-2 text-sm text-snow hover:bg-sky-500 hover:no-underline dark:text-snow hover:dark:bg-sky-600`,
+            'grid grid-cols-[16px_1fr] grid-rows-1 items-center gap-2 rounded px-4 py-2 text-sm text-snow hover:bg-sky-500 hover:no-underline dark:text-snow hover:dark:bg-sky-600',
             isActive &&
               'rounded border border-sky-500 bg-sky-500 font-bold dark:border-sky-600 dark:bg-sky-600'
           )
