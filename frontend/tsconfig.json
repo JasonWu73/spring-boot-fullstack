@@ -26,9 +26,7 @@
       "@/*": ["./src/*"]
     },
 
-    "allowSyntheticDefaultImports": true, // 增加类型检查的兼容性
-
-    "verbatimModuleSyntax": true // 使 IDE 识别对 type 类型的导入和导出
+    "allowSyntheticDefaultImports": true // 增加类型检查的兼容性
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]

@@ -52,6 +52,7 @@ npx shadcn-ui@latest init
 
 # 安装信号库（更好的状态管理库）
 npm install @preact/signals-react
+npm install --save @types/use-sync-external-store
 ```
 
 ## Tutorials
