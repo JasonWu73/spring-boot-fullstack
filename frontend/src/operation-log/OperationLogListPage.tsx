@@ -1,3 +1,4 @@
+import type { SortingState } from '@tanstack/react-table'
 import { addDays, format } from 'date-fns'
 import { useSearchParams } from 'react-router-dom'
 
@@ -11,7 +12,11 @@ import {
   CardHeader,
   CardTitle
 } from '@/shared/components/ui/Card'
-import { DEFAULT_PAGE_NUM, DEFAULT_PAGE_SIZE } from '@/shared/components/ui/DataTable'
+import {
+  DEFAULT_PAGE_NUM,
+  DEFAULT_PAGE_SIZE,
+  type Paging
+} from '@/shared/components/ui/DataTable'
 import {
   URL_QUERY_KEY_PAGE_NUM,
   URL_QUERY_KEY_PAGE_SIZE,
@@ -42,7 +47,7 @@ type GetLogsParams = PaginationParams & {
 export default function OperationLogListPage() {
   useTitle('操作日志')
 
-  const [searchParams] = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams()
 
   const {
     data: logPaging,
@@ -88,6 +93,27 @@ export default function OperationLogListPage() {
     return await requestData({ url, urlParams })
   }
 
+  function handlePaginate(paging: Paging) {
+    searchParams.set(URL_QUERY_KEY_PAGE_NUM, String(paging.pageNum))
+    searchParams.set(URL_QUERY_KEY_PAGE_SIZE, String(paging.pageSize))
+
+    setSearchParams(searchParams, { replace: true })
+  }
+
+  const handleSorting = (sorting: SortingState) => {
+    searchParams.delete('requestedAt')
+
+    const sortColumn = sorting[0]?.id === '请求时间' ? 'requestedAt' : ''
+    const sortOrder = sorting[0]?.desc === true ? 'desc' : 'asc'
+
+    if (!sortColumn) return
+
+    searchParams.set(URL_QUERY_KEY_SORT_COLUMN, sortColumn)
+    searchParams.set(URL_QUERY_KEY_SORT_ORDER, sortOrder)
+
+    setSearchParams(searchParams)
+  }
+
   return (
     <Card className="mx-auto h-full w-full">
       <CardHeader>
@@ -99,12 +125,20 @@ export default function OperationLogListPage() {
         <OperationLogSearch loading={loading} />
 
         <OperationLogTable
-          logs={logPaging?.list || []}
+          data={logPaging?.list || []}
           error={error}
           loading={loading}
-          pageNum={pageNum}
-          pageSize={pageSize}
-          total={logPaging?.total || 0}
+          pagination={{
+            pageNum,
+            pageSize,
+            total: logPaging?.total || 0
+          }}
+          onPaginate={handlePaginate}
+          sortColumn={{
+            id: '请求时间',
+            desc: searchParams.get(URL_QUERY_KEY_SORT_ORDER) !== 'asc'
+          }}
+          onSorting={handleSorting}
         />
       </CardContent>
     </Card>

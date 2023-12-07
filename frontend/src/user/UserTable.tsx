@@ -15,9 +15,9 @@ import type { User } from '@/user/UserListPage'
 import { getUserTableColumns } from '@/user/UserTableColumns'
 
 type UserTableProps = {
-  users: User[]
+  data: User[]
   error?: string
-  loadingPaging: boolean
+  loading: boolean
   submitting: boolean
   pagination: Pagination
   onPaginate: (paging: Paging) => void
@@ -31,9 +31,9 @@ type UserTableProps = {
 }
 
 export function UserTable({
-  users,
+  data,
   error,
-  loadingPaging,
+  loading,
   submitting,
   pagination,
   onPaginate,
@@ -65,9 +65,9 @@ export function UserTable({
           setOpenDeleteDialog,
           setOpenResetPasswordDialog
         })}
-        data={users}
+        data={data}
         error={error}
-        loading={loadingPaging}
+        loading={loading}
         pagination={pagination}
         onPaginate={onPaginate}
         sortColumn={sortColumn}

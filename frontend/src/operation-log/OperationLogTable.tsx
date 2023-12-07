@@ -1,23 +1,17 @@
-import { type ColumnDef, type SortingState } from '@tanstack/react-table'
-import { useSearchParams } from 'react-router-dom'
+import { type ColumnDef, type ColumnSort, type SortingState } from '@tanstack/react-table'
 
 import type { OperationLog } from '@/operation-log/OperationLogListPage'
-import { DataTable, type Paging } from '@/shared/components/ui/DataTable'
+import { DataTable, type Pagination, type Paging } from '@/shared/components/ui/DataTable'
 import { DataTableColumnHeader } from '@/shared/components/ui/DataTableColumnHeader'
-import {
-  URL_QUERY_KEY_PAGE_NUM,
-  URL_QUERY_KEY_PAGE_SIZE,
-  URL_QUERY_KEY_SORT_COLUMN,
-  URL_QUERY_KEY_SORT_ORDER
-} from '@/shared/constants'
 
 type OperationLogTableProps = {
-  logs: OperationLog[]
+  data: OperationLog[]
   error?: string
   loading: boolean
-  pageNum: number
-  pageSize: number
-  total: number
+  pagination: Pagination
+  onPaginate: (paging: Paging) => void
+  sortColumn: ColumnSort
+  onSorting: (sorting: SortingState) => void
 }
 
 const columns: ColumnDef<OperationLog>[] = [
@@ -51,53 +45,24 @@ const columns: ColumnDef<OperationLog>[] = [
 ]
 
 export function OperationLogTable({
-  logs,
+  data,
   error,
   loading,
-  pageNum,
-  pageSize,
-  total
+  pagination,
+  onPaginate,
+  sortColumn,
+  onSorting
 }: OperationLogTableProps) {
-  const [searchParams, setSearchParams] = useSearchParams()
-
-  function handlePaginate(paging: Paging) {
-    searchParams.set(URL_QUERY_KEY_PAGE_NUM, String(paging.pageNum))
-    searchParams.set(URL_QUERY_KEY_PAGE_SIZE, String(paging.pageSize))
-
-    setSearchParams(searchParams, { replace: true })
-  }
-
-  const handleSorting = (sorting: SortingState) => {
-    searchParams.delete('requestedAt')
-
-    const sortColumn = sorting[0]?.id === '请求时间' ? 'requestedAt' : ''
-    const sortOrder = sorting[0]?.desc === true ? 'desc' : 'asc'
-
-    if (!sortColumn) return
-
-    searchParams.set(URL_QUERY_KEY_SORT_COLUMN, sortColumn)
-    searchParams.set(URL_QUERY_KEY_SORT_ORDER, sortOrder)
-
-    setSearchParams(searchParams)
-  }
-
   return (
     <DataTable
       columns={columns}
-      data={logs}
+      data={data}
       error={error}
       loading={loading}
-      pagination={{
-        pageNum,
-        pageSize,
-        total
-      }}
-      onPaginate={handlePaginate}
-      sortColumn={{
-        id: '请求时间',
-        desc: searchParams.get(URL_QUERY_KEY_SORT_ORDER) !== 'asc'
-      }}
-      onSorting={handleSorting}
+      pagination={pagination}
+      onPaginate={onPaginate}
+      sortColumn={sortColumn}
+      onSorting={onSorting}
     />
   )
 }

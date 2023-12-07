@@ -58,7 +58,7 @@ export default function UserListPage() {
   const {
     data: userPaging,
     error,
-    loading: loadingPaging,
+    loading,
     requestData: requestPaging,
     discardRequest,
     updateState: updatePaging
@@ -276,14 +276,14 @@ export default function UserListPage() {
             status,
             authority
           }}
-          loading={loadingPaging}
+          loading={loading}
           onSearch={handleSearch}
         />
 
         <UserTable
-          users={userPaging?.list || []}
+          data={userPaging?.list || []}
           error={error}
-          loadingPaging={loadingPaging}
+          loading={loading}
           submitting={submitting}
           pagination={{
             pageNum,
