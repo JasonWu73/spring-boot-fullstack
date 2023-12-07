@@ -14,8 +14,6 @@ import { ResetPasswordDialog } from '@/user/ResetPasswordDialog'
 import type { User } from '@/user/UserListPage'
 import { getUserTableColumns } from '@/user/UserTableColumns'
 
-type UpdateState = (state: SetStateAction<PaginationData<User>>) => void
-
 type UserTableProps = {
   users: User[]
   error?: string
@@ -31,7 +29,7 @@ type UserTableProps = {
   onShowSelection: () => void
   onChangeStatus: (user: User, enabled: boolean) => void
   onDeleteUser: (user: User) => void
-  updatePaging: UpdateState
+  updatePaging: (state: SetStateAction<PaginationData<User>>) => void
 }
 
 export function UserTable({
