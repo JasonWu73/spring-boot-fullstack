@@ -17,6 +17,7 @@ export function SideNavBar() {
             <UserCog2 className="h-5 w-5" />
             <span>用户管理</span>
           </MenuItem>
+
           <MenuItem link="/operation-logs">
             <FileClock className="h-5 w-5" />
             <span>操作日志</span>
