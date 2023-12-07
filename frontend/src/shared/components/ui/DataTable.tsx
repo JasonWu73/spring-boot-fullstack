@@ -26,7 +26,7 @@ import {
 export const DEFAULT_PAGE_NUM = 1
 export const DEFAULT_PAGE_SIZE = 10
 
-type Pagination = { pageNum: number; pageSize: number; total: number }
+export type Pagination = { pageNum: number; pageSize: number; total: number }
 
 export type Paging = Omit<Pagination, 'total'>
 

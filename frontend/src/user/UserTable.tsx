@@ -6,7 +6,7 @@ import type { PaginationData } from '@/shared/apis/types'
 import { Button, buttonVariants } from '@/shared/components/ui/Button'
 import { Code } from '@/shared/components/ui/Code'
 import { ConfirmDialog } from '@/shared/components/ui/ConfirmDialog'
-import { DataTable, type Paging } from '@/shared/components/ui/DataTable'
+import { DataTable, type Pagination, type Paging } from '@/shared/components/ui/DataTable'
 import type { SetStateAction } from '@/shared/hooks/use-api'
 import { isRoot } from '@/shared/store/auth-state'
 import { cn } from '@/shared/utils/helpers'
@@ -19,9 +19,7 @@ type UserTableProps = {
   error?: string
   loadingPaging: boolean
   submitting: boolean
-  pageNum: number
-  pageSize: number
-  total: number
+  pagination: Pagination
   onPaginate: (paging: Paging) => void
   sortColumn: ColumnSort
   onSorting: (sorting: SortingState) => void
@@ -37,9 +35,7 @@ export function UserTable({
   error,
   loadingPaging,
   submitting,
-  pageNum,
-  pageSize,
-  total,
+  pagination,
   onPaginate,
   sortColumn,
   onSorting,
@@ -72,11 +68,7 @@ export function UserTable({
         data={users}
         error={error}
         loading={loadingPaging}
-        pagination={{
-          pageNum,
-          pageSize,
-          total
-        }}
+        pagination={pagination}
         onPaginate={onPaginate}
         sortColumn={sortColumn}
         onSorting={onSorting}

@@ -285,9 +285,11 @@ export default function UserListPage() {
           error={error}
           loadingPaging={loadingPaging}
           submitting={submitting}
-          pageNum={pageNum}
-          pageSize={pageSize}
-          total={userPaging?.total || 0}
+          pagination={{
+            pageNum,
+            pageSize,
+            total: userPaging?.total || 0
+          }}
           onPaginate={handlePaginate}
           sortColumn={{
             id:
