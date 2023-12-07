@@ -29,7 +29,7 @@ export function AuthSwitch() {
           <NavigationMenuTrigger
             onPointerMove={(event) => event.preventDefault()}
             onPointerLeave={(event) => event.preventDefault()}
-            className="text-night hover:bg-snow hover:text-night focus:bg-snow focus:text-night data-[active]:bg-snow data-[state=open]:bg-snow dark:text-snow dark:hover:bg-night-1 dark:hover:text-snow dark:focus:bg-night-1 dark:focus:text-snow dark:data-[active]:bg-night-1 dark:data-[state=open]:bg-night-1"
+            className="text-night hover:bg-snow hover:text-night focus:bg-snow focus:text-night data-[active]:bg-snow data-[state=open]:bg-snow dark:text-snow dark:hover:bg-night-2 dark:hover:text-snow dark:focus:bg-night-2 dark:focus:text-snow dark:data-[active]:bg-night-2 dark:data-[state=open]:bg-night-2"
           >
             {auth.value.nickname}
           </NavigationMenuTrigger>

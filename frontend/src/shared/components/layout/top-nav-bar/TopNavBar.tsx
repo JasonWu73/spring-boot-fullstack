@@ -33,7 +33,9 @@ export function TopNavBar({ showPanelFold = false }: TopNavBarProps) {
       <PageNav isOpen={isHamburgerOpen} />
 
       <div className="flex gap-4">
-        <AuthSwitch />
+        <div className="hidden sm:inline-block">
+          <AuthSwitch />
+        </div>
         <ModeToggle setTheme={setTheme} />
         <Hamburger isOpen={isHamburgerOpen} onToggle={setIsHamburgerOpen} />
       </div>

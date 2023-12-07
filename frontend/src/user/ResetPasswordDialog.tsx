@@ -139,7 +139,7 @@ export function ResetPasswordDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle>
             重置用户 <Code>{user.username}</Code> 密码

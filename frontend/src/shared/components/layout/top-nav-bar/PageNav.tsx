@@ -1,6 +1,7 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 
+import { AuthSwitch } from '@/shared/components/layout/top-nav-bar/AuthSwitch'
 import { buttonVariants } from '@/shared/components/ui/Button'
 import {
   NavigationMenu,
@@ -40,6 +41,9 @@ export function PageNav({ isOpen }: PageNavProps) {
 function NavItemList() {
   return (
     <>
+      <div className="sm:hidden">
+        <AuthSwitch />
+      </div>
       <NavItem link="/split-bill">账单 App</NavItem>
       {isUser && <NavItem link="/fetch">自定义 useFetch</NavItem>}
     </>

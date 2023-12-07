@@ -56,7 +56,7 @@ export default function RandomProductPage() {
   }
 
   return (
-    <div className="mx-auto grid w-[500px] grid-cols-1 grid-rows-[2rem_8rem_3rem_2rem] place-items-center gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow dark:border-slate-800 dark:bg-slate-950">
+    <div className="mx-auto grid max-w-md grid-cols-1 grid-rows-[2rem_8rem_3rem_2rem] place-items-center gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow dark:border-slate-800 dark:bg-slate-950 lg:max-w-2xl">
       <div className="row-span-1">
         {loading && <Title label="加载中..." />}
 
