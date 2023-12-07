@@ -92,7 +92,7 @@ export function FriendList() {
       <FriendSearch />
 
       <Card>
-        <ScrollArea className="h-96 w-96 md:h-[30rem] md:w-[22rem] lg:h-[24rem] lg:w-[30rem]">
+        <ScrollArea className="h-80">
           <div className="space-y-4 p-4">
             {loading && (
               <Alert>

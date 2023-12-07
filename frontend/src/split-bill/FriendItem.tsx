@@ -39,7 +39,7 @@ export function FriendItem({ friend, onDeleteFriend }: FriendItemProps) {
   return (
     <li
       className={cn(
-        'group relative flex items-center justify-between gap-2 rounded px-4 py-2 hover:bg-amber-100 dark:hover:text-slate-700',
+        'group relative flex items-center justify-between gap-2 rounded px-4 py-2 hover:bg-amber-100 dark:hover:text-slate-950',
         selected && 'bg-amber-100 dark:text-night'
       )}
     >

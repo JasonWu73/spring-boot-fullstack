@@ -164,7 +164,7 @@ export function SplitBill() {
   }
 
   return (
-    <Card className="w-96 bg-amber-100 text-slate-700 dark:bg-amber-100 dark:text-slate-700 md:w-[22rem] lg:w-[30rem]">
+    <Card className="bg-amber-100 text-slate-950 dark:bg-amber-100 dark:text-slate-950">
       {loading && <FormSkeleton />}
 
       {!loading && error && <SplitBillError message={error} />}
