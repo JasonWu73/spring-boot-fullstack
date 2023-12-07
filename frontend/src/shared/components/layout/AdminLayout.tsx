@@ -10,7 +10,7 @@ import { cn } from '@/shared/utils/helpers'
 
 export function AdminLayout() {
   return (
-    <div className="grid min-h-screen grid-cols-[auto_1fr] grid-rows-[auto_1fr]">
+    <div className="grid h-screen grid-cols-[auto_1fr] grid-rows-[auto_1fr]">
       <Header showPanelFold={true} className="col-span-2 row-span-1" />
 
       <Aside className={cn('col-span-1 row-span-1', folded.value && 'hidden')} />

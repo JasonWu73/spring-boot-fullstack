@@ -7,7 +7,7 @@ import { LoadingFullPage } from '@/shared/components/ui/LoadingFullPage'
 
 export function MainLayout() {
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex h-screen flex-col">
       <Header />
 
       <main className="relative flex-grow p-4">

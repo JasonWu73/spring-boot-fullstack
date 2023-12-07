@@ -13,6 +13,9 @@ export default {
       }
     },
     extend: {
+      height: {
+        screen: ['100vh /* fallback for Opera, IE and etc. */', '100dvh']
+      },
       colors: {
         night: {
           DEFAULT: 'rgb(var(--color-night) / <alpha-value>)',

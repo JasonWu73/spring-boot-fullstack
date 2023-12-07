@@ -7,7 +7,7 @@ import { LoadingFullPage } from '@/shared/components/ui/LoadingFullPage'
 
 export function LoginLayout() {
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex h-screen flex-col">
       <Header className="bg-night-1 dark:bg-night-1" />
 
       <main className="relative flex-grow bg-night bg-[url('/img/bg_login.png')] bg-[length:100%] bg-no-repeat p-4 text-snow">
