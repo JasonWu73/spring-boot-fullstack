@@ -113,7 +113,7 @@ export function updateNickname(nickname: string) {
 }
 
 /**
- * 创建本地缓存的身份验证数据。
+ * 创建本地缓存的身份验证数据 Signal。
  */
 export function createAuthState() {
   if (auth.value !== undefined) return

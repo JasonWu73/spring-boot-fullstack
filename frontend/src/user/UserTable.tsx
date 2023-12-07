@@ -1,26 +1,13 @@
-import { type ColumnDef, type SortingState } from '@tanstack/react-table'
+import { type SortingState } from '@tanstack/react-table'
 import { format } from 'date-fns'
-import { MoreHorizontal } from 'lucide-react'
 import React from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 
 import type { PaginationData } from '@/shared/apis/types'
-import { Badge } from '@/shared/components/ui/Badge'
 import { Button, buttonVariants } from '@/shared/components/ui/Button'
-import { Checkbox } from '@/shared/components/ui/Checkbox'
 import { Code } from '@/shared/components/ui/Code'
 import { ConfirmDialog } from '@/shared/components/ui/ConfirmDialog'
 import { DataTable, type Paging } from '@/shared/components/ui/DataTable'
-import { DataTableColumnHeader } from '@/shared/components/ui/DataTableColumnHeader'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger
-} from '@/shared/components/ui/DropdownMenu'
-import { Switch } from '@/shared/components/ui/Switch'
 import { useToast } from '@/shared/components/ui/use-toast'
 import {
   URL_QUERY_KEY_PAGE_NUM,
@@ -30,10 +17,11 @@ import {
 } from '@/shared/constants'
 import type { SetStateAction } from '@/shared/hooks/use-api'
 import { useApi } from '@/shared/hooks/use-api'
-import { ADMIN, ROOT, USER, isRoot, requestApi } from '@/shared/store/auth-state'
+import { isRoot, requestApi } from '@/shared/store/auth-state'
 import { cn } from '@/shared/utils/helpers'
 import { ResetPasswordDialog } from '@/user/ResetPasswordDialog'
 import type { User } from '@/user/UserListPage'
+import { getUserTableColumns } from '@/user/UserTableColumns'
 
 type UpdateState = (state: SetStateAction<PaginationData<User>>) => void
 
@@ -67,195 +55,6 @@ export function UserTable({
 
   const { loading: submitting, requestData } = useApi(requestApi<void>)
   const { toast } = useToast()
-
-  // 对话框不应该放在表格内部，否则会导致在表格刷新时（当刷新身份验证信息时）,对话框就会被关闭
-  function getColumns() {
-    const columns: ColumnDef<User>[] = [
-      {
-        id: '选择',
-        header: ({ table }) => (
-          <Checkbox
-            checked={table.getIsAllPageRowsSelected()}
-            onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-            aria-label="全选"
-          />
-        ),
-        cell: ({ row }) => (
-          <Checkbox
-            checked={row.getIsSelected()}
-            onCheckedChange={(value) => row.toggleSelected(!!value)}
-            aria-label="选择行"
-          />
-        ),
-        enableSorting: false,
-        enableHiding: false
-      },
-      {
-        id: 'ID',
-        accessorKey: 'id',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="ID" />
-      },
-      {
-        id: '昵称',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="昵称" />,
-        cell: ({ row }) => {
-          return row.original.nickname
-        }
-      },
-      {
-        id: '用户名',
-        accessorKey: 'username',
-        header: ({ column }) => (
-          <DataTableColumnHeader column={column}>
-            用户名
-            <span className="ml-1 text-xs text-slate-500">（可用作登录）</span>
-          </DataTableColumnHeader>
-        ),
-        cell: ({ row }) => {
-          return <Code>{row.original.username}</Code>
-        }
-      },
-      {
-        id: '账号状态',
-        header: ({ column }) => (
-          <DataTableColumnHeader column={column}>
-            账号状态
-            <span className="ml-1 text-xs text-slate-500">（禁用后不可登录）</span>
-          </DataTableColumnHeader>
-        ),
-        cell: ({ row }) => {
-          const user = row.original
-          const enabled = user.status === 1
-
-          return (
-            <Switch
-              checked={enabled}
-              disabled={submitting}
-              onCheckedChange={() => handleChangeStatus(user, enabled)}
-            />
-          )
-        }
-      },
-      {
-        id: '权限',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="权限" />,
-        cell: ({ row }) => {
-          const user = row.original
-
-          return (
-            <div className="space-x-1">
-              {user.authorities.map((authority) => {
-                if (authority === ROOT.value) {
-                  return (
-                    <Badge key={authority} variant="destructive">
-                      超级管理员
-                    </Badge>
-                  )
-                }
-
-                if (authority === ADMIN.value) {
-                  return <Badge key={authority}>管理员</Badge>
-                }
-
-                if (authority === USER.value) {
-                  return (
-                    <Badge key={authority} variant="outline">
-                      用户
-                    </Badge>
-                  )
-                }
-
-                return null
-              })}
-            </div>
-          )
-        }
-      },
-      {
-        id: '创建时间',
-        accessorKey: 'createdAt',
-        header: ({ column }) => (
-          <DataTableColumnHeader sortable column={column} title="创建时间" />
-        )
-      },
-      {
-        id: '更新时间',
-        accessorKey: 'updatedAt',
-        header: ({ column }) => (
-          <DataTableColumnHeader sortable column={column} title="更新时间" />
-        )
-      },
-      {
-        id: '备注',
-        accessorKey: 'remark',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="备注" />
-      },
-      {
-        id: '操作',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="操作" />,
-        cell: ({ row }) => {
-          const user = row.original
-
-          return (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild disabled={submitting}>
-                <Button variant="ghost" className="h-8 w-8 p-0">
-                  <MoreHorizontal className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-
-              <DropdownMenuContent align="end">
-                <DropdownMenuLabel>操作</DropdownMenuLabel>
-
-                <DropdownMenuItem className="p-0" asChild>
-                  <Link
-                    to={`/users/${user.id}`}
-                    className="inline-block w-full px-2 py-1.5"
-                  >
-                    查看详情
-                  </Link>
-                </DropdownMenuItem>
-
-                {isRoot && (
-                  <>
-                    <DropdownMenuSeparator />
-
-                    <DropdownMenuItem className="p-0" asChild>
-                      <button
-                        onClick={() => {
-                          setOpenDeleteDialog(true)
-                          currentUserRef.current = user
-                        }}
-                        className="inline-block w-full px-2 py-1.5 text-left text-red-500 dark:text-red-600"
-                      >
-                        删除用户
-                      </button>
-                    </DropdownMenuItem>
-
-                    <DropdownMenuItem className="p-0" asChild>
-                      <button
-                        onClick={() => {
-                          setOpenResetPasswordDialog(true)
-                          currentUserRef.current = user
-                        }}
-                        className="inline-block w-full px-2 py-1.5 text-left text-red-500 dark:text-red-600"
-                      >
-                        重置密码
-                      </button>
-                    </DropdownMenuItem>
-                  </>
-                )}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )
-        }
-      }
-    ]
-
-    if (isRoot) return columns
-
-    return columns.filter((column) => column.id !== '选择')
-  }
 
   async function changeStatus(userId: number, status: number) {
     return await requestData({
@@ -384,7 +183,13 @@ export function UserTable({
   return (
     <>
       <DataTable
-        columns={getColumns()}
+        columns={getUserTableColumns({
+          submitting,
+          currentUserRef,
+          handleChangeStatus,
+          setOpenDeleteDialog,
+          setOpenResetPasswordDialog
+        })}
         data={users}
         error={error}
         loading={loading}

@@ -17,7 +17,7 @@ export function setTheme(newTheme: Theme) {
 }
 
 /**
- * 创建本地缓存的主题数据。
+ * 创建本地缓存的主题数据 Signal。
  *
  * @param defaultTheme 默认主题
  * @param storageKey 本地存储中的键，默认为 `app-ui-theme`

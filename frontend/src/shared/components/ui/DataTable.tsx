@@ -30,9 +30,9 @@ type Pagination = { pageNum: number; pageSize: number; total: number }
 
 export type Paging = Omit<Pagination, 'total'>
 
-type DataTableProps<TData, TValue> = {
-  columns: ColumnDef<TData, TValue>[]
-  data: TData[]
+type DataTableProps<T> = {
+  columns: ColumnDef<T>[]
+  data: T[]
   error?: string
   loading?: boolean
 
@@ -69,7 +69,7 @@ type DataTableProps<TData, TValue> = {
  * @param props.children 放置在表格上方的内容，常用于放置新增、导出等操作按钮
  * @see <a href="https://ui.shadcn.com/docs/components/data-table">DataTable - shadcn/ui</a>
  */
-export function DataTable<TData, TValue>({
+export function DataTable<T>({
   columns,
   data,
   error,
@@ -87,7 +87,7 @@ export function DataTable<TData, TValue>({
   onSelect,
 
   children
-}: DataTableProps<TData, TValue>) {
+}: DataTableProps<T>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = React.useState({})

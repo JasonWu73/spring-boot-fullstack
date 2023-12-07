@@ -18,7 +18,7 @@ export const version = signal<Version | undefined>(undefined)
 let requestedAt = 0
 
 /**
- * 创建版本号数据。
+ * 创建版本号数据 Signal。
  */
 export async function createVersionState() {
   if (version.value !== undefined) return

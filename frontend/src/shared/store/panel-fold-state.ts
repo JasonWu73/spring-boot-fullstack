@@ -15,7 +15,7 @@ export function setFolded(newFolded: boolean) {
 }
 
 /**
- * 创建侧边栏折叠状态数据。
+ * 创建侧边栏折叠状态数据 Signal。
  */
 export function createPanelFoldState() {
   if (folded.value !== undefined) return
