@@ -1,14 +1,12 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ReloadIcon } from '@radix-ui/react-icons'
 import React from 'react'
-import { useForm } from 'react-hook-form'
-import { useSearchParams } from 'react-router-dom'
+import { useForm, type UseFormSetValue } from 'react-hook-form'
 import { z } from 'zod'
 
 import { Button } from '@/shared/components/ui/Button'
 import { FormInput, FormSelect } from '@/shared/components/ui/CustomFormField'
 import { Form } from '@/shared/components/ui/Form'
-import { URL_QUERY_KEY_PAGE_NUM, URL_QUERY_KEY_PAGE_SIZE } from '@/shared/constants'
 import { ADMIN, ROOT, USER } from '@/shared/store/auth-state'
 
 const statusOptions = [
@@ -28,8 +26,17 @@ const formSchema = z.object({
 
 type FormSchema = z.infer<typeof formSchema>
 
+export type QueryParams = {
+  username: string
+  nickname: string
+  status: string
+  authority: string
+}
+
 type UserSearchProps = {
+  queryParams: QueryParams
   loading: boolean
+  onSearch: (params: QueryParams) => void
 }
 
 const defaultValues: FormSchema = {
@@ -39,40 +46,16 @@ const defaultValues: FormSchema = {
   authority: ''
 }
 
-export function UserSearch({ loading }: UserSearchProps) {
+export function UserSearch({ queryParams, loading, onSearch }: UserSearchProps) {
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues
   })
-  const [searchParams, setSearchParams] = useSearchParams()
 
-  React.useEffect(() => {
-    const username = searchParams.get('username') || ''
-    const nickname = searchParams.get('nickname') || ''
-    const status = searchParams.get('status') || ''
-    const authority = searchParams.get('authority') || ''
-
-    form.setValue('username', username)
-    form.setValue('nickname', nickname)
-    form.setValue('status', status)
-    form.setValue('authority', authority)
-  }, [searchParams, form])
+  useQueryParams(queryParams, form.setValue)
 
   function onSubmit(values: FormSchema) {
-    searchParams.delete(URL_QUERY_KEY_PAGE_NUM)
-    searchParams.delete(URL_QUERY_KEY_PAGE_SIZE)
-    searchParams.delete('username')
-    searchParams.delete('username')
-    searchParams.delete('nickname')
-    searchParams.delete('status')
-    searchParams.delete('authority')
-
-    if (values.username) searchParams.set('username', values.username)
-    if (values.nickname) searchParams.set('nickname', values.nickname)
-    if (values.status) searchParams.set('status', values.status)
-    if (values.authority) searchParams.set('authority', values.authority)
-
-    setSearchParams(searchParams, { replace: true })
+    onSearch(values)
   }
 
   function handleReset() {
@@ -141,4 +124,13 @@ export function UserSearch({ loading }: UserSearchProps) {
       </form>
     </Form>
   )
+}
+
+function useQueryParams(queryParams: QueryParams, setValue: UseFormSetValue<FormSchema>) {
+  React.useEffect(() => {
+    setValue('username', queryParams.username)
+    setValue('nickname', queryParams.nickname)
+    setValue('status', queryParams.status)
+    setValue('authority', queryParams.authority)
+  }, [queryParams, setValue])
 }

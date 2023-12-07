@@ -28,7 +28,7 @@ import { useApi } from '@/shared/hooks/use-api'
 import { useRefresh } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
 import { requestApi } from '@/shared/store/auth-state'
-import { UserSearch } from '@/user/UserSearch'
+import { UserSearch, type QueryParams } from '@/user/UserSearch'
 import { UserTable } from '@/user/UserTable'
 
 export type User = {
@@ -78,16 +78,15 @@ export default function UserListPage() {
 
   const pageNum = Number(searchParams.get(URL_QUERY_KEY_PAGE_NUM)) || DEFAULT_PAGE_NUM
   const pageSize = Number(searchParams.get(URL_QUERY_KEY_PAGE_SIZE)) || DEFAULT_PAGE_SIZE
+  const sortColumn = searchParams.get(URL_QUERY_KEY_SORT_COLUMN) || 'createdAt'
+  const sortOrder = searchParams.get(URL_QUERY_KEY_SORT_ORDER) || 'desc'
+  const username = searchParams.get('username') || ''
+  const nickname = searchParams.get('nickname') || ''
+  const status = searchParams.get('status') || ''
+  const authority = searchParams.get('authority') || ''
 
   async function getUsers() {
     const urlParams: GetUsersParams = { pageNum, pageSize }
-
-    const sortColumn = searchParams.get(URL_QUERY_KEY_SORT_COLUMN) || 'createdAt'
-    const sortOrder = searchParams.get(URL_QUERY_KEY_SORT_ORDER) || 'desc'
-    const username = searchParams.get('username')
-    const nickname = searchParams.get('nickname')
-    const status = searchParams.get('status')
-    const authority = searchParams.get('authority')
 
     if (sortColumn) urlParams.sortColumn = sortColumn
     if (sortOrder) urlParams.sortOrder = sortOrder === 'asc' ? 'asc' : 'desc'
@@ -244,6 +243,24 @@ export default function UserListPage() {
     setSearchParams(searchParams)
   }
 
+  function handleSearch(params: QueryParams) {
+    searchParams.delete(URL_QUERY_KEY_PAGE_NUM)
+    searchParams.delete(URL_QUERY_KEY_PAGE_SIZE)
+    searchParams.delete('username')
+    searchParams.delete('nickname')
+    searchParams.delete('status')
+    searchParams.delete('authority')
+
+    const { username, nickname, status, authority } = params
+
+    if (username) searchParams.set('username', username)
+    if (nickname) searchParams.set('nickname', nickname)
+    if (status) searchParams.set('status', status)
+    if (authority) searchParams.set('authority', authority)
+
+    setSearchParams(searchParams, { replace: true })
+  }
+
   return (
     <Card className="mx-auto h-full w-full">
       <CardHeader>
@@ -252,7 +269,16 @@ export default function UserListPage() {
       </CardHeader>
 
       <CardContent>
-        <UserSearch loading={loadingPaging} />
+        <UserSearch
+          queryParams={{
+            username,
+            nickname,
+            status,
+            authority
+          }}
+          loading={loadingPaging}
+          onSearch={handleSearch}
+        />
 
         <UserTable
           users={userPaging?.list || []}
