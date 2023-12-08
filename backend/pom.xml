@@ -173,6 +173,7 @@
         <executions>
           <execution>
             <id>copy-frontend-resources</id>
+            <!-- 设置为构建生命周期 `compile` 的上一个，即在生成源代码前，拷贝 SPA 目录 -->
             <phase>generate-resources</phase>
             <goals>
               <goal>copy-resources</goal>
