@@ -14,7 +14,7 @@
   </parent>
 
   <groupId>net.wuxianjie</groupId>
-  <artifactId>spring-boot-demo</artifactId>
+  <artifactId>spring-boot-fullstack</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
 
