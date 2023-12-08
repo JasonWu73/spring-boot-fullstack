@@ -73,29 +73,6 @@
           <installDirectory>target</installDirectory>
         </configuration>
       </plugin>
-
-      <!-- 将 SPA 应用拷贝到后端项目的 `backend/target/classes/static` 中 -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-resources-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>copy-resources</id>
-            <phase>prepare-package</phase>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>${project.basedir}/../backend/target/classes/static</outputDirectory>
-              <resources>
-                <resource>
-                  <directory>${project.basedir}/dist</directory>
-                </resource>
-              </resources>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
     </plugins>
   </build>
 </project>

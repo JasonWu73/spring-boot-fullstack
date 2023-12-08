@@ -69,13 +69,11 @@
     </pluginManagement>
   </build>
 
-  <!-- 项目构建顺序：
-    1. Backend: `mvn clean`
-    2. Frontend: `mvn package`
-    3. Backend: `mvn package`
+  <!-- Maven 会按照 `<modules>` 元素中的顺序来执行模块，故 `frontend` 必须放在 `backend` 之前，
+    这才会保证在父 pom.xml 目录中执行 `mvn clean package` 时，能正确打包 SPA 应用到 Spring Boot 中
   -->
   <modules>
-    <module>backend</module>
     <module>frontend</module>
+    <module>backend</module>
   </modules>
 </project>
