@@ -29,9 +29,12 @@ export async function createVersionState() {
 
   initials = false
 
-  const { data } = await requestApi<Version>({
-    url: '/api/v1/public/version'
-  })
+  const { data } = await requestApi<Version>(
+    {
+      url: '/api/v1/public/version'
+    },
+    true
+  )
 
   if (data) {
     version.value = data

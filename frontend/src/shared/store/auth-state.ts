@@ -140,10 +140,14 @@ export function createAuthState() {
  * </ul>
  *
  * @param request 请求的配置属性
+ * @param isPublic 是否为公开 API
  * @returns Promise<ApiResponse> API 响应数据
  */
-export async function requestApi<T>(request: ApiRequest): Promise<ApiResponse<T>> {
-  if (!auth.value) return await requestBackendApi<T>(request)
+export async function requestApi<T>(
+  request: ApiRequest,
+  isPublic = false
+): Promise<ApiResponse<T>> {
+  if (isPublic || !auth.value) return await requestBackendApi<T>(request)
 
   const { expiresAt, accessToken } = auth.value
 
