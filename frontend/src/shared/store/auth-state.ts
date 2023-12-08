@@ -114,6 +114,8 @@ export function updateNickname(nickname: string) {
 
 /**
  * 创建本地缓存的身份验证数据 Signal。
+ * <p>
+ * 仅可在应用启动时初始化一次。
  */
 export function createAuthState() {
   if (auth.value !== undefined) return

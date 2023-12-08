@@ -16,6 +16,8 @@ export function setFolded(newFolded: boolean) {
 
 /**
  * 创建侧边栏折叠状态数据 Signal。
+ * <p>
+ * 仅可在应用启动时初始化一次。
  */
 export function createPanelFoldState() {
   if (folded.value !== undefined) return

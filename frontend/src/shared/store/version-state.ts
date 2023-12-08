@@ -14,22 +14,20 @@ type Version = {
  */
 export const version = signal<Version | undefined>(undefined)
 
-// 上次请求的时间戳，用于防止短时间内多次请求
-let requestedAt = 0
+/**
+ * 因为版本号是从后端获取的（异步的），所以需要一个额外变量来标记是否已经初始化过了，而不能简单地通过 `version.value !== undefined` 来判断，虽然 Signal 的更新是同步的。
+ */
+let initials = true
 
 /**
  * 创建版本号数据 Signal。
+ * <p>
+ * 仅可在应用启动时初始化一次。
  */
 export async function createVersionState() {
-  if (version.value !== undefined) return
+  if (version.value !== undefined || !initials) return
 
-  const now = Date.now()
-  console.log(now, requestedAt, now - requestedAt)
-
-  // 50 毫秒内多次请求，只处理第一次请求
-  if (Date.now() - requestedAt < 50) return
-
-  requestedAt = Date.now()
+  initials = false
 
   const { data } = await requestApi<Version>({
     url: '/api/v1/public/version'
