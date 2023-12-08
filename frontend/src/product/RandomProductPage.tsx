@@ -28,27 +28,16 @@ export default function RandomProductPage() {
   // 成功获取商品的次数
   const [count, setCount] = React.useState(0)
 
-  const {
-    data: product,
-    loading,
-    error,
-    requestData,
-    discardRequest
-  } = useApi(requestApi<Product>)
+  const { data: product, loading, error, requestData } = useApi(requestApi<Product>)
 
   const randomId = Math.floor(Math.random() * 110)
-  const url = `/products/${randomId}`
 
   useRefresh(() => {
-    const timestamp = Date.now()
-
     getProduct().then()
-
-    return () => discardRequest({ url }, timestamp)
   })
 
   async function getProduct() {
-    const { data } = await requestData({ url })
+    const { data } = await requestData({ url: `/products/${randomId}` })
 
     if (data) {
       setCount((prevCount) => prevCount + 1)

@@ -84,11 +84,9 @@ export type SetStateAction<T> = State<T> | ((prevState: State<T>) => State<T>)
 
 type PrevFetch = {
   url: string
-  timestamp: number
   method?: Method
+  timestamp: number
 }
-
-type DiscardRequestParams = { url: string; method?: Method }
 
 type UseApi<T> = {
   /**
@@ -120,16 +118,6 @@ type UseApi<T> = {
   requestData: (request: ApiRequest) => Promise<ApiResponse<T>>
 
   /**
-   * 丢弃请求，即 500 毫秒内不发送请求，主要用于防止 React Strict Mode 下的重复提交。
-   *
-   * @param params API Endpoint 信息
-   * @param params.url API Endpoint URL
-   * @param params.method 请求方法
-   * @param timestamp 请求发起时的时间戳
-   */
-  discardRequest: (params: DiscardRequestParams, timestamp: number) => void
-
-  /**
    * 更新前端数据。
    *
    * @param newState 更新的数据或更新的回调函数
@@ -141,9 +129,9 @@ type UseApi<T> = {
  * 获取 API 数据的自定义 Hook。
  *
  * <ul>
+ *   <li>自动丢弃 50 毫秒内的重复请求，主要用于解决 React Strict Mode 下的 useEffect 会先执行一个 setup+cleanup cycle，再执行 setup</li>
  *   <li>提供了常用的状态，如 HTTP 响应状态码、响应数据、是否正在加载中等</li>
  *   <li>提供了发起 HTTP 请求的方法</li>
- *   <li>提供了丢弃请求的方法，即 500 毫秒内不发送请求，主要用于 React Strict Mode 下的重复提交</li>
  *   <li>提供了更新前端数据的方法</li>
  * </ul>
  *
@@ -164,16 +152,22 @@ export function useApi<T>(
   async function requestData(request: ApiRequest): Promise<ApiResponse<T>> {
     dispatch({ type: 'START_LOADING' })
 
-    // 丢弃请求，即 500 毫秒内不发送请求，主要用于 React Strict Mode 下的重复提交
+    // 丢弃请求，即 50 毫秒内不发送请求，主要用于防止 React Strict Mode 下的重复请求
     const discardRequest = discardFetchRef.current
 
     if (
       discardRequest &&
       discardRequest.url === request.url &&
       discardRequest.method === request.method &&
-      Date.now() - discardRequest.timestamp < 500
+      Date.now() - discardRequest.timestamp < 50
     ) {
       return {}
+    }
+
+    discardFetchRef.current = {
+      url: request.url,
+      method: request.method,
+      timestamp: Date.now()
     }
 
     const response = await callback(request)
@@ -193,10 +187,6 @@ export function useApi<T>(
     })
 
     return response
-  }
-
-  function discardRequest({ url, method }: DiscardRequestParams, timestamp: number) {
-    discardFetchRef.current = { url, method, timestamp }
   }
 
   function updateState(newState: SetStateAction<T>) {
@@ -223,7 +213,6 @@ export function useApi<T>(
     error,
     loading,
     requestData,
-    discardRequest,
     updateState
   }
 }

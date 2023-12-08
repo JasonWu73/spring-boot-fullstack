@@ -53,18 +53,11 @@ export default function OperationLogListPage() {
     data: logPaging,
     error,
     loading,
-    requestData,
-    discardRequest
+    requestData
   } = useApi(requestApi<PaginationData<OperationLog>>)
 
-  const url = '/api/v1/operation-logs'
-
   useRefresh(() => {
-    const timestamp = Date.now()
-
     getLogs().then()
-
-    return () => discardRequest({ url }, timestamp)
   })
 
   const pageNum = Number(searchParams.get(URL_QUERY_KEY_PAGE_NUM)) || DEFAULT_PAGE_NUM
@@ -90,7 +83,7 @@ export default function OperationLogListPage() {
     if (username) urlParams.username = username
     if (message) urlParams.message = message
 
-    return await requestData({ url, urlParams })
+    return await requestData({ url: '/api/v1/operation-logs', urlParams })
   }
 
   function handlePaginate(paging: Paging) {

@@ -25,7 +25,7 @@ export function FriendList() {
   const navigate = useNavigate()
 
   const { friends, dispatch } = useFriends()
-  const { error, loading, requestData, discardRequest } = useApi(requestApi<Friend[]>)
+  const { error, loading, requestData } = useApi(requestApi<Friend[]>)
   const { toast } = useToast()
 
   const nameQuery = searchParams.get(URL_QUERY_KEY_QUERY) || ''
@@ -34,7 +34,6 @@ export function FriendList() {
         friend.name.toLowerCase().includes(nameQuery.toLowerCase())
       )
     : friends
-  const url = '/data/friends.json'
 
   useRefresh(() => {
     if (location.state?.noRefresh === true) {
@@ -48,8 +47,6 @@ export function FriendList() {
 
     dispatch({ type: 'SHOW_ADD_FRIEND_FORM', payload: false })
 
-    const timestamp = Date.now()
-
     getFriends().then(({ data, error }) => {
       if (error) {
         dispatch({ type: 'SET_FRIENDS', payload: [] })
@@ -61,12 +58,10 @@ export function FriendList() {
         dispatch({ type: 'SET_FRIENDS', payload: data })
       }
     })
-
-    return () => discardRequest({ url }, timestamp)
   })
 
   async function getFriends() {
-    return await requestData({ url })
+    return await requestData({ url: '/data/friends.json' })
   }
 
   function handleDeleteFriend(friend: Friend) {

@@ -62,32 +62,20 @@ export default function UpdateUserPage() {
 
   const userId = Number(params.userId)
 
-  const {
-    data: user,
-    error,
-    loading,
-    requestData: fetchUser,
-    discardRequest
-  } = useApi(requestApi<User>)
+  const { data: user, error, loading, requestData: fetchUser } = useApi(requestApi<User>)
   const { loading: submitting, requestData: fetchUpdate } = useApi(requestApi<void>)
   const { toast } = useToast()
 
-  const url = `/api/v1/users/${userId}`
-
   useInitial(() => {
-    const timestamp = Date.now()
-
     getUser().then(({ data }) => {
       if (data) {
         initializeUserData(data)
       }
     })
-
-    return () => discardRequest({ url }, timestamp)
   })
 
   async function getUser() {
-    return await fetchUser({ url })
+    return await fetchUser({ url: `/api/v1/users/${userId}` })
   }
 
   function initializeUserData(user: User) {

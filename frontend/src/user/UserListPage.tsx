@@ -60,20 +60,13 @@ export default function UserListPage() {
     error,
     loading,
     requestData: requestPaging,
-    discardRequest,
     updateState: updatePaging
   } = useApi(requestApi<PaginationData<User>>)
   const { loading: submitting, requestData: requestSubmit } = useApi(requestApi<void>)
   const { toast } = useToast()
 
-  const url = '/api/v1/users'
-
   useRefresh(() => {
-    const timestamp = Date.now()
-
     getUsers().then()
-
-    return () => discardRequest({ url }, timestamp)
   })
 
   const pageNum = Number(searchParams.get(URL_QUERY_KEY_PAGE_NUM)) || DEFAULT_PAGE_NUM
@@ -95,7 +88,7 @@ export default function UserListPage() {
     if (status) urlParams.status = status
     if (authority) urlParams.authority = authority
 
-    return await requestPaging({ url, urlParams })
+    return await requestPaging({ url: '/api/v1/users', urlParams })
   }
 
   function handleShowSelection() {
