@@ -1,6 +1,5 @@
 import type { SortingState } from '@tanstack/react-table'
 import { format } from 'date-fns'
-import React from 'react'
 import { useSearchParams } from 'react-router-dom'
 
 import type { PaginationData, PaginationParams } from '@/shared/apis/types'
@@ -30,6 +29,7 @@ import { useTitle } from '@/shared/hooks/use-title'
 import { requestApi } from '@/shared/signal/auth'
 import { UserSearch, type QueryParams } from '@/user/UserSearch'
 import { UserTable } from '@/user/UserTable'
+import { useSignal } from '@preact/signals-react'
 
 export type User = {
   id: number
@@ -76,7 +76,7 @@ export default function UserListPage() {
 
   const { toast } = useToast()
 
-  const [indexes, setIndexes] = React.useState<number[]>([]) // 选中的行的索引
+  const indexes = useSignal<number[]>([]) // 选中的行的索引
 
   async function getUsers() {
     const urlParams: GetUsersParams = { pageNum, pageSize }
@@ -93,7 +93,7 @@ export default function UserListPage() {
 
   function handleShowSelection() {
     const ids = (userPaging?.list || [])
-      .filter((_, index) => indexes.includes(index))
+      .filter((_, index) => indexes.value.includes(index))
       .map((user) => user.id)
 
     if (ids.length === 0) {
@@ -274,7 +274,7 @@ export default function UserListPage() {
             desc: searchParams.get(URL_QUERY_KEY_SORT_ORDER) !== 'asc'
           }}
           onSorting={handleSorting}
-          onSelect={setIndexes}
+          onSelect={(rowIndexes) => (indexes.value = rowIndexes)}
           onShowSelection={handleShowSelection}
           onChangeStatus={handleChangeStatus}
           onDeleteUser={handleDeleteUser}
