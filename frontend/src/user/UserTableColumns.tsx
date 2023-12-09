@@ -1,6 +1,6 @@
+import type { Signal } from '@preact/signals-react'
 import type { ColumnDef } from '@tanstack/react-table'
 import { MoreHorizontal } from 'lucide-react'
-import React from 'react'
 import { Link } from 'react-router-dom'
 
 import { Badge } from '@/shared/components/ui/Badge'
@@ -18,14 +18,14 @@ import {
 } from '@/shared/components/ui/DropdownMenu'
 import { Switch } from '@/shared/components/ui/Switch'
 import { ADMIN, ROOT, USER, isRoot } from '@/shared/signal/auth'
-import { type User } from '@/user/UserListPage'
+import type { User } from '@/user/UserListPage'
 
 type UserTableColumnProps = {
   submitting: boolean
-  currentUserRef: React.MutableRefObject<User | null>
+  currentUser: Signal<User | null>
   onChangeStatus: (user: User, enabled: boolean) => void
-  setOpenDeleteDialog: (open: boolean) => void
-  setOpenResetPasswordDialog: (open: boolean) => void
+  openDeleteDialog: Signal<boolean>
+  openResetPasswordDialog: Signal<boolean>
 }
 
 /**
@@ -33,10 +33,10 @@ type UserTableColumnProps = {
  */
 export function getUserTableColumns({
   submitting,
-  currentUserRef,
+  currentUser,
   onChangeStatus,
-  setOpenDeleteDialog,
-  setOpenResetPasswordDialog
+  openDeleteDialog,
+  openResetPasswordDialog
 }: UserTableColumnProps) {
   const columns: ColumnDef<User>[] = [
     {
@@ -191,8 +191,8 @@ export function getUserTableColumns({
                   <DropdownMenuItem className="p-0" asChild>
                     <button
                       onClick={() => {
-                        setOpenDeleteDialog(true)
-                        currentUserRef.current = user
+                        openDeleteDialog.value = true
+                        currentUser.value = user
                       }}
                       className="inline-block w-full px-2 py-1.5 text-left text-red-500 dark:text-red-600"
                     >
@@ -203,8 +203,8 @@ export function getUserTableColumns({
                   <DropdownMenuItem className="p-0" asChild>
                     <button
                       onClick={() => {
-                        setOpenResetPasswordDialog(true)
-                        currentUserRef.current = user
+                        openResetPasswordDialog.value = true
+                        currentUser.value = user
                       }}
                       className="inline-block w-full px-2 py-1.5 text-left text-red-500 dark:text-red-600"
                     >

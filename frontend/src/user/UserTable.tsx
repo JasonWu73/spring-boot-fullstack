@@ -1,6 +1,5 @@
-import type { Signal } from '@preact/signals-react'
+import { Signal, useSignal } from '@preact/signals-react'
 import type { ColumnSort, SortingState } from '@tanstack/react-table'
-import React from 'react'
 import { Link } from 'react-router-dom'
 
 import type { PaginationData } from '@/shared/apis/types'
@@ -40,15 +39,15 @@ export function UserTable({
   onChangeStatus,
   onDeleteUser
 }: UserTableProps) {
-  const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false)
-  const [openResetPasswordDialog, setOpenResetPasswordDialog] = React.useState(false)
-  const currentUserRef = React.useRef<User | null>(null)
+  const openDeleteDialog = useSignal(false)
+  const openResetPasswordDialog = useSignal(false)
+  const currentUser = useSignal<User | null>(null)
 
   const { loading, data, error } = pagingState.value
 
   function handleDeleteUser() {
-    if (currentUserRef.current) {
-      onDeleteUser(currentUserRef.current)
+    if (currentUser.value) {
+      onDeleteUser(currentUser.value)
     }
   }
 
@@ -57,10 +56,10 @@ export function UserTable({
       <DataTable
         columns={getUserTableColumns({
           submitting,
-          currentUserRef,
+          currentUser,
           onChangeStatus,
-          setOpenDeleteDialog,
-          setOpenResetPasswordDialog
+          openDeleteDialog,
+          openResetPasswordDialog
         })}
         data={data?.list || []}
         error={error}
@@ -97,24 +96,24 @@ export function UserTable({
         )}
       </DataTable>
 
-      {currentUserRef.current && (
+      {currentUser.value && (
         <ConfirmDialog
-          open={openDeleteDialog}
-          onOpenChange={setOpenDeleteDialog}
+          open={openDeleteDialog.value}
+          onOpenChange={(open) => (openDeleteDialog.value = open)}
           title={
             <span>
-              您确定要删除用户 <Code>{currentUserRef.current.username}</Code> 吗？
+              您确定要删除用户 <Code>{currentUser.value.username}</Code> 吗？
             </span>
           }
           onConfirm={handleDeleteUser}
         />
       )}
 
-      {currentUserRef.current && (
+      {currentUser.value && (
         <ResetPasswordDialog
-          open={openResetPasswordDialog}
-          onOpenChange={setOpenResetPasswordDialog}
-          user={currentUserRef.current}
+          open={openResetPasswordDialog.value}
+          onOpenChange={(open) => (openResetPasswordDialog.value = open)}
+          user={currentUser.value}
           pagingState={pagingState}
         />
       )}
