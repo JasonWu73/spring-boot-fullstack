@@ -1,66 +1,26 @@
-import React from 'react'
-
 import type { ApiRequest, Method } from '@/shared/utils/api-caller'
+import { useSignal, type Signal } from '@preact/signals-react'
 
-type State<T> = {
-  status?: number // HTTP 响应状态码
-  data?: T
-  error?: string
+export type ApiState<T> = {
+  /**
+   * 是否正在加载数据。
+   */
   loading: boolean
-}
 
-const initialState: State<unknown> = {
-  loading: false
-}
+  /**
+   * HTTP 响应状态码。
+   */
+  status?: number
 
-type Action<T> =
-  | { type: 'START_LOADING' }
-  | { type: 'REQUEST_SUCCESS'; payload: { status?: number; data?: T } }
-  | { type: 'REQUEST_FAILED'; payload: { status?: number; error?: string } }
-  | { type: 'UPDATE_STATE'; payload: State<T> }
+  /**
+   * API 响应数据。
+   */
+  data?: T
 
-function reducer<T>(state: State<T>, action: Action<T>): State<T> {
-  switch (action.type) {
-    case 'START_LOADING': {
-      return {
-        ...state,
-        status: undefined,
-        data: undefined,
-        error: undefined,
-        loading: true
-      }
-    }
-    case 'REQUEST_SUCCESS': {
-      return {
-        ...state,
-        status: action.payload.status,
-        data: action.payload.data,
-        error: undefined,
-        loading: false
-      }
-    }
-    case 'REQUEST_FAILED': {
-      return {
-        ...state,
-        status: action.payload.status,
-        data: undefined,
-        error: action.payload.error,
-        loading: false
-      }
-    }
-
-    // 用于在完成后端 API 请求后，对前端的数据进行更新
-    case 'UPDATE_STATE': {
-      return {
-        ...state,
-        ...action.payload
-      }
-    }
-
-    default: {
-      throw new Error(`未知的 action 类型：${action}`)
-    }
-  }
+  /**
+   * API 响应错误信息。
+   */
+  error?: string
 }
 
 export type ApiResponse<T> = {
@@ -80,8 +40,6 @@ export type ApiResponse<T> = {
   error?: string
 }
 
-export type SetStateAction<T> = State<T> | ((prevState: State<T>) => State<T>)
-
 type PrevFetch = {
   url: string
   method?: Method
@@ -90,24 +48,9 @@ type PrevFetch = {
 
 type UseApi<T> = {
   /**
-   * HTTP 响应状态码。
+   * API 相关数据 Signal。
    */
-  status?: number
-
-  /**
-   * API 响应数据。
-   */
-  data?: T
-
-  /**
-   * API 响应错误信息。
-   */
-  error?: string
-
-  /**
-   * 是否正在加载数据。
-   */
-  loading: boolean
+  apiState: Signal<ApiState<T>>
 
   /**
    * 发起 HTTP 请求，获取 API 数据。
@@ -116,13 +59,6 @@ type UseApi<T> = {
    * @returns Promise<ApiResponse<T>> HTTP 响应数据
    */
   requestData: (request: ApiRequest) => Promise<ApiResponse<T>>
-
-  /**
-   * 更新前端数据。
-   *
-   * @param newState 更新的数据或更新的回调函数
-   */
-  updateState: (state: SetStateAction<T>) => void
 }
 
 /**
@@ -141,30 +77,28 @@ type UseApi<T> = {
 export function useApi<T>(
   callback: (params: ApiRequest) => Promise<ApiResponse<T>>
 ): UseApi<T> {
-  const [state, dispatch] = React.useReducer(
-    reducer as React.Reducer<State<T>, Action<T>>,
-    initialState as State<T>
-  )
-  const discardFetchRef = React.useRef<PrevFetch | null>(null)
-
-  const { status, data, error, loading } = state
+  const apiState = useSignal<ApiState<T>>({ loading: false })
+  const prevFetch = useSignal<PrevFetch | undefined>(undefined)
 
   async function requestData(request: ApiRequest): Promise<ApiResponse<T>> {
-    dispatch({ type: 'START_LOADING' })
+    apiState.value = {
+      loading: true,
+      status: undefined,
+      data: undefined,
+      error: undefined
+    }
 
     // 丢弃请求，即 50 毫秒内不发送请求，主要用于防止 React Strict Mode 下的重复请求
-    const discardRequest = discardFetchRef.current
-
     if (
-      discardRequest &&
-      discardRequest.url === request.url &&
-      discardRequest.method === request.method &&
-      Date.now() - discardRequest.timestamp < 50
+      prevFetch.value &&
+      prevFetch.value.url === request.url &&
+      prevFetch.value.method === request.method &&
+      Date.now() - prevFetch.value.timestamp < 50
     ) {
       return {}
     }
 
-    discardFetchRef.current = {
+    prevFetch.value = {
       url: request.url,
       method: request.method,
       timestamp: Date.now()
@@ -172,47 +106,20 @@ export function useApi<T>(
 
     const response = await callback(request)
 
-    if (response.error) {
-      dispatch({
-        type: 'REQUEST_FAILED',
-        payload: { status: response.status, error: response.error }
-      })
-
-      return response
+    apiState.value = {
+      loading: false,
+      status: response.status,
+      data: response.data,
+      error: response.error
     }
 
-    dispatch({
-      type: 'REQUEST_SUCCESS',
-      payload: { status: response.status, data: response.data }
-    })
+    if (response.error) return response
 
     return response
   }
 
-  function updateState(newState: SetStateAction<T>) {
-    if (typeof newState === 'function') {
-      const updater = newState as (prevData: State<T>) => State<T>
-      const updatedState = updater(state)
-
-      dispatch({
-        type: 'UPDATE_STATE',
-        payload: updatedState
-      })
-      return
-    }
-
-    dispatch({
-      type: 'UPDATE_STATE',
-      payload: newState
-    })
-  }
-
   return {
-    status,
-    data,
-    error,
-    loading,
-    requestData,
-    updateState
+    apiState,
+    requestData
   }
 }

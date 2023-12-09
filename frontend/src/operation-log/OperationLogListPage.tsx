@@ -47,19 +47,16 @@ type GetLogsParams = PaginationParams & {
 export default function OperationLogListPage() {
   useTitle('操作日志')
 
-  const [searchParams, setSearchParams] = useSearchParams()
-
-  const {
-    data: logPaging,
-    error,
-    loading,
-    requestData
-  } = useApi(requestApi<PaginationData<OperationLog>>)
-
   useRefresh(() => {
     getLogs().then()
   })
 
+  const { apiState: pagingState, requestData } = useApi(
+    requestApi<PaginationData<OperationLog>>
+  )
+  const { loading } = pagingState.value
+
+  const [searchParams, setSearchParams] = useSearchParams()
   const pageNum = Number(searchParams.get(URL_QUERY_KEY_PAGE_NUM)) || DEFAULT_PAGE_NUM
   const pageSize = Number(searchParams.get(URL_QUERY_KEY_PAGE_SIZE)) || DEFAULT_PAGE_SIZE
   const startAt =
@@ -118,14 +115,8 @@ export default function OperationLogListPage() {
         <OperationLogSearch loading={loading} />
 
         <OperationLogTable
-          data={logPaging?.list || []}
-          error={error}
-          loading={loading}
-          pagination={{
-            pageNum,
-            pageSize,
-            total: logPaging?.total || 0
-          }}
+          paging={{ pageNum, pageSize }}
+          pagingState={pagingState}
           onPaginate={handlePaginate}
           sortColumn={{
             id: '请求时间',

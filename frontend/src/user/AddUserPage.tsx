@@ -1,7 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ReloadIcon } from '@radix-ui/react-icons'
 import { useForm } from 'react-hook-form'
-import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 
 import { Button } from '@/shared/components/ui/Button'
@@ -24,6 +23,7 @@ import { useApi } from '@/shared/hooks/use-api'
 import { useTitle } from '@/shared/hooks/use-title'
 import { ADMIN, PUBLIC_KEY, USER, requestApi } from '@/shared/signal/auth'
 import { encrypt } from '@/shared/utils/rsa'
+import { useNavigate } from 'react-router-dom'
 
 const AUTHORITY_OPTIONS = [ADMIN, USER]
 
@@ -67,9 +67,10 @@ export default function AddUserPage() {
     resolver: zodResolver(formSchema),
     defaultValues
   })
-  const navigate = useNavigate()
 
-  const { loading: submitting, requestData } = useApi(requestApi<void>)
+  const { apiState, requestData } = useApi(requestApi<void>)
+  const { loading: submitting } = apiState.value
+
   const { toast } = useToast()
 
   async function addUser({
@@ -91,6 +92,8 @@ export default function AddUserPage() {
       }
     })
   }
+
+  const navigate = useNavigate()
 
   async function onSubmit(values: FormSchema) {
     const { status, error } = await addUser({

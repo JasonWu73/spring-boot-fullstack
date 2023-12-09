@@ -1,3 +1,4 @@
+import type { Signal } from '@preact/signals-react'
 import type { ColumnSort, SortingState } from '@tanstack/react-table'
 import React from 'react'
 import { Link } from 'react-router-dom'
@@ -6,8 +7,8 @@ import type { PaginationData } from '@/shared/apis/types'
 import { Button, buttonVariants } from '@/shared/components/ui/Button'
 import { Code } from '@/shared/components/ui/Code'
 import { ConfirmDialog } from '@/shared/components/ui/ConfirmDialog'
-import { DataTable, type Pagination, type Paging } from '@/shared/components/ui/DataTable'
-import type { SetStateAction } from '@/shared/hooks/use-api'
+import { DataTable, type Paging } from '@/shared/components/ui/DataTable'
+import { type ApiState } from '@/shared/hooks/use-api'
 import { isRoot } from '@/shared/signal/auth'
 import { cn } from '@/shared/utils/helpers'
 import { ResetPasswordDialog } from '@/user/ResetPasswordDialog'
@@ -15,11 +16,9 @@ import type { User } from '@/user/UserListPage'
 import { getUserTableColumns } from '@/user/UserTableColumns'
 
 type UserTableProps = {
-  data: User[]
-  error?: string
-  loading: boolean
+  paging: Paging
+  pagingState: Signal<ApiState<PaginationData<User>>>
   submitting: boolean
-  pagination: Pagination
   onPaginate: (paging: Paging) => void
   sortColumn: ColumnSort
   onSorting: (sorting: SortingState) => void
@@ -27,27 +26,25 @@ type UserTableProps = {
   onShowSelection: () => void
   onChangeStatus: (user: User, enabled: boolean) => void
   onDeleteUser: (user: User) => void
-  updatePaging: (state: SetStateAction<PaginationData<User>>) => void
 }
 
 export function UserTable({
-  data,
-  error,
-  loading,
+  paging,
+  pagingState,
   submitting,
-  pagination,
   onPaginate,
   sortColumn,
   onSorting,
   onSelect,
   onShowSelection,
   onChangeStatus,
-  onDeleteUser,
-  updatePaging
+  onDeleteUser
 }: UserTableProps) {
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false)
   const [openResetPasswordDialog, setOpenResetPasswordDialog] = React.useState(false)
   const currentUserRef = React.useRef<User | null>(null)
+
+  const { loading, data, error } = pagingState.value
 
   function handleDeleteUser() {
     if (currentUserRef.current) {
@@ -65,10 +62,13 @@ export function UserTable({
           setOpenDeleteDialog,
           setOpenResetPasswordDialog
         })}
-        data={data}
+        data={data?.list || []}
         error={error}
         loading={loading}
-        pagination={pagination}
+        pagination={{
+          ...paging,
+          total: data?.total || 0
+        }}
         onPaginate={onPaginate}
         sortColumn={sortColumn}
         onSorting={onSorting}
@@ -115,7 +115,7 @@ export function UserTable({
           open={openResetPasswordDialog}
           onOpenChange={setOpenResetPasswordDialog}
           user={currentUserRef.current}
-          updateState={updatePaging}
+          pagingState={pagingState}
         />
       )}
     </>

@@ -1,5 +1,4 @@
 import { ReloadIcon } from '@radix-ui/react-icons'
-import React from 'react'
 
 import { requestApi } from '@/shared/apis/dummyjson-api'
 import { Button } from '@/shared/components/ui/Button'
@@ -7,6 +6,7 @@ import { useApi } from '@/shared/hooks/use-api'
 import { useRefresh } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
 import { cn } from '@/shared/utils/helpers'
+import { useSignal } from '@preact/signals-react'
 
 type Product = {
   id: number
@@ -25,22 +25,22 @@ type Product = {
 export default function RandomProductPage() {
   useTitle('随机商品')
 
-  // 成功获取商品的次数
-  const [count, setCount] = React.useState(0)
-
-  const { data: product, loading, error, requestData } = useApi(requestApi<Product>)
-
-  const randomId = Math.floor(Math.random() * 110)
-
   useRefresh(() => {
     getProduct().then()
   })
 
+  // 成功获取商品的次数
+  const count = useSignal(0)
+
+  const { apiState, requestData } = useApi(requestApi<Product>)
+  const { loading, data: product, error } = apiState.value
+
   async function getProduct() {
+    const randomId = Math.floor(Math.random() * 110)
     const { data } = await requestData({ url: `/products/${randomId}` })
 
     if (data) {
-      setCount((prevCount) => prevCount + 1)
+      count.value++
     }
   }
 

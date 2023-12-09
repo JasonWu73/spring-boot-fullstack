@@ -102,17 +102,6 @@ export function clearAuth() {
 }
 
 /**
- * 更新前端缓存的昵称。
- *
- * @param nickname 新的昵称
- */
-export function updateNickname(nickname: string) {
-  if (!auth.value) return
-
-  auth.value = { ...auth.value, nickname }
-}
-
-/**
  * 创建本地缓存的身份验证数据 Signal。
  * <p>
  * 仅可在应用启动时初始化一次。

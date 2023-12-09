@@ -52,23 +52,19 @@ type GetUsersParams = PaginationParams & {
 export default function UserListPage() {
   useTitle('用户管理')
 
-  const [searchParams, setSearchParams] = useSearchParams()
-  const [indexes, setIndexes] = React.useState<number[]>([]) // 选中的行的索引
-
-  const {
-    data: userPaging,
-    error,
-    loading,
-    requestData: requestPaging,
-    updateState: updatePaging
-  } = useApi(requestApi<PaginationData<User>>)
-  const { loading: submitting, requestData: requestSubmit } = useApi(requestApi<void>)
-  const { toast } = useToast()
-
   useRefresh(() => {
     getUsers().then()
   })
 
+  const { apiState: pagingState, requestData: requestPaging } = useApi(
+    requestApi<PaginationData<User>>
+  )
+  const { loading, data: userPaging } = pagingState.value
+
+  const { apiState: submitState, requestData: requestSubmit } = useApi(requestApi<void>)
+  const { loading: submitting } = submitState.value
+
+  const [searchParams, setSearchParams] = useSearchParams()
   const pageNum = Number(searchParams.get(URL_QUERY_KEY_PAGE_NUM)) || DEFAULT_PAGE_NUM
   const pageSize = Number(searchParams.get(URL_QUERY_KEY_PAGE_SIZE)) || DEFAULT_PAGE_SIZE
   const sortColumn = searchParams.get(URL_QUERY_KEY_SORT_COLUMN) || 'createdAt'
@@ -77,6 +73,10 @@ export default function UserListPage() {
   const nickname = searchParams.get('nickname') || ''
   const status = searchParams.get('status') || ''
   const authority = searchParams.get('authority') || ''
+
+  const { toast } = useToast()
+
+  const [indexes, setIndexes] = React.useState<number[]>([]) // 选中的行的索引
 
   async function getUsers() {
     const urlParams: GetUsersParams = { pageNum, pageSize }
@@ -144,26 +144,20 @@ export default function UserListPage() {
       return
     }
 
-    updatePaging((prevPaging) => {
-      if (!prevPaging.data) return prevPaging
+    pagingState.value = {
+      ...pagingState.value,
+      data: {
+        ...pagingState.value.data!,
+        list: pagingState.value.data!.list.map((prevUser) => {
+          if (prevUser.id === user.id) {
+            prevUser.status = newStatus
+            prevUser.updatedAt = format(new Date(), 'yyyy-MM-dd HH:mm:ss')
+          }
 
-      const newUsers = prevPaging.data.list.map((prevUser) => {
-        if (prevUser.id === user.id) {
-          prevUser.status = newStatus
-          prevUser.updatedAt = format(new Date(), 'yyyy-MM-dd HH:mm:ss')
-        }
-
-        return prevUser
-      })
-
-      return {
-        ...prevPaging,
-        data: {
-          ...prevPaging.data,
-          list: newUsers
-        }
+          return prevUser
+        })
       }
-    })
+    }
 
     toast({
       title: '更新账号状态成功',
@@ -188,20 +182,14 @@ export default function UserListPage() {
       return
     }
 
-    updatePaging((prevPaging) => {
-      if (!prevPaging.data) return prevPaging
-
-      const newUsers = prevPaging.data.list.filter((prevUser) => prevUser.id !== id)
-
-      return {
-        ...prevPaging,
-        data: {
-          ...prevPaging.data,
-          total: prevPaging.data.total - 1,
-          list: newUsers
-        }
+    pagingState.value = {
+      ...pagingState.value,
+      data: {
+        ...pagingState.value.data!,
+        total: pagingState.value.data!.total - 1,
+        list: pagingState.value.data!.list.filter((prevUser) => prevUser.id !== id)
       }
-    })
+    }
 
     toast({
       title: '删除用户成功',
@@ -274,15 +262,9 @@ export default function UserListPage() {
         />
 
         <UserTable
-          data={userPaging?.list || []}
-          error={error}
-          loading={loading}
+          paging={{ pageNum, pageSize }}
+          pagingState={pagingState}
           submitting={submitting}
-          pagination={{
-            pageNum,
-            pageSize,
-            total: userPaging?.total || 0
-          }}
           onPaginate={handlePaginate}
           sortColumn={{
             id:
@@ -296,7 +278,6 @@ export default function UserListPage() {
           onShowSelection={handleShowSelection}
           onChangeStatus={handleChangeStatus}
           onDeleteUser={handleDeleteUser}
-          updatePaging={updatePaging}
         />
       </CardContent>
     </Card>

@@ -53,19 +53,6 @@ const defaultValues: FormSchema = {
 export default function UpdateUserPage() {
   useTitle('用户详情')
 
-  const form = useForm<FormSchema>({
-    resolver: zodResolver(formSchema),
-    defaultValues
-  })
-  const params = useParams()
-  const navigate = useNavigate()
-
-  const userId = Number(params.userId)
-
-  const { data: user, error, loading, requestData: fetchUser } = useApi(requestApi<User>)
-  const { loading: submitting, requestData: fetchUpdate } = useApi(requestApi<void>)
-  const { toast } = useToast()
-
   useInitial(() => {
     getUser().then(({ data }) => {
       if (data) {
@@ -73,6 +60,24 @@ export default function UpdateUserPage() {
       }
     })
   })
+
+  const form = useForm<FormSchema>({
+    resolver: zodResolver(formSchema),
+    defaultValues
+  })
+
+  const { apiState: userState, requestData: fetchUser } = useApi(requestApi<User>)
+  const { loading, data: user, error } = userState.value
+
+  const { apiState: updateState, requestData: fetchUpdate } = useApi(requestApi<void>)
+  const { loading: submitting } = updateState.value
+
+  const params = useParams()
+  const userId = Number(params.userId)
+
+  const navigate = useNavigate()
+
+  const { toast } = useToast()
 
   async function getUser() {
     return await fetchUser({ url: `/api/v1/users/${userId}` })

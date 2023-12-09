@@ -48,11 +48,13 @@ export default function LoginPage() {
     resolver: zodResolver(formSchema),
     defaultValues
   })
-  const location = useLocation()
 
-  const { loading, requestData } = useApi(requestApi<AuthResponse>)
+  const { apiState, requestData } = useApi(requestApi<AuthResponse>)
+  const { loading } = apiState.value
+
   const { toast } = useToast()
 
+  const location = useLocation()
   const targetUrl = location.state?.from || DEFAULT_REDIRECT_URL
 
   if (auth.value) return <Navigate to={targetUrl} replace />

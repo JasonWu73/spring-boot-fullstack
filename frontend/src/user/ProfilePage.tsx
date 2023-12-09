@@ -25,7 +25,7 @@ import { useToast } from '@/shared/components/ui/use-toast'
 import { useApi } from '@/shared/hooks/use-api'
 import { useInitial } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
-import { PUBLIC_KEY, clearAuth, requestApi, updateNickname } from '@/shared/signal/auth'
+import { PUBLIC_KEY, auth, clearAuth, requestApi } from '@/shared/signal/auth'
 import { encrypt } from '@/shared/utils/rsa'
 import type { User } from '@/user/UserListPage'
 
@@ -67,15 +67,6 @@ const defaultValues: FormSchema = {
 export default function UpdateUserPage() {
   useTitle('个人资料')
 
-  const form = useForm<FormSchema>({
-    resolver: zodResolver(formSchema),
-    defaultValues
-  })
-
-  const { data: user, error, loading, requestData: fetchUser } = useApi(requestApi<User>)
-  const { loading: submitting, requestData: fetchUpdate } = useApi(requestApi<void>)
-  const { toast } = useToast()
-
   useInitial(() => {
     getUser().then(({ data }) => {
       if (data) {
@@ -83,6 +74,19 @@ export default function UpdateUserPage() {
       }
     })
   })
+
+  const form = useForm<FormSchema>({
+    resolver: zodResolver(formSchema),
+    defaultValues
+  })
+
+  const { apiState: userState, requestData: fetchUser } = useApi(requestApi<User>)
+  const { loading, data: user, error } = userState.value
+
+  const { apiState: updateState, requestData: fetchUpdate } = useApi(requestApi<void>)
+  const { loading: submitting } = updateState.value
+
+  const { toast } = useToast()
 
   async function getUser() {
     return await fetchUser({ url: '/api/v1/users/me' })
@@ -124,7 +128,6 @@ export default function UpdateUserPage() {
         description: error,
         variant: 'destructive'
       })
-
       return
     }
 
@@ -137,10 +140,11 @@ export default function UpdateUserPage() {
     if (values.newPassword) {
       // 修改密码时，后端会自动退出登录，所以前端只要删除已保存的身份验证信息即可
       clearAuth()
+      return
     }
 
     // 更新已保存的身份验证信息
-    updateNickname(values.nickname)
+    auth.value = { ...auth.value!, nickname: values.nickname }
   }
 
   return (

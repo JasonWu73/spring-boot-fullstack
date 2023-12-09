@@ -21,19 +21,16 @@ export function FriendList() {
   useTitle('好友列表')
 
   const [searchParams] = useSearchParams()
-  const location = useLocation()
-  const navigate = useNavigate()
+  const nameQuery = searchParams.get(URL_QUERY_KEY_QUERY) || ''
 
   const { friends, dispatch } = useFriends()
-  const { error, loading, requestData } = useApi(requestApi<Friend[]>)
-  const { toast } = useToast()
-
-  const nameQuery = searchParams.get(URL_QUERY_KEY_QUERY) || ''
   const filteredFriends = nameQuery
     ? friends.filter((friend) =>
         friend.name.toLowerCase().includes(nameQuery.toLowerCase())
       )
     : friends
+
+  const location = useLocation()
 
   useRefresh(() => {
     if (location.state?.noRefresh === true) {
@@ -59,6 +56,12 @@ export function FriendList() {
       }
     })
   })
+
+  const { apiState, requestData } = useApi(requestApi<Friend[]>)
+  const { loading, error } = apiState.value
+
+  const { toast } = useToast()
+  const navigate = useNavigate()
 
   async function getFriends() {
     return await requestData({ url: '/data/friends.json' })

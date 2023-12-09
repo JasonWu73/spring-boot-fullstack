@@ -88,20 +88,9 @@ export function SplitBill() {
     resolver: zodResolver(formSchema),
     defaultValues
   })
-  const params = useParams()
-  const navigate = useNavigate()
-
-  const friendId = Number(params.friendId)
 
   useWatchFriendExpense(form) // 更新好友的费用
 
-  const {
-    data: friend,
-    error,
-    loading,
-    requestData,
-    updateState
-  } = useApi(getFriendFakeApi)
   const { dispatch } = useFriends()
 
   useRefresh(() => {
@@ -119,6 +108,14 @@ export function SplitBill() {
       }
     })
   })
+
+  const { apiState, requestData } = useApi(getFriendFakeApi)
+  const { loading, data: friend, error } = apiState.value
+
+  const params = useParams()
+  const friendId = Number(params.friendId)
+
+  const navigate = useNavigate()
 
   async function getFriend() {
     return await requestData({ url: '/fake', urlParams: { id: friendId } })
@@ -142,9 +139,7 @@ export function SplitBill() {
   async function getFriendFakeApi(params: ApiRequest) {
     startNProgress()
 
-    updateState((prevState) => {
-      return { ...prevState, loading: true }
-    })
+    apiState.value = { ...apiState.value, loading: true }
 
     // 仅为了模拟查看骨架屏的效果
     await wait(2)
@@ -154,9 +149,7 @@ export function SplitBill() {
 
     endNProgress()
 
-    updateState((prevState) => {
-      return { ...prevState, loading: false }
-    })
+    apiState.value = { ...apiState.value, loading: false }
 
     if (friend) return { status: 200, data: friend }
 
