@@ -1,3 +1,4 @@
+import { useSignal } from '@preact/signals-react'
 import React from 'react'
 
 import { PanelFold } from '@/shared/components/layout/panel-fold/PanelFold'
@@ -13,11 +14,13 @@ type TopNavBarProps = {
 }
 
 export function TopNavBar({ showPanelFold = false }: TopNavBarProps) {
-  const [isHamburgerOpen, setIsHamburgerOpen] = React.useState(false)
+  const openHamburger = useSignal(false)
 
   function handleClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     // 当点击页面链接后，应该自动关闭汉堡包导航菜单
-    e.target instanceof HTMLAnchorElement && setIsHamburgerOpen(false)
+    if (e.target instanceof HTMLAnchorElement) {
+      openHamburger.value = false
+    }
   }
 
   return (
@@ -30,14 +33,17 @@ export function TopNavBar({ showPanelFold = false }: TopNavBarProps) {
         <Logo />
       </div>
 
-      <PageNav isOpen={isHamburgerOpen} />
+      <PageNav open={openHamburger.value} />
 
       <div className="flex gap-4">
         <div className="hidden sm:inline-block">
           <AuthSwitch />
         </div>
         <ModeToggle setTheme={setTheme} />
-        <Hamburger isOpen={isHamburgerOpen} onToggle={setIsHamburgerOpen} />
+        <Hamburger
+          open={openHamburger.value}
+          onOpenChange={(open) => (openHamburger.value = open)}
+        />
       </div>
     </nav>
   )

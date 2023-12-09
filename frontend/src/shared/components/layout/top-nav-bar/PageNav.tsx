@@ -12,10 +12,10 @@ import { isUser } from '@/shared/signal/auth'
 import { cn } from '@/shared/utils/helpers'
 
 type PageNavProps = {
-  isOpen: boolean
+  open: boolean
 }
 
-export function PageNav({ isOpen }: PageNavProps) {
+export function PageNav({ open }: PageNavProps) {
   return (
     <>
       <NavigationMenu className="hidden max-w-full justify-start lg:flex">
@@ -27,7 +27,7 @@ export function PageNav({ isOpen }: PageNavProps) {
       <NavigationMenu
         className={cn(
           'absolute left-0 top-16 z-50 h-[calc(100%-4rem)] w-full max-w-full -translate-x-full items-start bg-slate-950 pt-4 duration-500 dark:bg-night-1 lg:hidden',
-          isOpen && 'translate-x-0'
+          open && 'translate-x-0'
         )}
       >
         <NavigationMenuList className="flex-col gap-4">

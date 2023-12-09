@@ -1,4 +1,4 @@
-import { Signal, useSignal } from '@preact/signals-react'
+import { useSignal, type Signal } from '@preact/signals-react'
 import type { ColumnSort, SortingState } from '@tanstack/react-table'
 import { Link } from 'react-router-dom'
 
