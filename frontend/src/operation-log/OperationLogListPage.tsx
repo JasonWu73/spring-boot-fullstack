@@ -1,8 +1,8 @@
 import type { SortingState } from '@tanstack/react-table'
-import { addDays, format } from 'date-fns'
+import { addDays, format, parse } from 'date-fns'
 import { useSearchParams } from 'react-router-dom'
 
-import { OperationLogSearch } from '@/operation-log/OperationLogSearch'
+import { OperationLogSearch, QueryParams } from '@/operation-log/OperationLogSearch'
 import { OperationLogTable } from '@/operation-log/OperationLogTable'
 import type { PaginationData, PaginationParams } from '@/shared/apis/types'
 import {
@@ -59,18 +59,17 @@ export default function OperationLogListPage() {
   const [searchParams, setSearchParams] = useSearchParams()
   const pageNum = Number(searchParams.get(URL_QUERY_KEY_PAGE_NUM)) || DEFAULT_PAGE_NUM
   const pageSize = Number(searchParams.get(URL_QUERY_KEY_PAGE_SIZE)) || DEFAULT_PAGE_SIZE
+  const sortColumn = searchParams.get(URL_QUERY_KEY_SORT_COLUMN) || 'requestedAt'
+  const sortOrder = searchParams.get(URL_QUERY_KEY_SORT_ORDER) || 'desc'
   const startAt =
     searchParams.get('startAt') || format(addDays(new Date(), -6), 'yyyy-MM-dd')
   const endAt = searchParams.get('endAt') || format(new Date(), 'yyyy-MM-dd')
+  const clientIp = searchParams.get('clientIp') || ''
+  const username = searchParams.get('username') || ''
+  const message = searchParams.get('message') || ''
 
   async function getLogs() {
     const urlParams: GetLogsParams = { pageNum, pageSize, startAt, endAt }
-
-    const sortColumn = searchParams.get(URL_QUERY_KEY_SORT_COLUMN) || 'requestedAt'
-    const sortOrder = searchParams.get(URL_QUERY_KEY_SORT_ORDER) || 'desc'
-    const clientIp = searchParams.get('clientIp')
-    const username = searchParams.get('username')
-    const message = searchParams.get('message')
 
     if (sortColumn) urlParams.sortColumn = sortColumn
     if (sortOrder) urlParams.sortOrder = sortOrder === 'asc' ? 'asc' : 'desc'
@@ -104,6 +103,26 @@ export default function OperationLogListPage() {
     setSearchParams(searchParams)
   }
 
+  function handleSearch(params: QueryParams) {
+    searchParams.delete(URL_QUERY_KEY_PAGE_NUM)
+    searchParams.delete(URL_QUERY_KEY_PAGE_SIZE)
+    searchParams.delete('startAt')
+    searchParams.delete('endAt')
+    searchParams.delete('clientIp')
+    searchParams.delete('username')
+    searchParams.delete('message')
+
+    const { startAt, endAt, clientIp, username, message } = params
+
+    if (startAt) searchParams.set('startAt', format(startAt, 'yyyy-MM-dd'))
+    if (endAt) searchParams.set('endAt', format(endAt, 'yyyy-MM-dd'))
+    if (clientIp) searchParams.set('clientIp', clientIp)
+    if (username) searchParams.set('username', username)
+    if (message) searchParams.set('message', message)
+
+    setSearchParams(searchParams, { replace: true })
+  }
+
   return (
     <Card className="mx-auto h-full w-full">
       <CardHeader>
@@ -112,7 +131,17 @@ export default function OperationLogListPage() {
       </CardHeader>
 
       <CardContent>
-        <OperationLogSearch loading={loading} />
+        <OperationLogSearch
+          queryParams={{
+            startAt: parse(startAt, 'yyyy-MM-dd', new Date()),
+            endAt: parse(endAt, 'yyyy-MM-dd', new Date()),
+            clientIp,
+            username,
+            message
+          }}
+          loading={loading}
+          onSearch={handleSearch}
+        />
 
         <OperationLogTable
           paging={{ pageNum, pageSize }}

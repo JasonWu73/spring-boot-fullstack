@@ -1,3 +1,4 @@
+import { useSignal } from '@preact/signals-react'
 import type { SortingState } from '@tanstack/react-table'
 import { format } from 'date-fns'
 import { useSearchParams } from 'react-router-dom'
@@ -29,7 +30,6 @@ import { useTitle } from '@/shared/hooks/use-title'
 import { requestApi } from '@/shared/signal/auth'
 import { UserSearch, type QueryParams } from '@/user/UserSearch'
 import { UserTable } from '@/user/UserTable'
-import { useSignal } from '@preact/signals-react'
 
 export type User = {
   id: number

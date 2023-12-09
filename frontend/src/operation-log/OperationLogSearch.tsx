@@ -1,15 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ReloadIcon } from '@radix-ui/react-icons'
-import { addDays, format, parse } from 'date-fns'
+import { addDays } from 'date-fns'
 import React from 'react'
-import { useForm } from 'react-hook-form'
-import { useSearchParams } from 'react-router-dom'
+import { useForm, type UseFormSetValue } from 'react-hook-form'
 import { z } from 'zod'
 
 import { Button } from '@/shared/components/ui/Button'
 import { FormCalendar, FormInput } from '@/shared/components/ui/CustomFormField'
 import { Form } from '@/shared/components/ui/Form'
-import { URL_QUERY_KEY_PAGE_NUM, URL_QUERY_KEY_PAGE_SIZE } from '@/shared/constants'
 
 const formSchema = z.object({
   startAt: z
@@ -25,8 +23,18 @@ const formSchema = z.object({
 
 type FormSchema = z.infer<typeof formSchema>
 
+export type QueryParams = {
+  startAt: Date
+  endAt: Date
+  clientIp: string
+  username: string
+  message: string
+}
+
 type OperationLogSearchProps = {
+  queryParams: QueryParams
   loading: boolean
+  onSearch: (params: QueryParams) => void
 }
 
 const defaultValues: FormSchema = {
@@ -37,51 +45,24 @@ const defaultValues: FormSchema = {
   message: ''
 }
 
-export function OperationLogSearch({ loading }: OperationLogSearchProps) {
+export function OperationLogSearch({
+  queryParams,
+  loading,
+  onSearch
+}: OperationLogSearchProps) {
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues
   })
-  const [searchParams, setSearchParams] = useSearchParams()
 
-  React.useEffect(() => {
-    const startAt = searchParams.get('startAt')
-    const endAt = searchParams.get('endAt')
-    const clientIp = searchParams.get('clientIp') || ''
-    const username = searchParams.get('username') || ''
-    const message = searchParams.get('message') || ''
-
-    form.setValue(
-      'startAt',
-      startAt ? parse(startAt, 'yyyy-MM-dd', new Date()) : addDays(new Date(), -6)
-    )
-    form.setValue('endAt', endAt ? parse(endAt, 'yyyy-MM-dd', new Date()) : new Date())
-    form.setValue('clientIp', clientIp)
-    form.setValue('username', username)
-    form.setValue('message', message)
-  }, [searchParams, form])
+  useQueryParams(queryParams, form.setValue)
 
   function onSubmit(values: FormSchema) {
-    searchParams.delete(URL_QUERY_KEY_PAGE_NUM)
-    searchParams.delete(URL_QUERY_KEY_PAGE_SIZE)
-    searchParams.delete('startAt')
-    searchParams.delete('endAt')
-    searchParams.delete('clientIp')
-    searchParams.delete('username')
-    searchParams.delete('message')
-
-    if (values.startAt) searchParams.set('startAt', format(values.startAt, 'yyyy-MM-dd'))
-    if (values.endAt) searchParams.set('endAt', format(values.endAt, 'yyyy-MM-dd'))
-    if (values.clientIp) searchParams.set('clientIp', values.clientIp)
-    if (values.username) searchParams.set('username', values.username)
-    if (values.message) searchParams.set('message', values.message)
-
-    setSearchParams(searchParams, { replace: true })
+    onSearch(values)
   }
 
   function handleReset() {
     form.reset()
-
     onSubmit(defaultValues)
   }
 
@@ -158,4 +139,14 @@ export function OperationLogSearch({ loading }: OperationLogSearchProps) {
       </form>
     </Form>
   )
+}
+
+function useQueryParams(queryParams: QueryParams, setValue: UseFormSetValue<FormSchema>) {
+  React.useEffect(() => {
+    setValue('startAt', queryParams.startAt)
+    setValue('endAt', queryParams.endAt)
+    setValue('clientIp', queryParams.clientIp)
+    setValue('username', queryParams.username)
+    setValue('message', queryParams.message)
+  }, [queryParams, setValue])
 }
