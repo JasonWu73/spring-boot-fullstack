@@ -1,3 +1,4 @@
+import { useSignal } from '@preact/signals-react'
 import { ReloadIcon } from '@radix-ui/react-icons'
 
 import { requestApi } from '@/shared/apis/dummyjson-api'
@@ -6,7 +7,6 @@ import { useApi } from '@/shared/hooks/use-api'
 import { useRefresh } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
 import { cn } from '@/shared/utils/helpers'
-import { useSignal } from '@preact/signals-react'
 
 type Product = {
   id: number
