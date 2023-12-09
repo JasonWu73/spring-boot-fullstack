@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ReloadIcon } from '@radix-ui/react-icons'
+import { ShieldPlus } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { Navigate, useLocation } from 'react-router-dom'
 import { z } from 'zod'
@@ -25,7 +26,6 @@ import {
   type AuthResponse
 } from '@/shared/signal/auth'
 import { encrypt } from '@/shared/utils/rsa'
-import { ShieldPlus } from 'lucide-react'
 
 const DEFAULT_REDIRECT_URL = '/admin'
 
@@ -57,6 +57,7 @@ export default function LoginPage() {
   const location = useLocation()
   const targetUrl = location.state?.from || DEFAULT_REDIRECT_URL
 
+  // 已登录则跳转到目标页面，即登录后就不允许再访问登录页面
   if (auth.value) return <Navigate to={targetUrl} replace />
 
   async function login(username: string, password: string) {
