@@ -6,7 +6,7 @@ import { Logo } from '@/shared/components/layout/top-nav-bar/Logo'
 import { PageNav } from '@/shared/components/layout/top-nav-bar/PageNav'
 import { Hamburger } from '@/shared/components/ui/Hamburger'
 import { ModeToggle } from '@/shared/components/ui/ModeToggle'
-import { setTheme } from '@/shared/store/theme-state'
+import { setTheme } from '@/shared/signal/theme'
 
 type TopNavBarProps = {
   showPanelFold?: boolean

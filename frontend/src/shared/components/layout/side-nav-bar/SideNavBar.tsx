@@ -5,7 +5,7 @@ import { NavLink } from 'react-router-dom'
 import { buttonVariants } from '@/shared/components/ui/Button'
 import { ScrollArea } from '@/shared/components/ui/ScrollArea'
 import { Separator } from '@/shared/components/ui/Separator'
-import { isRoot } from '@/shared/store/auth-state'
+import { isRoot } from '@/shared/signal/auth'
 import { cn } from '@/shared/utils/helpers'
 
 export function SideNavBar() {

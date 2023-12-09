@@ -25,12 +25,7 @@ import { useToast } from '@/shared/components/ui/use-toast'
 import { useApi } from '@/shared/hooks/use-api'
 import { useInitial } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
-import {
-  PUBLIC_KEY,
-  clearAuth,
-  requestApi,
-  updateNickname
-} from '@/shared/store/auth-state'
+import { PUBLIC_KEY, clearAuth, requestApi, updateNickname } from '@/shared/signal/auth'
 import { encrypt } from '@/shared/utils/rsa'
 import type { User } from '@/user/UserListPage'
 

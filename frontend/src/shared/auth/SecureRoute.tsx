@@ -1,12 +1,4 @@
-import {
-  ADMIN,
-  ROOT,
-  USER,
-  auth,
-  isAdmin,
-  isRoot,
-  isUser
-} from '@/shared/store/auth-state'
+import { ADMIN, ROOT, USER, auth, isAdmin, isRoot, isUser } from '@/shared/signal/auth'
 import { Navigate, Outlet } from 'react-router-dom'
 
 type SecureRouteProps = {

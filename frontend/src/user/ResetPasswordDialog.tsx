@@ -22,7 +22,7 @@ import { Form } from '@/shared/components/ui/Form'
 import { useToast } from '@/shared/components/ui/use-toast'
 import type { SetStateAction } from '@/shared/hooks/use-api'
 import { useApi } from '@/shared/hooks/use-api'
-import { PUBLIC_KEY, requestApi } from '@/shared/store/auth-state'
+import { PUBLIC_KEY, requestApi } from '@/shared/signal/auth'
 import { encrypt } from '@/shared/utils/rsa'
 import type { User } from '@/user/UserListPage'
 

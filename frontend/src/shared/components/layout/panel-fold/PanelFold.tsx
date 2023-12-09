@@ -1,7 +1,7 @@
 import { PanelLeftClose, PanelLeftOpen } from 'lucide-react'
 
 import { Button } from '@/shared/components/ui/Button'
-import { folded, setFolded } from '@/shared/store/panel-fold-state'
+import { folded, setFolded } from '@/shared/signal/panel-fold'
 
 /**
  * 折叠或展开面板的图标，常用于折叠或展开侧边导航栏。

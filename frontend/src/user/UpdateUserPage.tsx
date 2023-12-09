@@ -25,7 +25,7 @@ import { useToast } from '@/shared/components/ui/use-toast'
 import { useApi } from '@/shared/hooks/use-api'
 import { useInitial } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
-import { ADMIN, ROOT, USER, requestApi } from '@/shared/store/auth-state'
+import { ADMIN, ROOT, USER, requestApi } from '@/shared/signal/auth'
 import type { User } from '@/user/UserListPage'
 
 const AUTHORITY_OPTIONS = [ADMIN, USER]

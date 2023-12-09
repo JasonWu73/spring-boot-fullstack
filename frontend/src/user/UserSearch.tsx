@@ -7,7 +7,7 @@ import { z } from 'zod'
 import { Button } from '@/shared/components/ui/Button'
 import { FormInput, FormSelect } from '@/shared/components/ui/CustomFormField'
 import { Form } from '@/shared/components/ui/Form'
-import { ADMIN, ROOT, USER } from '@/shared/store/auth-state'
+import { ADMIN, ROOT, USER } from '@/shared/signal/auth'
 
 const statusOptions = [
   { value: '', label: '全部' },

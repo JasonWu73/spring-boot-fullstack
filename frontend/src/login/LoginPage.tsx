@@ -23,7 +23,7 @@ import {
   requestApi,
   setAuth,
   type AuthResponse
-} from '@/shared/store/auth-state'
+} from '@/shared/signal/auth'
 import { encrypt } from '@/shared/utils/rsa'
 import { ShieldPlus } from 'lucide-react'
 
