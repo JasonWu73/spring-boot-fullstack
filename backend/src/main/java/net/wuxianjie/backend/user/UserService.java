@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 public class UserService {
 
   private final PasswordEncoder passwordEncoder;
+
   private final AuthServiceImpl authService;
   private final UserMapper userMapper;
 

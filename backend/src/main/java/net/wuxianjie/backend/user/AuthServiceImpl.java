@@ -52,8 +52,8 @@ public class AuthServiceImpl implements AuthService {
 
   private final HttpServletRequest request;
   private final StringRedisTemplate stringRedisTemplate;
-
   private final PasswordEncoder passwordEncoder;
+
   private final JsonConverter jsonConverter;
   private final UserMapper userMapper;
 
