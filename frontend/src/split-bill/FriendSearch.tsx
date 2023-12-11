@@ -1,9 +1,9 @@
+import { useSignal } from '@preact/signals-react'
 import React from 'react'
 
 import { Input } from '@/shared/components/ui/Input'
 import { useKeypress } from '@/shared/hooks/use-keypress'
 import { ShortcutTip } from '@/split-bill/ShortcutTip'
-import { useSignal } from '@preact/signals-react'
 
 type FriendSearchProps = {
   nameQuery: string

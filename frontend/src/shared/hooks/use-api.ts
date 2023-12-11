@@ -1,5 +1,6 @@
-import type { ApiRequest, Method } from '@/shared/utils/api-caller'
 import { useSignal, type Signal } from '@preact/signals-react'
+
+import type { ApiRequest, Method } from '@/shared/utils/api-caller'
 
 export type ApiState<T> = {
   /**
