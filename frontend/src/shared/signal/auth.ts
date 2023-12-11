@@ -56,7 +56,7 @@ type Auth = {
 }
 
 /**
- * 前端存储的身份验证数据。
+ * 前端存储的身份验证数据 Signal。
  */
 export const auth = signal<Auth | null>(undefined as unknown as Auth)
 

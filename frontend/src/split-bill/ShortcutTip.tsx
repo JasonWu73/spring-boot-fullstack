@@ -15,7 +15,7 @@ export function ShortcutTip() {
         <AccordionContent>
           <ul className="mt-4 space-y-2">
             <li>
-              <Code>Ctrl+\</Code>：定位到搜索框
+              <Code>Ctrl+\</Code>：聚焦搜索框
             </li>
             <li>
               <Code>Esc</Code>：清空搜索框，并仅展示应用主界面

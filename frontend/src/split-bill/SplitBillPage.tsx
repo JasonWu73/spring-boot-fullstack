@@ -5,9 +5,13 @@ import { Button } from '@/shared/components/ui/Button'
 import { Loading } from '@/shared/components/ui/Loading'
 import { useKeypress } from '@/shared/hooks/use-keypress'
 import { useTitle } from '@/shared/hooks/use-title'
+import {
+  createSplitBillState,
+  showAddFriend,
+  splitBill
+} from '@/shared/signal/split-bill'
 import { wait } from '@/shared/utils/helpers'
 import { FriendList } from '@/split-bill/FriendList'
-import { useFriends } from '@/split-bill/FriendProvider'
 
 // ----- 测试懒加载（React Split Code）-----
 const AddFriend = React.lazy(() =>
@@ -19,20 +23,20 @@ const AddFriend = React.lazy(() =>
 )
 
 export default function SplitBillPage() {
-  useTitle('分摊账单')
+  useTitle('分账 App')
+
+  createSplitBillState()
 
   const navigate = useNavigate()
 
-  const { showAddFriend, dispatch } = useFriends()
-
   useKeypress({ key: 'Escape' }, () => {
-    dispatch({ type: 'SHOW_ADD_FRIEND_FORM', payload: false })
+    showAddFriend(false)
 
     navigate('/split-bill', { state: { noRefresh: true } })
   })
 
   function handleToggleAddFriend() {
-    dispatch({ type: 'SHOW_ADD_FRIEND_FORM', payload: !showAddFriend })
+    showAddFriend(!splitBill.value.showAddFriend)
   }
 
   return (
@@ -44,13 +48,13 @@ export default function SplitBillPage() {
       <div className="flex w-full flex-col gap-6 self-start md:col-span-1 md:row-start-2 md:row-end-3 md:justify-self-end">
         <div className="w-full max-w-md self-end">
           <React.Suspense fallback={<Loading />}>
-            {showAddFriend && <AddFriend />}
+            {splitBill.value.showAddFriend && <AddFriend />}
           </React.Suspense>
         </div>
 
         <div className="self-end">
           <Button onClick={handleToggleAddFriend}>
-            {showAddFriend ? '关闭' : '添加好友'}
+            {splitBill.value.showAddFriend ? '关闭' : '添加好友'}
           </Button>
         </div>
       </div>

@@ -12,7 +12,6 @@ import { createPanelFoldState } from '@/shared/signal/panel-fold'
 import { createThemeState } from '@/shared/signal/theme'
 import { createVersionState } from '@/shared/signal/version'
 import { wait } from '@/shared/utils/helpers'
-import { FriendProvider } from '@/split-bill/FriendProvider'
 
 const ErrorPage = React.lazy(() => import('@/shared/components/ui/ErrorPage'))
 const NotFoundPage = React.lazy(() => import('@/shared/components/ui/NotFoundPage'))
@@ -28,7 +27,7 @@ const OperationLogListPage = React.lazy(
 )
 
 // 测试 React Router 懒加载（React Split Code）
-const SplitBillForm = React.lazy(() =>
+const SplitBill = React.lazy(() =>
   wait(2).then(() =>
     import('@/split-bill/SplitBill').then((module) => ({
       default: module.SplitBill
@@ -64,17 +63,13 @@ const router = createBrowserRouter([
           },
           {
             path: '/split-bill',
-            element: (
-              <FriendProvider>
-                <SplitBillPage />
-              </FriendProvider>
-            ),
+            element: <SplitBillPage />,
             children: [
               {
                 path: ':friendId',
                 element: (
                   <React.Suspense fallback={<Loading />}>
-                    <SplitBillForm />
+                    <SplitBill />
                   </React.Suspense>
                 )
               }

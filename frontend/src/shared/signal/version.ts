@@ -10,7 +10,7 @@ type Version = {
 }
 
 /**
- * 版本号。
+ * 版本号 Signal。
  */
 export const version = signal<Version | undefined>(undefined)
 

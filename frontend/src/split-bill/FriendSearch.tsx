@@ -1,47 +1,46 @@
 import React from 'react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
 
 import { Input } from '@/shared/components/ui/Input'
-import { URL_QUERY_KEY_QUERY } from '@/shared/constants'
 import { useKeypress } from '@/shared/hooks/use-keypress'
+import { showAddFriend } from '@/shared/signal/split-bill'
 import { ShortcutTip } from '@/split-bill/ShortcutTip'
+import { useSignal } from '@preact/signals-react'
+import { useNavigate } from 'react-router-dom'
 
-export function FriendSearch() {
-  const inputRef = React.useRef<HTMLInputElement | null>(null)
-  const [searchParams, setSearchParams] = useSearchParams()
-  const [query, setQuery] = React.useState(searchParams.get(URL_QUERY_KEY_QUERY) || '')
-  const navigate = useNavigate()
+type FriendSearchProps = {
+  nameQuery: string
+  onSearch: (name: string) => void
+  onEscape: () => void
+}
+
+export function FriendSearch({ nameQuery, onSearch, onEscape }: FriendSearchProps) {
+  const input = React.useRef<HTMLInputElement | null>(null)
 
   useKeypress({ key: '\\', modifiers: ['ctrlKey'] }, () => {
-    if (document.activeElement === inputRef.current) return
+    if (document.activeElement === input.current) return
 
-    inputRef.current?.focus()
+    input.current?.focus()
   })
+
+  const query = useSignal(nameQuery)
 
   useKeypress({ key: 'Escape' }, () => {
-    setQuery('')
+    query.value = ''
+    onEscape()
   })
 
+  const navigate = useNavigate()
+
   function handleSearch(event: React.ChangeEvent<HTMLInputElement>) {
-    searchParams.delete(URL_QUERY_KEY_QUERY)
+    const name = event.target.value
+    query.value = name
 
-    const value = event.target.value
-
-    setQuery(value)
-
-    const nameQuery = value.trim()
-
-    if (nameQuery) {
-      searchParams.set(URL_QUERY_KEY_QUERY, nameQuery)
-    }
-
-    return setSearchParams(searchParams, {
-      replace: true,
-      state: { noRefresh: true }
-    })
+    onSearch(name.trim())
   }
 
   function handleFocus() {
+    showAddFriend(false)
+
     navigate(`/split-bill${window.location.search}`, {
       replace: true,
       state: { noRefresh: true }
@@ -53,10 +52,10 @@ export function FriendSearch() {
       <ShortcutTip />
 
       <Input
-        value={query}
+        value={query.value}
         onChange={handleSearch}
         onFocus={handleFocus}
-        ref={inputRef}
+        ref={input}
         placeholder="搜索好友..."
         className="my-4 dark:border-amber-500"
       />

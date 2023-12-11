@@ -13,22 +13,18 @@ import { URL_QUERY_KEY_QUERY } from '@/shared/constants'
 import { useApi } from '@/shared/hooks/use-api'
 import { useRefresh } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
+import {
+  deleteFriend,
+  setFriends,
+  showAddFriend,
+  splitBill,
+  type Friend
+} from '@/shared/signal/split-bill'
 import { FriendItem } from '@/split-bill/FriendItem'
-import { useFriends, type Friend } from '@/split-bill/FriendProvider'
 import { FriendSearch } from '@/split-bill/FriendSearch'
 
 export function FriendList() {
   useTitle('好友列表')
-
-  const [searchParams] = useSearchParams()
-  const nameQuery = searchParams.get(URL_QUERY_KEY_QUERY) || ''
-
-  const { friends, dispatch } = useFriends()
-  const filteredFriends = nameQuery
-    ? friends.filter((friend) =>
-        friend.name.toLowerCase().includes(nameQuery.toLowerCase())
-      )
-    : friends
 
   const location = useLocation()
 
@@ -38,24 +34,25 @@ export function FriendList() {
       if (location.state) {
         location.state.noRefresh = false
       }
-
       return
     }
 
-    dispatch({ type: 'SHOW_ADD_FRIEND_FORM', payload: false })
+    showAddFriend(false)
 
-    getFriends().then(({ data, error }) => {
-      if (error) {
-        dispatch({ type: 'SET_FRIENDS', payload: [] })
-
-        return
-      }
-
+    getFriends().then(({ data }) => {
       if (data) {
-        dispatch({ type: 'SET_FRIENDS', payload: data })
+        setFriends(data)
       }
     })
   })
+
+  const [searchParams, setSearchParams] = useSearchParams()
+  const nameQuery = searchParams.get(URL_QUERY_KEY_QUERY) || ''
+  const filteredFriends = nameQuery
+    ? splitBill.value.friends.filter((friend) =>
+        friend.name.toLowerCase().includes(nameQuery.toLowerCase())
+      )
+    : splitBill.value.friends
 
   const { apiState, requestData } = useApi(requestApi<Friend[]>)
   const { loading, error } = apiState.value
@@ -68,7 +65,7 @@ export function FriendList() {
   }
 
   function handleDeleteFriend(friend: Friend) {
-    dispatch({ type: 'DELETE_FRIEND', payload: friend.id })
+    deleteFriend(friend.id)
 
     toast({
       title: '删除好友',
@@ -85,9 +82,33 @@ export function FriendList() {
     })
   }
 
+  function handleSearch(name: string) {
+    searchParams.delete(URL_QUERY_KEY_QUERY)
+
+    if (name) searchParams.set(URL_QUERY_KEY_QUERY, name)
+
+    setSearchParams(searchParams, {
+      replace: true,
+      state: { noRefresh: true }
+    })
+  }
+
+  function handleEscape() {
+    searchParams.delete(URL_QUERY_KEY_QUERY)
+
+    setSearchParams(searchParams, {
+      replace: true,
+      state: { noRefresh: true }
+    })
+  }
+
   return (
     <>
-      <FriendSearch />
+      <FriendSearch
+        nameQuery={nameQuery}
+        onSearch={handleSearch}
+        onEscape={handleEscape}
+      />
 
       <Card>
         <ScrollArea className="h-80">

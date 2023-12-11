@@ -8,11 +8,11 @@ import React from 'react'
  * @param objFn 函数或对象
  */
 export function useSavedRef<T>(objFn: T) {
-  const callbackRef = React.useRef(objFn)
+  const ref = React.useRef(objFn)
 
   React.useLayoutEffect(() => {
-    callbackRef.current = objFn
+    ref.current = objFn
   }, [objFn])
 
-  return callbackRef
+  return ref
 }

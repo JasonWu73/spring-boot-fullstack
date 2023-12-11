@@ -10,8 +10,8 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from '@/shared/components/ui/Tooltip'
+import { showAddFriend, type Friend } from '@/shared/signal/split-bill'
 import { cn, truncate } from '@/shared/utils/helpers'
-import { useFriends, type Friend } from '@/split-bill/FriendProvider'
 
 type FriendItemProps = {
   friend: Friend
@@ -20,21 +20,15 @@ type FriendItemProps = {
 
 export function FriendItem({ friend, onDeleteFriend }: FriendItemProps) {
   const params = useParams()
-
-  const { dispatch } = useFriends()
-
   const friendId = Number(params.friendId)
   const selected = friend.id === friendId
 
-  function handleToggleSelect() {
-    dispatch({
-      type: 'SHOW_ADD_FRIEND_FORM',
-      payload: false
-    })
-  }
-
   const name = truncate(friend.name, 5)
   const queryStr = window.location.search
+
+  function handleToggleSelect() {
+    showAddFriend(false)
+  }
 
   return (
     <li

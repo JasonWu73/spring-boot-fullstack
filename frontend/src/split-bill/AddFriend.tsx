@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui
 import { FormCalendar, FormInput } from '@/shared/components/ui/CustomFormField'
 import { Form } from '@/shared/components/ui/Form'
 import { useTitle } from '@/shared/hooks/use-title'
-import { useFriends } from '@/split-bill/FriendProvider'
+import { addFriend, showAddFriend } from '@/shared/signal/split-bill'
 
 const formSchema = z.object({
   name: z.string().min(1, '必须输入姓名').trim(),
@@ -34,24 +34,19 @@ export function AddFriend() {
     defaultValues
   })
 
-  const { dispatch } = useFriends()
-
   function onSubmit(values: FormSchema) {
     const newId = Date.now()
 
-    dispatch({
-      type: 'ADD_FRIEND',
-      payload: {
-        id: newId,
-        name: values.name,
-        image: `${values.image}?u=${newId}`,
-        birthday: format(values.birthday, 'yyyy-MM-dd'),
-        balance: 0,
-        creditRating: 0
-      }
+    addFriend({
+      id: newId,
+      name: values.name,
+      image: `${values.image}?u=${newId}`,
+      birthday: format(values.birthday, 'yyyy-MM-dd'),
+      balance: 0,
+      creditRating: 0
     })
 
-    dispatch({ type: 'SHOW_ADD_FRIEND_FORM', payload: false })
+    showAddFriend(false)
   }
 
   return (

@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { ExclamationTriangleIcon } from '@radix-ui/react-icons'
 import React from 'react'
 import { useForm, type UseFormReturn } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -25,11 +26,15 @@ import {
 import { useApi } from '@/shared/hooks/use-api'
 import { useRefresh } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
+import {
+  getStorageFriends,
+  showAddFriend,
+  updateBalance,
+  updateCredit
+} from '@/shared/signal/split-bill'
 import type { ApiRequest } from '@/shared/utils/api-caller'
 import { wait } from '@/shared/utils/helpers'
 import { endNProgress, startNProgress } from '@/shared/utils/nprogress'
-import { getFriendsFromStorage, useFriends } from '@/split-bill/FriendProvider'
-import { ExclamationTriangleIcon } from '@radix-ui/react-icons'
 
 const whoIsPayingOptions = [
   { value: 'user', label: '您' },
@@ -62,6 +67,9 @@ const formSchema = z
   })
   .refine(
     ({ userExpense, friendExpense, whoIsPaying }) => {
+      // 匿名，不用验证
+      if (whoIsPaying !== 'user' && whoIsPaying !== 'friend') return true
+
       if (whoIsPaying === 'user' && userExpense > 0) return true
 
       return whoIsPaying === 'friend' && friendExpense > 0
@@ -91,22 +99,10 @@ export function SplitBill() {
 
   useWatchFriendExpense(form) // 更新好友的费用
 
-  const { dispatch } = useFriends()
-
   useRefresh(() => {
     form.reset()
 
-    getFriend().then(({ data, error }) => {
-      if (error) {
-        dispatch({ type: 'SELECT_FRIEND', payload: null })
-
-        return
-      }
-
-      if (data) {
-        dispatch({ type: 'SELECT_FRIEND', payload: data })
-      }
-    })
+    getFriend().then()
   })
 
   const { apiState, requestData } = useApi(getFriendFakeApi)
@@ -125,7 +121,9 @@ export function SplitBill() {
     const expense =
       values.whoIsPaying === 'user' ? -values.friendExpense : values.userExpense
 
-    dispatch({ type: 'SPLIT_BILL', payload: { id: friendId, expense } })
+    updateBalance(friendId, expense)
+
+    showAddFriend(false)
 
     navigate(`/split-bill${window.location.search}`, {
       state: { noRefresh: true }
@@ -133,10 +131,10 @@ export function SplitBill() {
   }
 
   function handleCreditRating(creditRating: number) {
-    dispatch({ type: 'RATE_CREDIT_RANK', payload: { id: friendId, creditRating } })
+    updateCredit(friendId, creditRating)
   }
 
-  async function getFriendFakeApi(params: ApiRequest) {
+  async function getFriendFakeApi({ urlParams }: ApiRequest) {
     startNProgress()
 
     apiState.value = { ...apiState.value, loading: true }
@@ -144,8 +142,8 @@ export function SplitBill() {
     // 仅为了模拟查看骨架屏的效果
     await wait(2)
 
-    const friends = getFriendsFromStorage()
-    const friend = friends.find((friend) => friend.id === Number(params.urlParams!.id))
+    const friends = getStorageFriends()
+    const friend = friends.find((friend) => friend.id === Number(urlParams!.id))
 
     endNProgress()
 
