@@ -123,7 +123,7 @@ export function SplitBill() {
 
     updateBalance(friendId, expense)
 
-    showAddFriend(false)
+    showAddFriend.value = false
 
     navigate(`/split-bill${window.location.search}`, {
       state: { noRefresh: true }

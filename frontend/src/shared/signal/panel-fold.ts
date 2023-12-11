@@ -3,7 +3,7 @@ import { effect, signal } from '@preact/signals-react'
 /**
  * 是否折叠侧边栏 Signal。
  */
-export const folded = signal<boolean>(undefined as unknown as boolean)
+export const folded = signal(undefined as unknown as boolean)
 
 /**
  * 设置是否折叠侧边栏。

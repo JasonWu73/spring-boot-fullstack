@@ -4,7 +4,7 @@ import type { Theme } from '@/shared/components/ui/ModeToggle'
 
 let STORAGE_KEY: string
 
-const theme = signal<Theme>(undefined as unknown as Theme)
+const theme = signal(undefined as unknown as Theme)
 
 /**
  * 设置主题。

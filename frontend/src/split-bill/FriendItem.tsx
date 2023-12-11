@@ -27,7 +27,7 @@ export function FriendItem({ friend, onDeleteFriend }: FriendItemProps) {
   const queryStr = window.location.search
 
   function handleToggleSelect() {
-    showAddFriend(false)
+    showAddFriend.value = false
   }
 
   return (

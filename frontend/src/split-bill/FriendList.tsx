@@ -15,9 +15,9 @@ import { useRefresh } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
 import {
   deleteFriend,
+  friends,
   setFriends,
   showAddFriend,
-  splitBill,
   type Friend
 } from '@/shared/signal/split-bill'
 import { FriendItem } from '@/split-bill/FriendItem'
@@ -37,7 +37,7 @@ export function FriendList() {
       return
     }
 
-    showAddFriend(false)
+    showAddFriend.value = false
 
     getFriends().then(({ data }) => {
       if (data) {
@@ -49,10 +49,10 @@ export function FriendList() {
   const [searchParams, setSearchParams] = useSearchParams()
   const nameQuery = searchParams.get(URL_QUERY_KEY_QUERY) || ''
   const filteredFriends = nameQuery
-    ? splitBill.value.friends.filter((friend) =>
+    ? friends.value.filter((friend) =>
         friend.name.toLowerCase().includes(nameQuery.toLowerCase())
       )
-    : splitBill.value.friends
+    : friends.value
 
   const { apiState, requestData } = useApi(requestApi<Friend[]>)
   const { loading, error } = apiState.value

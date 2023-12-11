@@ -46,7 +46,7 @@ export function AddFriend() {
       creditRating: 0
     })
 
-    showAddFriend(false)
+    showAddFriend.value = false
   }
 
   return (

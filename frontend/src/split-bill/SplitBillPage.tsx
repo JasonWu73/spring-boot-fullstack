@@ -5,11 +5,7 @@ import { Button } from '@/shared/components/ui/Button'
 import { Loading } from '@/shared/components/ui/Loading'
 import { useKeypress } from '@/shared/hooks/use-keypress'
 import { useTitle } from '@/shared/hooks/use-title'
-import {
-  createSplitBillState,
-  showAddFriend,
-  splitBill
-} from '@/shared/signal/split-bill'
+import { createSplitBillState, showAddFriend } from '@/shared/signal/split-bill'
 import { wait } from '@/shared/utils/helpers'
 import { FriendList } from '@/split-bill/FriendList'
 
@@ -30,13 +26,13 @@ export default function SplitBillPage() {
   const navigate = useNavigate()
 
   useKeypress({ key: 'Escape' }, () => {
-    showAddFriend(false)
+    showAddFriend.value = false
 
     navigate('/split-bill', { state: { noRefresh: true } })
   })
 
   function handleToggleAddFriend() {
-    showAddFriend(!splitBill.value.showAddFriend)
+    showAddFriend.value = !showAddFriend.value
   }
 
   return (
@@ -48,13 +44,13 @@ export default function SplitBillPage() {
       <div className="flex w-full flex-col gap-6 self-start md:col-span-1 md:row-start-2 md:row-end-3 md:justify-self-end">
         <div className="w-full max-w-md self-end">
           <React.Suspense fallback={<Loading />}>
-            {splitBill.value.showAddFriend && <AddFriend />}
+            {showAddFriend.value && <AddFriend />}
           </React.Suspense>
         </div>
 
         <div className="self-end">
           <Button onClick={handleToggleAddFriend}>
-            {splitBill.value.showAddFriend ? '关闭' : '添加好友'}
+            {showAddFriend.value ? '关闭' : '添加好友'}
           </Button>
         </div>
       </div>

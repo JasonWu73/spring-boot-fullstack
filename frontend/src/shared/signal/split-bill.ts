@@ -1,4 +1,4 @@
-import { signal } from '@preact/signals-react'
+import { effect, signal } from '@preact/signals-react'
 
 const STORAGE_KEY = 'demo-friends'
 
@@ -11,22 +11,15 @@ export type Friend = {
   birthday: string
 }
 
-type SplitBill = {
-  /**
-   * 好友列表。
-   */
-  friends: Friend[]
-
-  /**
-   * 是否显示添加好友的表单。
-   */
-  showAddFriend: boolean
-}
+/**
+ * 好友列表 Signal。
+ */
+export const friends = signal(undefined as unknown as Friend[])
 
 /**
- * 分账数据 Signal。
+ * 是否显示添加好友的表单 Signal。
  */
-export const splitBill = signal<SplitBill>(undefined as unknown as SplitBill)
+export const showAddFriend = signal(false)
 
 /**
  * 创建分账数据 Signal。
@@ -34,24 +27,13 @@ export const splitBill = signal<SplitBill>(undefined as unknown as SplitBill)
  * 仅可在应用启动时初始化一次。
  */
 export function createSplitBillState() {
-  if (splitBill.value !== undefined) return
+  if (friends.value !== undefined) return
 
-  splitBill.value = {
-    friends: getStorageFriends(),
-    showAddFriend: false
-  }
-}
+  friends.value = getStorageFriends()
 
-/**
- * 是否显示添加好友的表单。
- *
- * @returns show 是否显示
- */
-export function showAddFriend(show: boolean) {
-  splitBill.value = {
-    ...splitBill.value,
-    showAddFriend: show
-  }
+  effect(() => {
+    setStorageFriends(friends.value)
+  })
 }
 
 /**
@@ -59,14 +41,12 @@ export function showAddFriend(show: boolean) {
  * <p>
  * 若本地存储中已有好友列表数据，则不会覆盖。
  *
- * @param friends 好友列表
+ * @param newFriends 好友列表
  */
-export function setFriends(friends: Friend[]) {
+export function setFriends(newFriends: Friend[]) {
   if (getStorageFriends().length > 0) return
 
-  splitBill.value.friends = friends
-
-  setStorageFriends(friends)
+  friends.value = newFriends
 }
 
 /**
@@ -75,9 +55,7 @@ export function setFriends(friends: Friend[]) {
  * @param friend 要添加的好友
  */
 export function addFriend(friend: Friend) {
-  splitBill.value.friends = [...splitBill.value.friends, friend]
-
-  setStorageFriends(splitBill.value.friends)
+  friends.value = [...friends.value, friend]
 }
 
 /**
@@ -86,11 +64,7 @@ export function addFriend(friend: Friend) {
  * @param friendId 要删除的好友 ID
  */
 export function deleteFriend(friendId: number) {
-  splitBill.value.friends = splitBill.value.friends.filter(
-    (friend) => friend.id !== friendId
-  )
-
-  setStorageFriends(splitBill.value.friends)
+  friends.value = friends.value.filter((friend) => friend.id !== friendId)
 }
 
 /**
@@ -100,21 +74,16 @@ export function deleteFriend(friendId: number) {
  * @param expense 本次消费金额
  */
 export function updateBalance(friendId: number, expense: number) {
-  splitBill.value = {
-    ...splitBill.value,
-    friends: splitBill.value.friends.map((friend) => {
-      if (friend.id === friendId) {
-        return {
-          ...friend,
-          balance: Number((friend.balance - expense).toFixed(2))
-        }
+  friends.value = friends.value.map((friend) => {
+    if (friend.id === friendId) {
+      return {
+        ...friend,
+        balance: Number((friend.balance - expense).toFixed(2))
       }
+    }
 
-      return friend
-    })
-  }
-
-  setStorageFriends(splitBill.value.friends)
+    return friend
+  })
 }
 
 /**
@@ -124,21 +93,16 @@ export function updateBalance(friendId: number, expense: number) {
  * @param creditRating 最新的信用等级
  */
 export function updateCredit(friendId: number, creditRating: number) {
-  splitBill.value = {
-    ...splitBill.value,
-    friends: splitBill.value.friends.map((friend) => {
-      if (friend.id === friendId) {
-        return {
-          ...friend,
-          creditRating
-        }
+  friends.value = friends.value.map((friend) => {
+    if (friend.id === friendId) {
+      return {
+        ...friend,
+        creditRating
       }
+    }
 
-      return friend
-    })
-  }
-
-  setStorageFriends(splitBill.value.friends)
+    return friend
+  })
 }
 
 /**

@@ -39,7 +39,7 @@ export function FriendSearch({ nameQuery, onSearch, onEscape }: FriendSearchProp
   }
 
   function handleFocus() {
-    showAddFriend(false)
+    showAddFriend.value = false
 
     navigate(`/split-bill${window.location.search}`, {
       replace: true,
