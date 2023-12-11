@@ -184,7 +184,7 @@ export function getUserTableColumns({
                 </Link>
               </DropdownMenuItem>
 
-              {isRoot && (
+              {isRoot.value && (
                 <>
                   <DropdownMenuSeparator />
 
@@ -220,7 +220,7 @@ export function getUserTableColumns({
     }
   ]
 
-  if (isRoot) return columns
+  if (isRoot.value) return columns
 
   return columns.filter((column) => column.id !== '选择')
 }

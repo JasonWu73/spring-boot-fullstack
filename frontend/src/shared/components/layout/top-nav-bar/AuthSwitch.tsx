@@ -44,7 +44,7 @@ export function AuthSwitch() {
                 个人资料
               </NavItem>
 
-              {isAdmin && (
+              {isAdmin.value && (
                 <NavItem link="/admin">
                   <LayoutDashboard className="h-4 w-4" />
                   管理后台

@@ -27,7 +27,7 @@ export function SideNavBar() {
         <MenuSeparator />
 
         <Menu title="测试路由">
-          {isRoot && (
+          {isRoot.value && (
             <MenuItem link="/product">
               <ShoppingCart className="h-4 w-4" />
               <span>随机商品</span>

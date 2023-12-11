@@ -45,7 +45,7 @@ function NavItemList() {
         <AuthSwitch />
       </div>
       <NavItem link="/split-bill">分账 App</NavItem>
-      {isUser && <NavItem link="/fetch">自定义 useFetch</NavItem>}
+      {isUser.value && <NavItem link="/fetch">自定义 useFetch</NavItem>}
     </>
   )
 }

@@ -74,7 +74,7 @@ export function UserTable({
         enableRowSelection
         onSelect={onSelect}
       >
-        {isRoot && (
+        {isRoot.value && (
           <div>
             <Button onClick={onShowSelection} size="sm" variant="secondary">
               查看被选中的行
