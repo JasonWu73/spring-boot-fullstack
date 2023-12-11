@@ -15,6 +15,7 @@ import { wait } from '@/shared/utils/helpers'
 
 const ErrorPage = React.lazy(() => import('@/shared/components/ui/ErrorPage'))
 const NotFoundPage = React.lazy(() => import('@/shared/components/ui/NotFoundPage'))
+const ForbiddenPage = React.lazy(() => import('@/shared/components/ui/ForbiddenPage'))
 const LoginPage = React.lazy(() => import('@/login/LoginPage'))
 const ProfilePage = React.lazy(() => import('@/user/ProfilePage'))
 const RandomProductPage = React.lazy(() => import('@/product/RandomProductPage'))
@@ -77,6 +78,7 @@ const router = createBrowserRouter([
           }
         ]
       },
+      { path: '/403', element: <ForbiddenPage /> },
       { path: '*', element: <NotFoundPage /> }
     ]
   },

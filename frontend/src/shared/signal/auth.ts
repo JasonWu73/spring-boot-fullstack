@@ -67,22 +67,22 @@ export const ADMIN = { value: 'admin', label: '管理员' }
 export const USER = { value: 'user', label: '用户' }
 
 /**
- * 是否拥有超级管理员权限。
+ * 是否拥有超级管理员权限 Signal。
  */
 export const isRoot = computed(() => auth.value?.authorities.includes(ROOT.value))
 
 /**
- * 是否拥有管理员权限。
+ * 是否拥有管理员权限 Signal。
  */
 export const isAdmin = computed(
-  () => isRoot || (auth.value?.authorities.includes(ADMIN.value) ?? false)
+  () => isRoot.value || (auth.value?.authorities.includes(ADMIN.value) ?? false)
 )
 
 /**
- * 是否拥有普通用户权限。
+ * 是否拥有普通用户权限 Signal。
  */
 export const isUser = computed(
-  () => isAdmin || (auth.value?.authorities.includes(USER.value) ?? false)
+  () => isAdmin.value || (auth.value?.authorities.includes(USER.value) ?? false)
 )
 
 /**
