@@ -102,12 +102,22 @@ export function FriendList() {
     })
   }
 
+  function handleFocus() {
+    showAddFriend.value = false
+
+    navigate(`/split-bill${window.location.search}`, {
+      replace: true,
+      state: { noRefresh: true }
+    })
+  }
+
   return (
     <>
       <FriendSearch
         nameQuery={nameQuery}
         onSearch={handleSearch}
         onEscape={handleEscape}
+        onFocus={handleFocus}
       />
 
       <Card>
