@@ -19,7 +19,7 @@ import {
   setFriends,
   showAddFriend,
   type Friend
-} from '@/shared/signal/split-bill'
+} from '@/shared/signals/split-bill'
 import { FriendItem } from '@/split-bill/FriendItem'
 import { FriendSearch } from '@/split-bill/FriendSearch'
 

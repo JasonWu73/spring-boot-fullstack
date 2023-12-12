@@ -5,7 +5,7 @@ import { Button } from '@/shared/components/ui/Button'
 import { Loading } from '@/shared/components/ui/Loading'
 import { useKeypress } from '@/shared/hooks/use-keypress'
 import { useTitle } from '@/shared/hooks/use-title'
-import { createSplitBillState, showAddFriend } from '@/shared/signal/split-bill'
+import { createSplitBillState, showAddFriend } from '@/shared/signals/split-bill'
 import { wait } from '@/shared/utils/helpers'
 import { FriendList } from '@/split-bill/FriendList'
 

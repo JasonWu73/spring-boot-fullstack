@@ -1,6 +1,6 @@
 import { Navigate, Outlet } from 'react-router-dom'
 
-import { ADMIN, ROOT, USER, auth, isAdmin, isRoot, isUser } from '@/shared/signal/auth'
+import { ADMIN, ROOT, USER, auth, isAdmin, isRoot, isUser } from '@/shared/signals/auth'
 
 type SecureRouteProps = {
   authority?: 'root' | 'admin' | 'user'

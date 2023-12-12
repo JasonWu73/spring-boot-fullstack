@@ -3,7 +3,7 @@ import { LogOut } from 'lucide-react'
 
 import { Button } from '@/shared/components/ui/Button'
 import { useApi } from '@/shared/hooks/use-api'
-import { clearAuth, requestApi } from '@/shared/signal/auth'
+import { clearAuth, requestApi } from '@/shared/signals/auth'
 
 export function LogoutButton() {
   const { apiState, requestData } = useApi(requestApi<void>)

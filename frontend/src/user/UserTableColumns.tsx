@@ -17,7 +17,7 @@ import {
   DropdownMenuTrigger
 } from '@/shared/components/ui/DropdownMenu'
 import { Switch } from '@/shared/components/ui/Switch'
-import { ADMIN, ROOT, USER, isRoot } from '@/shared/signal/auth'
+import { ADMIN, ROOT, USER, isRoot } from '@/shared/signals/auth'
 import type { User } from '@/user/UserListPage'
 
 type UserTableColumnProps = {

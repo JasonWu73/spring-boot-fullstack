@@ -24,7 +24,7 @@ import {
   requestApi,
   setAuth,
   type AuthResponse
-} from '@/shared/signal/auth'
+} from '@/shared/signals/auth'
 import { encrypt } from '@/shared/utils/rsa'
 
 const DEFAULT_REDIRECT_URL = '/admin'

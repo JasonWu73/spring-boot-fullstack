@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui
 import { FormCalendar, FormInput } from '@/shared/components/ui/CustomFormField'
 import { Form } from '@/shared/components/ui/Form'
 import { useTitle } from '@/shared/hooks/use-title'
-import { addFriend, showAddFriend } from '@/shared/signal/split-bill'
+import { addFriend, showAddFriend } from '@/shared/signals/split-bill'
 
 const formSchema = z.object({
   name: z.string().min(1, '必须输入姓名').trim(),

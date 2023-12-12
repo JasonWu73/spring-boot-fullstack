@@ -26,7 +26,7 @@ import {
 import { useApi } from '@/shared/hooks/use-api'
 import { useRefresh } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
-import { requestApi } from '@/shared/signal/auth'
+import { requestApi } from '@/shared/signals/auth'
 
 export type OperationLog = {
   id: number

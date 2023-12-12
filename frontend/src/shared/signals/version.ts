@@ -1,6 +1,6 @@
 import { signal } from '@preact/signals-react'
 
-import { requestApi } from '@/shared/signal/auth'
+import { requestApi } from '@/shared/signals/auth'
 
 type Version = {
   name: string

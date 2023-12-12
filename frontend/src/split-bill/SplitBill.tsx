@@ -31,7 +31,7 @@ import {
   showAddFriend,
   updateBalance,
   updateCredit
-} from '@/shared/signal/split-bill'
+} from '@/shared/signals/split-bill'
 import type { ApiRequest } from '@/shared/utils/api-caller'
 import { wait } from '@/shared/utils/helpers'
 import { endNProgress, startNProgress } from '@/shared/utils/nprogress'

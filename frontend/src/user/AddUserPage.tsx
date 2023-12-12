@@ -22,7 +22,7 @@ import { Form } from '@/shared/components/ui/Form'
 import { useToast } from '@/shared/components/ui/use-toast'
 import { useApi } from '@/shared/hooks/use-api'
 import { useTitle } from '@/shared/hooks/use-title'
-import { ADMIN, PUBLIC_KEY, USER, requestApi } from '@/shared/signal/auth'
+import { ADMIN, PUBLIC_KEY, USER, requestApi } from '@/shared/signals/auth'
 import { encrypt } from '@/shared/utils/rsa'
 
 const AUTHORITY_OPTIONS = [ADMIN, USER]
