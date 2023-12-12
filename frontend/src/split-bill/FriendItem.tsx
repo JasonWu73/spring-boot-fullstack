@@ -1,7 +1,7 @@
-import { Link, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/components/ui/Avatar'
-import { buttonVariants } from '@/shared/components/ui/Button'
+import { Button } from '@/shared/components/ui/Button'
 import { Code } from '@/shared/components/ui/Code'
 import { ConfirmDialog } from '@/shared/components/ui/ConfirmDialog'
 import {
@@ -10,7 +10,11 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from '@/shared/components/ui/Tooltip'
-import { setShowAddFriend, type Friend } from '@/shared/signals/split-bill'
+import {
+  getLoadingFriend,
+  setShowAddFriend,
+  type Friend
+} from '@/shared/signals/split-bill'
 import { cn, truncate } from '@/shared/utils/helpers'
 
 type FriendItemProps = {
@@ -26,7 +30,20 @@ export function FriendItem({ friend, onDeleteFriend }: FriendItemProps) {
   const name = truncate(friend.name, 5)
   const queryStr = window.location.search
 
+  const navigate = useNavigate()
+  const loading = getLoadingFriend()
+
   function handleToggleSelect() {
+    const url = selected
+      ? `/split-bill${queryStr}`
+      : `/split-bill/${friend.id}${queryStr}`
+
+    navigate(url, {
+      state: {
+        noRefresh: true
+      }
+    })
+
     setShowAddFriend(false)
   }
 
@@ -90,16 +107,9 @@ export function FriendItem({ friend, onDeleteFriend }: FriendItemProps) {
         )}
       </div>
 
-      <Link
-        to={selected ? `/split-bill${queryStr}` : `/split-bill/${friend.id}${queryStr}`}
-        state={{
-          noRefresh: true
-        }}
-        onClick={handleToggleSelect}
-        className={buttonVariants({ variant: 'default' })}
-      >
+      <Button onClick={handleToggleSelect} disabled={loading}>
         {selected ? '关闭' : '选择'}
-      </Link>
+      </Button>
     </li>
   )
 }

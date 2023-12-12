@@ -26,6 +26,11 @@ const friends = signal(undefined as unknown as Friend[])
 const showAddFriend = signal(false)
 
 /**
+ * 是否正在加载好友详情 Signal。
+ */
+const loadingFriend = signal(false)
+
+/**
  * 创建分账数据 Signal。
  * <p>
  * 仅可在应用启动时初始化一次。
@@ -39,15 +44,6 @@ export function createSplitBillState() {
   effect(() => {
     setStorageFriends(friends.value)
   })
-}
-
-/**
- * 获取好友列表。
- *
- * @returns Friend[] 好友列表
- */
-export function getFriends() {
-  return friends.value
 }
 
 /**
@@ -66,6 +62,33 @@ export function getShowAddFriend() {
  */
 export function setShowAddFriend(show: boolean) {
   showAddFriend.value = show
+}
+
+/**
+ * 获取是否正在加载好友详情。
+ *
+ * @returns boolean 是否正在加载好友详情
+ */
+export function getLoadingFriend() {
+  return loadingFriend.value
+}
+
+/**
+ * 设置是否正在加载好友详情。
+ *
+ * @param isLoading 是否正在加载好友详情
+ */
+export function setLoadingFriend(isLoading: boolean) {
+  loadingFriend.value = isLoading
+}
+
+/**
+ * 获取好友列表。
+ *
+ * @returns Friend[] 好友列表
+ */
+export function getFriends() {
+  return friends.value
 }
 
 /**

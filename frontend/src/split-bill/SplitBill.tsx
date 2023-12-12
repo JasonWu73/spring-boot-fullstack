@@ -28,6 +28,7 @@ import { useRefresh } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
 import {
   getStorageFriends,
+  setLoadingFriend,
   setShowAddFriend,
   updateBalance,
   updateCredit
@@ -117,7 +118,13 @@ export function SplitBill() {
   const navigate = useNavigate()
 
   async function getFriend() {
-    return await requestData({ url: '/fake', urlParams: { id: friendId } })
+    setLoadingFriend(true)
+
+    const response = await requestData({ url: '/fake', urlParams: { id: friendId } })
+
+    setLoadingFriend(false)
+
+    return response
   }
 
   function onSubmit(values: FormSchema) {
