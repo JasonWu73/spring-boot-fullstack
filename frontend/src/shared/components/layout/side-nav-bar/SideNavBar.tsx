@@ -5,7 +5,7 @@ import { NavLink } from 'react-router-dom'
 import { buttonVariants } from '@/shared/components/ui/Button'
 import { ScrollArea } from '@/shared/components/ui/ScrollArea'
 import { Separator } from '@/shared/components/ui/Separator'
-import { isRoot } from '@/shared/signals/auth'
+import { hasRoot } from '@/shared/signals/auth'
 import { cn } from '@/shared/utils/helpers'
 
 export function SideNavBar() {
@@ -27,7 +27,7 @@ export function SideNavBar() {
         <MenuSeparator />
 
         <Menu title="测试路由">
-          {isRoot.value && (
+          {hasRoot() && (
             <MenuItem link="/product">
               <ShoppingCart className="h-4 w-4" />
               <span>随机商品</span>

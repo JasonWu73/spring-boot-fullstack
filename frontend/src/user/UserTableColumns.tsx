@@ -17,7 +17,7 @@ import {
   DropdownMenuTrigger
 } from '@/shared/components/ui/DropdownMenu'
 import { Switch } from '@/shared/components/ui/Switch'
-import { ADMIN, ROOT, USER, isRoot } from '@/shared/signals/auth'
+import { ADMIN, ROOT, USER, hasRoot } from '@/shared/signals/auth'
 import type { User } from '@/user/UserListPage'
 
 type UserTableColumnProps = {
@@ -38,6 +38,8 @@ export function getUserTableColumns({
   openDeleteDialog,
   openResetPasswordDialog
 }: UserTableColumnProps) {
+  let isRoot = hasRoot()
+
   const columns: ColumnDef<User>[] = [
     {
       id: '选择',
@@ -184,7 +186,7 @@ export function getUserTableColumns({
                 </Link>
               </DropdownMenuItem>
 
-              {isRoot.value && (
+              {isRoot && (
                 <>
                   <DropdownMenuSeparator />
 
@@ -220,7 +222,7 @@ export function getUserTableColumns({
     }
   ]
 
-  if (isRoot.value) return columns
+  if (isRoot) return columns
 
   return columns.filter((column) => column.id !== '选择')
 }

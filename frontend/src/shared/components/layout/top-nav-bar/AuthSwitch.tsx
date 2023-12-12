@@ -12,7 +12,7 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger
 } from '@/shared/components/ui/NavigationMenu'
-import { auth, isAdmin } from '@/shared/signals/auth'
+import { getAuth, hasAdmin } from '@/shared/signals/auth'
 import { cn } from '@/shared/utils/helpers'
 
 export function AuthSwitch() {
@@ -20,7 +20,9 @@ export function AuthSwitch() {
 
   if (location.pathname === '/login') return null
 
-  if (!auth.value) return <LoginButton />
+  const auth = getAuth()
+
+  if (!auth) return <LoginButton />
 
   return (
     <NavigationMenu>
@@ -31,7 +33,7 @@ export function AuthSwitch() {
             onPointerLeave={(event) => event.preventDefault()}
             className="text-night hover:bg-snow hover:text-night focus:bg-snow focus:text-night data-[active]:bg-snow data-[state=open]:bg-snow dark:text-snow dark:hover:bg-night-2 dark:hover:text-snow dark:focus:bg-night-2 dark:focus:text-snow dark:data-[active]:bg-night-2 dark:data-[state=open]:bg-night-2"
           >
-            {auth.value.nickname}
+            {auth.nickname}
           </NavigationMenuTrigger>
 
           <NavigationMenuContent
@@ -44,7 +46,7 @@ export function AuthSwitch() {
                 个人资料
               </NavItem>
 
-              {isAdmin.value && (
+              {hasAdmin() && (
                 <NavItem link="/admin">
                   <LayoutDashboard className="h-4 w-4" />
                   管理后台

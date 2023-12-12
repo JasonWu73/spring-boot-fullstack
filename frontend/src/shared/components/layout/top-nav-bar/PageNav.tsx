@@ -8,7 +8,7 @@ import {
   NavigationMenuItem,
   NavigationMenuList
 } from '@/shared/components/ui/NavigationMenu'
-import { isUser } from '@/shared/signals/auth'
+import { hasUser } from '@/shared/signals/auth'
 import { cn } from '@/shared/utils/helpers'
 
 type PageNavProps = {
@@ -45,7 +45,7 @@ function NavItemList() {
         <AuthSwitch />
       </div>
       <NavItem link="/split-bill">分账 App</NavItem>
-      {isUser.value && <NavItem link="/fetch">自定义 useFetch</NavItem>}
+      {hasUser() && <NavItem link="/fetch">自定义 useFetch</NavItem>}
     </>
   )
 }

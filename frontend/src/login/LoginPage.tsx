@@ -20,7 +20,7 @@ import { useApi } from '@/shared/hooks/use-api'
 import { useTitle } from '@/shared/hooks/use-title'
 import {
   PUBLIC_KEY,
-  auth,
+  getAuth,
   requestApi,
   setAuth,
   type AuthResponse
@@ -58,7 +58,7 @@ export default function LoginPage() {
   const targetUrl = location.state?.from || DEFAULT_REDIRECT_URL
 
   // 已登录则跳转到目标页面，即登录后就不允许再访问登录页面
-  if (auth.value) return <Navigate to={targetUrl} replace />
+  if (getAuth()) return <Navigate to={targetUrl} replace />
 
   async function login(username: string, password: string) {
     return await requestData({

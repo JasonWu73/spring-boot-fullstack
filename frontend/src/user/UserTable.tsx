@@ -8,7 +8,7 @@ import { Code } from '@/shared/components/ui/Code'
 import { ConfirmDialog } from '@/shared/components/ui/ConfirmDialog'
 import { DataTable, type Paging } from '@/shared/components/ui/DataTable'
 import { type ApiState } from '@/shared/hooks/use-api'
-import { isRoot } from '@/shared/signals/auth'
+import { hasRoot } from '@/shared/signals/auth'
 import { cn } from '@/shared/utils/helpers'
 import { ResetPasswordDialog } from '@/user/ResetPasswordDialog'
 import type { User } from '@/user/UserListPage'
@@ -74,7 +74,7 @@ export function UserTable({
         enableRowSelection
         onSelect={onSelect}
       >
-        {isRoot.value && (
+        {hasRoot() && (
           <div>
             <Button onClick={onShowSelection} size="sm" variant="secondary">
               查看被选中的行

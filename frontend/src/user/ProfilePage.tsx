@@ -25,7 +25,7 @@ import { useToast } from '@/shared/components/ui/use-toast'
 import { useApi } from '@/shared/hooks/use-api'
 import { useInitial } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
-import { PUBLIC_KEY, auth, clearAuth, requestApi } from '@/shared/signals/auth'
+import { PUBLIC_KEY, clearAuth, requestApi, updateNickname } from '@/shared/signals/auth'
 import { encrypt } from '@/shared/utils/rsa'
 import type { User } from '@/user/UserListPage'
 
@@ -144,7 +144,7 @@ export default function UpdateUserPage() {
     }
 
     // 更新已保存的身份验证信息
-    auth.value = { ...auth.value!, nickname: values.nickname }
+    updateNickname(values.nickname)
   }
 
   return (
