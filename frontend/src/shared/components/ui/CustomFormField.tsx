@@ -2,7 +2,7 @@ import { CalendarIcon } from '@radix-ui/react-icons'
 import { format } from 'date-fns'
 import { zhCN } from 'date-fns/locale'
 import React from 'react'
-import { type Control, type FieldValues, type Path } from 'react-hook-form'
+import type { Control, FieldValues, Path } from 'react-hook-form'
 
 import { Button } from '@/shared/components/ui/Button'
 import { Calendar } from '@/shared/components/ui/Calendar'

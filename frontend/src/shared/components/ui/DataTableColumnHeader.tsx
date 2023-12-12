@@ -4,7 +4,7 @@ import {
   CaretSortIcon,
   EyeNoneIcon
 } from '@radix-ui/react-icons'
-import { type Column } from '@tanstack/react-table'
+import type { Column } from '@tanstack/react-table'
 import React from 'react'
 
 import { Button } from '@/shared/components/ui/Button'

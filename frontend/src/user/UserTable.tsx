@@ -1,5 +1,5 @@
 import { useSignal } from '@preact/signals-react'
-import { type ColumnSort, type SortingState } from '@tanstack/react-table'
+import type { ColumnSort, SortingState } from '@tanstack/react-table'
 import { Link } from 'react-router-dom'
 
 import type { PaginationData } from '@/shared/apis/types'
@@ -7,11 +7,11 @@ import { Button, buttonVariants } from '@/shared/components/ui/Button'
 import { Code } from '@/shared/components/ui/Code'
 import { ConfirmDialog } from '@/shared/components/ui/ConfirmDialog'
 import { DataTable, type Paging } from '@/shared/components/ui/DataTable'
-import { type ApiState, type SetApiStateAction } from '@/shared/hooks/use-api'
+import type { ApiState, SetApiStateAction } from '@/shared/hooks/use-api'
 import { hasRoot } from '@/shared/signals/auth'
 import { cn } from '@/shared/utils/helpers'
 import { ResetPasswordDialog } from '@/user/ResetPasswordDialog'
-import { type User } from '@/user/UserListPage'
+import type { User } from '@/user/UserListPage'
 import { getUserTableColumns } from '@/user/UserTableColumns'
 
 type UserTableProps = {

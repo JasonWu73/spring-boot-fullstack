@@ -1,5 +1,5 @@
 import { MixerHorizontalIcon } from '@radix-ui/react-icons'
-import { type Table } from '@tanstack/react-table'
+import type { Table } from '@tanstack/react-table'
 
 import { Button } from '@/shared/components/ui/Button'
 import {
