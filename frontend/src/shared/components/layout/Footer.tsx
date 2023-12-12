@@ -1,12 +1,12 @@
 import React from 'react'
 
-import { version } from '@/shared/signals/version'
+import { getVersion } from '@/shared/signals/version'
 import { cn } from '@/shared/utils/helpers'
 
 type FooterProps = React.ComponentPropsWithoutRef<'footer'>
 
 export function Footer({ className, ...props }: FooterProps) {
-  const { developer, name, version: ver, builtAt } = version.value ?? {}
+  let version = getVersion()
 
   return (
     <footer
@@ -15,7 +15,13 @@ export function Footer({ className, ...props }: FooterProps) {
     >
       <div className="container mx-auto flex flex-col flex-wrap px-5 py-4">
         <Message>
-          © {new Date().getFullYear()} {developer} {name} {ver} 构建于：{builtAt}
+          © {new Date().getFullYear()}{' '}
+          {version && (
+            <span>
+              {version.developer} {version.name} {version.version} 构建于：
+              {version.builtAt}
+            </span>
+          )}
         </Message>
       </div>
     </footer>

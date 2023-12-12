@@ -11,8 +11,10 @@ type Version = {
 
 /**
  * 版本号 Signal。
+ * <p>
+ * 不要直接导出 Signal，而是应该导出方法来使用 Signal。
  */
-export const version = signal<Version | undefined>(undefined)
+const version = signal<Version | undefined>(undefined)
 
 /**
  * 因为版本号是从后端获取的（异步的），所以需要一个额外变量来标记是否已经初始化过了，而不能简单地通过 `version.value !== undefined` 来判断，虽然 Signal 的更新是同步的。
@@ -39,4 +41,13 @@ export async function createVersionState() {
   if (data) {
     version.value = data
   }
+}
+
+/**
+ * 获取版本号信息。
+ *
+ * @returns Version 版本号信息
+ */
+export function getVersion() {
+  return version.value
 }
