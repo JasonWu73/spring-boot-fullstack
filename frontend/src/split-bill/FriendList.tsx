@@ -15,9 +15,9 @@ import { useRefresh } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
 import {
   deleteFriend,
-  friends,
+  getFriends,
   setFriends,
-  showAddFriend,
+  setShowAddFriend,
   type Friend
 } from '@/shared/signals/split-bill'
 import { FriendItem } from '@/split-bill/FriendItem'
@@ -37,9 +37,9 @@ export function FriendList() {
       return
     }
 
-    showAddFriend.value = false
+    setShowAddFriend(false)
 
-    getFriends().then(({ data }) => {
+    getFriendsFromApi().then(({ data }) => {
       if (data) {
         setFriends(data)
       }
@@ -48,11 +48,13 @@ export function FriendList() {
 
   const [searchParams, setSearchParams] = useSearchParams()
   const nameQuery = searchParams.get(URL_QUERY_KEY_QUERY) || ''
+
+  const friends = getFriends()
   const filteredFriends = nameQuery
-    ? friends.value.filter((friend) =>
+    ? friends.filter((friend) =>
         friend.name.toLowerCase().includes(nameQuery.toLowerCase())
       )
-    : friends.value
+    : friends
 
   const { apiState, requestData } = useApi(requestApi<Friend[]>)
   const { loading, error } = apiState.value
@@ -60,7 +62,7 @@ export function FriendList() {
   const { toast } = useToast()
   const navigate = useNavigate()
 
-  async function getFriends() {
+  async function getFriendsFromApi() {
     return await requestData({ url: '/data/friends.json' })
   }
 
@@ -103,7 +105,7 @@ export function FriendList() {
   }
 
   function handleFocus() {
-    showAddFriend.value = false
+    setShowAddFriend(false)
 
     navigate(`/split-bill${window.location.search}`, {
       replace: true,

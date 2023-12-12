@@ -10,7 +10,7 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from '@/shared/components/ui/Tooltip'
-import { showAddFriend, type Friend } from '@/shared/signals/split-bill'
+import { setShowAddFriend, type Friend } from '@/shared/signals/split-bill'
 import { cn, truncate } from '@/shared/utils/helpers'
 
 type FriendItemProps = {
@@ -27,7 +27,7 @@ export function FriendItem({ friend, onDeleteFriend }: FriendItemProps) {
   const queryStr = window.location.search
 
   function handleToggleSelect() {
-    showAddFriend.value = false
+    setShowAddFriend(false)
   }
 
   return (

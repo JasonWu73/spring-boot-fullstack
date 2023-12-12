@@ -13,13 +13,17 @@ export type Friend = {
 
 /**
  * 好友列表 Signal。
+ * <p>
+ * 不要直接导出 Signal，而且应该导出方法来使用 Signal。
  */
-export const friends = signal(undefined as unknown as Friend[])
+const friends = signal(undefined as unknown as Friend[])
 
 /**
  * 是否显示添加好友的表单 Signal。
+ * <p>
+ * 不要直接导出 Signal，而且应该导出方法来使用 Signal。
  */
-export const showAddFriend = signal(false)
+const showAddFriend = signal(false)
 
 /**
  * 创建分账数据 Signal。
@@ -31,9 +35,37 @@ export function createSplitBillState() {
 
   friends.value = getStorageFriends()
 
+  // 监听好友列表的变化，将其存储到本地存储中
   effect(() => {
     setStorageFriends(friends.value)
   })
+}
+
+/**
+ * 获取好友列表。
+ *
+ * @returns Friend[] 好友列表
+ */
+export function getFriends() {
+  return friends.value
+}
+
+/**
+ * 获取是否显示添加好友的表单。
+ *
+ * @returns boolean 是否显示添加好友的表单
+ */
+export function getShowAddFriend() {
+  return showAddFriend.value
+}
+
+/**
+ * 设置是否显示添加好友的表单。
+ *
+ * @param show 是否显示添加好友的表单
+ */
+export function setShowAddFriend(show: boolean) {
+  showAddFriend.value = show
 }
 
 /**

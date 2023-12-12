@@ -28,7 +28,7 @@ import { useRefresh } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
 import {
   getStorageFriends,
-  showAddFriend,
+  setShowAddFriend,
   updateBalance,
   updateCredit
 } from '@/shared/signals/split-bill'
@@ -123,7 +123,7 @@ export function SplitBill() {
 
     updateBalance(friendId, expense)
 
-    showAddFriend.value = false
+    setShowAddFriend(false)
 
     navigate(`/split-bill${window.location.search}`, {
       state: { noRefresh: true }

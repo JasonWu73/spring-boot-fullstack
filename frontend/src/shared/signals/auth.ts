@@ -104,7 +104,7 @@ export function createAuthState() {
 
   auth.value = getStorageAuth()
 
-  // 自动更新前端缓存的身份验证数据
+  // 监听身份验证数据的变化，将其存储到本地存储中
   effect(() => {
     setStorageAuth(auth.value)
   })
