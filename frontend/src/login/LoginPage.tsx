@@ -49,8 +49,10 @@ export default function LoginPage() {
     defaultValues
   })
 
-  const { apiState, requestData } = useApi(requestApi<AuthResponse>)
-  const { loading } = apiState.value
+  const {
+    state: { loading },
+    requestData
+  } = useApi(requestApi<AuthResponse>)
 
   const { toast } = useToast()
 

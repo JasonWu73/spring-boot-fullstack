@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import type { Signal } from '@preact/signals-react'
 import { ExclamationTriangleIcon, ReloadIcon } from '@radix-ui/react-icons'
 import { format } from 'date-fns'
 import { useForm } from 'react-hook-form'
@@ -21,7 +20,7 @@ import {
 } from '@/shared/components/ui/Dialog'
 import { Form } from '@/shared/components/ui/Form'
 import { useToast } from '@/shared/components/ui/use-toast'
-import { useApi, type ApiState } from '@/shared/hooks/use-api'
+import { useApi, type SetApiStateAction } from '@/shared/hooks/use-api'
 import { PUBLIC_KEY, requestApi } from '@/shared/signals/auth'
 import { encrypt } from '@/shared/utils/rsa'
 import type { User } from '@/user/UserListPage'
@@ -42,7 +41,7 @@ type ResetPasswordDialogProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
   user: User
-  pagingState: Signal<ApiState<PaginationData<User>>>
+  setPagingState: (newState: SetApiStateAction<PaginationData<User>>) => void
 }
 
 const defaultValues: FormSchema = {
@@ -54,15 +53,18 @@ export function ResetPasswordDialog({
   open,
   onOpenChange,
   user,
-  pagingState
+  setPagingState
 }: ResetPasswordDialogProps) {
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues
   })
 
-  const { apiState, requestData } = useApi(requestApi<void>)
-  const { loading, error } = apiState.value
+  const {
+    state: { loading, error },
+    requestData,
+    setState
+  } = useApi(requestApi<void>)
 
   const { toast } = useToast()
 
@@ -79,22 +81,24 @@ export function ResetPasswordDialog({
 
     if (status !== 204) return
 
-    pagingState.value = {
-      ...pagingState.value,
-      data: {
-        ...pagingState.value.data!,
-        list: pagingState.value.data!.list.map((prevUser) => {
-          if (prevUser.id === user.id) {
-            return {
-              ...prevUser,
-              updatedAt: format(new Date(), 'yyyy-MM-dd HH:mm:ss')
+    setPagingState((prevState) => {
+      return {
+        ...prevState,
+        data: {
+          ...prevState.data!,
+          list: prevState.data!.list.map((prevUser) => {
+            if (prevUser.id === user.id) {
+              return {
+                ...prevUser,
+                updatedAt: format(new Date(), 'yyyy-MM-dd HH:mm:ss')
+              }
             }
-          }
 
-          return prevUser
-        })
+            return prevUser
+          })
+        }
       }
-    }
+    })
 
     resetForm()
     onOpenChange(false)
@@ -112,10 +116,12 @@ export function ResetPasswordDialog({
   function resetForm() {
     form.reset()
 
-    apiState.value = {
-      ...apiState.value,
-      error: undefined
-    }
+    setState((prevState) => {
+      return {
+        ...prevState,
+        error: undefined
+      }
+    })
   }
 
   function handleOpenChange(open: boolean) {

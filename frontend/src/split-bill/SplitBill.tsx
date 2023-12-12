@@ -105,8 +105,11 @@ export function SplitBill() {
     getFriend().then()
   })
 
-  const { apiState, requestData } = useApi(getFriendFakeApi)
-  const { loading, data: friend, error } = apiState.value
+  const {
+    state: { loading, data: friend, error },
+    requestData,
+    setState
+  } = useApi(getFriendFakeApi)
 
   const params = useParams()
   const friendId = Number(params.friendId)
@@ -137,7 +140,9 @@ export function SplitBill() {
   async function getFriendFakeApi({ urlParams }: ApiRequest) {
     startNProgress()
 
-    apiState.value = { ...apiState.value, loading: true }
+    setState((prevState) => {
+      return { ...prevState, loading: true }
+    })
 
     // 仅为了模拟查看骨架屏的效果
     await wait(2)
@@ -147,7 +152,9 @@ export function SplitBill() {
 
     endNProgress()
 
-    apiState.value = { ...apiState.value, loading: false }
+    setState((prevState) => {
+      return { ...prevState, loading: false }
+    })
 
     if (friend) return { status: 200, data: friend }
 

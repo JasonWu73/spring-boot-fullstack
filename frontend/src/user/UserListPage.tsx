@@ -56,13 +56,16 @@ export default function UserListPage() {
     getUsers().then()
   })
 
-  const { apiState: pagingState, requestData: requestPaging } = useApi(
-    requestApi<PaginationData<User>>
-  )
-  const { loading, data: userPaging } = pagingState.value
+  const {
+    state: pagingState,
+    requestData: requestPaging,
+    setState
+  } = useApi(requestApi<PaginationData<User>>)
 
-  const { apiState: submitState, requestData: requestSubmit } = useApi(requestApi<void>)
-  const { loading: submitting } = submitState.value
+  const {
+    state: { loading: submitting },
+    requestData: requestSubmit
+  } = useApi(requestApi<void>)
 
   const [searchParams, setSearchParams] = useSearchParams()
   const pageNum = Number(searchParams.get(URL_QUERY_KEY_PAGE_NUM)) || DEFAULT_PAGE_NUM
@@ -92,7 +95,7 @@ export default function UserListPage() {
   }
 
   function handleShowSelection() {
-    const ids = (userPaging?.list || [])
+    const ids = (pagingState.data?.list || [])
       .filter((_, index) => indexes.value.includes(index))
       .map((user) => user.id)
 
@@ -144,20 +147,22 @@ export default function UserListPage() {
       return
     }
 
-    pagingState.value = {
-      ...pagingState.value,
-      data: {
-        ...pagingState.value.data!,
-        list: pagingState.value.data!.list.map((prevUser) => {
-          if (prevUser.id === user.id) {
-            prevUser.status = newStatus
-            prevUser.updatedAt = format(new Date(), 'yyyy-MM-dd HH:mm:ss')
-          }
+    setState((prevState) => {
+      return {
+        ...prevState,
+        data: {
+          ...prevState.data!,
+          list: prevState.data!.list.map((prevUser) => {
+            if (prevUser.id === user.id) {
+              prevUser.status = newStatus
+              prevUser.updatedAt = format(new Date(), 'yyyy-MM-dd HH:mm:ss')
+            }
 
-          return prevUser
-        })
+            return prevUser
+          })
+        }
       }
-    }
+    })
 
     toast({
       title: '更新账号状态成功',
@@ -182,14 +187,16 @@ export default function UserListPage() {
       return
     }
 
-    pagingState.value = {
-      ...pagingState.value,
-      data: {
-        ...pagingState.value.data!,
-        total: pagingState.value.data!.total - 1,
-        list: pagingState.value.data!.list.filter((prevUser) => prevUser.id !== id)
+    setState((prevState) => {
+      return {
+        ...prevState,
+        data: {
+          ...prevState.data!,
+          total: prevState.data!.total - 1,
+          list: prevState.data!.list.filter((prevUser) => prevUser.id !== id)
+        }
       }
-    }
+    })
 
     toast({
       title: '删除用户成功',
@@ -257,13 +264,14 @@ export default function UserListPage() {
             status,
             authority
           }}
-          loading={loading}
+          loading={pagingState.loading}
           onSearch={handleSearch}
         />
 
         <UserTable
           paging={{ pageNum, pageSize }}
           pagingState={pagingState}
+          setPagingState={setState}
           submitting={submitting}
           onPaginate={handlePaginate}
           sortColumn={{

@@ -1,4 +1,4 @@
-import { useSignal, type Signal } from '@preact/signals-react'
+import { useSignal } from '@preact/signals-react'
 
 import type { ApiRequest, Method } from '@/shared/utils/api-caller'
 
@@ -47,11 +47,14 @@ type PrevFetch = {
   timestamp: number
 }
 
+type ApiStateUpdater<T> = (prevState: ApiState<T>) => ApiState<T>
+export type SetApiStateAction<T> = ApiState<T> | ApiStateUpdater<T>
+
 type UseApi<T> = {
   /**
-   * API 相关数据 Signal。
+   * API 相关数据。
    */
-  apiState: Signal<ApiState<T>>
+  state: ApiState<T>
 
   /**
    * 发起 HTTP 请求，获取 API 数据。
@@ -60,6 +63,13 @@ type UseApi<T> = {
    * @returns Promise<ApiResponse<T>> HTTP 响应数据
    */
   requestData: (request: ApiRequest) => Promise<ApiResponse<T>>
+
+  /**
+   * 更新前端数据。
+   *
+   * @param newState 新的状态
+   */
+  setState: (newState: SetApiStateAction<T>) => void
 }
 
 /**
@@ -119,8 +129,19 @@ export function useApi<T>(
     return response
   }
 
+  function setState(newState: SetApiStateAction<T>) {
+    if (typeof newState === 'function') {
+      const updater = newState as ApiStateUpdater<T>
+      apiState.value = updater(apiState.value)
+      return
+    }
+
+    apiState.value = newState
+  }
+
   return {
-    apiState,
-    requestData
+    state: apiState.value,
+    requestData,
+    setState
   }
 }

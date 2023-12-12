@@ -56,8 +56,10 @@ export function FriendList() {
       )
     : friends
 
-  const { apiState, requestData } = useApi(requestApi<Friend[]>)
-  const { loading, error } = apiState.value
+  const {
+    state: { loading, error },
+    requestData
+  } = useApi(requestApi<Friend[]>)
 
   const { toast } = useToast()
   const navigate = useNavigate()

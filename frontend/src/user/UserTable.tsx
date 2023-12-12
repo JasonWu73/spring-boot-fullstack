@@ -1,5 +1,5 @@
-import { useSignal, type Signal } from '@preact/signals-react'
-import type { ColumnSort, SortingState } from '@tanstack/react-table'
+import { useSignal } from '@preact/signals-react'
+import { type ColumnSort, type SortingState } from '@tanstack/react-table'
 import { Link } from 'react-router-dom'
 
 import type { PaginationData } from '@/shared/apis/types'
@@ -7,16 +7,17 @@ import { Button, buttonVariants } from '@/shared/components/ui/Button'
 import { Code } from '@/shared/components/ui/Code'
 import { ConfirmDialog } from '@/shared/components/ui/ConfirmDialog'
 import { DataTable, type Paging } from '@/shared/components/ui/DataTable'
-import { type ApiState } from '@/shared/hooks/use-api'
+import { type ApiState, type SetApiStateAction } from '@/shared/hooks/use-api'
 import { hasRoot } from '@/shared/signals/auth'
 import { cn } from '@/shared/utils/helpers'
 import { ResetPasswordDialog } from '@/user/ResetPasswordDialog'
-import type { User } from '@/user/UserListPage'
+import { type User } from '@/user/UserListPage'
 import { getUserTableColumns } from '@/user/UserTableColumns'
 
 type UserTableProps = {
   paging: Paging
-  pagingState: Signal<ApiState<PaginationData<User>>>
+  pagingState: ApiState<PaginationData<User>>
+  setPagingState: (newState: SetApiStateAction<PaginationData<User>>) => void
   submitting: boolean
   onPaginate: (paging: Paging) => void
   sortColumn: ColumnSort
@@ -30,6 +31,7 @@ type UserTableProps = {
 export function UserTable({
   paging,
   pagingState,
+  setPagingState,
   submitting,
   onPaginate,
   sortColumn,
@@ -43,7 +45,7 @@ export function UserTable({
   const openResetPasswordDialog = useSignal(false)
   const currentUser = useSignal<User | null>(null)
 
-  const { loading, data, error } = pagingState.value
+  const { loading, data, error } = pagingState
 
   function handleDeleteUser() {
     if (currentUser.value) {
@@ -114,7 +116,7 @@ export function UserTable({
           open={openResetPasswordDialog.value}
           onOpenChange={(open) => (openResetPasswordDialog.value = open)}
           user={currentUser.value}
-          pagingState={pagingState}
+          setPagingState={setPagingState}
         />
       )}
     </>

@@ -51,10 +51,9 @@ export default function OperationLogListPage() {
     getLogs().then()
   })
 
-  const { apiState: pagingState, requestData } = useApi(
+  const { state: pagingState, requestData } = useApi(
     requestApi<PaginationData<OperationLog>>
   )
-  const { loading } = pagingState.value
 
   const [searchParams, setSearchParams] = useSearchParams()
   const pageNum = Number(searchParams.get(URL_QUERY_KEY_PAGE_NUM)) || DEFAULT_PAGE_NUM
@@ -139,7 +138,7 @@ export default function OperationLogListPage() {
             username,
             message
           }}
-          loading={loading}
+          loading={pagingState.loading}
           onSearch={handleSearch}
         />
 

@@ -180,7 +180,7 @@ export function getUserTableColumns({
               <DropdownMenuItem className="p-0" asChild>
                 <Link
                   to={`/users/${user.id}`}
-                  className="inline-block w-full px-2 py-1.5"
+                  className="inline-block w-full cursor-pointer px-2 py-1.5"
                 >
                   查看详情
                 </Link>
@@ -196,7 +196,7 @@ export function getUserTableColumns({
                         openDeleteDialog.value = true
                         currentUser.value = user
                       }}
-                      className="inline-block w-full px-2 py-1.5 text-left text-red-500 dark:text-red-600"
+                      className="inline-block w-full cursor-pointer px-2 py-1.5 text-left text-red-500 dark:text-red-600"
                     >
                       删除用户
                     </button>
@@ -208,7 +208,7 @@ export function getUserTableColumns({
                         openResetPasswordDialog.value = true
                         currentUser.value = user
                       }}
-                      className="inline-block w-full px-2 py-1.5 text-left text-red-500 dark:text-red-600"
+                      className="inline-block w-full cursor-pointer px-2 py-1.5 text-left text-red-500 dark:text-red-600"
                     >
                       重置密码
                     </button>

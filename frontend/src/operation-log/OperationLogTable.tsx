@@ -1,4 +1,3 @@
-import type { Signal } from '@preact/signals-react'
 import type { ColumnDef, ColumnSort, SortingState } from '@tanstack/react-table'
 
 import type { OperationLog } from '@/operation-log/OperationLogListPage'
@@ -9,7 +8,7 @@ import type { ApiState } from '@/shared/hooks/use-api'
 
 type OperationLogTableProps = {
   paging: Paging
-  pagingState: Signal<ApiState<PaginationData<OperationLog>>>
+  pagingState: ApiState<PaginationData<OperationLog>>
   onPaginate: (paging: Paging) => void
   sortColumn: ColumnSort
   onSorting: (sorting: SortingState) => void
@@ -52,7 +51,7 @@ export function OperationLogTable({
   sortColumn,
   onSorting
 }: OperationLogTableProps) {
-  const { loading, data, error } = pagingState.value
+  const { loading, data, error } = pagingState
 
   return (
     <DataTable

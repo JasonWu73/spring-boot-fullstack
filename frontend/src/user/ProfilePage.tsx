@@ -80,11 +80,15 @@ export default function UpdateUserPage() {
     defaultValues
   })
 
-  const { apiState: userState, requestData: fetchUser } = useApi(requestApi<User>)
-  const { loading, data: user, error } = userState.value
+  const {
+    state: { loading, data: user, error },
+    requestData: fetchUser
+  } = useApi(requestApi<User>)
 
-  const { apiState: updateState, requestData: fetchUpdate } = useApi(requestApi<void>)
-  const { loading: submitting } = updateState.value
+  const {
+    state: { loading: submitting },
+    requestData: fetchUpdate
+  } = useApi(requestApi<void>)
 
   const { toast } = useToast()
 
@@ -182,7 +186,7 @@ export default function UpdateUserPage() {
                 <AccordionItem value="item-1">
                   <AccordionTrigger>修改密码</AccordionTrigger>
 
-                  <AccordionContent className="space-y-2 pt-2">
+                  <AccordionContent className="space-y-2 p-2">
                     <FormInput
                       control={form.control}
                       name="oldPassword"

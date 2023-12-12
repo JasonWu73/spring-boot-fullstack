@@ -68,8 +68,10 @@ export default function AddUserPage() {
     defaultValues
   })
 
-  const { apiState, requestData } = useApi(requestApi<void>)
-  const { loading: submitting } = apiState.value
+  const {
+    state: { loading: submitting },
+    requestData
+  } = useApi(requestApi<void>)
 
   const { toast } = useToast()
 

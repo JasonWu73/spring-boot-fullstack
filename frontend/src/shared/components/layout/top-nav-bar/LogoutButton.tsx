@@ -6,8 +6,10 @@ import { useApi } from '@/shared/hooks/use-api'
 import { clearAuth, requestApi } from '@/shared/signals/auth'
 
 export function LogoutButton() {
-  const { apiState, requestData } = useApi(requestApi<void>)
-  const { loading } = apiState.value
+  const {
+    state: { loading },
+    requestData
+  } = useApi(requestApi<void>)
 
   async function handleLogout() {
     await requestData({

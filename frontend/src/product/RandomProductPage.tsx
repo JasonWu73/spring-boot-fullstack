@@ -32,8 +32,10 @@ export default function RandomProductPage() {
   // 成功获取商品的次数
   const count = useSignal(0)
 
-  const { apiState, requestData } = useApi(requestApi<Product>)
-  const { loading, data: product, error } = apiState.value
+  const {
+    state: { loading, data: product, error },
+    requestData
+  } = useApi(requestApi<Product>)
 
   async function getProduct() {
     const randomId = Math.floor(Math.random() * 110)

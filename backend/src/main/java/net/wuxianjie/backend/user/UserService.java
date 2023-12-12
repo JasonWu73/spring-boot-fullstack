@@ -320,6 +320,6 @@ public class UserService {
   }
 
   private static boolean isRootAccount(final String authorities) {
-    return authorities.contains(Authority.ROOT.getCode());
+    return authorities != null && authorities.contains(Authority.ROOT.getCode());
   }
 }

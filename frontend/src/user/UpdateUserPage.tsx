@@ -66,11 +66,15 @@ export default function UpdateUserPage() {
     defaultValues
   })
 
-  const { apiState: userState, requestData: fetchUser } = useApi(requestApi<User>)
-  const { loading, data: user, error } = userState.value
+  const {
+    state: { loading, data: user, error },
+    requestData: fetchUser
+  } = useApi(requestApi<User>)
 
-  const { apiState: updateState, requestData: fetchUpdate } = useApi(requestApi<void>)
-  const { loading: submitting } = updateState.value
+  const {
+    state: { loading: submitting },
+    requestData: fetchUpdate
+  } = useApi(requestApi<void>)
 
   const params = useParams()
   const userId = Number(params.userId)
