@@ -71,11 +71,15 @@ const auth = signal<Auth | null>(undefined as unknown as Auth)
 
 /**
  * 是否拥有超级管理员权限 Signal。
+ * <p>
+ * 不要直接导出 Signal，而且应该导出方法来使用 Signal。
  */
 const isRoot = computed(() => auth.value?.authorities.includes(ROOT.value))
 
 /**
  * 是否拥有管理员权限 Signal。
+ * <p>
+ * 不要直接导出 Signal，而且应该导出方法来使用 Signal。
  */
 const isAdmin = computed(
   () => isRoot.value || (auth.value?.authorities.includes(ADMIN.value) ?? false)
@@ -83,6 +87,8 @@ const isAdmin = computed(
 
 /**
  * 是否拥有普通用户权限 Signal。
+ * <p>
+ * 不要直接导出 Signal，而且应该导出方法来使用 Signal。
  */
 const isUser = computed(
   () => isAdmin.value || (auth.value?.authorities.includes(USER.value) ?? false)
