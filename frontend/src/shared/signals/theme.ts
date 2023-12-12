@@ -4,6 +4,11 @@ import type { Theme } from '@/shared/components/ui/ModeToggle'
 
 let STORAGE_KEY: string
 
+/**
+ * 主题 Signal。
+ * <p>
+ * 不要直接导出 Signal，而是应该导出方法来使用 Signal。
+ */
 const theme = signal(undefined as unknown as Theme)
 
 /**

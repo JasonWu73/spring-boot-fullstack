@@ -3,7 +3,7 @@ import { effect, signal } from '@preact/signals-react'
 /**
  * 是否折叠侧边栏 Signal。
  * <p>
- * 不要直接导出 Signal，而且应该导出方法来使用 Signal。
+ * 不要直接导出 Signal，而是应该导出方法来使用 Signal。
  */
 const folded = signal(undefined as unknown as boolean)
 

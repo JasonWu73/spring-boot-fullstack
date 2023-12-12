@@ -14,14 +14,14 @@ export type Friend = {
 /**
  * 好友列表 Signal。
  * <p>
- * 不要直接导出 Signal，而且应该导出方法来使用 Signal。
+ * 不要直接导出 Signal，而是应该导出方法来使用 Signal。
  */
 const friends = signal(undefined as unknown as Friend[])
 
 /**
  * 是否显示添加好友的表单 Signal。
  * <p>
- * 不要直接导出 Signal，而且应该导出方法来使用 Signal。
+ * 不要直接导出 Signal，而是应该导出方法来使用 Signal。
  */
 const showAddFriend = signal(false)
 
