@@ -1,5 +1,6 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import React from 'react'
-import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
+import { Navigate, RouterProvider, createBrowserRouter } from 'react-router-dom'
 
 import { SecureRoute } from '@/shared/auth/SecureRoute'
 import { AdminLayout } from '@/shared/components/layout/AdminLayout'
@@ -111,18 +112,26 @@ const router = createBrowserRouter([
   }
 ])
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 60 * 1000
+    }
+  }
+})
+
+// 创建组件外 Signal
+createThemeState('system', 'demo-ui-theme')
+createAuthState()
+createPanelFoldState()
+createVersionState().then()
+
 export default function App() {
-  createThemeState('system', 'demo-ui-theme')
-  createAuthState()
-  createPanelFoldState()
-
-  createVersionState().then()
-
   return (
-    <>
+    <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />
 
       <Toaster />
-    </>
+    </QueryClientProvider>
   )
 }

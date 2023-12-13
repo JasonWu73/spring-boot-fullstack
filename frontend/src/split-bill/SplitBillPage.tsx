@@ -22,10 +22,11 @@ const AddFriend = React.lazy(() =>
   )
 )
 
+// 创建组件外 Signal
+createSplitBillState()
+
 export default function SplitBillPage() {
   useTitle('分账 App')
-
-  createSplitBillState()
 
   const navigate = useNavigate()
 
