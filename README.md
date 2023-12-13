@@ -28,7 +28,8 @@ npm install --save-dev --save-exact prettier
 # 安装 `eslint-config-prettier`，关闭所有不必要或可能与 Prettier 冲突的 ESLint 规则
 npm install --save-dev eslint-config-prettier
 
-# 安装 `prettier-plugin-organize-imports`，自动整理 `import` 语句
+# 安装 `prettier-plugin-organize-imports`，自动排序 `import` 语句
+# 可通过空行分隔不同类型的 `import` 语句，比如库、非库
 npm install --save-dev prettier-plugin-organize-imports
 
 # 安装 Tailwind CSS 的 Prettier 插件
@@ -57,6 +58,7 @@ npm install --save @types/use-sync-external-store
 # 安装 React Query
 npm install @tanstack/react-query
 npm install --save-dev @tanstack/eslint-plugin-query
+npm install @tanstack/react-query-devtools
 ```
 
 ## Tutorials

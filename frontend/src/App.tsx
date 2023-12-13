@@ -1,4 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import React from 'react'
 import { Navigate, RouterProvider, createBrowserRouter } from 'react-router-dom'
 
@@ -129,6 +130,8 @@ createVersionState().then()
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
+      <ReactQueryDevtools initialIsOpen={false} />
+
       <RouterProvider router={router} />
 
       <Toaster />
