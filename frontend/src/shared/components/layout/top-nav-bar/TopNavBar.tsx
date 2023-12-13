@@ -4,7 +4,7 @@ import React from 'react'
 import { PanelFold } from '@/shared/components/layout/panel-fold/PanelFold'
 import { AuthSwitch } from '@/shared/components/layout/top-nav-bar/AuthSwitch'
 import { Logo } from '@/shared/components/layout/top-nav-bar/Logo'
-import { PageNav } from '@/shared/components/layout/top-nav-bar/PageNav'
+import { TopNavItem } from '@/shared/components/layout/top-nav-bar/TopNavItem'
 import { Hamburger } from '@/shared/components/ui/Hamburger'
 import { ModeToggle } from '@/shared/components/ui/ModeToggle'
 import { setTheme } from '@/shared/signals/theme'
@@ -33,7 +33,7 @@ export function TopNavBar({ showPanelFold = false }: TopNavBarProps) {
         <Logo />
       </div>
 
-      <PageNav open={openHamburger.value} />
+      <TopNavItem open={openHamburger.value} />
 
       <div className="flex gap-4">
         <div className="hidden sm:inline-block">
