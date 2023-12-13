@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ReloadIcon } from '@radix-ui/react-icons'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
@@ -19,6 +18,7 @@ import {
   FormTextarea
 } from '@/shared/components/ui/CustomFormField'
 import { Form } from '@/shared/components/ui/Form'
+import LoadingButton from '@/shared/components/ui/LoadingButton'
 import { useToast } from '@/shared/components/ui/use-toast'
 import { useApi } from '@/shared/hooks/use-api'
 import { useTitle } from '@/shared/hooks/use-title'
@@ -211,10 +211,9 @@ export default function AddUserPage() {
                 返回
               </Button>
 
-              <Button type="submit" className="self-end" disabled={submitting}>
-                {submitting && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
+              <LoadingButton type="submit" loading={submitting} className="self-end">
                 提交
-              </Button>
+              </LoadingButton>
             </div>
           </form>
         </Form>

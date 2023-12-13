@@ -1,8 +1,7 @@
 import { useSignal } from '@preact/signals-react'
-import { ReloadIcon } from '@radix-ui/react-icons'
 
 import { requestApi } from '@/shared/apis/dummyjson-api'
-import { Button } from '@/shared/components/ui/Button'
+import LoadingButton from '@/shared/components/ui/LoadingButton'
 import { useApi } from '@/shared/hooks/use-api'
 import { useRefresh } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
@@ -73,10 +72,14 @@ export default function RandomProductPage() {
       </div>
 
       <div className="row-span-1">
-        <Button onClick={getProduct} className="my-4" disabled={loading}>
-          {loading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
+        <LoadingButton
+          type="button"
+          onClick={getProduct}
+          loading={loading}
+          className="my-4"
+        >
           获取商品
-        </Button>
+        </LoadingButton>
       </div>
 
       <div className="row-span-1">

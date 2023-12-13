@@ -1,7 +1,6 @@
-import { ReloadIcon } from '@radix-ui/react-icons'
 import { LogOut } from 'lucide-react'
 
-import { Button } from '@/shared/components/ui/Button'
+import LoadingButton from '@/shared/components/ui/LoadingButton'
 import { useApi } from '@/shared/hooks/use-api'
 import { clearAuth, requestApi } from '@/shared/signals/auth'
 
@@ -21,15 +20,15 @@ export function LogoutButton() {
   }
 
   return (
-    <Button
+    <LoadingButton
+      type="button"
       onClick={handleLogout}
+      loading={loading}
       variant="link"
       className="grid w-full grid-cols-[auto_1fr] gap-2 text-left"
-      disabled={loading}
     >
       {!loading && <LogOut className="h-4 w-4" />}
-      {loading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
       退出
-    </Button>
+    </LoadingButton>
   )
 }

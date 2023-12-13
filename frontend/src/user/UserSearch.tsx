@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ReloadIcon } from '@radix-ui/react-icons'
 import React from 'react'
 import { useForm, type UseFormSetValue } from 'react-hook-form'
 import { z } from 'zod'
@@ -7,6 +6,7 @@ import { z } from 'zod'
 import { Button } from '@/shared/components/ui/Button'
 import { FormInput, FormSelect } from '@/shared/components/ui/CustomFormField'
 import { Form } from '@/shared/components/ui/Form'
+import LoadingButton from '@/shared/components/ui/LoadingButton'
 import { ADMIN, ROOT, USER } from '@/shared/signals/auth'
 
 const statusOptions = [
@@ -107,10 +107,9 @@ export function UserSearch({ queryParams, loading, onSearch }: UserSearchProps) 
           isError={form.getFieldState('authority')?.invalid}
         />
 
-        <Button type="submit" className="self-end" disabled={loading}>
-          {loading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
+        <LoadingButton type="submit" loading={loading} className="self-end">
           查询
-        </Button>
+        </LoadingButton>
 
         <Button
           onClick={handleReset}

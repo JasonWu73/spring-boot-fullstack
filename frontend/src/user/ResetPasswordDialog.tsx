@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ExclamationTriangleIcon, ReloadIcon } from '@radix-ui/react-icons'
+import { ExclamationTriangleIcon } from '@radix-ui/react-icons'
 import { format } from 'date-fns'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -19,6 +19,7 @@ import {
   DialogTitle
 } from '@/shared/components/ui/Dialog'
 import { Form } from '@/shared/components/ui/Form'
+import LoadingButton from '@/shared/components/ui/LoadingButton'
 import { useToast } from '@/shared/components/ui/use-toast'
 import { useApi, type SetApiStateAction } from '@/shared/hooks/use-api'
 import { PUBLIC_KEY, requestApi } from '@/shared/signals/auth'
@@ -183,10 +184,9 @@ export function ResetPasswordDialog({
                 </Button>
               </DialogClose>
 
-              <Button type="submit" disabled={loading}>
-                {loading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
+              <LoadingButton type="submit" loading={loading}>
                 提交
-              </Button>
+              </LoadingButton>
             </DialogFooter>
           </form>
         </Form>

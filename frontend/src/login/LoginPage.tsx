@@ -1,11 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ReloadIcon } from '@radix-ui/react-icons'
 import { ShieldPlus } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { Navigate, useLocation } from 'react-router-dom'
 import { z } from 'zod'
 
-import { Button } from '@/shared/components/ui/Button'
 import {
   Card,
   CardContent,
@@ -15,6 +13,7 @@ import {
 } from '@/shared/components/ui/Card'
 import { FormInput } from '@/shared/components/ui/CustomFormField'
 import { Form } from '@/shared/components/ui/Form'
+import LoadingButton from '@/shared/components/ui/LoadingButton'
 import { useToast } from '@/shared/components/ui/use-toast'
 import { useApi } from '@/shared/hooks/use-api'
 import { useTitle } from '@/shared/hooks/use-title'
@@ -129,10 +128,9 @@ export default function LoginPage() {
               isError={form.getFieldState('password')?.invalid}
             />
 
-            <Button type="submit" disabled={loading}>
-              {loading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
+            <LoadingButton type="submit" loading={loading}>
               登录
-            </Button>
+            </LoadingButton>
           </form>
         </Form>
       </CardContent>
