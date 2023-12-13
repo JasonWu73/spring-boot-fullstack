@@ -86,7 +86,7 @@ type UseApi<T> = {
  * @returns useApi<T> API 相关数据及方法
  */
 export function useApi<T>(
-  callback: (params: ApiRequest) => Promise<ApiResponse<T>>
+  callback: (request: ApiRequest) => Promise<ApiResponse<T>>
 ): UseApi<T> {
   const apiState = useSignal<ApiState<T>>({ loading: false })
   const prevFetch = useSignal<PrevFetch | undefined>(undefined)
