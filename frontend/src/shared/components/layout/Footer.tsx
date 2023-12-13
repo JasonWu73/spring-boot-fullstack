@@ -1,12 +1,35 @@
+import { ReloadIcon } from '@radix-ui/react-icons'
 import React from 'react'
 
-import { getVersion } from '@/shared/signals/version'
+import { useApi } from '@/shared/hooks/use-api'
+import { useInitial } from '@/shared/hooks/use-refresh'
+import { requestApi } from '@/shared/signals/auth'
 import { cn } from '@/shared/utils/helpers'
+
+type Version = {
+  name: string
+  version: string
+  developer: string
+  builtAt: string
+}
 
 type FooterProps = React.ComponentPropsWithoutRef<'footer'>
 
 export function Footer({ className, ...props }: FooterProps) {
-  let version = getVersion()
+  useInitial(() => {
+    getVersion().then()
+  })
+
+  const {
+    state: { loading, data, error },
+    requestData
+  } = useApi(requestApi<Version>)
+
+  const { developer, name, version, builtAt } = data ?? {}
+
+  async function getVersion() {
+    return await requestData({ url: '/api/v1/public/version' })
+  }
 
   return (
     <footer
@@ -14,24 +37,21 @@ export function Footer({ className, ...props }: FooterProps) {
       {...props}
     >
       <div className="container mx-auto flex flex-col flex-wrap px-5 py-4">
-        <Message>
-          © {new Date().getFullYear()}{' '}
-          {version && (
+        <p className="flex items-center justify-center gap-1 text-sm">
+          <span>© {new Date().getFullYear()}</span>
+          {loading && <ReloadIcon className="mr-2 inline-block h-4 w-4 animate-spin" />}
+
+          {!loading && error && (
+            <span className="text-red-500 dark:text-red-600">{error}</span>
+          )}
+
+          {!loading && data && (
             <span>
-              {version.developer} {version.name} {version.version} 构建于：
-              {version.builtAt}
+              {developer} {name} {version} 构建于：{builtAt}
             </span>
           )}
-        </Message>
+        </p>
       </div>
     </footer>
   )
-}
-
-type MessageProps = {
-  children: React.ReactNode
-}
-
-function Message({ children }: MessageProps) {
-  return <p className="text-center text-sm">{children}</p>
 }

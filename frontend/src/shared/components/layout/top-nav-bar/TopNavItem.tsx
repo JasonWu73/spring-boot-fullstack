@@ -44,7 +44,9 @@ function NavItemList() {
       <div className="sm:hidden">
         <AuthSwitch />
       </div>
+
       <NavItem link="/split-bill">分账 App</NavItem>
+
       {hasUser() && <NavItem link="/fetch">自定义 useFetch</NavItem>}
     </>
   )
@@ -57,13 +59,13 @@ type NavItemProps = {
 
 function NavItem({ children, link }: NavItemProps) {
   return (
-    <NavigationMenuItem className=" hover:text-sky-500 hover:dark:text-sky-600">
+    <NavigationMenuItem className="hover:text-sky-500 hover:dark:text-sky-600">
       <NavLink
         to={link}
         className={({ isActive }) =>
           cn(
             buttonVariants({ variant: 'link' }),
-            'text-base font-bold text-snow hover:text-sky-500 hover:no-underline dark:text-snow dark:hover:text-sky-600',
+            'text-base font-bold text-snow hover:text-sky-500 hover:no-underline focus-visible:ring-slate-300 dark:text-snow dark:hover:text-sky-600',
             isActive && 'text-sky-500 dark:text-sky-600'
           )
         }

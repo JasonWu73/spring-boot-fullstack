@@ -38,7 +38,7 @@ export function getUserTableColumns({
   openDeleteDialog,
   openResetPasswordDialog
 }: UserTableColumnProps) {
-  let isRoot = hasRoot()
+  const isRoot = hasRoot()
 
   const columns: ColumnDef<User>[] = [
     {

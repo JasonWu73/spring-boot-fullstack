@@ -9,7 +9,7 @@ type HeaderProps = React.ComponentPropsWithoutRef<'header'> & {
 
 export function Header({ showPanelFold = false, className, ...props }: HeaderProps) {
   return (
-    <header className={cn('dark bg-night text-snow dark:bg-night', className)} {...props}>
+    <header className={cn('bg-night text-snow dark:bg-night', className)} {...props}>
       <TopNavBar showPanelFold={showPanelFold} />
     </header>
   )

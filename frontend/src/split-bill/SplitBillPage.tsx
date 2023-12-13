@@ -36,7 +36,7 @@ export default function SplitBillPage() {
     navigate('/split-bill', { state: { noRefresh: true } })
   })
 
-  let showAddFriend = getShowAddFriend()
+  const showAddFriend = getShowAddFriend()
 
   function handleToggleAddFriend() {
     setShowAddFriend(!showAddFriend)

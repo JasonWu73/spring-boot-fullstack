@@ -10,7 +10,7 @@ export function Logo() {
       to="/"
       className={cn(
         buttonVariants({ variant: 'link' }),
-        'text-snow hover:no-underline dark:text-snow'
+        'text-snow hover:no-underline focus-visible:ring-slate-300 dark:text-snow'
       )}
     >
       <span className="flex items-center gap-2">

@@ -12,7 +12,6 @@ import { Toaster } from '@/shared/components/ui/Toaster'
 import { createAuthState } from '@/shared/signals/auth'
 import { createPanelFoldState } from '@/shared/signals/panel-fold'
 import { createThemeState } from '@/shared/signals/theme'
-import { createVersionState } from '@/shared/signals/version'
 import { wait } from '@/shared/utils/helpers'
 
 const ErrorPage = React.lazy(() => import('@/shared/components/ui/ErrorPage'))
@@ -125,7 +124,6 @@ const queryClient = new QueryClient({
 createThemeState('system', 'demo-ui-theme')
 createAuthState()
 createPanelFoldState()
-createVersionState().then()
 
 export default function App() {
   return (

@@ -30,6 +30,7 @@ export function TopNavBar({ showPanelFold = false }: TopNavBarProps) {
     >
       <div className="flex items-center gap-4">
         {showPanelFold && <PanelFold />}
+
         <Logo />
       </div>
 
@@ -39,7 +40,12 @@ export function TopNavBar({ showPanelFold = false }: TopNavBarProps) {
         <div className="hidden sm:inline-block">
           <AuthSwitch />
         </div>
-        <ModeToggle setTheme={setTheme} />
+
+        <ModeToggle
+          setTheme={setTheme}
+          className="border-slate-900 focus-visible:ring-slate-300"
+        />
+
         <Hamburger
           open={openHamburger.value}
           onOpenChange={(open) => (openHamburger.value = open)}
