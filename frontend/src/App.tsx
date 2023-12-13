@@ -28,7 +28,7 @@ const OperationLogListPage = React.lazy(
   () => import('@/operation-log/OperationLogListPage')
 )
 
-// 测试 React Router 懒加载（React Split Code）
+// 测试 React 懒加载非 `default` 导出的组件
 const SplitBill = React.lazy(() =>
   wait(2).then(() =>
     import('@/split-bill/SplitBill').then((module) => ({

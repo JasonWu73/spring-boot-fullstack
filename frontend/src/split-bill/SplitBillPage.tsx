@@ -13,7 +13,7 @@ import {
 import { wait } from '@/shared/utils/helpers'
 import { FriendList } from '@/split-bill/FriendList'
 
-// ----- 测试懒加载（React Split Code）-----
+// 测试 React 懒加载非 `default` 导出的组件
 const AddFriend = React.lazy(() =>
   wait(2).then(() =>
     import('@/split-bill/AddFriend').then((module) => ({
