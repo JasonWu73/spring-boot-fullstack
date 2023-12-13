@@ -1,6 +1,6 @@
 import { useSignal } from '@preact/signals-react'
 
-import { requestApi } from '@/shared/apis/dummyjson-api'
+import { requestApi } from '@/shared/apis/dummyjson'
 import LoadingButton from '@/shared/components/ui/LoadingButton'
 import { useApi } from '@/shared/hooks/use-api'
 import { useRefresh } from '@/shared/hooks/use-refresh'

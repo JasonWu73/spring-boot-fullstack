@@ -1,6 +1,5 @@
 import { computed, effect, signal } from '@preact/signals-react'
 
-import type { ApiResponse } from '@/shared/hooks/use-api'
 import { sendRequest, type ApiRequest } from '@/shared/utils/api-caller'
 
 /**
@@ -188,10 +187,7 @@ export function clearAuth() {
  * @param isPublic 是否为公开 API
  * @returns Promise<ApiResponse> API 响应数据
  */
-export async function requestApi<T>(
-  request: ApiRequest,
-  isPublic = false
-): Promise<ApiResponse<T>> {
+export async function requestApi<T>(request: ApiRequest, isPublic = false) {
   if (isPublic || !auth.value) return await requestBackendApi<T>(request)
 
   const { expiresAt, accessToken } = auth.value
@@ -273,7 +269,7 @@ function toStorageAuth(data: AuthResponse): Auth {
   }
 }
 
-async function requestBackendApi<T>(request: ApiRequest): Promise<ApiResponse<T>> {
+async function requestBackendApi<T>(request: ApiRequest) {
   const baseUrl = /^https?:\/\/.+/.test(request.url) ? request.url : BASE_URL
 
   const { status, data, error } = await sendRequest<T, ApiError>({

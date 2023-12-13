@@ -2,7 +2,7 @@ import { ExclamationTriangleIcon, ReloadIcon, RocketIcon } from '@radix-ui/react
 import React from 'react'
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 
-import { requestApi } from '@/shared/apis/local-api'
+import { requestApi } from '@/shared/apis/local'
 import { Alert, AlertDescription, AlertTitle } from '@/shared/components/ui/Alert'
 import { Card } from '@/shared/components/ui/Card'
 import { Code } from '@/shared/components/ui/Code'

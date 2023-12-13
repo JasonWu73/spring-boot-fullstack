@@ -24,7 +24,7 @@ export type ApiState<T> = {
   error?: string
 }
 
-export type ApiResponse<T> = {
+type ApiResponse<T> = {
   /**
    * HTTP 响应状态码。
    */
