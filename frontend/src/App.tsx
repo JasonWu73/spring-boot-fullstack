@@ -17,6 +17,7 @@ const ErrorPage = React.lazy(() => import('@/shared/components/ui/ErrorPage'))
 const NotFoundPage = React.lazy(() => import('@/shared/components/ui/NotFoundPage'))
 const ForbiddenPage = React.lazy(() => import('@/shared/components/ui/ForbiddenPage'))
 const LoginPage = React.lazy(() => import('@/login/LoginPage'))
+const DashboardPage = React.lazy(() => import('@/dashboard/DashboardPage'))
 const ProfilePage = React.lazy(() => import('@/user/ProfilePage'))
 const RandomProductPage = React.lazy(() => import('@/product/RandomProductPage'))
 const SplitBillPage = React.lazy(() => import('@/split-bill/SplitBillPage'))
@@ -53,7 +54,8 @@ const router = createBrowserRouter([
       {
         errorElement: <ErrorPage />,
         children: [
-          { path: '/', element: <Navigate to="/split-bill" replace /> },
+          { path: '/', element: <Navigate to="/dashboard" replace /> },
+          { path: '/dashboard', element: <DashboardPage /> },
           {
             element: <SecureRoute />,
             children: [{ path: '/profile', element: <ProfilePage /> }]
