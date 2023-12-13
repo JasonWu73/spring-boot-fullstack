@@ -45,7 +45,7 @@ export function Footer({ className, ...props }: FooterProps) {
             <span className="text-red-500 dark:text-red-600">{error}</span>
           )}
 
-          {!loading && data && (
+          {!loading && !error && data && (
             <span>
               {developer} {name} {version} 构建于：{builtAt}
             </span>
