@@ -21,10 +21,9 @@ export function LogoutButton() {
 
   return (
     <LoadingButton
-      type="button"
-      onClick={handleLogout}
-      loading={loading}
       variant="link"
+      loading={loading}
+      onClick={handleLogout}
       className="grid w-full grid-cols-[auto_1fr] gap-2 text-left"
     >
       {!loading && <LogOut className="h-4 w-4" />}

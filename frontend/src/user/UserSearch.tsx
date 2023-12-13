@@ -112,11 +112,11 @@ export function UserSearch({ queryParams, loading, onSearch }: UserSearchProps) 
         </LoadingButton>
 
         <Button
-          onClick={handleReset}
           type="reset"
           variant="outline"
-          className="self-end"
           disabled={loading}
+          onClick={handleReset}
+          className="self-end"
         >
           重置
         </Button>

@@ -15,9 +15,9 @@ export function Hamburger({ open, onOpenChange }: HamburgerProps) {
   return (
     <div className="flex items-center lg:hidden">
       <Button
-        onClick={() => onOpenChange(!open)}
         variant="outline"
         size="icon"
+        onClick={() => onOpenChange(!open)}
         className="group flex-col"
       >
         <div className={cn(line, open && 'translate-y-[0.625rem] rotate-45')} />

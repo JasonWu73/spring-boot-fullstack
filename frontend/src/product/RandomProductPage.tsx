@@ -72,12 +72,7 @@ export default function RandomProductPage() {
       </div>
 
       <div className="row-span-1">
-        <LoadingButton
-          type="button"
-          onClick={getProduct}
-          loading={loading}
-          className="my-4"
-        >
+        <LoadingButton loading={loading} onClick={getProduct} className="my-4">
           获取商品
         </LoadingButton>
       </div>

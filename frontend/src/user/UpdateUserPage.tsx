@@ -224,10 +224,10 @@ export default function UpdateUserPage() {
 
               <div className="flex gap-2 sm:justify-end">
                 <Button
-                  onClick={backToUserListPage}
                   type="button"
                   variant="outline"
                   disabled={submitting}
+                  onClick={backToUserListPage}
                 >
                   返回
                 </Button>

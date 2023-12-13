@@ -67,9 +67,9 @@ function DataTablePagination<TData>({
         <div className="flex items-center space-x-2">
           <Button
             variant="outline"
-            className="hidden h-8 w-8 p-0 lg:flex"
-            onClick={() => table.setPageIndex(0)}
             disabled={!table.getCanPreviousPage()}
+            onClick={() => table.setPageIndex(0)}
+            className="hidden h-8 w-8 p-0 lg:flex"
           >
             <span className="sr-only">转到第一页</span>
             <DoubleArrowLeftIcon className="h-4 w-4" />
@@ -77,9 +77,9 @@ function DataTablePagination<TData>({
 
           <Button
             variant="outline"
-            className="h-8 w-8 p-0"
-            onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
+            onClick={() => table.previousPage()}
+            className="h-8 w-8 p-0"
           >
             <span className="sr-only">转到上一页</span>
             <ChevronLeftIcon className="h-4 w-4" />
@@ -87,9 +87,9 @@ function DataTablePagination<TData>({
 
           <Button
             variant="outline"
-            className="h-8 w-8 p-0"
-            onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
+            onClick={() => table.nextPage()}
+            className="h-8 w-8 p-0"
           >
             <span className="sr-only">转到下一页</span>
             <ChevronRightIcon className="h-4 w-4" />
@@ -97,9 +97,9 @@ function DataTablePagination<TData>({
 
           <Button
             variant="outline"
-            className="hidden h-8 w-8 p-0 lg:flex"
-            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
             disabled={!table.getCanNextPage()}
+            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+            className="hidden h-8 w-8 p-0 lg:flex"
           >
             <span className="sr-only">转到最后一页</span>
             <DoubleArrowRightIcon className="h-4 w-4" />

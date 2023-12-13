@@ -12,9 +12,9 @@ export function PanelFold() {
 
   return (
     <Button
-      onClick={() => setFolded(!folded)}
       variant="outline"
       size="icon"
+      onClick={() => setFolded(!folded)}
       className="group"
     >
       <IconComponent className="h-[1.2rem] w-[1.2rem] cursor-pointer text-slate-300 group-hover:text-slate-800 group-hover:dark:text-white" />

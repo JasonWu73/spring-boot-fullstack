@@ -107,7 +107,7 @@ export function FriendItem({ friend, onDeleteFriend }: FriendItemProps) {
         )}
       </div>
 
-      <Button onClick={handleToggleSelect} disabled={loading}>
+      <Button disabled={loading} onClick={handleToggleSelect}>
         {selected ? '关闭' : '选择'}
       </Button>
     </li>

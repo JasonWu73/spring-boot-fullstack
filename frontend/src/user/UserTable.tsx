@@ -78,7 +78,7 @@ export function UserTable({
       >
         {hasRoot() && (
           <div>
-            <Button onClick={onShowSelection} size="sm" variant="secondary">
+            <Button variant="secondary" size="sm" onClick={onShowSelection}>
               查看被选中的行
             </Button>
 
