@@ -23,7 +23,7 @@ type ApiResponse<TData, TError> = {
   status?: number
 
   /**
-   * API 响应数据。
+   * API 响应结果。
    */
   data?: TData
 
@@ -39,7 +39,7 @@ type ApiResponse<TData, TError> = {
 }
 
 /**
- * 发送 HTTP API 请求，并以 JSON 数据格式解析响应数据。
+ * 发送 HTTP API 请求，并以 JSON 数据格式解析响应结果。
  * <p>
  * 不建议使用 `signal`（`AbortController`）实现中途放弃请求，因为这只会不易于前端 F12 调试（看不到响应内容），而后端仍然会处理请求。前端要做的事应该只是忽略请求的结果，而非中途放弃请求。
  *
@@ -47,14 +47,14 @@ type ApiResponse<TData, TError> = {
  *   <li>请求头中的 `Accept` 默认为 `application/json`</li>
  * </ul>
  *
- * @param options 请求的配置属性
+ * @param options 请求配置项
  * @param options.url URL 地址
  * @param options.method 请求方法，默认为 `GET`
  * @param options.contentType 请求体的内容类型，默认为 `JSON`
  * @param options.headers HTTP 请求头
  * @param options.urlParams URL 参数
  * @param options.bodyData 请求体数据
- * @returns Promise<ApiResponse<TData, TError>> HTTP 响应数据或请求发送失败时的错误信息
+ * @returns Promise<ApiResponse<TData, TError>> HTTP 响应结果或请求发送失败时的错误信息
  */
 export async function sendRequest<TData, TError>({
   url,
@@ -75,7 +75,7 @@ export async function sendRequest<TData, TError>({
       body: getBody(bodyData, contentType)
     })
 
-    // 如果 HTTP 状态码为 204，表示请求成功，但无响应数据
+    // 如果 HTTP 状态码为 204，表示请求成功，但无响应结果
     if (response.status === 204) {
       return { status: response.status }
     }
@@ -83,7 +83,7 @@ export async function sendRequest<TData, TError>({
     // 以 JSON 数据格式解析请求
     const responseData = await response.json()
 
-    // 请求失败时，返回异常响应数据
+    // 请求失败时，返回异常响应结果
     if (!response.ok) {
       return { status: response.status, error: responseData }
     }

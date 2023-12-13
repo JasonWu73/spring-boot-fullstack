@@ -8,7 +8,13 @@ type ApiError = {
   expiredAt?: string
 }
 
-export async function requestApi<T>(request: ApiRequest) {
+/**
+ * 向 Dummy Json 服务发送 API 请求。
+ *
+ * @param request 请求配置项
+ * @returns Promise<ApiResponse<T>> API 响应结果
+ */
+export async function requestDummyJsonApi<T>(request: ApiRequest) {
   const { status, data, error } = await sendRequest<T, ApiError>({
     ...request,
     url: `${BASE_URL}${request.url}`

@@ -1,3 +1,7 @@
+/**
+ * 推荐使用 React Query 替换此 Hook。
+ */
+
 import { useSignal } from '@preact/signals-react'
 
 import type { ApiRequest, Method } from '@/shared/utils/api-caller'
@@ -14,7 +18,7 @@ export type ApiState<T> = {
   status?: number
 
   /**
-   * API 响应数据。
+   * API 响应结果。
    */
   data?: T
 
@@ -31,7 +35,7 @@ type ApiResponse<T> = {
   status?: number
 
   /**
-   * API 响应数据。
+   * API 响应结果。
    */
   data?: T
 
@@ -59,8 +63,8 @@ type UseApi<T> = {
   /**
    * 发起 HTTP 请求，获取 API 数据。
    *
-   * @param request 请求的配置属性
-   * @returns Promise<ApiResponse<T>> HTTP 响应数据
+   * @param request 请求配置项
+   * @returns Promise<ApiResponse<T>> HTTP 响应结果
    */
   requestData: (request: ApiRequest) => Promise<ApiResponse<T>>
 
@@ -77,7 +81,7 @@ type UseApi<T> = {
  *
  * <ul>
  *   <li>自动丢弃 50 毫秒内的重复请求，主要用于解决 React Strict Mode 下的 useEffect 会先执行一个 setup+cleanup cycle，再执行 setup</li>
- *   <li>提供了常用的状态，如 HTTP 响应状态码、响应数据、是否正在加载中等</li>
+ *   <li>提供了常用的状态，如 HTTP 响应状态码、响应结果、是否正在加载中等</li>
  *   <li>提供了发起 HTTP 请求的方法</li>
  *   <li>提供了更新前端数据的方法</li>
  * </ul>

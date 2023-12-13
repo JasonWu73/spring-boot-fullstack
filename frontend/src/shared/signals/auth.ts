@@ -183,8 +183,8 @@ export function clearAuth() {
  *   <li>当访问令牌过期时，会自动退出登录</li>
  * </ul>
  *
- * @param request 请求的配置属性
- * @returns Promise<ApiResponse> API 响应数据
+ * @param request 请求配置项
+ * @returns Promise<ApiResponse<T>> API 响应结果
  */
 export async function requestApi<T>(request: ApiRequest) {
   if (!auth.value) return await requestBackendApi<T>(request)

@@ -12,7 +12,7 @@ type Keypress = {
 /**
  * 用于监听键盘按键的 Hook。
  *
- * @param keypress 键盘按键配置属性
+ * @param keypress 键盘按键配置项
  * @param keypress.key 按键
  * @param keypress.modifiers 修饰键
  * @param callback 按键触发后的回调函数

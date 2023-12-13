@@ -1,49 +1,33 @@
 import { useSignal } from '@preact/signals-react'
+import { useQuery } from '@tanstack/react-query'
 
-import { requestApi } from '@/shared/apis/dummyjson'
+import { getProduct, type Product } from '@/shared/apis/dummyjson/product'
 import LoadingButton from '@/shared/components/ui/LoadingButton'
-import { useApi } from '@/shared/hooks/use-api'
-import { useRefresh } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
 import { cn } from '@/shared/utils/helpers'
 
-type Product = {
-  id: number
-  title: string
-  description: string
-  price: number
-  discountPercentage: number
-  rating: number
-  stock: number
-  brand: string
-  category: string
-  thumbnail: string
-  images: string[]
-}
-
 export default function RandomProductPage() {
   useTitle('随机商品')
-
-  useRefresh(() => {
-    getProduct().then()
-  })
 
   // 成功获取商品的次数
   const count = useSignal(0)
 
   const {
-    state: { loading, data: product, error },
-    requestData
-  } = useApi(requestApi<Product>)
+    isFetching: loading,
+    data: product,
+    error,
+    refetch: refetchProduct
+  } = useQuery<Product, string>({
+    queryKey: ['product'],
+    queryFn: async () => {
+      const randomId = Math.floor(Math.random() * 110)
+      const product = await getProduct(randomId)
 
-  async function getProduct() {
-    const randomId = Math.floor(Math.random() * 110)
-    const { data } = await requestData({ url: `/products/${randomId}` })
-
-    if (data) {
       count.value++
+
+      return product
     }
-  }
+  })
 
   return (
     <div className="mx-auto grid max-w-md grid-cols-1 grid-rows-[2rem_8rem_3rem_2rem] place-items-center gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow dark:border-slate-800 dark:bg-slate-950 lg:max-w-2xl">
@@ -72,7 +56,11 @@ export default function RandomProductPage() {
       </div>
 
       <div className="row-span-1">
-        <LoadingButton loading={loading} onClick={getProduct} className="my-4">
+        <LoadingButton
+          loading={loading}
+          onClick={() => refetchProduct()}
+          className="my-4"
+        >
           获取商品
         </LoadingButton>
       </div>
