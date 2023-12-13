@@ -1,7 +1,7 @@
 import { useSignal } from '@preact/signals-react'
 import { useQuery } from '@tanstack/react-query'
 
-import { getProduct, type Product } from '@/shared/apis/dummyjson/product'
+import { getProduct } from '@/shared/apis/dummyjson/product'
 import LoadingButton from '@/shared/components/ui/LoadingButton'
 import { useTitle } from '@/shared/hooks/use-title'
 import { cn } from '@/shared/utils/helpers'
@@ -17,7 +17,7 @@ export default function RandomProductPage() {
     data: product,
     error,
     refetch: refetchProduct
-  } = useQuery<Product, string>({
+  } = useQuery({
     queryKey: ['product'],
     queryFn: async () => {
       const randomId = Math.floor(Math.random() * 110)
@@ -34,7 +34,7 @@ export default function RandomProductPage() {
       <div className="row-span-1">
         {loading && <Title label="加载中..." />}
 
-        {!loading && error && <Title label={error} isError />}
+        {!loading && error && <Title label={error.message} isError />}
 
         {!loading && !error && product && (
           <Title label={`${product.id} - ${product.title}`} />

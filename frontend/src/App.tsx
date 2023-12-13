@@ -115,6 +115,7 @@ const router = createBrowserRouter([
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
+      retry: 0, // 默认当 API 响应错误时不重新请求
       staleTime: 60 * 1000 // 默认 API 数据在 1 分钟后过期
     }
   }
