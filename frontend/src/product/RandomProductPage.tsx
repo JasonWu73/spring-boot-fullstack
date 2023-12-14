@@ -12,22 +12,31 @@ export default function RandomProductPage() {
   // 成功获取商品的次数
   const count = useSignal(0)
 
+  const randomId = Math.floor(Math.random() * 110)
+
   const {
-    isFetching: loading,
+    isLoading,
     data: product,
     error,
     refetch: refetchProduct
   } = useQuery({
     queryKey: ['product'],
     queryFn: async () => {
-      const randomId = Math.floor(Math.random() * 110)
       const product = await getProduct(randomId)
 
       count.value++
-
       return product
     }
   })
+
+  const reloading = useSignal(false)
+  const loading = isLoading || reloading.value
+
+  async function handleRefetchProduct() {
+    reloading.value = true
+    await refetchProduct()
+    reloading.value = false
+  }
 
   return (
     <div className="mx-auto grid max-w-md grid-cols-1 grid-rows-[2rem_8rem_3rem_2rem] place-items-center gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow dark:border-slate-800 dark:bg-slate-950 lg:max-w-2xl">
@@ -42,7 +51,7 @@ export default function RandomProductPage() {
       </div>
 
       <div className="row-span-1">
-        {!product && (
+        {(error || !product) && (
           <div className="h-32 w-32 rounded-full border border-gray-300 bg-gradient-to-r from-slate-100 to-slate-300 object-cover shadow-sm" />
         )}
 
@@ -56,11 +65,7 @@ export default function RandomProductPage() {
       </div>
 
       <div className="row-span-1">
-        <LoadingButton
-          loading={loading}
-          onClick={() => refetchProduct()}
-          className="my-4"
-        >
+        <LoadingButton loading={loading} onClick={handleRefetchProduct} className="my-4">
           获取商品
         </LoadingButton>
       </div>
