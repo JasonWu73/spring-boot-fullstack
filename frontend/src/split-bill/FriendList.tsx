@@ -2,7 +2,7 @@ import { ExclamationTriangleIcon, ReloadIcon, RocketIcon } from '@radix-ui/react
 import React from 'react'
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 
-import { requestFakeApi } from '@/shared/apis/local'
+import { getLocalFriends } from '@/shared/apis/local/friend'
 import { Alert, AlertDescription, AlertTitle } from '@/shared/components/ui/Alert'
 import { Card } from '@/shared/components/ui/Card'
 import { Code } from '@/shared/components/ui/Code'
@@ -10,7 +10,7 @@ import { ScrollArea } from '@/shared/components/ui/ScrollArea'
 import { Separator } from '@/shared/components/ui/Separator'
 import { useToast } from '@/shared/components/ui/use-toast'
 import { URL_QUERY_KEY_QUERY } from '@/shared/constants'
-import { useApi } from '@/shared/hooks/use-api'
+import { useFetch } from '@/shared/hooks/use-fetch'
 import { useRefresh } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
 import {
@@ -26,6 +26,18 @@ import { FriendSearch } from '@/split-bill/FriendSearch'
 export function FriendList() {
   useTitle('好友列表')
 
+  const [searchParams, setSearchParams] = useSearchParams()
+  const nameQuery = searchParams.get(URL_QUERY_KEY_QUERY) || ''
+
+  const friends = getFriends()
+  const filteredFriends = nameQuery
+    ? friends.filter((friend) =>
+        friend.name.toLowerCase().includes(nameQuery.toLowerCase())
+      )
+    : friends
+
+  const { loading, error, fetchData: getFriendsFromApi } = useFetch(getLocalFriends)
+
   const location = useLocation()
 
   useRefresh(() => {
@@ -39,34 +51,15 @@ export function FriendList() {
 
     setShowAddFriend(false)
 
-    getFriendsFromApi().then(({ data }) => {
+    getFriendsFromApi(null).then(({ data }) => {
       if (data) {
         setFriends(data)
       }
     })
   })
 
-  const [searchParams, setSearchParams] = useSearchParams()
-  const nameQuery = searchParams.get(URL_QUERY_KEY_QUERY) || ''
-
-  const friends = getFriends()
-  const filteredFriends = nameQuery
-    ? friends.filter((friend) =>
-        friend.name.toLowerCase().includes(nameQuery.toLowerCase())
-      )
-    : friends
-
-  const {
-    state: { loading, error },
-    requestData
-  } = useApi(requestFakeApi<Friend[]>)
-
   const { toast } = useToast()
   const navigate = useNavigate()
-
-  async function getFriendsFromApi() {
-    return await requestData({ url: '/data/friends.json' })
-  }
 
   function handleDeleteFriend(friend: Friend) {
     deleteFriend(friend.id)

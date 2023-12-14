@@ -1,21 +1,15 @@
 import { LogOut } from 'lucide-react'
 
-import { requestApi } from '@/shared/apis/backend/helpers'
+import { logout } from '@/shared/apis/backend/auth'
 import LoadingButton from '@/shared/components/ui/LoadingButton'
-import { useApi } from '@/shared/hooks/use-api'
+import { useFetch } from '@/shared/hooks/use-fetch'
 import { clearAuth } from '@/shared/signals/auth'
 
 export function LogoutButton() {
-  const {
-    state: { loading },
-    requestData
-  } = useApi(requestApi<void>)
+  const { loading, fetchData: logoutSystem } = useFetch(logout)
 
   async function handleLogout() {
-    await requestData({
-      url: '/api/v1/auth/logout',
-      method: 'DELETE'
-    })
+    await logoutSystem(null)
 
     clearAuth()
   }

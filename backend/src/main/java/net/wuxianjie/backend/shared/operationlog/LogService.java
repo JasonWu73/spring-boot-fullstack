@@ -14,9 +14,9 @@ import java.util.List;
  */
 @Service
 @RequiredArgsConstructor
-public class OperationLogService {
+public class LogService {
 
-  private final OperationLogMapper operationLogMapper;
+  private final LogMapper logMapper;
 
   /**
    * 获取操作日志分页列表。
@@ -33,12 +33,12 @@ public class OperationLogService {
   ) {
     setFuzzyQuery(logParam);
 
-    final List<OperationLog> list = operationLogMapper.selectByQueryLimit(
+    final List<OperationLog> list = logMapper.selectByQueryLimit(
       paginationParam,
       logParam
     );
 
-    final long total = operationLogMapper.countByQuery(logParam);
+    final long total = logMapper.countByQuery(logParam);
 
     return new PaginationResult<>(
       paginationParam.getPageNum(),

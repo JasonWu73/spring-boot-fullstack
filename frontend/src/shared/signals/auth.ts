@@ -1,5 +1,7 @@
 import { computed, effect, signal } from '@preact/signals-react'
 
+import type { AuthResponse } from '@/shared/apis/backend/auth'
+
 /**
  * 用户名和密码的加密公钥。
  */
@@ -7,17 +9,6 @@ export const PUBLIC_KEY =
   'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArbGWjwR4QAjBiJwMi5QNe+X8oPEFBfX3z5K6dSv9tU2kF9SVkf8uGGJwXeihQQ0o9aUk42zO58VL3MqDOaWHU6wm52pN9ZBbH0XJefqxtgyXrYAm279MU6EY4sywkUT9KOOgk/qDHB93IoEDL1fosYc7TRsAONuMGiyTJojn1FCPtJbbj7J56yCaFhUpuDunBFETQ32usRaK4KCWx9w0HZ6WmbX8QdcJkVjJ2FCLuGkvbKmUQ5h/GXXnNgbxIn3z2lX7snGRMhIFvW0Qjkn8YmOq6HUj7TU0jKm9VhZirVQXh8trvi2ivY7s6yJoF8N72Ekn94WSpSRVeC0XpXf2LQIDAQAB'
 
 const STORAGE_KEY = 'demo-auth'
-
-/**
- * 后端返回的身份验证数据类型。
- */
-export type AuthResponse = {
-  accessToken: string
-  refreshToken: string
-  expiresInSeconds: number
-  nickname: string
-  authorities: string[]
-}
 
 /**
  * 前端存储的身份验证数据类型。

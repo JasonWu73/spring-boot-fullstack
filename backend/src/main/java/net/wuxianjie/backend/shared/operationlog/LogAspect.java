@@ -25,14 +25,14 @@ import java.time.LocalDateTime;
 @Aspect
 @Component
 @RequiredArgsConstructor
-public class OperationLogAspect {
+public class LogAspect {
 
   private static final String LOCALHOST = "localhost";
   private static final String LOCALHOST_ADDRESS = "0:0:0:0:0:0:0:1";
 
   private final HttpServletRequest request;
 
-  private final OperationLogMapper operationLogMapper;
+  private final LogMapper logMapper;
 
   /**
    * 记录被 {@link Operation} 注解标记的方法的操作日志。
@@ -66,7 +66,7 @@ public class OperationLogAspect {
     final Operation annotation = method.getAnnotation(Operation.class);
     operation.setMessage(annotation.value());
 
-    operationLogMapper.insert(operation);
+    logMapper.insert(operation);
 
     return result;
   }

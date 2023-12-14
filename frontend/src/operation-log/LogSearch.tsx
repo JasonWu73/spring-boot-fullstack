@@ -45,11 +45,7 @@ const defaultValues: FormSchema = {
   message: ''
 }
 
-export function OperationLogSearch({
-  queryParams,
-  loading,
-  onSearch
-}: OperationLogSearchProps) {
+export function LogSearch({ queryParams, loading, onSearch }: OperationLogSearchProps) {
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues

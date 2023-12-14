@@ -3,7 +3,7 @@ import { ExclamationTriangleIcon } from '@radix-ui/react-icons'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
-import { requestApi } from '@/shared/apis/backend/helpers'
+import { getMe, updateMe, type User } from '@/shared/apis/backend/user'
 import {
   Accordion,
   AccordionContent,
@@ -23,12 +23,10 @@ import { Form } from '@/shared/components/ui/Form'
 import LoadingButton from '@/shared/components/ui/LoadingButton'
 import { Skeleton } from '@/shared/components/ui/Skeleton'
 import { useToast } from '@/shared/components/ui/use-toast'
-import { useApi } from '@/shared/hooks/use-api'
+import { useFetch } from '@/shared/hooks/use-fetch'
 import { useInitial } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
-import { PUBLIC_KEY, clearAuth, updateNickname } from '@/shared/signals/auth'
-import { encrypt } from '@/shared/utils/rsa'
-import type { User } from '@/user/UserListPage'
+import { clearAuth, updateNickname } from '@/shared/signals/auth'
 
 const formSchema = z
   .object({
@@ -52,12 +50,6 @@ const formSchema = z
 
 type FormSchema = z.infer<typeof formSchema>
 
-type UpdateUserParams = {
-  nickname: string
-  oldPassword?: string
-  newPassword?: string
-}
-
 const defaultValues: FormSchema = {
   nickname: '',
   oldPassword: '',
@@ -68,34 +60,24 @@ const defaultValues: FormSchema = {
 export default function UpdateUserPage() {
   useTitle('个人资料')
 
+  const form = useForm<FormSchema>({
+    resolver: zodResolver(formSchema),
+    defaultValues
+  })
+
+  const { loading, data: user, error, fetchData: fetchUser } = useFetch(getMe)
+
   useInitial(() => {
-    getUser().then(({ data }) => {
+    fetchUser(null).then(({ data }) => {
       if (data) {
         initializeUserData(data)
       }
     })
   })
 
-  const form = useForm<FormSchema>({
-    resolver: zodResolver(formSchema),
-    defaultValues
-  })
-
-  const {
-    state: { loading, data: user, error },
-    requestData: fetchUser
-  } = useApi(requestApi<User>)
-
-  const {
-    state: { loading: submitting },
-    requestData: fetchUpdate
-  } = useApi(requestApi<void>)
+  const { loading: submitting, fetchData: updateUser } = useFetch(updateMe)
 
   const { toast } = useToast()
-
-  async function getUser() {
-    return await fetchUser({ url: '/api/v1/users/me' })
-  }
 
   function initializeUserData(user: User) {
     form.reset({
@@ -103,18 +85,6 @@ export default function UpdateUserPage() {
       oldPassword: '',
       newPassword: '',
       confirmPassword: ''
-    })
-  }
-
-  async function updateUser({ nickname, oldPassword, newPassword }: UpdateUserParams) {
-    return await fetchUpdate({
-      url: '/api/v1/users/me',
-      method: 'PUT',
-      bodyData: {
-        nickname,
-        oldPassword: oldPassword ? encrypt(PUBLIC_KEY, oldPassword) : null,
-        newPassword: newPassword ? encrypt(PUBLIC_KEY, newPassword) : null
-      }
     })
   }
 
@@ -133,6 +103,7 @@ export default function UpdateUserPage() {
         description: error,
         variant: 'destructive'
       })
+
       return
     }
 

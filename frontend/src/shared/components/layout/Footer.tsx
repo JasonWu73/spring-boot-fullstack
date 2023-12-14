@@ -2,23 +2,25 @@ import { ReloadIcon } from '@radix-ui/react-icons'
 import React from 'react'
 
 import { getVersion } from '@/shared/apis/backend/version'
+import { useFetch } from '@/shared/hooks/use-fetch'
+import { useInitial } from '@/shared/hooks/use-refresh'
 import { cn } from '@/shared/utils/helpers'
-import { useQuery } from '@tanstack/react-query'
 
 type FooterProps = React.ComponentPropsWithoutRef<'footer'>
 
 export function Footer({ className, ...props }: FooterProps) {
   const {
-    isLoading: loading,
-    data,
-    error
-  } = useQuery({
-    queryKey: ['version'],
-    queryFn: getVersion,
-    staleTime: Infinity // 版本信息不会变，所以设置为永不过期
+    loading,
+    data: versionInfo,
+    error,
+    fetchData: fetchVersion
+  } = useFetch(getVersion)
+
+  useInitial(() => {
+    fetchVersion(null).then()
   })
 
-  const { developer, name, version, builtAt } = data ?? {}
+  const { developer, name, version, builtAt } = versionInfo ?? {}
 
   return (
     <footer
@@ -31,10 +33,10 @@ export function Footer({ className, ...props }: FooterProps) {
           {loading && <ReloadIcon className="mr-2 inline-block h-4 w-4 animate-spin" />}
 
           {!loading && error && (
-            <span className="text-red-500 dark:text-red-600">{error.message}</span>
+            <span className="text-red-500 dark:text-red-600">{error}</span>
           )}
 
-          {!loading && !error && data && (
+          {!loading && !error && versionInfo && (
             <span>
               {developer} {name} {version} 构建于：{builtAt}
             </span>

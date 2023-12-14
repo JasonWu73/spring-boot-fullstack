@@ -23,7 +23,7 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from '@/shared/components/ui/Tooltip'
-import { useApi } from '@/shared/hooks/use-api'
+import { useFetch } from '@/shared/hooks/use-fetch'
 import { useRefresh } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
 import {
@@ -33,7 +33,7 @@ import {
   updateBalance,
   updateCredit
 } from '@/shared/signals/split-bill'
-import type { ApiRequest } from '@/shared/utils/api-caller'
+import type { ApiRequest } from '@/shared/utils/fetch'
 import { wait } from '@/shared/utils/helpers'
 import { endNProgress, startNProgress } from '@/shared/utils/nprogress'
 
@@ -107,10 +107,12 @@ export function SplitBill() {
   })
 
   const {
-    state: { loading, data: friend, error },
-    requestData,
+    loading,
+    data: friend,
+    error,
+    fetchData: fetchFriend,
     setState
-  } = useApi(getFriendFakeApi)
+  } = useFetch(getFriendFakeApi)
 
   const params = useParams()
   const friendId = Number(params.friendId)
@@ -120,7 +122,7 @@ export function SplitBill() {
   async function getFriend() {
     setLoadingFriend(true)
 
-    const response = await requestData({ url: '/fake', urlParams: { id: friendId } })
+    const response = await fetchFriend({ url: '/fake', urlParams: { id: friendId } })
 
     setLoadingFriend(false)
 

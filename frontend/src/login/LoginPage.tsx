@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form'
 import { Navigate, useLocation } from 'react-router-dom'
 import { z } from 'zod'
 
-import { requestApi } from '@/shared/apis/backend/helpers'
+import { login } from '@/shared/apis/backend/auth'
 import {
   Card,
   CardContent,
@@ -16,10 +16,9 @@ import { FormInput } from '@/shared/components/ui/CustomFormField'
 import { Form } from '@/shared/components/ui/Form'
 import LoadingButton from '@/shared/components/ui/LoadingButton'
 import { useToast } from '@/shared/components/ui/use-toast'
-import { useApi } from '@/shared/hooks/use-api'
+import { useFetch } from '@/shared/hooks/use-fetch'
 import { useTitle } from '@/shared/hooks/use-title'
-import { PUBLIC_KEY, getAuth, setAuth, type AuthResponse } from '@/shared/signals/auth'
-import { encrypt } from '@/shared/utils/rsa'
+import { getAuth, setAuth } from '@/shared/signals/auth'
 
 const DEFAULT_REDIRECT_URL = '/admin'
 
@@ -43,10 +42,9 @@ export default function LoginPage() {
     defaultValues
   })
 
-  const {
-    state: { loading },
-    requestData
-  } = useApi(requestApi<AuthResponse>)
+  const { loading, fetchData: loginSystem } = useFetch(
+    async ({ username, password }: FormSchema) => await login(username, password)
+  )
 
   const { toast } = useToast()
 
@@ -56,19 +54,8 @@ export default function LoginPage() {
   // 已登录则跳转到目标页面，即登录后就不允许再访问登录页面
   if (getAuth()) return <Navigate to={targetUrl} replace />
 
-  async function login(username: string, password: string) {
-    return await requestData({
-      url: '/api/v1/auth/login',
-      method: 'POST',
-      bodyData: {
-        username: encrypt(PUBLIC_KEY, username),
-        password: encrypt(PUBLIC_KEY, password)
-      }
-    })
-  }
-
   async function onSubmit(values: FormSchema) {
-    const { data, error } = await login(values.username, values.password)
+    const { data, error } = await loginSystem(values)
 
     if (error) {
       toast({

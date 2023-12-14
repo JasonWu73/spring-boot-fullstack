@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
 import { z } from 'zod'
 
-import { requestApi } from '@/shared/apis/backend/helpers'
+import { getUser, updateUser, type User } from '@/shared/apis/backend/user'
 import { Alert, AlertDescription, AlertTitle } from '@/shared/components/ui/Alert'
 import { Button } from '@/shared/components/ui/Button'
 import {
@@ -24,11 +24,10 @@ import { Form } from '@/shared/components/ui/Form'
 import LoadingButton from '@/shared/components/ui/LoadingButton'
 import { Skeleton } from '@/shared/components/ui/Skeleton'
 import { useToast } from '@/shared/components/ui/use-toast'
-import { useApi } from '@/shared/hooks/use-api'
+import { useFetch } from '@/shared/hooks/use-fetch'
 import { useInitial } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
 import { ADMIN, ROOT, USER } from '@/shared/signals/auth'
-import type { User } from '@/user/UserListPage'
 
 const AUTHORITY_OPTIONS = [ADMIN, USER]
 
@@ -40,12 +39,6 @@ const formSchema = z.object({
 
 type FormSchema = z.infer<typeof formSchema>
 
-type UpdateUserParams = {
-  nickname: string
-  authorities: string[]
-  remark: string
-}
-
 const defaultValues: FormSchema = {
   nickname: '',
   authorities: [],
@@ -55,39 +48,28 @@ const defaultValues: FormSchema = {
 export default function UpdateUserPage() {
   useTitle('用户详情')
 
+  const form = useForm<FormSchema>({
+    resolver: zodResolver(formSchema),
+    defaultValues
+  })
+
+  const { loading, data: user, error, fetchData: fetchUser } = useFetch(getUser)
+
+  const params = useParams()
+  const userId = Number(params.userId)
+
   useInitial(() => {
-    getUser().then(({ data }) => {
+    fetchUser(userId).then(({ data }) => {
       if (data) {
         initializeUserData(data)
       }
     })
   })
 
-  const form = useForm<FormSchema>({
-    resolver: zodResolver(formSchema),
-    defaultValues
-  })
-
-  const {
-    state: { loading, data: user, error },
-    requestData: fetchUser
-  } = useApi(requestApi<User>)
-
-  const {
-    state: { loading: submitting },
-    requestData: fetchUpdate
-  } = useApi(requestApi<void>)
-
-  const params = useParams()
-  const userId = Number(params.userId)
+  const { loading: submitting, fetchData: updateUserInfo } = useFetch(updateUser)
 
   const navigate = useNavigate()
-
   const { toast } = useToast()
-
-  async function getUser() {
-    return await fetchUser({ url: `/api/v1/users/${userId}` })
-  }
 
   function initializeUserData(user: User) {
     form.reset({
@@ -107,18 +89,11 @@ export default function UpdateUserPage() {
     })
   }
 
-  async function updateUser({ nickname, authorities, remark }: UpdateUserParams) {
-    return await fetchUpdate({
-      url: `/api/v1/users/${user!.id}`,
-      method: 'PUT',
-      bodyData: { nickname, authorities, remark }
-    })
-  }
-
   async function onSubmit(values: FormSchema) {
     if (!user) return
 
-    const { status, error } = await updateUser({
+    const { status, error } = await updateUserInfo({
+      userId: user.id,
       nickname: values.nickname,
       authorities: values.authorities.map((authority) => authority.value),
       remark: values.remark

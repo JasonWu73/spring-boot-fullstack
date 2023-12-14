@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 
-import { requestApi } from '@/shared/apis/backend/helpers'
+import { addUser } from '@/shared/apis/backend/user'
 import { Button } from '@/shared/components/ui/Button'
 import {
   Card,
@@ -21,10 +21,9 @@ import {
 import { Form } from '@/shared/components/ui/Form'
 import LoadingButton from '@/shared/components/ui/LoadingButton'
 import { useToast } from '@/shared/components/ui/use-toast'
-import { useApi } from '@/shared/hooks/use-api'
+import { useFetch } from '@/shared/hooks/use-fetch'
 import { useTitle } from '@/shared/hooks/use-title'
-import { ADMIN, PUBLIC_KEY, USER } from '@/shared/signals/auth'
-import { encrypt } from '@/shared/utils/rsa'
+import { ADMIN, USER } from '@/shared/signals/auth'
 
 const AUTHORITY_OPTIONS = [ADMIN, USER]
 
@@ -44,14 +43,6 @@ const formSchema = z
 
 type FormSchema = z.infer<typeof formSchema>
 
-type AddUserParams = {
-  username: string
-  nickname: string
-  password: string
-  authorities: string[]
-  remark: string
-}
-
 const defaultValues: FormSchema = {
   username: '',
   nickname: '',
@@ -69,37 +60,13 @@ export default function AddUserPage() {
     defaultValues
   })
 
-  const {
-    state: { loading: submitting },
-    requestData
-  } = useApi(requestApi<void>)
+  const { loading: submitting, fetchData: saveUser } = useFetch(addUser)
 
   const { toast } = useToast()
-
-  async function addUser({
-    username,
-    nickname,
-    password,
-    authorities,
-    remark
-  }: AddUserParams) {
-    return await requestData({
-      url: '/api/v1/users',
-      method: 'POST',
-      bodyData: {
-        username,
-        nickname,
-        password: encrypt(PUBLIC_KEY, password),
-        authorities,
-        remark
-      }
-    })
-  }
-
   const navigate = useNavigate()
 
   async function onSubmit(values: FormSchema) {
-    const { status, error } = await addUser({
+    const { status, error } = await saveUser({
       username: values.username,
       nickname: values.nickname,
       password: values.password,

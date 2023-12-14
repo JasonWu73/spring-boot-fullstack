@@ -1,41 +1,41 @@
 import { useSignal } from '@preact/signals-react'
-import { useQuery } from '@tanstack/react-query'
 
 import { getProduct } from '@/shared/apis/dummyjson/product'
 import LoadingButton from '@/shared/components/ui/LoadingButton'
+import { useFetch } from '@/shared/hooks/use-fetch'
+import { useRefresh } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
 import { cn } from '@/shared/utils/helpers'
 
 export default function RandomProductPage() {
   useTitle('随机商品')
 
+  useRefresh(() => {
+    getRandomProduct().then()
+  })
+
   // 成功获取商品的次数
   const count = useSignal(0)
 
-  const randomId = Math.floor(Math.random() * 110)
-
   const {
-    isLoading,
+    loading,
     data: product,
     error,
-    refetch: refetchProduct
-  } = useQuery({
-    queryKey: ['product'],
-    queryFn: async () => {
-      const product = await getProduct(randomId)
+    fetchData: fetchProduct
+  } = useFetch(async (productId: number) => {
+    const response = await getProduct(productId)
 
+    if (response.data) {
       count.value++
-      return product
     }
+
+    return response
   })
 
-  const reloading = useSignal(false)
-  const loading = isLoading || reloading.value
+  function getRandomProduct() {
+    const randomId = Math.floor(Math.random() * 110)
 
-  async function handleRefetchProduct() {
-    reloading.value = true
-    await refetchProduct()
-    reloading.value = false
+    return fetchProduct(randomId)
   }
 
   return (
@@ -43,7 +43,7 @@ export default function RandomProductPage() {
       <div className="row-span-1">
         {loading && <Title label="加载中..." />}
 
-        {!loading && error && <Title label={error.message} isError />}
+        {!loading && error && <Title label={error} isError />}
 
         {!loading && !error && product && (
           <Title label={`${product.id} - ${product.title}`} />
@@ -65,7 +65,7 @@ export default function RandomProductPage() {
       </div>
 
       <div className="row-span-1">
-        <LoadingButton loading={loading} onClick={handleRefetchProduct} className="my-4">
+        <LoadingButton loading={loading} onClick={getRandomProduct} className="my-4">
           获取商品
         </LoadingButton>
       </div>

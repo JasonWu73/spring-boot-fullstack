@@ -9,6 +9,7 @@ import net.wuxianjie.backend.shared.auth.dto.CachedAuth;
 import net.wuxianjie.backend.shared.auth.dto.LoginParam;
 import net.wuxianjie.backend.shared.exception.ApiException;
 import net.wuxianjie.backend.shared.json.JsonConverter;
+import net.wuxianjie.backend.shared.operationlog.LogAspect;
 import net.wuxianjie.backend.shared.util.RsaUtils;
 import net.wuxianjie.backend.shared.util.StrUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -66,7 +67,7 @@ public class AuthServiceImpl implements AuthService {
    *   <li>验证密码是否正确</li>
    *   <li>在身份验证通过后，删除旧的 {@link #ACCESS_TOKEN_KEY_PREFIX} 缓存，以防止同一个用户通过不断登录，从而不断往 Redis 中写入登录信息</li>
    *   <li>生成新的访问令牌和刷新令牌</li>
-   *   <li>将登录信息写入 Spring Security Context，以便像 {@link net.wuxianjie.backend.shared.operationlog.OperationLogAspect} 这样的 AOP 可以获取到当前登录用户的信息</li>
+   *   <li>将登录信息写入 Spring Security Context，以便像 {@link LogAspect} 这样的 AOP 可以获取到当前登录用户的信息</li>
    *   <li>将登录信息写入 Redis</li>
    * </ol>
    *
@@ -115,7 +116,7 @@ public class AuthServiceImpl implements AuthService {
    *   <li>在刷新令牌验证通过后，删除旧的 {@link #ACCESS_TOKEN_KEY_PREFIX} 缓存，以防止同一个用户通过不断刷新身份验证信息，从而不断往 Redis 中写入登录信息</li>
    *   <li>验证用户账号是否已被禁用</li>
    *   <li>生成新的访问令牌和刷新令牌</li>
-   *   <li>将登录信息写入 Spring Security Context，以便像 {@link net.wuxianjie.backend.shared.operationlog.OperationLogAspect} 这样的 AOP 可以获取到当前登录用户的信息</li>
+   *   <li>将登录信息写入 Spring Security Context，以便像 {@link LogAspect} 这样的 AOP 可以获取到当前登录用户的信息</li>
    *   <li>将登录信息写入 Redis</li>
    * </ol>
    *

@@ -1,5 +1,6 @@
-import { AuthResponse, clearAuth, getAuth, setAuth } from '@/shared/signals/auth'
-import { sendRequest, type ApiRequest } from '@/shared/utils/api-caller'
+import type { AuthResponse } from '@/shared/apis/backend/auth'
+import { clearAuth, getAuth, setAuth } from '@/shared/signals/auth'
+import { sendRequest, type ApiRequest } from '@/shared/utils/fetch'
 
 // 这里假设 Vite 运行时使用默认的 5173 端口
 const DEV_PORT = '5173'
@@ -55,9 +56,8 @@ export async function requestApi<T>(request: ApiRequest) {
     return { status: response.status, error: '登录过期' }
   }
 
-  // 检查是否需要刷新访问令牌
-  // 这里为了测试目的，故意设置离过期时间小于 29 分 55 秒时就刷新访问令牌，即 5 秒后刷新
-  if (expiresAt - Date.now() < (30 * 60 - 5) * 1000) {
+  // 当访问令牌离过期时间小于 10 分钟时，刷新访问令牌
+  if (expiresAt - Date.now() < 10 * 60 * 1000) {
     await refreshAuth()
   }
 
@@ -72,8 +72,8 @@ async function refreshAuth() {
 
   if (!auth) return
 
-  // 1 秒内不重复刷新
-  if (Date.now() - refreshedAt < 1000) return
+  // 1 分钟内不重复刷新
+  if (Date.now() - refreshedAt < 60 * 1000) return
 
   refreshedAt = Date.now()
 

@@ -18,14 +18,10 @@ export type Product = {
  * 获取商品详情。
  *
  * @param productId 要获取的商品 ID
- * @returns Promise<Product> 商品详情
+ * @returns Promise 响应结果
  */
 export async function getProduct(productId: number) {
-  const { data, error } = await requestDummyJsonApi<Product>({
+  return await requestDummyJsonApi<Product>({
     url: `/products/${productId}`
   })
-
-  if (error) throw new Error(error)
-
-  return data!
 }

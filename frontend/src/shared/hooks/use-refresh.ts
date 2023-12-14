@@ -19,12 +19,11 @@ type RefreshCallback = () => ReturnCleanup
 export function useRefresh(callback: RefreshCallback) {
   const location = useLocation()
   const prevTimestamp = React.useRef<number>()
-
   const callbackRef = useSavedRef(callback)
 
   React.useEffect(() => {
     // 为了避免高频率的重复点击相同的 URL，导致重复刷新组件，故这里加了一个 1 秒的防抖
-    if (!!prevTimestamp.current && Date.now() - prevTimestamp.current < 1_000) return
+    if (prevTimestamp.current && Date.now() - prevTimestamp.current < 1_000) return
 
     prevTimestamp.current = Date.now()
 
@@ -36,13 +35,21 @@ export function useRefresh(callback: RefreshCallback) {
 
 /**
  * 仅首次加载时执行。
+ * <p>
+ * 为避免 React Strict Mode 下的重复渲染，故这里加了一个 1 秒的防抖。
  *
  * @param callback 刷新组件状态的回调函数，该回调函数可再返回清理函数
  */
 export function useInitial(callback: RefreshCallback) {
+  const prevTimestamp = React.useRef<number>()
   const callbackRef = useSavedRef(callback)
 
   React.useEffect(() => {
+    // 为避免 React Strict Mode 下的重复渲染，故这里加了一个 1 秒的防抖
+    if (prevTimestamp.current && Date.now() - prevTimestamp.current < 1_000) return
+
+    prevTimestamp.current = Date.now()
+
     const cleanup = callbackRef.current()
 
     return () => cleanup && cleanup()

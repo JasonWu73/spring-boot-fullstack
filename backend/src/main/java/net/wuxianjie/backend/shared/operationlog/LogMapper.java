@@ -11,7 +11,7 @@ import java.util.List;
  * 与操作日志表相关的数据库操作。
  */
 @Mapper
-public interface OperationLogMapper {
+public interface LogMapper {
 
   /**
    * 根据查询条件获取操作日志分页列表。

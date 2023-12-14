@@ -3,6 +3,7 @@ import type { ColumnDef } from '@tanstack/react-table'
 import { MoreHorizontal } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
+import type { User } from '@/shared/apis/backend/user'
 import { Badge } from '@/shared/components/ui/Badge'
 import { Button } from '@/shared/components/ui/Button'
 import { Checkbox } from '@/shared/components/ui/Checkbox'
@@ -18,7 +19,6 @@ import {
 } from '@/shared/components/ui/DropdownMenu'
 import { Switch } from '@/shared/components/ui/Switch'
 import { ADMIN, ROOT, USER, hasRoot } from '@/shared/signals/auth'
-import type { User } from '@/user/UserListPage'
 
 type UserTableColumnProps = {
   submitting: boolean

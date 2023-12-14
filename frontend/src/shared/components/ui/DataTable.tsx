@@ -28,8 +28,6 @@ export const DEFAULT_PAGE_SIZE = 10
 
 export type Pagination = { pageNum: number; pageSize: number; total: number }
 
-export type Paging = Omit<Pagination, 'total'>
-
 type DataTableProps<T> = {
   columns: ColumnDef<T>[]
   data: T[]
@@ -38,7 +36,7 @@ type DataTableProps<T> = {
 
   manualPagination?: boolean
   pagination?: Pagination
-  onPaginate?: (paging: Paging) => void
+  onPaginate?: (pagination: Pagination) => void
 
   manualSorting?: boolean
   sortColumn?: ColumnSort
@@ -120,7 +118,8 @@ export function DataTable<T>({
 
         onPaginate?.({
           pageNum: next.pageIndex + 1,
-          pageSize: next.pageSize
+          pageSize: next.pageSize,
+          total: pagination!.total
         })
       }
     },

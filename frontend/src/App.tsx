@@ -25,9 +25,7 @@ const SplitBillPage = React.lazy(() => import('@/split-bill/SplitBillPage'))
 const UserListPage = React.lazy(() => import('@/user/UserListPage'))
 const AddUserPage = React.lazy(() => import('@/user/AddUserPage'))
 const UpdateUserPage = React.lazy(() => import('@/user/UpdateUserPage'))
-const OperationLogListPage = React.lazy(
-  () => import('@/operation-log/OperationLogListPage')
-)
+const OperationLogListPage = React.lazy(() => import('@/operation-log/LogListPage'))
 
 // 测试 React 懒加载非 `default` 导出的组件
 const SplitBill = React.lazy(() =>
@@ -117,7 +115,7 @@ const queryClient = new QueryClient({
     queries: {
       retry: 0, // 在 API 响应错误（非 2XX 响应状态码）时，即不重新再发起请求
       networkMode: 'always', // 立即获取请求发送失败的提示，即忽略网络是否在线
-      staleTime: 5 * 1000 // 这里为了便于测试设置 API 响应结果在 5 秒后过期
+      staleTime: 5 * 1000 // 设置 API 响应结果在 5 秒后过期
     }
   }
 })

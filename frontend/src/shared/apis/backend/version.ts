@@ -10,14 +10,10 @@ type Version = {
 /**
  * 获取版本信息。
  *
- * @returns Promise<Version> 版本信息
+ * @returns Promise 响应结果
  */
 export async function getVersion() {
-  const { data, error } = await requestApi<Version>({
+  return await requestApi<Version>({
     url: '/api/v1/public/version'
   })
-
-  if (error) throw new Error(error)
-
-  return data!
 }

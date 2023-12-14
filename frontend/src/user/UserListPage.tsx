@@ -1,10 +1,15 @@
 import { useSignal } from '@preact/signals-react'
 import type { SortingState } from '@tanstack/react-table'
-import { format } from 'date-fns'
 import { useSearchParams } from 'react-router-dom'
 
-import { requestApi } from '@/shared/apis/backend/helpers'
-import type { PaginationData, PaginationParams } from '@/shared/apis/types'
+import {
+  deleteUser,
+  getUsers,
+  updateUserStatus,
+  type AccountStatus,
+  type GetUsersParams,
+  type User
+} from '@/shared/apis/backend/user'
 import {
   Card,
   CardContent,
@@ -16,7 +21,7 @@ import { Code } from '@/shared/components/ui/Code'
 import {
   DEFAULT_PAGE_NUM,
   DEFAULT_PAGE_SIZE,
-  type Paging
+  type Pagination
 } from '@/shared/components/ui/DataTable'
 import { useToast } from '@/shared/components/ui/use-toast'
 import {
@@ -25,49 +30,22 @@ import {
   URL_QUERY_KEY_SORT_COLUMN,
   URL_QUERY_KEY_SORT_ORDER
 } from '@/shared/constants'
-import { useApi } from '@/shared/hooks/use-api'
+import { useFetch } from '@/shared/hooks/use-fetch'
 import { useRefresh } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
 import { UserSearch, type QueryParams } from '@/user/UserSearch'
 import { UserTable } from '@/user/UserTable'
 
-export type User = {
-  id: number
-  createdAt: string
-  updatedAt: string
-  remark: string
-  username: string
-  nickname: string
-  status: number
-  authorities: string[]
-}
-
-type GetUsersParams = PaginationParams & {
-  username?: string
-  nickname?: string
-  status?: string
-  authority?: string
+type UpdateUserStatus = {
+  userId: number
+  status: AccountStatus
 }
 
 export default function UserListPage() {
   useTitle('用户管理')
 
-  useRefresh(() => {
-    getUsers().then()
-  })
-
-  const {
-    state: pagingState,
-    requestData: requestPaging,
-    setState
-  } = useApi(requestApi<PaginationData<User>>)
-
-  const {
-    state: { loading: submitting },
-    requestData: requestSubmit
-  } = useApi(requestApi<void>)
-
   const [searchParams, setSearchParams] = useSearchParams()
+
   const pageNum = Number(searchParams.get(URL_QUERY_KEY_PAGE_NUM)) || DEFAULT_PAGE_NUM
   const pageSize = Number(searchParams.get(URL_QUERY_KEY_PAGE_SIZE)) || DEFAULT_PAGE_SIZE
   const sortColumn = searchParams.get(URL_QUERY_KEY_SORT_COLUMN) || 'createdAt'
@@ -77,139 +55,40 @@ export default function UserListPage() {
   const status = searchParams.get('status') || ''
   const authority = searchParams.get('authority') || ''
 
-  const { toast } = useToast()
+  const params: GetUsersParams = { pageNum, pageSize }
+
+  if (sortColumn) params.sortColumn = sortColumn
+  if (sortOrder) params.sortOrder = sortOrder === 'asc' ? 'asc' : 'desc'
+  if (username) params.username = username
+  if (nickname) params.nickname = nickname
+  if (status) params.status = status
+  if (authority) params.authority = authority
+
+  const {
+    loading: loadingUsers,
+    data: users,
+    error: errorUsers,
+    fetchData: fetchUsers,
+    invalidateFetch: invalidateUsers
+  } = useFetch(getUsers)
+
+  useRefresh(() => {
+    fetchUsers(params).then()
+  })
+
+  const { loading: loadingChangeStatus, fetchData: changeUserStatus } = useFetch(
+    async ({ userId, status }: UpdateUserStatus) => await updateUserStatus(userId, status)
+  )
+
+  const { loading: loadingRemoveUser, fetchData: removeUser } = useFetch(
+    async (userId: number) => await deleteUser(userId)
+  )
 
   const indexes = useSignal<number[]>([]) // 选中的行的索引
 
-  async function getUsers() {
-    const urlParams: GetUsersParams = { pageNum, pageSize }
+  const { toast } = useToast()
 
-    if (sortColumn) urlParams.sortColumn = sortColumn
-    if (sortOrder) urlParams.sortOrder = sortOrder === 'asc' ? 'asc' : 'desc'
-    if (username) urlParams.username = username
-    if (nickname) urlParams.nickname = nickname
-    if (status) urlParams.status = status
-    if (authority) urlParams.authority = authority
-
-    return await requestPaging({ url: '/api/v1/users', urlParams })
-  }
-
-  function handleShowSelection() {
-    const ids = (pagingState.data?.list || [])
-      .filter((_, index) => indexes.value.includes(index))
-      .map((user) => user.id)
-
-    if (ids.length === 0) {
-      toast({
-        title: '未选中任何行',
-        description: '请先选中要操作的行',
-        variant: 'destructive'
-      })
-
-      return
-    }
-
-    toast({
-      title: '选中的行',
-      description: (
-        <span>
-          被选中的行 ID(s)：<Code>{ids.join(', ')}</Code>
-        </span>
-      )
-    })
-  }
-
-  async function changeStatus(userId: number, status: number) {
-    return await requestSubmit({
-      url: `/api/v1/users/${userId}/status`,
-      method: 'PUT',
-      bodyData: { status }
-    })
-  }
-
-  async function deleteUser(userId: number) {
-    return await requestSubmit({
-      url: `/api/v1/users/${userId}`,
-      method: 'DELETE'
-    })
-  }
-
-  async function handleChangeStatus(user: User, enabled: boolean) {
-    const newStatus = enabled ? 0 : 1
-    const { status, error } = await changeStatus(user.id, newStatus)
-
-    if (status !== 204) {
-      toast({
-        title: '更新账号状态失败',
-        description: error,
-        variant: 'destructive'
-      })
-      return
-    }
-
-    setState((prevState) => {
-      return {
-        ...prevState,
-        data: {
-          ...prevState.data!,
-          list: prevState.data!.list.map((prevUser) => {
-            if (prevUser.id === user.id) {
-              prevUser.status = newStatus
-              prevUser.updatedAt = format(new Date(), 'yyyy-MM-dd HH:mm:ss')
-            }
-
-            return prevUser
-          })
-        }
-      }
-    })
-
-    toast({
-      title: '更新账号状态成功',
-      description: (
-        <span>
-          {!enabled ? '启用' : '禁用'} <Code>{user.username}</Code> 账号
-        </span>
-      )
-    })
-  }
-
-  async function handleDeleteUser(user: User) {
-    const { id, username } = user
-    const { status, error } = await deleteUser(id)
-
-    if (status !== 204) {
-      toast({
-        title: '删除用户失败',
-        description: error,
-        variant: 'destructive'
-      })
-      return
-    }
-
-    setState((prevState) => {
-      return {
-        ...prevState,
-        data: {
-          ...prevState.data!,
-          total: prevState.data!.total - 1,
-          list: prevState.data!.list.filter((prevUser) => prevUser.id !== id)
-        }
-      }
-    })
-
-    toast({
-      title: '删除用户成功',
-      description: (
-        <span>
-          成功删除用户 <Code>{username}</Code>
-        </span>
-      )
-    })
-    return
-  }
-
-  function handlePaginate(paging: Paging) {
+  function handlePaginate(paging: Pagination) {
     searchParams.set(URL_QUERY_KEY_PAGE_NUM, String(paging.pageNum))
     searchParams.set(URL_QUERY_KEY_PAGE_SIZE, String(paging.pageSize))
 
@@ -249,6 +128,87 @@ export default function UserListPage() {
     setSearchParams(searchParams, { replace: true })
   }
 
+  function handleShowSelection() {
+    const ids = (users?.list || [])
+      .filter((_, index) => indexes.value.includes(index))
+      .map((user) => user.id)
+
+    if (ids.length === 0) {
+      toast({
+        title: '未选中任何行',
+        description: '请先选中要操作的行',
+        variant: 'destructive'
+      })
+
+      return
+    }
+
+    toast({
+      title: '选中的行',
+      description: (
+        <span>
+          被选中的行 ID(s)：<Code>{ids.join(', ')}</Code>
+        </span>
+      )
+    })
+  }
+
+  async function handleChangeStatus(user: User, enabled: boolean) {
+    const newStatus = enabled ? 0 : 1
+
+    const { status, error } = await changeUserStatus({
+      userId: user.id,
+      status: newStatus
+    })
+
+    if (status !== 204) {
+      toast({
+        title: '更新账号状态失败',
+        description: error,
+        variant: 'destructive'
+      })
+
+      return
+    }
+
+    invalidateUsers().then()
+
+    toast({
+      title: '更新账号状态成功',
+      description: (
+        <span>
+          {!enabled ? '启用' : '禁用'} <Code>{user.username}</Code> 账号
+        </span>
+      )
+    })
+  }
+
+  async function handleDeleteUser(user: User) {
+    const { id, username } = user
+    const { status, error } = await removeUser(id)
+
+    if (status !== 204) {
+      toast({
+        title: '删除用户失败',
+        description: error,
+        variant: 'destructive'
+      })
+
+      return
+    }
+
+    invalidateUsers().then()
+
+    toast({
+      title: '删除用户成功',
+      description: (
+        <span>
+          成功删除用户 <Code>{username}</Code>
+        </span>
+      )
+    })
+  }
+
   return (
     <Card className="mx-auto h-full w-full">
       <CardHeader>
@@ -264,15 +224,20 @@ export default function UserListPage() {
             status,
             authority
           }}
-          loading={pagingState.loading}
+          loading={loadingUsers}
           onSearch={handleSearch}
         />
 
         <UserTable
-          paging={{ pageNum, pageSize }}
-          pagingState={pagingState}
-          setPagingState={setState}
-          submitting={submitting}
+          data={users?.list || []}
+          error={errorUsers}
+          loading={loadingUsers}
+          pagination={{
+            pageNum,
+            pageSize,
+            total: users?.total || 0
+          }}
+          submitting={loadingChangeStatus || loadingRemoveUser}
           onPaginate={handlePaginate}
           sortColumn={{
             id:
@@ -286,6 +251,7 @@ export default function UserListPage() {
           onShowSelection={handleShowSelection}
           onChangeStatus={handleChangeStatus}
           onDeleteUser={handleDeleteUser}
+          invalidateUsers={invalidateUsers}
         />
       </CardContent>
     </Card>

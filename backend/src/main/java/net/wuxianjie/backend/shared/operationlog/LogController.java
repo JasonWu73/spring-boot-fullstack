@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/operation-logs")
 @RequiredArgsConstructor
-public class OperationLogController {
+public class LogController {
 
-  private final OperationLogService operationLogService;
+  private final LogService logService;
 
   /**
    * 获取操作日志分页列表。
@@ -35,6 +35,6 @@ public class OperationLogController {
     @Valid final PaginationParam paginationParam,
     @Valid final GetLogParam logParam
   ) {
-    return operationLogService.getLogs(paginationParam, logParam);
+    return logService.getLogs(paginationParam, logParam);
   }
 }

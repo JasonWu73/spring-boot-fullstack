@@ -1,20 +1,20 @@
 import type { ColumnDef, ColumnSort, SortingState } from '@tanstack/react-table'
 
-import type { OperationLog } from '@/operation-log/OperationLogListPage'
-import type { PaginationData } from '@/shared/apis/types'
-import { DataTable, type Paging } from '@/shared/components/ui/DataTable'
+import type { Log } from '@/shared/apis/backend/operation-log'
+import { DataTable, type Pagination } from '@/shared/components/ui/DataTable'
 import { DataTableColumnHeader } from '@/shared/components/ui/DataTableColumnHeader'
-import type { ApiState } from '@/shared/hooks/use-api'
 
 type OperationLogTableProps = {
-  paging: Paging
-  pagingState: ApiState<PaginationData<OperationLog>>
-  onPaginate: (paging: Paging) => void
+  data: Log[]
+  error?: string
+  loading?: boolean
+  pagination: Pagination
+  onPaginate: (paging: Pagination) => void
   sortColumn: ColumnSort
   onSorting: (sorting: SortingState) => void
 }
 
-const columns: ColumnDef<OperationLog>[] = [
+const columns: ColumnDef<Log>[] = [
   {
     id: 'ID',
     accessorKey: 'id',
@@ -44,25 +44,22 @@ const columns: ColumnDef<OperationLog>[] = [
   }
 ]
 
-export function OperationLogTable({
-  paging,
-  pagingState,
+export function LogTable({
+  data,
+  error,
+  loading,
+  pagination,
   onPaginate,
   sortColumn,
   onSorting
 }: OperationLogTableProps) {
-  const { loading, data, error } = pagingState
-
   return (
     <DataTable
       columns={columns}
-      data={data?.list || []}
+      data={data}
       error={error}
       loading={loading}
-      pagination={{
-        ...paging,
-        total: data?.total || 0
-      }}
+      pagination={pagination}
       onPaginate={onPaginate}
       sortColumn={sortColumn}
       onSorting={onSorting}

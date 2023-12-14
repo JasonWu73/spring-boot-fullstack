@@ -1,10 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ExclamationTriangleIcon } from '@radix-ui/react-icons'
-import { format } from 'date-fns'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
 import { requestApi } from '@/shared/apis/backend/helpers'
+import type { User } from '@/shared/apis/backend/user'
 import type { PaginationData } from '@/shared/apis/types'
 import { Alert, AlertDescription, AlertTitle } from '@/shared/components/ui/Alert'
 import { Button } from '@/shared/components/ui/Button'
@@ -22,10 +22,9 @@ import {
 import { Form } from '@/shared/components/ui/Form'
 import LoadingButton from '@/shared/components/ui/LoadingButton'
 import { useToast } from '@/shared/components/ui/use-toast'
-import { useApi, type SetApiStateAction } from '@/shared/hooks/use-api'
+import { useFetch, type ApiResponse } from '@/shared/hooks/use-fetch'
 import { PUBLIC_KEY } from '@/shared/signals/auth'
 import { encrypt } from '@/shared/utils/rsa'
-import type { User } from '@/user/UserListPage'
 
 const formSchema = z
   .object({
@@ -43,7 +42,7 @@ type ResetPasswordDialogProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
   user: User
-  setPagingState: (newState: SetApiStateAction<PaginationData<User>>) => void
+  invalidateUsers: () => Promise<ApiResponse<PaginationData<User>>>
 }
 
 const defaultValues: FormSchema = {
@@ -55,23 +54,19 @@ export function ResetPasswordDialog({
   open,
   onOpenChange,
   user,
-  setPagingState
+  invalidateUsers
 }: ResetPasswordDialogProps) {
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues
   })
 
-  const {
-    state: { loading, error },
-    requestData,
-    setState
-  } = useApi(requestApi<void>)
+  const { loading, error, fetchData, reset } = useFetch(requestApi<void>)
 
   const { toast } = useToast()
 
   async function resetPassword(userId: number, password: string) {
-    return await requestData({
+    return await fetchData({
       url: `/api/v1/users/${userId}/password`,
       method: 'PUT',
       bodyData: { password: encrypt(PUBLIC_KEY, password) }
@@ -83,24 +78,7 @@ export function ResetPasswordDialog({
 
     if (status !== 204) return
 
-    setPagingState((prevState) => {
-      return {
-        ...prevState,
-        data: {
-          ...prevState.data!,
-          list: prevState.data!.list.map((prevUser) => {
-            if (prevUser.id === user.id) {
-              return {
-                ...prevUser,
-                updatedAt: format(new Date(), 'yyyy-MM-dd HH:mm:ss')
-              }
-            }
-
-            return prevUser
-          })
-        }
-      }
-    })
+    invalidateUsers().then()
 
     resetForm()
     onOpenChange(false)
@@ -118,12 +96,7 @@ export function ResetPasswordDialog({
   function resetForm() {
     form.reset()
 
-    setState((prevState) => {
-      return {
-        ...prevState,
-        error: undefined
-      }
-    })
+    reset()
   }
 
   function handleOpenChange(open: boolean) {
