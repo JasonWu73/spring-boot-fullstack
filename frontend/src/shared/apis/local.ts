@@ -8,9 +8,7 @@ export async function requestFakeApi<T>(request: ApiRequest) {
     url: `${BASE_URL}${request.url}`
   })
 
-  if (error) {
-    return { status, error }
-  }
+  if (error) return { status, error }
 
   return { status, data }
 }

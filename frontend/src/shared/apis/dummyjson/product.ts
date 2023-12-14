@@ -25,9 +25,7 @@ export async function getProduct(productId: number) {
     url: `/products/${productId}`
   })
 
-  if (error) {
-    throw new Error(error)
-  }
+  if (error) throw new Error(error)
 
   return data!
 }

@@ -17,9 +17,7 @@ export async function getVersion() {
     url: '/api/v1/public/version'
   })
 
-  if (error) {
-    throw new Error(error)
-  }
+  if (error) throw new Error(error)
 
   return data!
 }
