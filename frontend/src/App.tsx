@@ -7,16 +7,16 @@ import { SecureRoute } from '@/shared/auth/SecureRoute'
 import { AdminLayout } from '@/shared/components/layout/AdminLayout'
 import { LoginLayout } from '@/shared/components/layout/LoginLayout'
 import { MainLayout } from '@/shared/components/layout/MainLayout'
+import ErrorPage from '@/shared/components/ui/ErrorPage'
+import ForbiddenPage from '@/shared/components/ui/ForbiddenPage'
 import { Loading } from '@/shared/components/ui/Loading'
+import NotFoundPage from '@/shared/components/ui/NotFoundPage'
 import { Toaster } from '@/shared/components/ui/Toaster'
 import { createAuthState } from '@/shared/signals/auth'
 import { createPanelFoldState } from '@/shared/signals/panel-fold'
 import { createThemeState } from '@/shared/signals/theme'
 import { wait } from '@/shared/utils/helpers'
 
-const ErrorPage = React.lazy(() => import('@/shared/components/ui/ErrorPage'))
-const NotFoundPage = React.lazy(() => import('@/shared/components/ui/NotFoundPage'))
-const ForbiddenPage = React.lazy(() => import('@/shared/components/ui/ForbiddenPage'))
 const LoginPage = React.lazy(() => import('@/login/LoginPage'))
 const DashboardPage = React.lazy(() => import('@/dashboard/DashboardPage'))
 const ProfilePage = React.lazy(() => import('@/user/ProfilePage'))

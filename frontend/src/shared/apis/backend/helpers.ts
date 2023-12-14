@@ -64,10 +64,18 @@ export async function requestApi<T>(request: ApiRequest) {
   return response
 }
 
+// 上次刷新访问令牌的时间，用于避免因异步触发而导致可能的重复刷新问题
+let refreshedAt = 0
+
 async function refreshAuth() {
   const auth = getAuth()
 
   if (!auth) return
+
+  // 1 秒内不重复刷新
+  if (Date.now() - refreshedAt < 1000) return
+
+  refreshedAt = Date.now()
 
   const { accessToken, refreshToken } = auth
 

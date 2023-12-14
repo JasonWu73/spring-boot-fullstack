@@ -15,7 +15,7 @@ export function Footer({ className, ...props }: FooterProps) {
   } = useQuery({
     queryKey: ['version'],
     queryFn: getVersion,
-    staleTime: Infinity // 版本号不会变，所以设置为永不过期
+    staleTime: Infinity // 版本信息不会变，所以设置为永不过期
   })
 
   const { developer, name, version, builtAt } = data ?? {}
