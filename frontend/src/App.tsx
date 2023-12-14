@@ -115,8 +115,9 @@ const router = createBrowserRouter([
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: 0, // 默认当 API 响应错误时不重新请求
-      staleTime: 5 * 1000 // 默认 API 数据在几毫秒后过期，这里为了便于测试设置为 5 秒
+      retry: 0, // 在 API 响应错误（非 2XX 响应状态码）时，即不重新再发起请求
+      networkMode: 'always', // 立即获取请求发送失败的提示，即忽略网络是否在线
+      staleTime: 5 * 1000 // 这里为了便于测试设置 API 响应结果在 5 秒后过期
     }
   }
 })
