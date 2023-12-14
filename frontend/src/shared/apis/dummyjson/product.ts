@@ -29,9 +29,5 @@ export async function getProduct(productId: number) {
     throw new Error(error)
   }
 
-  if (!data) {
-    throw new Error('获取到的商品数据为空')
-  }
-
-  return data
+  return data!
 }

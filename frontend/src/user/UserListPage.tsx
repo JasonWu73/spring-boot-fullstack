@@ -3,6 +3,7 @@ import type { SortingState } from '@tanstack/react-table'
 import { format } from 'date-fns'
 import { useSearchParams } from 'react-router-dom'
 
+import { requestApi } from '@/shared/apis/backend/helpers'
 import type { PaginationData, PaginationParams } from '@/shared/apis/types'
 import {
   Card,
@@ -27,7 +28,6 @@ import {
 import { useApi } from '@/shared/hooks/use-api'
 import { useRefresh } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
-import { requestApi } from '@/shared/signals/auth'
 import { UserSearch, type QueryParams } from '@/user/UserSearch'
 import { UserTable } from '@/user/UserTable'
 

@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form'
 import { Navigate, useLocation } from 'react-router-dom'
 import { z } from 'zod'
 
+import { requestApi } from '@/shared/apis/backend/helpers'
 import {
   Card,
   CardContent,
@@ -17,13 +18,7 @@ import LoadingButton from '@/shared/components/ui/LoadingButton'
 import { useToast } from '@/shared/components/ui/use-toast'
 import { useApi } from '@/shared/hooks/use-api'
 import { useTitle } from '@/shared/hooks/use-title'
-import {
-  PUBLIC_KEY,
-  getAuth,
-  requestApi,
-  setAuth,
-  type AuthResponse
-} from '@/shared/signals/auth'
+import { PUBLIC_KEY, getAuth, setAuth, type AuthResponse } from '@/shared/signals/auth'
 import { encrypt } from '@/shared/utils/rsa'
 
 const DEFAULT_REDIRECT_URL = '/admin'

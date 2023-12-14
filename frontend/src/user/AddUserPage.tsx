@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 
+import { requestApi } from '@/shared/apis/backend/helpers'
 import { Button } from '@/shared/components/ui/Button'
 import {
   Card,
@@ -22,7 +23,7 @@ import LoadingButton from '@/shared/components/ui/LoadingButton'
 import { useToast } from '@/shared/components/ui/use-toast'
 import { useApi } from '@/shared/hooks/use-api'
 import { useTitle } from '@/shared/hooks/use-title'
-import { ADMIN, PUBLIC_KEY, USER, requestApi } from '@/shared/signals/auth'
+import { ADMIN, PUBLIC_KEY, USER } from '@/shared/signals/auth'
 import { encrypt } from '@/shared/utils/rsa'
 
 const AUTHORITY_OPTIONS = [ADMIN, USER]

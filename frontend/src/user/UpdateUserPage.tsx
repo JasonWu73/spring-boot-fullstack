@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
 import { z } from 'zod'
 
+import { requestApi } from '@/shared/apis/backend/helpers'
 import { Alert, AlertDescription, AlertTitle } from '@/shared/components/ui/Alert'
 import { Button } from '@/shared/components/ui/Button'
 import {
@@ -26,7 +27,7 @@ import { useToast } from '@/shared/components/ui/use-toast'
 import { useApi } from '@/shared/hooks/use-api'
 import { useInitial } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
-import { ADMIN, ROOT, USER, requestApi } from '@/shared/signals/auth'
+import { ADMIN, ROOT, USER } from '@/shared/signals/auth'
 import type { User } from '@/user/UserListPage'
 
 const AUTHORITY_OPTIONS = [ADMIN, USER]

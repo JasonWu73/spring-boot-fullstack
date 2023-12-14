@@ -116,7 +116,7 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       retry: 0, // 默认当 API 响应错误时不重新请求
-      staleTime: 60 * 1000 // 默认 API 数据在 1 分钟后过期
+      staleTime: 5 * 1000 // 默认 API 数据在几毫秒后过期，这里为了便于测试设置为 5 秒
     }
   }
 })

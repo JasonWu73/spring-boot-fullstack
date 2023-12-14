@@ -4,6 +4,7 @@ import { useSearchParams } from 'react-router-dom'
 
 import { OperationLogSearch, QueryParams } from '@/operation-log/OperationLogSearch'
 import { OperationLogTable } from '@/operation-log/OperationLogTable'
+import { requestApi } from '@/shared/apis/backend/helpers'
 import type { PaginationData, PaginationParams } from '@/shared/apis/types'
 import {
   Card,
@@ -26,7 +27,6 @@ import {
 import { useApi } from '@/shared/hooks/use-api'
 import { useRefresh } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
-import { requestApi } from '@/shared/signals/auth'
 
 export type OperationLog = {
   id: number
