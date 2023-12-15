@@ -1,5 +1,3 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import React from 'react'
 import { Navigate, RouterProvider, createBrowserRouter } from 'react-router-dom'
 
@@ -110,16 +108,6 @@ const router = createBrowserRouter([
   }
 ])
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: 0, // 在 API 响应错误（非 2XX 响应状态码）时，即不重新再发起请求
-      networkMode: 'always', // 立即获取请求发送失败的提示，即忽略网络是否在线
-      staleTime: 5 * 1000 // 设置 API 响应结果在 5 秒后过期
-    }
-  }
-})
-
 // 创建组件外 Signal
 createThemeState('system', 'demo-ui-theme')
 createAuthState()
@@ -127,12 +115,10 @@ createPanelFoldState()
 
 export default function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <ReactQueryDevtools initialIsOpen={false} />
-
+    <>
       <RouterProvider router={router} />
 
       <Toaster />
-    </QueryClientProvider>
+    </>
   )
 }

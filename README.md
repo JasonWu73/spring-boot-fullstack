@@ -54,11 +54,6 @@ npx shadcn-ui@latest init
 # 安装信号库（更好的状态管理库）
 npm install @preact/signals-react
 npm install --save @types/use-sync-external-store
-
-# 安装 React Query
-npm install @tanstack/react-query
-npm install --save-dev @tanstack/eslint-plugin-query
-npm install @tanstack/react-query-devtools
 ```
 
 ## Tutorials
