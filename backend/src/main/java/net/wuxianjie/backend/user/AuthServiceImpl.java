@@ -49,7 +49,10 @@ public class AuthServiceImpl implements AuthService {
    */
   public static final String LOGGED_IN_KEY_PREFIX = "loggedIn:";
 
-  private static final int TOKEN_EXPIRES_IN_SECONDS = 1800;
+  /**
+   * 访问令牌的过期时间，单位为：秒。
+   */
+  private static final int TOKEN_EXPIRES_IN_SECONDS = 30 * 60;
 
   private final HttpServletRequest request;
   private final StringRedisTemplate stringRedisTemplate;
@@ -100,8 +103,8 @@ public class AuthServiceImpl implements AuthService {
 
     final String accessToken = StrUtils.generateUuid();
     final String refreshToken = StrUtils.generateUuid();
-
     final CachedAuth auth = getCachedAuth(user, accessToken, refreshToken);
+
     saveLoginCache(auth);
 
     return getAuthResult(accessToken, refreshToken, auth);

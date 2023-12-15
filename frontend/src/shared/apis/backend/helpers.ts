@@ -25,6 +25,11 @@ type ApiError = {
 }
 
 /**
+ * 后端对访问令牌的有效期，单位为：秒。
+ */
+const TOKEN_EXPIRES_IN_SECONDS = 30 * 60
+
+/**
  * 向后端服务发送 API 请求。
  * <p>
  * 使用此方法发送请求，会自动处理以下情况：
@@ -56,8 +61,8 @@ export async function requestApi<T>(request: ApiRequest) {
     return { status: response.status, error: '登录过期' }
   }
 
-  // 当访问令牌离过期时间小于 10 分钟时，刷新访问令牌
-  if (expiresAt - Date.now() < 10 * 60 * 1000) {
+  // 为了测试和发现问题，故意设置 60 秒后就刷新访问令牌
+  if (expiresAt - Date.now() < (TOKEN_EXPIRES_IN_SECONDS - 60) * 1000) {
     await refreshAuth()
   }
 
@@ -67,13 +72,18 @@ export async function requestApi<T>(request: ApiRequest) {
 // 上次刷新访问令牌的时间，用于避免因异步触发而导致可能的重复刷新问题
 let refreshedAt = 0
 
+/**
+ * 刷新访问令牌的间隔时间，单位为：秒。
+ */
+const REFRESH_INTERVAL_SECONDS = 30
+
 async function refreshAuth() {
   const auth = getAuth()
 
   if (!auth) return
 
-  // 1 分钟内不重复刷新
-  if (Date.now() - refreshedAt < 60 * 1000) return
+  // 在 `REFRESH_INTERVAL_SECONDS` 秒内，不重复刷新
+  if (Date.now() - refreshedAt < REFRESH_INTERVAL_SECONDS * 1000) return
 
   refreshedAt = Date.now()
 
