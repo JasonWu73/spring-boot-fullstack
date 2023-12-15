@@ -150,6 +150,7 @@ export default function UpdateUserPage() {
                 <label className="inline-block w-[80px]">用户名：</label>
                 <span>{user?.username}</span>
               </p>
+
               <p>
                 <label>账号状态：</label>
                 <span>
@@ -160,10 +161,12 @@ export default function UpdateUserPage() {
                   )}
                 </span>
               </p>
+
               <p>
                 <label>创建时间：</label>
                 <span>{user?.createdAt}</span>
               </p>
+
               <p>
                 <label>更新时间：</label>
                 <span>{user?.updatedAt}</span>
