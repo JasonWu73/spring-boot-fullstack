@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom'
 
+import reactLogo from '@/shared/assets/react.svg'
 import { buttonVariants } from '@/shared/components/ui/Button'
 import { cn } from '@/shared/utils/helpers'
-import reactLogo from '/public/react.svg'
 
 export function Logo() {
   return (
