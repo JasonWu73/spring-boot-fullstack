@@ -61,6 +61,19 @@ html.dark {
   @apply text-snow;
 }
 
+/* ----- 开始：选中文本时的背景色 ----- */
+::selection {
+  @apply bg-teal-500;
+  @apply text-teal-50;
+}
+
+/* 暗色主题 */
+html.dark ::selection {
+  @apply bg-teal-600;
+  @apply text-teal-100;
+}
+/* ----- 结束：选中文本时的背景色 ----- */
+
 /* ----- 开始：NProgress 样式 ----- */
 #nprogress .bar {
   background-color: var(--nprogress-color);
