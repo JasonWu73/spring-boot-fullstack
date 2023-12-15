@@ -73,7 +73,7 @@ export function FriendList() {
       )
     })
 
-    navigate(`/split-bill${window.location.search}`, {
+    navigate(`/split-bill${location.search}`, {
       replace: true,
       state: { noRefresh: true }
     })
@@ -102,7 +102,7 @@ export function FriendList() {
   function handleFocus() {
     setShowAddFriend(false)
 
-    navigate(`/split-bill${window.location.search}`, {
+    navigate(`/split-bill${location.search}`, {
       replace: true,
       state: { noRefresh: true }
     })

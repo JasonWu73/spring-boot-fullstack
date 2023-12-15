@@ -1,4 +1,4 @@
-import { Navigate, Outlet } from 'react-router-dom'
+import { Navigate, Outlet, useLocation } from 'react-router-dom'
 
 import {
   ADMIN,
@@ -15,11 +15,13 @@ type SecureRouteProps = {
 }
 
 export function SecureRoute({ authority }: SecureRouteProps) {
-  // 未登录，则跳转到登录页面
+  const location = useLocation()
   const auth = getAuth()
 
+  // 未登录，则跳转到登录页面
   if (!auth) {
-    return <Navigate to="/login" replace state={{ from: window.location.pathname }} />
+    // 记录当前页面的路径，以便登录后跳转到该页面
+    return <Navigate to="/login" replace state={{ from: location.pathname }} />
   }
 
   // 若用户已登录，但未拥有组件的访问权限，则跳转到 403 页面

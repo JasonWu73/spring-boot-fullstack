@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { ExclamationTriangleIcon } from '@radix-ui/react-icons'
 import React from 'react'
 import { useForm, type UseFormReturn } from 'react-hook-form'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { z } from 'zod'
 
 import { Button } from '@/shared/components/ui/Button'
@@ -118,6 +118,7 @@ export function SplitBill() {
   const friendId = Number(params.friendId)
 
   const navigate = useNavigate()
+  const location = useLocation()
 
   async function getFriend() {
     setLoadingFriend(true)
@@ -137,7 +138,7 @@ export function SplitBill() {
 
     setShowAddFriend(false)
 
-    navigate(`/split-bill${window.location.search}`, {
+    navigate(`/split-bill${location.search}`, {
       state: { noRefresh: true }
     })
   }

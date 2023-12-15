@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/components/ui/Avatar'
 import { Button } from '@/shared/components/ui/Button'
@@ -28,15 +28,15 @@ export function FriendItem({ friend, onDeleteFriend }: FriendItemProps) {
   const selected = friend.id === friendId
 
   const name = truncate(friend.name, 5)
-  const queryStr = window.location.search
 
+  const location = useLocation()
   const navigate = useNavigate()
   const loading = getLoadingFriend()
 
   function handleToggleSelect() {
     const url = selected
-      ? `/split-bill${queryStr}`
-      : `/split-bill/${friend.id}${queryStr}`
+      ? `/split-bill${location.search}`
+      : `/split-bill/${friend.id}${location.search}`
 
     navigate(url, {
       state: {
