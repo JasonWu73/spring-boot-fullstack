@@ -47,7 +47,7 @@ function NavItemList() {
 
       <NavItem link="/split-bill">分账 App</NavItem>
 
-      {hasUser() && <NavItem link="/fetch">useFetch</NavItem>}
+      {hasUser() && <NavItem link="/compound-component">复合组件</NavItem>}
     </>
   )
 }

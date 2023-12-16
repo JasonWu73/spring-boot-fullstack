@@ -65,7 +65,12 @@ npm install --save @types/use-sync-external-store
 
 - shadcn/ui
   - [Vite | shadcn/ui](https://ui.shadcn.com/docs/installation/vite)
+  - [Dark mode | vite | shadcn/ui](https://ui.shadcn.com/docs/dark-mode/vite)
 
 - Preact.js/signals
   - [React Signals | preactjs/signals | GitHub](https://github.com/preactjs/signals/blob/main/packages/react/README.md)
   - [Introducing Signals | Preact](https://preactjs.com/blog/introducing-signals/)
+
+## Tutorials
+
+- [The Ultimate React Course 2024: React, Redux & More | Udemy](https://www.udemy.com/course/the-ultimate-react-course/)

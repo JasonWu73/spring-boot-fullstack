@@ -24,6 +24,7 @@ const UserListPage = React.lazy(() => import('@/user/UserListPage'))
 const AddUserPage = React.lazy(() => import('@/user/AddUserPage'))
 const UpdateUserPage = React.lazy(() => import('@/user/UpdateUserPage'))
 const OperationLogListPage = React.lazy(() => import('@/operation-log/LogListPage'))
+const CounterPage = React.lazy(() => import('@/compound-component/CounterPage'))
 
 // 测试 React 懒加载非 `default` 导出的组件
 const SplitBill = React.lazy(() =>
@@ -59,7 +60,7 @@ const router = createBrowserRouter([
           },
           {
             element: <SecureRoute authority="user" />,
-            children: [{ path: '/fetch', element: <RandomProductPage /> }]
+            children: [{ path: '/compound-component', element: <CounterPage /> }]
           },
           {
             path: '/split-bill',
