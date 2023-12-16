@@ -144,8 +144,8 @@ public class AuthServiceImpl implements AuthService {
 
     final String newAccessToken = StrUtils.generateUuid();
     final String newRefreshToken = StrUtils.generateUuid();
-
     final CachedAuth newAuth = getCachedAuth(user, newAccessToken, newRefreshToken);
+
     saveLoginCache(newAuth);
 
     return getAuthResult(newAccessToken, newRefreshToken, newAuth);
