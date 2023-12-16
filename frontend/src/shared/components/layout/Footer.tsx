@@ -1,7 +1,7 @@
 import { ReloadIcon } from '@radix-ui/react-icons'
 import React from 'react'
 
-import { getVersion } from '@/shared/apis/backend/version'
+import { getVersionApi } from '@/shared/apis/backend/version'
 import { useFetch } from '@/shared/hooks/use-fetch'
 import { useInitial } from '@/shared/hooks/use-refresh'
 import { cn } from '@/shared/utils/helpers'
@@ -13,11 +13,11 @@ export function Footer({ className, ...props }: FooterProps) {
     loading,
     data: versionInfo,
     error,
-    fetchData: fetchVersion
-  } = useFetch(getVersion)
+    fetchData: getVersion
+  } = useFetch(getVersionApi)
 
   useInitial(() => {
-    fetchVersion(null).then()
+    getVersion(null).then()
   })
 
   const { developer, name, version, builtAt } = versionInfo ?? {}

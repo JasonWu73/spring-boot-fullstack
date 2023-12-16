@@ -2,7 +2,7 @@ import { ExclamationTriangleIcon, ReloadIcon, RocketIcon } from '@radix-ui/react
 import React from 'react'
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 
-import { getLocalFriends } from '@/shared/apis/local/friend'
+import { getFriendsApi } from '@/shared/apis/local/friend'
 import { Alert, AlertDescription, AlertTitle } from '@/shared/components/ui/Alert'
 import { Card } from '@/shared/components/ui/Card'
 import { Code } from '@/shared/components/ui/Code'
@@ -36,7 +36,7 @@ export function FriendList() {
       )
     : friends
 
-  const { loading, error, fetchData: getFriendsFromApi } = useFetch(getLocalFriends)
+  const { loading, error, fetchData: getFriendsLocalApi } = useFetch(getFriendsApi)
 
   const location = useLocation()
 
@@ -51,7 +51,7 @@ export function FriendList() {
 
     setShowAddFriend(false)
 
-    getFriendsFromApi(null).then(({ data }) => {
+    getFriendsLocalApi(null).then(({ data }) => {
       if (data) {
         setFriends(data)
       }

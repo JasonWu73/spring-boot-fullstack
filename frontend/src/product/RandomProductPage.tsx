@@ -1,6 +1,6 @@
 import { useSignal } from '@preact/signals-react'
 
-import { getProduct } from '@/shared/apis/dummyjson/product'
+import { getProductApi } from '@/shared/apis/dummyjson/product'
 import LoadingButton from '@/shared/components/ui/LoadingButton'
 import { useFetch } from '@/shared/hooks/use-fetch'
 import { useRefresh } from '@/shared/hooks/use-refresh'
@@ -21,9 +21,9 @@ export default function RandomProductPage() {
     loading,
     data: product,
     error,
-    fetchData: fetchProduct
+    fetchData: getProduct
   } = useFetch(async (productId: number) => {
-    const response = await getProduct(productId)
+    const response = await getProductApi(productId)
 
     if (response.data) {
       count.value++
@@ -35,7 +35,7 @@ export default function RandomProductPage() {
   function getRandomProduct() {
     const randomId = Math.floor(Math.random() * 110)
 
-    return fetchProduct(randomId)
+    return getProduct(randomId)
   }
 
   return (

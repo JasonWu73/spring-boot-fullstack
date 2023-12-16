@@ -6,6 +6,6 @@ import type { Friend } from '@/shared/signals/split-bill'
  *
  * @returns Promise API 响应结果
  */
-export async function getLocalFriends() {
+export async function getFriendsApi() {
   return await requestLocalApi<Friend[]>({ url: '/data/friends.json' })
 }

@@ -23,7 +23,7 @@ export type Log = {
  * @param params 分页查询条件
  * @returns Promise 响应结果
  */
-export async function getLogs(params: GetLogsParams) {
+export async function getLogsApi(params: GetLogsParams) {
   return await requestApi<PaginationData<Log>>({
     url: '/api/v1/operation-logs',
     urlParams: params

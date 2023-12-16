@@ -3,9 +3,9 @@ import type { SortingState } from '@tanstack/react-table'
 import { useSearchParams } from 'react-router-dom'
 
 import {
-  deleteUser,
-  getUsers,
-  updateUserStatus,
+  deleteUserApi,
+  getUsersApi,
+  updateUserStatusApi,
   type AccountStatus,
   type GetUsersParams,
   type User
@@ -68,20 +68,21 @@ export default function UserListPage() {
     loading: loadingUsers,
     data: users,
     error: errorUsers,
-    fetchData: fetchUsers,
+    fetchData: getUsers,
     invalidateFetch: invalidateUsers
-  } = useFetch(getUsers)
+  } = useFetch(getUsersApi)
 
   useRefresh(() => {
-    fetchUsers(params).then()
+    getUsers(params).then()
   })
 
-  const { loading: loadingChangeStatus, fetchData: changeUserStatus } = useFetch(
-    async ({ userId, status }: UpdateUserStatus) => await updateUserStatus(userId, status)
+  const { loading: loadingUpdateUserStatus, fetchData: updateUserStatus } = useFetch(
+    async ({ userId, status }: UpdateUserStatus) =>
+      await updateUserStatusApi(userId, status)
   )
 
-  const { loading: loadingRemoveUser, fetchData: removeUser } = useFetch(
-    async (userId: number) => await deleteUser(userId)
+  const { loading: loadingDeleteUser, fetchData: deleteUser } = useFetch(
+    async (userId: number) => await deleteUserApi(userId)
   )
 
   const indexes = useSignal<number[]>([]) // 选中的行的索引
@@ -156,7 +157,7 @@ export default function UserListPage() {
   async function handleChangeStatus(user: User, enabled: boolean) {
     const newStatus = enabled ? 0 : 1
 
-    const { status, error } = await changeUserStatus({
+    const { status, error } = await updateUserStatus({
       userId: user.id,
       status: newStatus
     })
@@ -185,7 +186,7 @@ export default function UserListPage() {
 
   async function handleDeleteUser(user: User) {
     const { id, username } = user
-    const { status, error } = await removeUser(id)
+    const { status, error } = await deleteUser(id)
 
     if (status !== 204) {
       toast({
@@ -237,7 +238,7 @@ export default function UserListPage() {
             pageSize,
             total: users?.total || 0
           }}
-          submitting={loadingChangeStatus || loadingRemoveUser}
+          submitting={loadingUpdateUserStatus || loadingDeleteUser}
           onPaginate={handlePaginate}
           sortColumn={{
             id:

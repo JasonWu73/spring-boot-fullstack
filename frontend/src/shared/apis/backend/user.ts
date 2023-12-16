@@ -27,7 +27,7 @@ export type User = {
  * @param params 分页查询条件
  * @returns Promise 响应结果
  */
-export async function getUsers(params: GetUsersParams) {
+export async function getUsersApi(params: GetUsersParams) {
   return await requestApi<PaginationData<User>>({
     url: '/api/v1/users',
     urlParams: params
@@ -48,7 +48,7 @@ type AddUserParams = {
  * @param userId 需要获取详情的用户 ID
  * @returns Promise 响应结果
  */
-export async function getUser(userId: number) {
+export async function getUserApi(userId: number) {
   return await requestApi<User>({ url: `/api/v1/users/${userId}` })
 }
 
@@ -61,7 +61,7 @@ export async function getUser(userId: number) {
  * @param authorities 权限
  * @param remark 备注
  */
-export async function addUser({
+export async function addUserApi({
   username,
   nickname,
   password,
@@ -96,7 +96,7 @@ type UpdateUserParams = {
  * @param authorities 权限
  * @param remark 备注
  */
-export async function updateUser({
+export async function updateUserApi({
   userId,
   nickname,
   authorities,
@@ -118,7 +118,7 @@ export type AccountStatus = 0 | 1
  * @param status 新的账号状态
  * @returns Promise 响应结果
  */
-export async function updateUserStatus(userId: number, status: AccountStatus) {
+export async function updateUserStatusApi(userId: number, status: AccountStatus) {
   return await requestApi<void>({
     url: `/api/v1/users/${userId}/status`,
     method: 'PUT',
@@ -132,7 +132,7 @@ export async function updateUserStatus(userId: number, status: AccountStatus) {
  * @param userId 需要删除的用户 ID
  * @returns Promise 响应结果
  */
-export async function deleteUser(userId: number) {
+export async function deleteUserApi(userId: number) {
   return await requestApi<void>({
     url: `/api/v1/users/${userId}`,
     method: 'DELETE'
@@ -144,7 +144,7 @@ export async function deleteUser(userId: number) {
  *
  * @returns Promise 响应结果
  */
-export async function getMe() {
+export async function getMeApi() {
   return await requestApi<User>({
     url: '/api/v1/users/me'
   })
@@ -163,7 +163,7 @@ type UpdateMe = {
  * @param oldPassword 旧密码
  * @param newPassword 新密码
  */
-export async function updateMe({ nickname, oldPassword, newPassword }: UpdateMe) {
+export async function updateMeApi({ nickname, oldPassword, newPassword }: UpdateMe) {
   return await requestApi<void>({
     url: '/api/v1/users/me',
     method: 'PUT',

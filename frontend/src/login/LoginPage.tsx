@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form'
 import { Navigate, useLocation } from 'react-router-dom'
 import { z } from 'zod'
 
-import { login } from '@/shared/apis/backend/auth'
+import { loginApi } from '@/shared/apis/backend/auth'
 import {
   Card,
   CardContent,
@@ -42,8 +42,8 @@ export default function LoginPage() {
     defaultValues
   })
 
-  const { loading, fetchData: loginSystem } = useFetch(
-    async ({ username, password }: FormSchema) => await login(username, password)
+  const { loading, fetchData: login } = useFetch(
+    async ({ username, password }: FormSchema) => await loginApi(username, password)
   )
 
   const { toast } = useToast()
@@ -55,7 +55,7 @@ export default function LoginPage() {
   if (getAuth()) return <Navigate to={targetUrl} replace />
 
   async function onSubmit(values: FormSchema) {
-    const { data, error } = await loginSystem(values)
+    const { data, error } = await login(values)
 
     if (error) {
       toast({

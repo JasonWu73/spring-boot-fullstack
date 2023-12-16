@@ -12,7 +12,7 @@ type Version = {
  *
  * @returns Promise 响应结果
  */
-export async function getVersion() {
+export async function getVersionApi() {
   return await requestApi<Version>({
     url: '/api/v1/public/version'
   })

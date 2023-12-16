@@ -4,7 +4,7 @@ import { useSearchParams } from 'react-router-dom'
 
 import { LogSearch, type QueryParams } from '@/operation-log/LogSearch'
 import { LogTable } from '@/operation-log/LogTable'
-import { getLogs, type GetLogsParams } from '@/shared/apis/backend/operation-log'
+import { getLogsApi, type GetLogsParams } from '@/shared/apis/backend/operation-log'
 import {
   Card,
   CardContent,
@@ -57,11 +57,11 @@ export default function LogListPage() {
     loading: loadingLogs,
     data: logs,
     error: errorLogs,
-    fetchData: fetchLogs
-  } = useFetch(getLogs)
+    fetchData: getLogs
+  } = useFetch(getLogsApi)
 
   useRefresh(() => {
-    fetchLogs(params).then()
+    getLogs(params).then()
   })
 
   function handlePaginate(paging: Pagination) {

@@ -20,7 +20,7 @@ export type Product = {
  * @param productId 要获取的商品 ID
  * @returns Promise 响应结果
  */
-export async function getProduct(productId: number) {
+export async function getProductApi(productId: number) {
   return await requestDummyJsonApi<Product>({
     url: `/products/${productId}`
   })

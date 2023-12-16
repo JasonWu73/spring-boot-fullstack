@@ -20,7 +20,7 @@ export type AuthResponse = {
  * @param password 密码
  * @returns Promise 响应结果
  */
-export async function login(username: string, password: string) {
+export async function loginApi(username: string, password: string) {
   return await requestApi<AuthResponse>({
     url: '/api/v1/auth/login',
     method: 'POST',
@@ -36,7 +36,7 @@ export async function login(username: string, password: string) {
  *
  * @returns Promise 响应结果
  */
-export async function logout() {
+export async function logoutApi() {
   return await requestApi<void>({
     url: '/api/v1/auth/logout',
     method: 'DELETE'

@@ -3,7 +3,7 @@ import { ExclamationTriangleIcon } from '@radix-ui/react-icons'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
-import { getMe, updateMe, type User } from '@/shared/apis/backend/user'
+import { getMeApi, updateMeApi, type User } from '@/shared/apis/backend/user'
 import {
   Accordion,
   AccordionContent,
@@ -65,17 +65,17 @@ export default function UpdateUserPage() {
     defaultValues
   })
 
-  const { loading, data: user, error, fetchData: fetchUser } = useFetch(getMe)
+  const { loading, data: user, error, fetchData: getUser } = useFetch(getMeApi)
 
   useInitial(() => {
-    fetchUser(null).then(({ data }) => {
+    getUser(null).then(({ data }) => {
       if (data) {
         initializeUserData(data)
       }
     })
   })
 
-  const { loading: submitting, fetchData: updateUser } = useFetch(updateMe)
+  const { loading: submitting, fetchData: updateMe } = useFetch(updateMeApi)
 
   const { toast } = useToast()
 
@@ -91,7 +91,7 @@ export default function UpdateUserPage() {
   async function onSubmit(values: FormSchema) {
     if (!user) return
 
-    const { status, error } = await updateUser({
+    const { status, error } = await updateMe({
       nickname: values.nickname,
       oldPassword: values.oldPassword,
       newPassword: values.newPassword

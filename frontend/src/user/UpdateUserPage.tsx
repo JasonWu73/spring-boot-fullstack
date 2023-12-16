@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
 import { z } from 'zod'
 
-import { getUser, updateUser, type User } from '@/shared/apis/backend/user'
+import { getUserApi, updateUserApi, type User } from '@/shared/apis/backend/user'
 import { Alert, AlertDescription, AlertTitle } from '@/shared/components/ui/Alert'
 import { Button } from '@/shared/components/ui/Button'
 import {
@@ -53,20 +53,20 @@ export default function UpdateUserPage() {
     defaultValues
   })
 
-  const { loading, data: user, error, fetchData: fetchUser } = useFetch(getUser)
+  const { loading, data: user, error, fetchData: getUser } = useFetch(getUserApi)
 
   const params = useParams()
   const userId = Number(params.userId)
 
   useInitial(() => {
-    fetchUser(userId).then(({ data }) => {
+    getUser(userId).then(({ data }) => {
       if (data) {
         initializeUserData(data)
       }
     })
   })
 
-  const { loading: submitting, fetchData: updateUserInfo } = useFetch(updateUser)
+  const { loading: submitting, fetchData: updateUser } = useFetch(updateUserApi)
 
   const navigate = useNavigate()
   const { toast } = useToast()
@@ -92,7 +92,7 @@ export default function UpdateUserPage() {
   async function onSubmit(values: FormSchema) {
     if (!user) return
 
-    const { status, error } = await updateUserInfo({
+    const { status, error } = await updateUser({
       userId: user.id,
       nickname: values.nickname,
       authorities: values.authorities.map((authority) => authority.value),

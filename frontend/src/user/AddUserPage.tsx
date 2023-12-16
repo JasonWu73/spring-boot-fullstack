@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 
-import { addUser } from '@/shared/apis/backend/user'
+import { addUserApi } from '@/shared/apis/backend/user'
 import { Button } from '@/shared/components/ui/Button'
 import {
   Card,
@@ -60,13 +60,13 @@ export default function AddUserPage() {
     defaultValues
   })
 
-  const { loading: submitting, fetchData: saveUser } = useFetch(addUser)
+  const { loading: submitting, fetchData: addUser } = useFetch(addUserApi)
 
   const { toast } = useToast()
   const navigate = useNavigate()
 
   async function onSubmit(values: FormSchema) {
-    const { status, error } = await saveUser({
+    const { status, error } = await addUser({
       username: values.username,
       nickname: values.nickname,
       password: values.password,
