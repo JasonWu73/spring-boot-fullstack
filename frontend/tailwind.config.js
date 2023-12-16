@@ -3,7 +3,11 @@ import animatePlugin from 'tailwindcss-animate'
 /** @type {import('tailwindcss').Config} */
 export default {
   darkMode: ['class'], // 启用暗色模式
-  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+  content: {
+    /* 使用相对于 `tailwind.config.js`，而非相对于当前所在目录的相对路径 */
+    relative: true,
+    files: ['./index.html', './src/**/*.{js,ts,jsx,tsx}']
+  },
   theme: {
     container: {
       center: true,

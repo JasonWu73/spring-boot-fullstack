@@ -29,7 +29,7 @@ npm install --save-dev --save-exact prettier
 npm install --save-dev eslint-config-prettier
 
 # 安装 `prettier-plugin-organize-imports`，自动排序 `import` 语句
-# 可通过空行分隔不同类型的 `import` 语句，比如库、非库
+# 可通过空行分隔不同类型的 `import` 语句，比如：第三方库、内部库
 npm install --save-dev prettier-plugin-organize-imports
 
 # 安装 Tailwind CSS 的 Prettier 插件
@@ -56,6 +56,16 @@ npm install @preact/signals-react
 npm install --save @types/use-sync-external-store
 ```
 
-## Tutorials
+## Docs
 
-[The Ultimate React Course 2023: React, Redux & More](https://www.udemy.com/course/the-ultimate-react-course/)
+- Tailwind CSS
+  - [Install Tailwind CSS with Vite | Tailwind CSS](https://tailwindcss.com/docs/guides/vite)
+  - [Configuration | Tailwind CSS](https://tailwindcss.com/docs/configuration)
+  - [Content | Tailwind CSS](https://tailwindcss.com/docs/content-configuration)
+
+- shadcn/ui
+  - [Vite | shadcn/ui](https://ui.shadcn.com/docs/installation/vite)
+
+- Preact.js/signals
+  - [React Signals | preactjs/signals | GitHub](https://github.com/preactjs/signals/blob/main/packages/react/README.md)
+  - [Introducing Signals | Preact](https://preactjs.com/blog/introducing-signals/)
