@@ -55,11 +55,19 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ----- 开始：系统主题 ----- */
+/* 亮色主题 */
+html {
+  @apply bg-gray-100;
+  @apply text-slate-950;
+}
+
 /* 暗色主题 */
 html.dark {
   @apply bg-night-2;
   @apply text-snow;
 }
+/* ----- 结束：系统主题 ----- */
 
 /* ----- 开始：选中文本时的背景色 ----- */
 ::selection {

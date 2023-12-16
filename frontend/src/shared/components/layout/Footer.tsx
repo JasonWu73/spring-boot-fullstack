@@ -24,7 +24,7 @@ export function Footer({ className, ...props }: FooterProps) {
 
   return (
     <footer
-      className={cn('bg-slate-100 dark:bg-night-3 dark:text-snow', className)}
+      className={cn('bg-gray-200/50 dark:bg-night-3 dark:text-snow', className)}
       {...props}
     >
       <div className="container mx-auto flex flex-col flex-wrap px-5 py-4">

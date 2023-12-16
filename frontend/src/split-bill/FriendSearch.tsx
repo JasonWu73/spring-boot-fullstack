@@ -50,7 +50,7 @@ export function FriendSearch({
         onFocus={onFocus}
         ref={input}
         placeholder="搜索好友..."
-        className="my-4 dark:border-amber-500"
+        className="my-4 bg-white dark:border-amber-500 dark:bg-transparent"
       />
     </>
   )
