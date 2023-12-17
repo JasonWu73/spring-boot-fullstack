@@ -14,7 +14,7 @@ export function Code({ children, className }: CodeProps) {
   return (
     <code
       className={cn(
-        'rounded bg-slate-100 px-1 py-0.5 font-mono text-sm text-red-500 dark:bg-night-3 dark:text-[#88C0D0]',
+        'rounded bg-slate-100 px-1 py-0.5 font-mono text-sm text-red-500 dark:bg-[#282828] dark:text-[#F18260]',
         className
       )}
     >
