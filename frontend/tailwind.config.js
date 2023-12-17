@@ -30,6 +30,9 @@ export default {
         },
         snow: {
           DEFAULT: 'rgb(var(--color-snow) / <alpha-value>)'
+        },
+        predawn: {
+          DEFAULT: 'rgb(var(--color-predawn) / <alpha-value>)'
         }
       },
       keyframes: {

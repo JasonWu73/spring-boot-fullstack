@@ -27,6 +27,10 @@
     /* For rgb(236 239 244 / <alpha-value>) */
     --color-snow: 236 239 244;
 
+    /* predawn */
+    /* For rgb(241 130 96 / <alpha-value>) */
+    --color-predawn: 241 130 96;
+
     /* sky-500 */
     --nprogress-color: #0ea5e9;
 
