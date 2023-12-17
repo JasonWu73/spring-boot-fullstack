@@ -39,9 +39,9 @@ export default function CounterPage() {
           <Counter.Label className="font-semibold">Counter 复合组件</Counter.Label>
 
           <div className="flex items-center justify-center gap-2">
-            <Counter.Decrease icon="◀️" />
-            <Counter.Count />
             <Counter.Increase icon="▶️" />
+            <Counter.Count />
+            <Counter.Decrease icon="◀️" />
           </div>
         </Counter>
 
