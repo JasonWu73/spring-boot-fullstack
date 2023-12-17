@@ -162,6 +162,7 @@ public class AuthServiceImpl implements AuthService {
   @Override
   public void logout() {
     final CachedAuth auth = AuthUtils.getCurrentUser().orElseThrow();
+
     logout(auth.username());
   }
 
