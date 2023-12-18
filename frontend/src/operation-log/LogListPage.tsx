@@ -1,8 +1,8 @@
 import type { SortingState } from '@tanstack/react-table'
-import { addDays, format, parse } from 'date-fns'
+import { addDays, format } from 'date-fns'
 import { useSearchParams } from 'react-router-dom'
 
-import { LogSearch, type QueryParams } from '@/operation-log/LogSearch'
+import { LogSearch } from '@/operation-log/LogSearch'
 import { LogTable } from '@/operation-log/LogTable'
 import { getLogsApi, type GetLogsParams } from '@/shared/apis/backend/operation-log'
 import {
@@ -85,26 +85,6 @@ export default function LogListPage() {
     setSearchParams(searchParams)
   }
 
-  function handleSearch(params: QueryParams) {
-    searchParams.delete(URL_QUERY_KEY_PAGE_NUM)
-    searchParams.delete(URL_QUERY_KEY_PAGE_SIZE)
-    searchParams.delete('startAt')
-    searchParams.delete('endAt')
-    searchParams.delete('clientIp')
-    searchParams.delete('username')
-    searchParams.delete('message')
-
-    const { startAt, endAt, clientIp, username, message } = params
-
-    if (startAt) searchParams.set('startAt', format(startAt, 'yyyy-MM-dd'))
-    if (endAt) searchParams.set('endAt', format(endAt, 'yyyy-MM-dd'))
-    if (clientIp) searchParams.set('clientIp', clientIp)
-    if (username) searchParams.set('username', username)
-    if (message) searchParams.set('message', message)
-
-    setSearchParams(searchParams, { replace: true })
-  }
-
   return (
     <Card className="mx-auto h-full w-full">
       <CardHeader>
@@ -113,17 +93,7 @@ export default function LogListPage() {
       </CardHeader>
 
       <CardContent>
-        <LogSearch
-          queryParams={{
-            startAt: parse(startAt, 'yyyy-MM-dd', new Date()),
-            endAt: parse(endAt, 'yyyy-MM-dd', new Date()),
-            clientIp,
-            username,
-            message
-          }}
-          loading={loadingLogs}
-          onSearch={handleSearch}
-        />
+        <LogSearch />
 
         <LogTable
           data={logs?.list || []}

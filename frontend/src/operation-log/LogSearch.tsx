@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { addDays } from 'date-fns'
+import { addDays, format, parse } from 'date-fns'
 import React from 'react'
 import { useForm, type UseFormSetValue } from 'react-hook-form'
 import { z } from 'zod'
@@ -7,7 +7,8 @@ import { z } from 'zod'
 import { Button } from '@/shared/components/ui/Button'
 import { FormCalendar, FormInput } from '@/shared/components/ui/CustomFormField'
 import { Form } from '@/shared/components/ui/Form'
-import LoadingButton from '@/shared/components/ui/LoadingButton'
+import { URL_QUERY_KEY_PAGE_NUM, URL_QUERY_KEY_PAGE_SIZE } from '@/shared/constants'
+import { useSearchParams } from 'react-router-dom'
 
 const formSchema = z.object({
   startAt: z
@@ -23,20 +24,6 @@ const formSchema = z.object({
 
 type FormSchema = z.infer<typeof formSchema>
 
-export type QueryParams = {
-  startAt: Date
-  endAt: Date
-  clientIp: string
-  username: string
-  message: string
-}
-
-type OperationLogSearchProps = {
-  queryParams: QueryParams
-  loading: boolean
-  onSearch: (params: QueryParams) => void
-}
-
 const defaultValues: FormSchema = {
   startAt: addDays(new Date(), -6),
   endAt: new Date(),
@@ -45,16 +32,34 @@ const defaultValues: FormSchema = {
   message: ''
 }
 
-export function LogSearch({ queryParams, loading, onSearch }: OperationLogSearchProps) {
+export function LogSearch() {
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues
   })
 
-  useQueryParams(queryParams, form.setValue)
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  useQueryParams(searchParams, form.setValue)
 
   function onSubmit(values: FormSchema) {
-    onSearch(values)
+    searchParams.delete(URL_QUERY_KEY_PAGE_NUM)
+    searchParams.delete(URL_QUERY_KEY_PAGE_SIZE)
+    searchParams.delete('startAt')
+    searchParams.delete('endAt')
+    searchParams.delete('clientIp')
+    searchParams.delete('username')
+    searchParams.delete('message')
+
+    const { startAt, endAt, clientIp, username, message } = values
+
+    if (startAt) searchParams.set('startAt', format(startAt, 'yyyy-MM-dd'))
+    if (endAt) searchParams.set('endAt', format(endAt, 'yyyy-MM-dd'))
+    if (clientIp) searchParams.set('clientIp', clientIp)
+    if (username) searchParams.set('username', username)
+    if (message) searchParams.set('message', message)
+
+    setSearchParams(searchParams, { replace: true })
   }
 
   function handleReset() {
@@ -118,17 +123,11 @@ export function LogSearch({ queryParams, loading, onSearch }: OperationLogSearch
           isError={form.getFieldState('message')?.invalid}
         />
 
-        <LoadingButton type="submit" loading={loading} className="self-end">
+        <Button type="submit" className="self-end">
           查询
-        </LoadingButton>
+        </Button>
 
-        <Button
-          type="reset"
-          variant="outline"
-          disabled={loading}
-          onClick={handleReset}
-          className="self-end"
-        >
+        <Button type="reset" variant="outline" onClick={handleReset} className="self-end">
           重置
         </Button>
       </form>
@@ -136,12 +135,27 @@ export function LogSearch({ queryParams, loading, onSearch }: OperationLogSearch
   )
 }
 
-function useQueryParams(queryParams: QueryParams, setValue: UseFormSetValue<FormSchema>) {
+function useQueryParams(
+  searchParams: URLSearchParams,
+  setValue: UseFormSetValue<FormSchema>
+) {
   React.useEffect(() => {
-    setValue('startAt', queryParams.startAt)
-    setValue('endAt', queryParams.endAt)
-    setValue('clientIp', queryParams.clientIp)
-    setValue('username', queryParams.username)
-    setValue('message', queryParams.message)
-  }, [queryParams, setValue])
+    const startAtStr = searchParams.get('startAt')
+    const startAt = startAtStr
+      ? parse(startAtStr, 'yyyy-MM-dd', new Date())
+      : addDays(new Date(), -6)
+
+    const endAtStr = searchParams.get('endAt')
+    const endAt = endAtStr ? parse(endAtStr, 'yyyy-MM-dd', new Date()) : new Date()
+
+    const clientIp = searchParams.get('clientIp') || ''
+    const username = searchParams.get('username') || ''
+    const message = searchParams.get('message') || ''
+
+    setValue('startAt', startAt)
+    setValue('endAt', endAt)
+    setValue('clientIp', clientIp)
+    setValue('username', username)
+    setValue('message', message)
+  }, [searchParams, setValue])
 }

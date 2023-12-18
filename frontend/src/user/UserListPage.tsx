@@ -33,7 +33,7 @@ import {
 import { useFetch } from '@/shared/hooks/use-fetch'
 import { useRefresh } from '@/shared/hooks/use-refresh'
 import { useTitle } from '@/shared/hooks/use-title'
-import { UserSearch, type QueryParams } from '@/user/UserSearch'
+import { UserSearch } from '@/user/UserSearch'
 import { UserTable } from '@/user/UserTable'
 
 type UpdateUserStatus = {
@@ -109,24 +109,6 @@ export default function UserListPage() {
     searchParams.set(URL_QUERY_KEY_SORT_ORDER, sortOrder)
 
     setSearchParams(searchParams)
-  }
-
-  function handleSearch(params: QueryParams) {
-    searchParams.delete(URL_QUERY_KEY_PAGE_NUM)
-    searchParams.delete(URL_QUERY_KEY_PAGE_SIZE)
-    searchParams.delete('username')
-    searchParams.delete('nickname')
-    searchParams.delete('status')
-    searchParams.delete('authority')
-
-    const { username, nickname, status, authority } = params
-
-    if (username) searchParams.set('username', username)
-    if (nickname) searchParams.set('nickname', nickname)
-    if (status) searchParams.set('status', status)
-    if (authority) searchParams.set('authority', authority)
-
-    setSearchParams(searchParams, { replace: true })
   }
 
   function handleShowSelection() {
@@ -218,16 +200,7 @@ export default function UserListPage() {
       </CardHeader>
 
       <CardContent>
-        <UserSearch
-          queryParams={{
-            username,
-            nickname,
-            status,
-            authority
-          }}
-          loading={loadingUsers}
-          onSearch={handleSearch}
-        />
+        <UserSearch />
 
         <UserTable
           data={users?.list || []}

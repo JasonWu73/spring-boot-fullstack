@@ -26,7 +26,7 @@ import { FriendSearch } from '@/split-bill/FriendSearch'
 export function FriendList() {
   useTitle('好友列表')
 
-  const [searchParams, setSearchParams] = useSearchParams()
+  const [searchParams] = useSearchParams()
   const nameQuery = searchParams.get(URL_QUERY_KEY_QUERY) || ''
 
   const friends = getFriends()
@@ -79,43 +79,9 @@ export function FriendList() {
     })
   }
 
-  function handleSearch(name: string) {
-    searchParams.delete(URL_QUERY_KEY_QUERY)
-
-    if (name) searchParams.set(URL_QUERY_KEY_QUERY, name)
-
-    setSearchParams(searchParams, {
-      replace: true,
-      state: { noRefresh: true }
-    })
-  }
-
-  function handleEscape() {
-    searchParams.delete(URL_QUERY_KEY_QUERY)
-
-    setSearchParams(searchParams, {
-      replace: true,
-      state: { noRefresh: true }
-    })
-  }
-
-  function handleFocus() {
-    setShowAddFriend(false)
-
-    navigate(`/split-bill${location.search}`, {
-      replace: true,
-      state: { noRefresh: true }
-    })
-  }
-
   return (
     <>
-      <FriendSearch
-        nameQuery={nameQuery}
-        onSearch={handleSearch}
-        onEscape={handleEscape}
-        onFocus={handleFocus}
-      />
+      <FriendSearch />
 
       <Card>
         <ScrollArea className="h-80">
