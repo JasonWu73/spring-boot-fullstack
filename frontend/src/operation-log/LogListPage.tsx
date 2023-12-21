@@ -1,4 +1,3 @@
-import type { SortingState } from '@tanstack/react-table'
 import { addDays, format } from 'date-fns'
 import { useSearchParams } from 'react-router-dom'
 
@@ -12,11 +11,7 @@ import {
   CardHeader,
   CardTitle
 } from '@/shared/components/ui/Card'
-import {
-  DEFAULT_PAGE_NUM,
-  DEFAULT_PAGE_SIZE,
-  type Pagination
-} from '@/shared/components/ui/DataTable'
+import { DEFAULT_PAGE_NUM, DEFAULT_PAGE_SIZE } from '@/shared/components/ui/DataTable'
 import {
   URL_QUERY_KEY_PAGE_NUM,
   URL_QUERY_KEY_PAGE_SIZE,
@@ -30,7 +25,7 @@ import { useTitle } from '@/shared/hooks/use-title'
 export default function LogListPage() {
   useTitle('操作日志')
 
-  const [searchParams, setSearchParams] = useSearchParams()
+  const [searchParams] = useSearchParams()
 
   const pageNum = Number(searchParams.get(URL_QUERY_KEY_PAGE_NUM)) || DEFAULT_PAGE_NUM
   const pageSize = Number(searchParams.get(URL_QUERY_KEY_PAGE_SIZE)) || DEFAULT_PAGE_SIZE
@@ -64,27 +59,6 @@ export default function LogListPage() {
     getLogs(params).then()
   })
 
-  function handlePaginate(paging: Pagination) {
-    searchParams.set(URL_QUERY_KEY_PAGE_NUM, String(paging.pageNum))
-    searchParams.set(URL_QUERY_KEY_PAGE_SIZE, String(paging.pageSize))
-
-    setSearchParams(searchParams, { replace: true })
-  }
-
-  const handleSorting = (sorting: SortingState) => {
-    searchParams.delete('requestedAt')
-
-    const sortColumn = sorting[0]?.id === '请求时间' ? 'requestedAt' : ''
-    const sortOrder = sorting[0]?.desc === true ? 'desc' : 'asc'
-
-    if (!sortColumn) return
-
-    searchParams.set(URL_QUERY_KEY_SORT_COLUMN, sortColumn)
-    searchParams.set(URL_QUERY_KEY_SORT_ORDER, sortOrder)
-
-    setSearchParams(searchParams)
-  }
-
   return (
     <Card className="mx-auto h-full w-full">
       <CardHeader>
@@ -104,12 +78,6 @@ export default function LogListPage() {
             pageSize,
             total: logs?.total || 0
           }}
-          onPaginate={handlePaginate}
-          sortColumn={{
-            id: '请求时间',
-            desc: searchParams.get(URL_QUERY_KEY_SORT_ORDER) !== 'asc'
-          }}
-          onSorting={handleSorting}
         />
       </CardContent>
     </Card>

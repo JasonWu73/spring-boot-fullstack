@@ -1,5 +1,4 @@
 import { useSignal } from '@preact/signals-react'
-import type { SortingState } from '@tanstack/react-table'
 import { useSearchParams } from 'react-router-dom'
 
 import {
@@ -18,11 +17,7 @@ import {
   CardTitle
 } from '@/shared/components/ui/Card'
 import { Code } from '@/shared/components/ui/Code'
-import {
-  DEFAULT_PAGE_NUM,
-  DEFAULT_PAGE_SIZE,
-  type Pagination
-} from '@/shared/components/ui/DataTable'
+import { DEFAULT_PAGE_NUM, DEFAULT_PAGE_SIZE } from '@/shared/components/ui/DataTable'
 import { useToast } from '@/shared/components/ui/use-toast'
 import {
   URL_QUERY_KEY_PAGE_NUM,
@@ -44,7 +39,7 @@ type UpdateUserStatus = {
 export default function UserListPage() {
   useTitle('用户管理')
 
-  const [searchParams, setSearchParams] = useSearchParams()
+  const [searchParams] = useSearchParams()
 
   const pageNum = Number(searchParams.get(URL_QUERY_KEY_PAGE_NUM)) || DEFAULT_PAGE_NUM
   const pageSize = Number(searchParams.get(URL_QUERY_KEY_PAGE_SIZE)) || DEFAULT_PAGE_SIZE
@@ -86,30 +81,7 @@ export default function UserListPage() {
   )
 
   const indexes = useSignal<number[]>([]) // 选中的行的索引
-
   const { toast } = useToast()
-
-  function handlePaginate(paging: Pagination) {
-    searchParams.set(URL_QUERY_KEY_PAGE_NUM, String(paging.pageNum))
-    searchParams.set(URL_QUERY_KEY_PAGE_SIZE, String(paging.pageSize))
-
-    setSearchParams(searchParams, { replace: true })
-  }
-
-  const handleSorting = (sorting: SortingState) => {
-    searchParams.delete('createdAt')
-    searchParams.delete('updatedAt')
-
-    const sortColumn = sorting[0]?.id === '更新时间' ? 'updatedAt' : 'createdAt'
-    const sortOrder = sorting[0]?.desc === true ? 'desc' : 'asc'
-
-    if (!sortColumn) return
-
-    searchParams.set(URL_QUERY_KEY_SORT_COLUMN, sortColumn)
-    searchParams.set(URL_QUERY_KEY_SORT_ORDER, sortOrder)
-
-    setSearchParams(searchParams)
-  }
 
   function handleShowSelection() {
     const ids = (users?.list || [])
@@ -212,15 +184,6 @@ export default function UserListPage() {
             total: users?.total || 0
           }}
           submitting={loadingUpdateUserStatus || loadingDeleteUser}
-          onPaginate={handlePaginate}
-          sortColumn={{
-            id:
-              searchParams.get(URL_QUERY_KEY_SORT_COLUMN) === 'updatedAt'
-                ? '更新时间'
-                : '创建时间',
-            desc: searchParams.get(URL_QUERY_KEY_SORT_ORDER) !== 'asc'
-          }}
-          onSorting={handleSorting}
           onSelect={(rowIndexes) => (indexes.value = rowIndexes)}
           onShowSelection={handleShowSelection}
           onChangeStatus={handleChangeStatus}

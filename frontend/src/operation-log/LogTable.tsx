@@ -1,17 +1,21 @@
-import type { ColumnDef, ColumnSort, SortingState } from '@tanstack/react-table'
+import type { ColumnDef, SortingState } from '@tanstack/react-table'
 
 import type { Log } from '@/shared/apis/backend/operation-log'
 import { DataTable, type Pagination } from '@/shared/components/ui/DataTable'
 import { DataTableColumnHeader } from '@/shared/components/ui/DataTableColumnHeader'
+import {
+  URL_QUERY_KEY_PAGE_NUM,
+  URL_QUERY_KEY_PAGE_SIZE,
+  URL_QUERY_KEY_SORT_COLUMN,
+  URL_QUERY_KEY_SORT_ORDER
+} from '@/shared/constants'
+import { useSearchParams } from 'react-router-dom'
 
 type OperationLogTableProps = {
   data: Log[]
   error?: string
   loading?: boolean
   pagination: Pagination
-  onPaginate: (paging: Pagination) => void
-  sortColumn: ColumnSort
-  onSorting: (sorting: SortingState) => void
 }
 
 const columns: ColumnDef<Log>[] = [
@@ -44,15 +48,30 @@ const columns: ColumnDef<Log>[] = [
   }
 ]
 
-export function LogTable({
-  data,
-  error,
-  loading,
-  pagination,
-  onPaginate,
-  sortColumn,
-  onSorting
-}: OperationLogTableProps) {
+export function LogTable({ data, error, loading, pagination }: OperationLogTableProps) {
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  function handlePaginate(paging: Pagination) {
+    searchParams.set(URL_QUERY_KEY_PAGE_NUM, String(paging.pageNum))
+    searchParams.set(URL_QUERY_KEY_PAGE_SIZE, String(paging.pageSize))
+
+    setSearchParams(searchParams, { replace: true })
+  }
+
+  const handleSorting = (sorting: SortingState) => {
+    searchParams.delete('requestedAt')
+
+    const sortColumn = sorting[0]?.id === '请求时间' ? 'requestedAt' : ''
+    const sortOrder = sorting[0]?.desc === true ? 'desc' : 'asc'
+
+    if (!sortColumn) return
+
+    searchParams.set(URL_QUERY_KEY_SORT_COLUMN, sortColumn)
+    searchParams.set(URL_QUERY_KEY_SORT_ORDER, sortOrder)
+
+    setSearchParams(searchParams)
+  }
+
   return (
     <DataTable
       columns={columns}
@@ -60,9 +79,12 @@ export function LogTable({
       error={error}
       loading={loading}
       pagination={pagination}
-      onPaginate={onPaginate}
-      sortColumn={sortColumn}
-      onSorting={onSorting}
+      onPaginate={handlePaginate}
+      sortColumn={{
+        id: '请求时间',
+        desc: searchParams.get(URL_QUERY_KEY_SORT_ORDER) !== 'asc'
+      }}
+      onSorting={handleSorting}
     />
   )
 }

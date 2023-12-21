@@ -1,6 +1,6 @@
 import { useSignal } from '@preact/signals-react'
-import type { ColumnSort, SortingState } from '@tanstack/react-table'
-import { Link } from 'react-router-dom'
+import type { SortingState } from '@tanstack/react-table'
+import { Link, useSearchParams } from 'react-router-dom'
 
 import type { User } from '@/shared/apis/backend/user'
 import type { PaginationData } from '@/shared/apis/types'
@@ -8,6 +8,12 @@ import { Button, buttonVariants } from '@/shared/components/ui/Button'
 import { Code } from '@/shared/components/ui/Code'
 import { ConfirmDialog } from '@/shared/components/ui/ConfirmDialog'
 import { DataTable, type Pagination } from '@/shared/components/ui/DataTable'
+import {
+  URL_QUERY_KEY_PAGE_NUM,
+  URL_QUERY_KEY_PAGE_SIZE,
+  URL_QUERY_KEY_SORT_COLUMN,
+  URL_QUERY_KEY_SORT_ORDER
+} from '@/shared/constants'
 import type { ApiResponse } from '@/shared/hooks/use-fetch'
 import { hasRoot } from '@/shared/signals/auth'
 import { cn } from '@/shared/utils/helpers'
@@ -20,9 +26,6 @@ type UserTableProps = {
   loading?: boolean
   pagination: Pagination
   submitting: boolean
-  onPaginate: (paging: Pagination) => void
-  sortColumn: ColumnSort
-  onSorting: (sorting: SortingState) => void
   onSelect: (rowIndexes: number[]) => void
   onShowSelection: () => void
   onChangeStatus: (user: User, enabled: boolean) => void
@@ -36,18 +39,38 @@ export function UserTable({
   loading,
   pagination,
   submitting,
-  onPaginate,
-  sortColumn,
-  onSorting,
   onSelect,
   onShowSelection,
   onChangeStatus,
   onDeleteUser,
   invalidateUsers
 }: UserTableProps) {
+  const [searchParams, setSearchParams] = useSearchParams()
   const openDeleteDialog = useSignal(false)
   const openResetPasswordDialog = useSignal(false)
   const currentUser = useSignal<User | null>(null)
+
+  function handlePaginate(paging: Pagination) {
+    searchParams.set(URL_QUERY_KEY_PAGE_NUM, String(paging.pageNum))
+    searchParams.set(URL_QUERY_KEY_PAGE_SIZE, String(paging.pageSize))
+
+    setSearchParams(searchParams, { replace: true })
+  }
+
+  const handleSorting = (sorting: SortingState) => {
+    searchParams.delete('createdAt')
+    searchParams.delete('updatedAt')
+
+    const sortColumn = sorting[0]?.id === '更新时间' ? 'updatedAt' : 'createdAt'
+    const sortOrder = sorting[0]?.desc === true ? 'desc' : 'asc'
+
+    if (!sortColumn) return
+
+    searchParams.set(URL_QUERY_KEY_SORT_COLUMN, sortColumn)
+    searchParams.set(URL_QUERY_KEY_SORT_ORDER, sortOrder)
+
+    setSearchParams(searchParams)
+  }
 
   function handleDeleteUser() {
     if (currentUser.value) {
@@ -69,9 +92,15 @@ export function UserTable({
         error={error}
         loading={loading}
         pagination={pagination}
-        onPaginate={onPaginate}
-        sortColumn={sortColumn}
-        onSorting={onSorting}
+        onPaginate={handlePaginate}
+        sortColumn={{
+          id:
+            searchParams.get(URL_QUERY_KEY_SORT_COLUMN) === 'updatedAt'
+              ? '更新时间'
+              : '创建时间',
+          desc: searchParams.get(URL_QUERY_KEY_SORT_ORDER) !== 'asc'
+        }}
+        onSorting={handleSorting}
         enableRowSelection
         onSelect={onSelect}
       >
