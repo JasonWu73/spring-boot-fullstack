@@ -48,11 +48,10 @@ public enum SortOrder {
   public static Optional<SortOrder> resolve(final String value) {
     return Optional
       .ofNullable(value)
-      .flatMap(val ->
-        Arrays
-          .stream(VALUES)
-          .filter(theEnum -> Objects.equals(theEnum.code, val))
-          .findFirst()
+      .flatMap(val -> Arrays
+        .stream(VALUES)
+        .filter(theEnum -> Objects.equals(theEnum.code, val))
+        .findFirst()
       );
   }
 }

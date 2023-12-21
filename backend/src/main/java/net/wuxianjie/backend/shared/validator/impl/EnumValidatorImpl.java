@@ -45,6 +45,7 @@ public class EnumValidatorImpl implements ConstraintValidator<EnumValidator, Obj
         values.add(method.invoke(theEnum));
       } catch (NoSuchMethodException e) {
         isPassed = true;
+
         log.warn(
           "忽略枚举值验证 [{} 不存在 {} 方法]",
           enumClass.getName(),
@@ -52,6 +53,7 @@ public class EnumValidatorImpl implements ConstraintValidator<EnumValidator, Obj
         );
       } catch (InvocationTargetException | IllegalAccessException e) {
         isPassed = true;
+
         log.warn(
           "忽略枚举值验证 [{}.{} 方法执行出错]",
           enumClass.getName(),

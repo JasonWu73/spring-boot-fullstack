@@ -231,9 +231,9 @@ public class AuthServiceImpl implements AuthService {
       user.getId(),
       user.getUsername(),
       user.getNickname(),
-      user.getAuthorities() == null
-        ? List.of()
-        : List.of(user.getAuthorities().split(",")),
+      user.getAuthorities() == null ?
+        List.of() :
+        List.of(user.getAuthorities().split(",")),
       accessToken,
       refreshToken
     );

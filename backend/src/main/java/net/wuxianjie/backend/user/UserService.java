@@ -153,6 +153,7 @@ public class UserService {
     }
 
     final User user = new User();
+
     user.setCreatedAt(LocalDateTime.now());
     user.setUpdatedAt(LocalDateTime.now());
     user.setRemark(param.getRemark());

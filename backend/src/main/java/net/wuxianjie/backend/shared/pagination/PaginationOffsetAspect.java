@@ -52,12 +52,11 @@ public class PaginationOffsetAspect {
   public void setPaginationOffsetParam(final JoinPoint joinPoint) {
     Optional
       .ofNullable(joinPoint.getArgs())
-      .flatMap(args ->
-        Arrays
-          .stream(args)
-          .filter(arg -> (arg instanceof PaginationParam))
-          .findFirst()
-          .map(arg -> (PaginationParam) arg)
+      .flatMap(args -> Arrays
+        .stream(args)
+        .filter(arg -> (arg instanceof PaginationParam))
+        .findFirst()
+        .map(arg -> (PaginationParam) arg)
       )
       .ifPresent(PaginationParam::setOffset);
   }
