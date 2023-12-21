@@ -75,9 +75,9 @@ public class UserInfo {
       username,
       nickname,
       status,
-      authorities == null ?
-        List.of() :
-        List.of(authorities.split(","))
+      authorities == null
+        ? List.of()
+        : List.of(authorities.split(","))
     );
   }
 }
