@@ -56,8 +56,8 @@ export default function CounterPage() {
           </Counter.Label>
 
           <div className="flex items-center justify-center gap-2">
-            <Counter.Increase icon="🔙" className="dark:bg-slate-50" />
-            <Counter.Decrease icon="🔜" className="dark:bg-slate-50" />
+            <Counter.Increase icon="🔜" className="dark:bg-slate-50" />
+            <Counter.Decrease icon="🔙" className="dark:bg-slate-50" />
           </div>
         </Counter>
       </CardContent>
