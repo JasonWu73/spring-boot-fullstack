@@ -43,6 +43,7 @@ public record ApiError(LocalDateTime timestamp, int status, String error, String
   private static String getRequestPath() {
     final ServletRequestAttributes requestAttributes =
       (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+
     return Objects.requireNonNull(requestAttributes).getRequest().getRequestURI();
   }
 }

@@ -142,8 +142,8 @@ public class GlobalExceptionHandler {
 
     Optional
       .ofNullable(e.getConstraintViolations())
-      .ifPresent(violations ->
-        violations.forEach(violation -> {
+      .ifPresent(violations -> violations
+        .forEach(violation -> {
           if (!stringBuilder.isEmpty()) {
             stringBuilder.append(ApiException.MESSAGE_SEPARATOR);
           }

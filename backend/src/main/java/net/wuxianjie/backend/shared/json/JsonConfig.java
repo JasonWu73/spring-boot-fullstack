@@ -34,8 +34,11 @@ public class JsonConfig {
    */
   @Bean
   public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {
-    final MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+    final MappingJackson2HttpMessageConverter converter =
+      new MappingJackson2HttpMessageConverter();
+
     converter.setObjectMapper(objectMapper());
+
     return converter;
   }
 
