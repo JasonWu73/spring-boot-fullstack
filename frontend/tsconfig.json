@@ -28,7 +28,7 @@
 
     "allowSyntheticDefaultImports": true, // 增加类型检查的兼容性
 
-    //"verbatimModuleSyntax": true // 强制类型必须使用 type 导入和导出
+    //"verbatimModuleSyntax": true // 强制类型必须使用 type 导入和导出，否则报错
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
