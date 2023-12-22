@@ -108,10 +108,10 @@ export function UpdateUser() {
       )
     })
 
-    backToUserListPage()
+    goBackToUserListPage()
   }
 
-  function backToUserListPage() {
+  function goBackToUserListPage() {
     return navigate('/users')
   }
 
@@ -190,7 +190,7 @@ export function UpdateUser() {
                 type="button"
                 variant="outline"
                 disabled={submitting}
-                onClick={backToUserListPage}
+                onClick={goBackToUserListPage}
               >
                 返回
               </Button>

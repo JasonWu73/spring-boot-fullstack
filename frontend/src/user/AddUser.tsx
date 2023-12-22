@@ -83,10 +83,10 @@ export function AddUser() {
       )
     })
 
-    backToUserListPage()
+    goBackToUserListPage()
   }
 
-  function backToUserListPage() {
+  function goBackToUserListPage() {
     return navigate('/users')
   }
 
@@ -157,7 +157,7 @@ export function AddUser() {
             type="button"
             variant="outline"
             disabled={submitting}
-            onClick={backToUserListPage}
+            onClick={goBackToUserListPage}
           >
             返回
           </Button>
