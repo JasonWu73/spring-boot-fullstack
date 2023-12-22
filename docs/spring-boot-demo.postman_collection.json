@@ -31,7 +31,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"username\": \"O+x9E+pD0RQmMWdy2YAn0vgRR5kUbbuI+McrAqqvWcuWnFEWnMLq1OGUV45UnfEkNAW/8kagCiuuJOI6PCp4RH/df25vZSkSYQZ8AfPAwTCjSCbSCLX4oM125mhPyHPq7jR6g1Yh37/itLekvzXFEES77Ti6OywLfKZsPX/U0ejw7JK4oQls7do3x0f4Vhdo3KiHLRK40JW/05AFer0XOOShRLFMliUmq4gYXhjsvi7gqxHkXsd/8aztZV1bjyFHel2CEuv6UZk1rMIltpatoiDHjp8K30ric/f1KuaYQM4Cj8V6cp7gVG/+tnch3WtUmB7050b7oelnmigNajhQsg==\", // 加密后的用户名（不区分大小写），必填\n  \"password\": \"XORWZyhDoj2mXs/jtYokXRR7HGVL/tviE0Klg9D99GrOHhdcIVfdLXq5MACRFc+nwsF6hKlbLb4usqJ4D1qdeooDE2j1O96PXhVNiZKzBd3+HQYQ8iwsUVq09ZC53RQX0WcDNi9w/SF/OggJd5bNdqMf1GXfDi8EOBlLySGSIXL+aQW7M2g0ATDsBoFDOMieSXmIYLRH51F+q1b167WzHRFxua1bEiC93S1UqLzTQ6nstTThzZAlCeoeUxmMkrRVEN2E5eqAvwgobQIKXqrA++WcJ0eM1fOr2dT8PAV2xjV0QqXMv9ktbQzc+1rC5kuzFdlVevQgQre8tl3eJ2Hgsw==\" // 加密后的密码，必填\n}",
+							"raw": "{\n  \"username\": \"ZRNE+4q5IFyPLycCpwvlUg8WvlcCjXStdHF7hnVkLqRwCPTMzoZ4g9L/glqv5EbXPn/Irix5mt/tTTubenAHXW1QwzKutBPYDylQmb6yonVyo3tm0EUnvj61czR0MCZF1st7aHuy8qAFVtf76blBjd6vqRY27572BUwlDn+boL4aStL0dopTPs9UJTcLNvCfKJmup7mKmKSHEEaRoY8XHdn+gufzSZwZmbBGCdjQAixmrgguF+s9FBzko0m+wlY+UQo28GdLoYzxVqNfS8KIdgwup/3rnIAPka7n2BFgLHJlnE4647GIBjUQZ2jk2otbrn6QEUX0wAcWCo5TwzXa+g==\", // 加密后的用户名（不区分大小写），必填\n  \"password\": \"BmoQzfEaVa1D0RgnRcBj17++JZAFqYKiCalbkaDlpkjehqANdU1MfUwZvLhoJMyaU9xZSfdGhaKt3VuD7tfXLUOsk+tvaRDqoaSgsqUjas3fhoQMcPFcGfqpNj9J8OTSeXeLpaw69R3dc1ZzYga6Xx9KhNX3BT7bhehYNkGvWginPUNDy6sBQm9r/GsLFMNq7MOjNYyJGBwRcowkoYp2hwBdd6hn21/g9XbPEPd57uRsHRidmCz2hdOiTb3WVnsoLIzYdoTEUJIOH9wuqUTnRLCMgCBg/hqKd3xGttZctblDUs4fM/2oATACdFArAxvITqPfK7iXF/SdgLqO40a55w==\" // 加密后的密码，必填\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -123,6 +123,43 @@
 								"v1",
 								"auth",
 								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "获取已登录用户名列表",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/auth/logged-in-users",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"logged-in-users"
 							]
 						}
 					},

@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -164,6 +165,23 @@ public class AuthServiceImpl implements AuthService {
     final CachedAuth auth = AuthUtils.getCurrentUser().orElseThrow();
 
     logout(auth.username());
+  }
+
+  /**
+   * 从 Redis 中获取已登录用户名列表。
+   *
+   * @return 已登录用户名列表
+   */
+  @Override
+  public List<String> getLoggedInUsers() {
+    final Set<String> keys = stringRedisTemplate.keys(LOGGED_IN_KEY_PREFIX + "*");
+
+    if (keys == null) return List.of();
+
+    return keys
+      .stream()
+      .map(key -> key.substring(LOGGED_IN_KEY_PREFIX.length()))
+      .toList();
   }
 
   /**

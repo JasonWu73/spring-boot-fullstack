@@ -8,6 +8,8 @@ import net.wuxianjie.backend.shared.operationlog.Operation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * 身份验证 API。
  */
@@ -50,5 +52,15 @@ public class AuthController {
   public ResponseEntity<Void> logout() {
     authService.logout();
     return ResponseEntity.noContent().build();
+  }
+
+  /**
+   * 获取已登录用户名列表。
+   *
+   * @return 已登录用户名列表
+   */
+  @GetMapping("/logged-in-users")
+  public List<String> getLoggedInUsers() {
+    return authService.getLoggedInUsers();
   }
 }

@@ -3,6 +3,8 @@ package net.wuxianjie.backend.shared.auth;
 import net.wuxianjie.backend.shared.auth.dto.AuthResult;
 import net.wuxianjie.backend.shared.auth.dto.LoginParam;
 
+import java.util.List;
+
 /**
  * 身份验证业务接口。
  */
@@ -28,4 +30,11 @@ public interface AuthService {
    * 退出登录。
    */
   void logout();
+
+  /**
+   * 获取已登录用户名列表。
+   *
+   * @return 已登录用户名列表
+   */
+  List<String> getLoggedInUsers();
 }
