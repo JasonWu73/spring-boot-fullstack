@@ -11,7 +11,7 @@ import { useToast } from '@/shared/components/ui/use-toast'
 import { useFetch } from '@/shared/hooks/use-fetch'
 import { getAuth, setAuth } from '@/shared/signals/auth'
 
-const DEFAULT_REDIRECT_URL = '/admin'
+const DEFAULT_REDIRECT_URL = '/'
 
 const formSchema = z.object({
   username: z.string().min(1, '必须输入用户名'),

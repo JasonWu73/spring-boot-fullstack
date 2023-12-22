@@ -9,6 +9,8 @@ import {
   CardTitle
 } from '@/shared/components/ui/Card'
 import { useTitle } from '@/shared/hooks/use-title'
+import { hasAdmin } from '@/shared/signals/auth'
+import { Navigate } from 'react-router-dom'
 
 /**
  * 1. 登录次数最多的前三个用户，饼图（占总登录数），点击饼图的某一块，跳转到用户详情页
@@ -17,6 +19,9 @@ import { useTitle } from '@/shared/hooks/use-title'
  */
 export default function DashboardPage() {
   useTitle('仪表盘')
+
+  // 该页面只显示给管理员用户查看
+  if (!hasAdmin()) return <Navigate to="/split-bill" replace />
 
   return (
     <Card className="mx-auto mt-8 max-w-7xl">

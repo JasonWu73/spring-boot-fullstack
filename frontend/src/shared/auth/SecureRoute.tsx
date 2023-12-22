@@ -1,5 +1,6 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
 
+import ForbiddenPage from '@/shared/components/ui/ForbiddenPage'
 import {
   ADMIN,
   getAuth,
@@ -30,7 +31,7 @@ export function SecureRoute({ authority }: SecureRouteProps) {
     (authority === ADMIN.value && !hasAdmin()) ||
     (authority === USER.value && !hasUser())
   ) {
-    return <Navigate to="/403" replace />
+    return <ForbiddenPage />
   }
 
   // 若用户已登录，且拥有组件的访问权限，则渲染子组件
