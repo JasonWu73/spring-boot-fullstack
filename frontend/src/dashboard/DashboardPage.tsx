@@ -1,12 +1,43 @@
+import { LoggedInUsers } from '@/dashboard/LoggedInUsers'
+import { LoginHistoryChart } from '@/dashboard/LoginHistoryChart'
+import { LoginsTopThree } from '@/dashboard/LoginsTopThree'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '@/shared/components/ui/Card'
+import { useTitle } from '@/shared/hooks/use-title'
+
 /**
  * 1. 登录次数最多的前三个用户，饼图（占总登录数），点击饼图的某一块，跳转到用户详情页
  * 2. SSE 实时显示当前在线用户，滚动列表
  * 3. 最近七天的登录次数，折线图
  */
 export default function DashboardPage() {
+  useTitle('仪表盘')
+
   return (
-    <div>
-      <h1>Dashboard</h1>
-    </div>
+    <Card className="mx-auto mt-8 max-w-7xl">
+      <CardHeader className="text-center">
+        <CardTitle>仪表盘</CardTitle>
+        <CardDescription>
+          通常用于展示用户关心的重要指标、图表、图形和其他信息，以便用户可以一目了然地监视和了解系统的整体状况
+        </CardDescription>
+      </CardHeader>
+
+      <CardContent>
+        <div className="flex flex-col items-center justify-center gap-4 md:flex-row md:justify-around">
+          <LoggedInUsers />
+
+          <LoginsTopThree />
+        </div>
+
+        <div className="mt-4">
+          <LoginHistoryChart />
+        </div>
+      </CardContent>
+    </Card>
   )
 }
