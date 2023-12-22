@@ -15,6 +15,8 @@ import {
   SelectValue
 } from '@/shared/components/ui/Select'
 
+const PAGE_SIZE_OPTIONS = [10, 20, 30, 40, 50]
+
 type DataTablePaginationProps<TData> = {
   total: number
   table: Table<TData>
@@ -26,6 +28,21 @@ function DataTablePagination<TData>({
   table,
   needsSelection = false
 }: DataTablePaginationProps<TData>) {
+  function getPageSizeSelectItems() {
+    const pageSizeOptions = [...PAGE_SIZE_OPTIONS]
+    const currentPageSize = table.getState().pagination.pageSize
+
+    if (!PAGE_SIZE_OPTIONS.includes(currentPageSize)) {
+      pageSizeOptions.unshift(currentPageSize)
+    }
+
+    return pageSizeOptions.map((predefinedPageSize) => (
+      <SelectItem key={predefinedPageSize} value={`${predefinedPageSize}`}>
+        {predefinedPageSize}
+      </SelectItem>
+    ))
+  }
+
   return (
     <div className="mt-4 flex items-center justify-between px-2">
       <div className="hidden flex-1 text-sm lg:flex">
@@ -49,13 +66,7 @@ function DataTablePagination<TData>({
             <SelectTrigger className="h-8 w-[70px]">
               <SelectValue placeholder={table.getState().pagination.pageSize} />
             </SelectTrigger>
-            <SelectContent side="top">
-              {[10, 20, 30, 40, 50].map((pageSize) => (
-                <SelectItem key={pageSize} value={`${pageSize}`}>
-                  {pageSize}
-                </SelectItem>
-              ))}
-            </SelectContent>
+            <SelectContent side="top">{getPageSizeSelectItems()}</SelectContent>
           </Select>
         </div>
 
