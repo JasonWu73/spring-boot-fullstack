@@ -34,9 +34,9 @@ export default function DashboardPage() {
 
       <CardContent>
         <div className="flex flex-col items-center justify-center gap-4 md:flex-row md:justify-around">
-          <LoggedInUsers />
-
           <LoginsTopThree />
+
+          <LoggedInUsers />
         </div>
 
         <div className="mt-4">

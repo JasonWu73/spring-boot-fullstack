@@ -1,5 +1,4 @@
 import { ExclamationTriangleIcon, ReloadIcon, RocketIcon } from '@radix-ui/react-icons'
-import React from 'react'
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 
 import { getFriendsApi } from '@/shared/apis/local/friend'
@@ -7,7 +6,6 @@ import { Alert, AlertDescription, AlertTitle } from '@/shared/components/ui/Aler
 import { Card } from '@/shared/components/ui/Card'
 import { Code } from '@/shared/components/ui/Code'
 import { ScrollArea } from '@/shared/components/ui/ScrollArea'
-import { Separator } from '@/shared/components/ui/Separator'
 import { useToast } from '@/shared/components/ui/use-toast'
 import { URL_QUERY_KEY_QUERY } from '@/shared/constants'
 import { useFetch } from '@/shared/hooks/use-fetch'
@@ -90,7 +88,7 @@ export function FriendList() {
               <Alert>
                 <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
                 <AlertTitle>加载中...</AlertTitle>
-                <AlertDescription>好友列表加载中</AlertDescription>
+                <AlertDescription>数据加载中</AlertDescription>
               </Alert>
             )}
 
@@ -111,13 +109,13 @@ export function FriendList() {
             )}
 
             {!loading && !error && filteredFriends.length > 0 && (
-              <ul>
-                {filteredFriends.map((item, index, array) => (
-                  <React.Fragment key={item.id}>
-                    <FriendItem friend={item} onDeleteFriend={handleDeleteFriend} />
-
-                    {index < array.length - 1 && <Separator className="my-2" />}
-                  </React.Fragment>
+              <ul className="divide-y divide-solid divide-slate-200 dark:divide-slate-700">
+                {filteredFriends.map((friend) => (
+                  <FriendItem
+                    key={friend.id}
+                    friend={friend}
+                    onDeleteFriend={handleDeleteFriend}
+                  />
                 ))}
               </ul>
             )}

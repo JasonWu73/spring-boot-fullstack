@@ -42,3 +42,9 @@ export async function logoutApi() {
     method: 'DELETE'
   })
 }
+
+export async function getLoggedInUsersApi() {
+  return await requestApi<string[]>({
+    url: '/api/v1/auth/logged-in-users'
+  })
+}
