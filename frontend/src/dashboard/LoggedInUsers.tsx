@@ -22,6 +22,7 @@ export function LoggedInUsers() {
     <ScrollArea className="h-72 rounded-md border">
       <div className="space-y-4 p-4">
         <h4 className="mb-4 text-sm font-medium leading-none">当前已登录的用户</h4>
+
         {loading && (
           <Alert>
             <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
@@ -41,7 +42,9 @@ export function LoggedInUsers() {
         {!loading && !error && usernames && (
           <ul className="divide-y divide-solid divide-slate-200 dark:divide-slate-700">
             {usernames.map((username) => (
-              <li key={username}>{username}</li>
+              <li key={username} className="p-2">
+                {username}
+              </li>
             ))}
           </ul>
         )}
