@@ -57,6 +57,6 @@ export async function getLoginsTopApi(num: number) {
  */
 export async function getLoginsHistoryApi(days: number) {
   return await requestApi<ChartData>({
-    url: `/api/v1/operation-logs/logins-top/${days}`
+    url: `/api/v1/operation-logs/logins-history/${days}`
   })
 }

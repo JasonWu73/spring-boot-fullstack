@@ -35,7 +35,7 @@ public class VersionController {
    * <p>
    * 每次在生产环境中发布新包时都要更新版本号及构建时间。
    */
-  private static final LocalDateTime BUILT_AT = LocalDateTime.of(2023, 12, 2, 15, 14, 32);
+  private static final LocalDateTime BUILT_AT = LocalDateTime.of(2023, 12, 24, 20, 49, 46);
 
   /**
    * 获取项目版本号。
