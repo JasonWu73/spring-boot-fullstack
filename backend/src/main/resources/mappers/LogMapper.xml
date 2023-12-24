@@ -44,7 +44,7 @@
 
   <select
     id="selectLoginsLimit"
-    resultType="net.wuxianjie.backend.shared.operationlog.dto.PieChartData"
+    resultType="net.wuxianjie.backend.shared.operationlog.dto.ChartData"
   >
     SELECT username AS name,
            SUM(IF(message = '登录', 1, 0)) AS value
@@ -52,6 +52,18 @@
     GROUP BY username
     ORDER BY value DESC
     LIMIT #{limit}
+  </select>
+
+  <select
+    id="selectLoginsHistory"
+    resultType="net.wuxianjie.backend.shared.operationlog.dto.ChartData"
+  >
+    SELECT DATE_FORMAT(requested_at, '%Y-%m-%d') AS name,
+           SUM(IF(message = '登录', 1, 0)) AS value
+    FROM operation_log
+    WHERE requested_at &gt;= DATE_SUB(CURDATE(), INTERVAL #{days} DAY)
+    GROUP BY name
+    ORDER BY name
   </select>
 
   <insert id="insert">

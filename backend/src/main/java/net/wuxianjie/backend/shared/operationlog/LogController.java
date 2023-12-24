@@ -4,7 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import net.wuxianjie.backend.shared.auth.annotation.Admin;
 import net.wuxianjie.backend.shared.operationlog.dto.GetLogParam;
-import net.wuxianjie.backend.shared.operationlog.dto.PieChartData;
+import net.wuxianjie.backend.shared.operationlog.dto.ChartData;
 import net.wuxianjie.backend.shared.pagination.PaginationParam;
 import net.wuxianjie.backend.shared.pagination.PaginationResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,7 +50,19 @@ public class LogController {
    */
   @Admin
   @GetMapping("/logins-top/{num}")
-  public List<PieChartData> getLoginsTop(@PathVariable final int num) {
+  public List<ChartData> getLoginsTop(@PathVariable final int num) {
     return logService.getLoginsTop(num);
+  }
+
+  /**
+   * 获取最近几天的登录数。
+   *
+   * @param days 最近几天
+   * @return 最近几天的登录数
+   */
+  @Admin
+  @GetMapping("/logins-history/{days}")
+  public List<ChartData> getLoginsHistory(@PathVariable final int days) {
+    return logService.getLoginsHistory(days);
   }
 }

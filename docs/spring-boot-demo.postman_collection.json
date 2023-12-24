@@ -600,7 +600,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/operation-logs/logins-top/3",
+							"raw": "{{BASE_URL}}/api/v1/operation-logs/logins-top/:num",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -609,7 +609,46 @@
 								"v1",
 								"operation-logs",
 								"logins-top",
-								"3"
+								":num"
+							],
+							"variable": [
+								{
+									"key": "num",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "获取最近几天的登录数",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/operation-logs/logins-history/:days",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"operation-logs",
+								"logins-history",
+								":days"
+							],
+							"variable": [
+								{
+									"key": "days",
+									"value": "2"
+								}
 							]
 						}
 					},
