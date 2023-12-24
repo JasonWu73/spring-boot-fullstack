@@ -18,7 +18,7 @@ import { Navigate } from 'react-router-dom'
  * 3. 最近七天的登录次数，折线图
  */
 export default function DashboardPage() {
-  useTitle('仪表盘')
+  useTitle('Dashboard')
 
   // 该页面只显示给管理员用户查看
   if (!hasAdmin()) return <Navigate to="/split-bill" replace />
@@ -26,7 +26,7 @@ export default function DashboardPage() {
   return (
     <Card className="mx-auto mt-8 max-w-7xl">
       <CardHeader className="text-center">
-        <CardTitle>仪表盘</CardTitle>
+        <CardTitle>Dashboard</CardTitle>
         <CardDescription>
           通常用于展示用户关心的重要指标、图表、图形和其他信息，以便用户可以一目了然地监视和了解系统的整体状况
         </CardDescription>

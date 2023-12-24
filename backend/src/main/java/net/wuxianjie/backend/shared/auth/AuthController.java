@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import net.wuxianjie.backend.shared.auth.dto.AuthResult;
 import net.wuxianjie.backend.shared.auth.dto.LoginParam;
 import net.wuxianjie.backend.shared.operationlog.Operation;
+import net.wuxianjie.backend.user.AuthServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AuthController {
 
-  private final AuthService authService;
+  private final AuthServiceImpl authService;
 
   /**
    * 登录。

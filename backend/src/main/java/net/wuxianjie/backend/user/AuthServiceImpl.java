@@ -168,11 +168,19 @@ public class AuthServiceImpl implements AuthService {
   }
 
   /**
+   * 将指定用户名的用户从系统中退出登录。
+   *
+   * @param username 需要退出登录的用户名
+   */
+  public void logout(final String username) {
+    deleteLoginCache(username);
+  }
+
+  /**
    * 从 Redis 中获取已登录用户名列表。
    *
    * @return 已登录用户名列表
    */
-  @Override
   public List<String> getLoggedInUsers() {
     final Set<String> keys = stringRedisTemplate.keys(LOGGED_IN_KEY_PREFIX + "*");
 
@@ -182,15 +190,6 @@ public class AuthServiceImpl implements AuthService {
       .stream()
       .map(key -> key.substring(LOGGED_IN_KEY_PREFIX.length()))
       .toList();
-  }
-
-  /**
-   * 将指定用户名的用户从系统中退出登录。
-   *
-   * @param username 需要退出登录的用户名
-   */
-  public void logout(final String username) {
-    deleteLoginCache(username);
   }
 
   private void deleteAccessTokenCache(final String username) {

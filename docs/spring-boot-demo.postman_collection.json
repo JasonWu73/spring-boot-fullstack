@@ -587,6 +587,33 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "获取登录数前几的用户",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/operation-logs/logins-top/3",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"operation-logs",
+								"logins-top",
+								"3"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},

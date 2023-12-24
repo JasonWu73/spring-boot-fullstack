@@ -2,6 +2,7 @@ package net.wuxianjie.backend.shared.operationlog;
 
 import lombok.RequiredArgsConstructor;
 import net.wuxianjie.backend.shared.operationlog.dto.GetLogParam;
+import net.wuxianjie.backend.shared.operationlog.dto.PieChartData;
 import net.wuxianjie.backend.shared.pagination.PaginationParam;
 import net.wuxianjie.backend.shared.pagination.PaginationResult;
 import net.wuxianjie.backend.shared.util.StrUtils;
@@ -46,6 +47,16 @@ public class LogService {
       total,
       list
     );
+  }
+
+  /**
+   * 获取登录数前三的用户。
+   *
+   * @param num 前几
+   * @return 登录数前三的用户
+   */
+  public List<PieChartData> getLoginsTop(final int num) {
+    return logMapper.selectLoginsLimit(num);
   }
 
   private void setFuzzyQuery(final GetLogParam logParam) {

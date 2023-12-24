@@ -1,6 +1,7 @@
 package net.wuxianjie.backend.shared.operationlog;
 
 import net.wuxianjie.backend.shared.operationlog.dto.GetLogParam;
+import net.wuxianjie.backend.shared.operationlog.dto.PieChartData;
 import net.wuxianjie.backend.shared.pagination.PaginationParam;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -39,6 +40,14 @@ public interface LogMapper {
    * @return 操作日志总数
    */
   long countByQuery(@Param("q") GetLogParam logParam);
+
+  /**
+   * 获取登录数前几的用户。
+   *
+   * @param limit 前几
+   * @return 登录数前几的用户
+   */
+  List<PieChartData> selectLoginsLimit(int limit);
 
   /**
    * 新增操作日志。

@@ -42,6 +42,18 @@
     </where>
   </sql>
 
+  <select
+    id="selectLoginsLimit"
+    resultType="net.wuxianjie.backend.shared.operationlog.dto.PieChartData"
+  >
+    SELECT username AS name,
+           SUM(IF(message = '登录', 1, 0)) AS value
+    FROM operation_log
+    GROUP BY username
+    ORDER BY value DESC
+    LIMIT #{limit}
+  </select>
+
   <insert id="insert">
     INSERT INTO operation_log (
       requested_at,
