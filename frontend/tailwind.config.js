@@ -20,6 +20,7 @@ export default {
       height: {
         screen: ['100vh /* fallback for Opera, IE and etc. */', '100dvh']
       },
+      /* 扩展自定义颜色 */
       colors: {
         night: {
           DEFAULT: 'rgb(var(--color-night) / <alpha-value>)',
