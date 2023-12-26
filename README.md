@@ -25,6 +25,9 @@ npm install --save-dev @types/node
 # 安装 Prettier
 # 1. `.prettierignore` 与 `.gitignore` 内容一致
 # 2. `prettier.config.js`
+# 3. `package.json` 中 `scripts` 添加：
+# 3.1 "check": "prettier --check ."
+# 3.2 "reformat": "prettier --write ."
 npm install --save-dev --save-exact prettier
 
 # 安装 `eslint-config-prettier`，关闭所有不必要或可能与 Prettier 冲突的 ESLint 规则
