@@ -46,15 +46,16 @@ npm install --save-dev tailwindcss postcss autoprefixer
 # 生成 `tailwind.config.js` 和 `postcss.config.js` 文件
 npx tailwindcss init -p
 
+# 安装 shadcn/ui
+# 调整 `components.json`
+npx shadcn-ui@latest init
+
 # 安装 NProgress
 npm install nprogress
 npm install --save-dev @types/nprogress
 
 # 安装 React Router
 npm install react-router-dom
-
-# 安装 shadcn/ui
-npx shadcn-ui@latest init
 
 # 安装信号库（更好的状态管理库）
 npm install @preact/signals-react

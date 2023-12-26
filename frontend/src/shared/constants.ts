@@ -1,5 +1,3 @@
-export const ELLIPSIS = '…'
-
 export const URL_QUERY_KEY_QUERY = 'q'
 export const URL_QUERY_KEY_PAGE_NUM = 'p'
 export const URL_QUERY_KEY_PAGE_SIZE = 's'

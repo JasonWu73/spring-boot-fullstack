@@ -1,8 +1,6 @@
 import clsx, { type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 
-import { ELLIPSIS } from '@/shared/constants'
-
 /**
  * 合并 Tailwind CSS 类名（可覆盖之前的类），由 `npx shadcn-ui@latest init` 自动生成。
  *
@@ -38,7 +36,7 @@ export function tw(strings: TemplateStringsArray, ...values: unknown[]) {
 export function truncate(value: string, maxlength: number) {
   if (value.length <= maxlength) return value
 
-  return value.slice(0, maxlength - 1) + ELLIPSIS
+  return value.slice(0, maxlength - 1) + '…'
 }
 
 /**
