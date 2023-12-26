@@ -23,6 +23,8 @@ npm create vite@latest my-react-app -- --template react-ts
 npm install --save-dev @types/node
 
 # 安装 Prettier
+# 1. `.prettierignore` 与 `.gitignore` 内容一致
+# 2. `prettier.config.js`
 npm install --save-dev --save-exact prettier
 
 # 安装 `eslint-config-prettier`，关闭所有不必要或可能与 Prettier 冲突的 ESLint 规则
