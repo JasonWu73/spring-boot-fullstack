@@ -19,6 +19,21 @@ POST /orders/1/lines  <---> orders[1].lines.push(data)
 # Vite 创建 React + TS 项目
 npm create vite@latest my-react-app -- --template react-ts
 
+# 配置别名
+# 1. 修改 `tsconfig.json` 在 `compilerOptions` 中添加：
+#    /* 配置别名 */
+#    "baseUrl": "./",
+#    "paths": {
+#      "@/*": ["./src/*"]
+#    },
+# 2. 修改 `vite.config.ts` 在 `resolve.alias` 中添加：
+#  resolve: {
+#    // 配置别名
+#    alias: {
+#      '@': path.resolve(__dirname, './src')
+#    }
+#  }
+
 # 安装 Node 的类型定义，避免 IDE 因无法识别 Node 类型的而产生的警告
 npm install --save-dev @types/node
 
@@ -31,9 +46,13 @@ npm install --save-dev @types/node
 npm install --save-dev --save-exact prettier
 
 # 安装 `eslint-config-prettier`，关闭所有不必要或可能与 Prettier 冲突的 ESLint 规则
+# 调整 `.eslintrc.cjs`，在 `extends` 的最后一项添加 `prettier`
 npm install --save-dev eslint-config-prettier
 
 # 安装 Tailwind CSS 的 Prettier 插件
+# 调整 `prettier.config.js`，
+# 1. 添加 `tailwindFunctions: ['clsx', 'tw']`
+# 2. 在 `plugins` 的最后一项添加 `prettier-plugin-tailwindcss`
 npm install --save-dev prettier-plugin-tailwindcss
 
 # 安装 Tailwind CSS
