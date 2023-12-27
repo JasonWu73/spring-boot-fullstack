@@ -36,6 +36,8 @@ export default {
           DEFAULT: 'rgb(var(--color-predawn) / <alpha-value>)'
         }
       },
+
+      /* 由 shad-cn/ui 生成 */
       keyframes: {
         'accordion-down': {
           from: { height: 0 },
