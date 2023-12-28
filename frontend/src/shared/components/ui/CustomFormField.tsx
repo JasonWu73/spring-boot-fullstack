@@ -1,8 +1,8 @@
+import React from 'react'
+import type { Control, FieldValues, Path } from 'react-hook-form'
 import { CalendarIcon } from '@radix-ui/react-icons'
 import { format } from 'date-fns'
 import { zhCN } from 'date-fns/locale'
-import React from 'react'
-import type { Control, FieldValues, Path } from 'react-hook-form'
 
 import { Button } from '@/shared/components/ui/Button'
 import { Calendar } from '@/shared/components/ui/Calendar'
@@ -13,7 +13,7 @@ import {
   FormLabel,
   FormMessage
 } from '@/shared/components/ui/Form'
-import { Input } from '@/shared/components/ui/Input'
+import { Input, inputErrorClasses } from '@/shared/components/ui/Input'
 import { MultiSelect } from '@/shared/components/ui/MultiSelect'
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/Popover'
 import {
@@ -24,19 +24,7 @@ import {
   SelectValue
 } from '@/shared/components/ui/Select'
 import { Textarea } from '@/shared/components/ui/Textarea'
-import { cn, tw } from '@/shared/utils/helpers'
-
-/**
- * 当参数验证不通过时的文本框样式。
- *
- * @param isError 是否验证不通过
- * @returns Tailwind CSS 类名字符串
- */
-export function inputErrorClasses(isError: boolean) {
-  return isError
-    ? tw`border-red-500 focus-visible:ring-red-500 dark:border-red-600 dark:focus-visible:ring-red-600`
-    : tw`border-slate-200 focus-visible:ring-slate-950 dark:border-slate-800 dark:focus-visible:ring-slate-300`
-}
+import { cn } from '@/shared/utils/helpers'
 
 type FormInputProps<T extends FieldValues> = {
   control: Control<T>

@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { inputErrorClasses } from '@/shared/components/ui/CustomFormField'
+import { inputErrorClasses } from '@/shared/components/ui/Input'
 import { cn } from '@/shared/utils/helpers'
 
 export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {

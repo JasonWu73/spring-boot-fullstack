@@ -9,7 +9,7 @@ import {
   CommandInput,
   CommandItem
 } from '@/shared/components/ui/Command'
-import { inputErrorClasses } from '@/shared/components/ui/CustomFormField'
+import { inputErrorClasses } from '@/shared/components/ui/Input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/Popover'
 import { cn } from '@/shared/utils/helpers'
 
