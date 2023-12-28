@@ -1,6 +1,6 @@
-import { BugOff, FileClock, Gauge, ShoppingCart, UserCog2 } from 'lucide-react'
 import React from 'react'
 import { NavLink } from 'react-router-dom'
+import { BugOff, FileClock, Gauge, ShoppingCart, UserCog2 } from 'lucide-react'
 
 import { buttonVariants } from '@/shared/components/ui/Button'
 import { ScrollArea } from '@/shared/components/ui/ScrollArea'
