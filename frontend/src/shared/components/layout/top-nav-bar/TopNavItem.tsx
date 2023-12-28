@@ -8,7 +8,7 @@ import {
   NavigationMenuItem,
   NavigationMenuList
 } from '@/shared/components/ui/NavigationMenu'
-import { hasUser } from '@/shared/signals/auth'
+import { hasUser } from '@/shared/auth/auth'
 import { cn } from '@/shared/utils/helpers'
 
 type PageNavProps = {
@@ -26,7 +26,7 @@ export function TopNavItem({ open }: PageNavProps) {
 
       <NavigationMenu
         className={cn(
-          'absolute left-0 top-16 z-50 h-[calc(100%-4rem)] w-full max-w-full -translate-x-full items-start bg-slate-950 pt-4 duration-500 dark:bg-night-1 lg:hidden',
+          'absolute left-0 top-16 z-50 h-[calc(100%-4rem)] w-full max-w-full -translate-x-full items-start bg-slate-950 pt-4 duration-500 lg:hidden dark:bg-night-1',
           open && 'translate-x-0'
         )}
       >

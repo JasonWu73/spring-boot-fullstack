@@ -18,7 +18,7 @@ import {
   DropdownMenuTrigger
 } from '@/shared/components/ui/DropdownMenu'
 import { Switch } from '@/shared/components/ui/Switch'
-import { ADMIN, ROOT, USER, hasRoot } from '@/shared/signals/auth'
+import { ADMIN, ROOT, USER, hasRoot } from '@/shared/auth/auth'
 
 type UserTableColumnProps = {
   submitting: boolean

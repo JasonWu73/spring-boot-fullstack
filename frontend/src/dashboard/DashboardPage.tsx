@@ -9,7 +9,7 @@ import {
   CardTitle
 } from '@/shared/components/ui/Card'
 import { useTitle } from '@/shared/hooks/use-title'
-import { hasAdmin } from '@/shared/signals/auth'
+import { hasAdmin } from '@/shared/auth/auth'
 import { Navigate } from 'react-router-dom'
 
 /**

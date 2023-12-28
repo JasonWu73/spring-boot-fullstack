@@ -23,7 +23,7 @@ import { Form } from '@/shared/components/ui/Form'
 import LoadingButton from '@/shared/components/ui/LoadingButton'
 import { useToast } from '@/shared/components/ui/use-toast'
 import { useFetch, type ApiResponse } from '@/shared/hooks/use-fetch'
-import { PUBLIC_KEY } from '@/shared/signals/auth'
+import { PUBLIC_KEY } from '@/shared/auth/auth'
 import { encrypt } from '@/shared/utils/rsa'
 
 const formSchema = z

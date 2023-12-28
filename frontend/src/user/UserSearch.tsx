@@ -7,7 +7,7 @@ import { Button } from '@/shared/components/ui/Button'
 import { FormInput, FormSelect } from '@/shared/components/ui/CustomFormField'
 import { Form } from '@/shared/components/ui/Form'
 import { URL_QUERY_KEY_PAGE_NUM, URL_QUERY_KEY_PAGE_SIZE } from '@/shared/constants'
-import { ADMIN, ROOT, USER } from '@/shared/signals/auth'
+import { ADMIN, ROOT, USER } from '@/shared/auth/auth'
 import { useSearchParams } from 'react-router-dom'
 
 const statusOptions = [

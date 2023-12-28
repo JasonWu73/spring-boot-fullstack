@@ -3,7 +3,7 @@ import { LogOut } from 'lucide-react'
 import { logoutApi } from '@/shared/apis/backend/auth'
 import LoadingButton from '@/shared/components/ui/LoadingButton'
 import { useFetch } from '@/shared/hooks/use-fetch'
-import { clearAuth } from '@/shared/signals/auth'
+import { clearAuth } from '@/shared/auth/auth'
 
 export function LogoutButton() {
   const { loading, fetchData: logout } = useFetch(logoutApi)

@@ -9,7 +9,7 @@ import {
   hasUser,
   ROOT,
   USER
-} from '@/shared/signals/auth'
+} from '@/shared/auth/auth'
 
 type SecureRouteProps = {
   authority?: 'root' | 'admin' | 'user'

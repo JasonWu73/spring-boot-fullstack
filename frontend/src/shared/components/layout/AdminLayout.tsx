@@ -5,7 +5,7 @@ import { Aside } from '@/shared/components/layout/Aside'
 import { Footer } from '@/shared/components/layout/Footer'
 import { Header } from '@/shared/components/layout/Header'
 import { LoadingFullPage } from '@/shared/components/ui/LoadingFullPage'
-import { getFolded } from '@/shared/signals/panel-fold'
+import { getFolded } from '@/shared/components/layout/panel-fold/panel-fold'
 import { cn } from '@/shared/utils/helpers'
 
 export function AdminLayout() {

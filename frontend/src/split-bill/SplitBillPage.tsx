@@ -9,7 +9,7 @@ import {
   createSplitBillState,
   getShowAddFriend,
   setShowAddFriend
-} from '@/shared/signals/split-bill'
+} from '@/split-bill/split-bill'
 import { wait } from '@/shared/utils/helpers'
 import { FriendList } from '@/split-bill/FriendList'
 

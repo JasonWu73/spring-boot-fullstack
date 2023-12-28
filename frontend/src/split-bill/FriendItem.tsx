@@ -10,11 +10,7 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from '@/shared/components/ui/Tooltip'
-import {
-  getLoadingFriend,
-  setShowAddFriend,
-  type Friend
-} from '@/shared/signals/split-bill'
+import { getLoadingFriend, setShowAddFriend, type Friend } from '@/split-bill/split-bill'
 import { cn, truncate } from '@/shared/utils/helpers'
 
 type FriendItemProps = {

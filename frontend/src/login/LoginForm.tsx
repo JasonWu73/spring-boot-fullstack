@@ -9,7 +9,7 @@ import { Form } from '@/shared/components/ui/Form'
 import LoadingButton from '@/shared/components/ui/LoadingButton'
 import { useToast } from '@/shared/components/ui/use-toast'
 import { useFetch } from '@/shared/hooks/use-fetch'
-import { getAuth, setAuth } from '@/shared/signals/auth'
+import { getAuth, setAuth } from '@/shared/auth/auth'
 
 const DEFAULT_REDIRECT_URL = '/'
 

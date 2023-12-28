@@ -18,7 +18,7 @@ import { Skeleton } from '@/shared/components/ui/Skeleton'
 import { useToast } from '@/shared/components/ui/use-toast'
 import { useFetch } from '@/shared/hooks/use-fetch'
 import { useInitial } from '@/shared/hooks/use-refresh'
-import { clearAuth, updateNickname } from '@/shared/signals/auth'
+import { clearAuth, updateNickname } from '@/shared/auth/auth'
 
 const formSchema = z
   .object({
