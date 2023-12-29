@@ -39,10 +39,6 @@ type FormInputProps<T extends FieldValues> = {
   className?: string
 }
 
-type FormTextareaProps<T extends FieldValues> = Omit<FormInputProps<T>, 'inputRef'> & {
-  textareaRef?: React.MutableRefObject<HTMLTextAreaElement | null>
-}
-
 export function FormInput<T extends FieldValues>({
   control,
   name,
@@ -90,6 +86,10 @@ export function FormInput<T extends FieldValues>({
       )}
     />
   )
+}
+
+type FormTextareaProps<T extends FieldValues> = Omit<FormInputProps<T>, 'inputRef'> & {
+  textareaRef?: React.MutableRefObject<HTMLTextAreaElement | null>
 }
 
 export function FormTextarea<T extends FieldValues>({
