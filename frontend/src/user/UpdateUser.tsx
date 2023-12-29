@@ -112,7 +112,7 @@ export function UpdateUser() {
   }
 
   function goBackToUserListPage() {
-    return navigate('/users')
+    navigate('/users')
   }
 
   return (

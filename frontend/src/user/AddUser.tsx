@@ -87,7 +87,7 @@ export function AddUser() {
   }
 
   function goBackToUserListPage() {
-    return navigate('/users')
+    navigate('/users')
   }
 
   return (
