@@ -52,6 +52,7 @@ export function LoginForm() {
         description: error,
         variant: 'destructive'
       })
+
       return
     }
 
