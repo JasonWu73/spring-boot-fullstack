@@ -72,7 +72,7 @@ npm install --save-dev @types/nprogress
 # 安装 React Router
 npm install react-router-dom
 
-# 安装信号库（更好的状态管理库）
+# 安装信号库（仅用作全局状态管理）
 npm install @preact/signals-react
 npm install --save @types/use-sync-external-store
 ```
