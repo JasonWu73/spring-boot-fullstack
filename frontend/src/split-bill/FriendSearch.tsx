@@ -5,7 +5,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Input } from '@/shared/components/ui/Input'
 import { URL_QUERY_KEY_QUERY } from '@/shared/constants'
 import { useKeypress } from '@/shared/hooks/use-keypress'
-import { setShowAddFriend } from '@/split-bill/split-bill'
+import { setShowAddFriend } from '@/split-bill/split-bill-signals'
 import { ShortcutTip } from '@/split-bill/ShortcutTip'
 
 export function FriendSearch() {

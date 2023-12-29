@@ -9,7 +9,7 @@ let STORAGE_KEY: string
  * <p>
  * 不要直接导出 Signal，而是应该导出方法来使用 Signal。
  */
-const theme = signal(undefined as unknown as Theme)
+const themeSignals = signal(undefined as unknown as Theme)
 
 /**
  * 创建本地缓存的主题数据 Signal。
@@ -20,16 +20,16 @@ const theme = signal(undefined as unknown as Theme)
  * @param storageKey 本地存储中的键，默认为 `app-ui-theme`
  */
 export function createThemeState(defaultTheme: Theme, storageKey = 'app-ui-theme') {
-  if (theme.value !== undefined) return
+  if (themeSignals.value !== undefined) return
 
   STORAGE_KEY = storageKey
-  theme.value = (localStorage.getItem(STORAGE_KEY) as Theme) || defaultTheme
+  themeSignals.value = (localStorage.getItem(STORAGE_KEY) as Theme) || defaultTheme
 
   effect(() => {
     resetTheme()
 
-    if (theme.value !== 'system') {
-      applyTheme(theme.value)
+    if (themeSignals.value !== 'system') {
+      applyTheme(themeSignals.value)
       return
     }
 
@@ -51,7 +51,7 @@ export function createThemeState(defaultTheme: Theme, storageKey = 'app-ui-theme
  */
 export function setTheme(newTheme: Theme) {
   localStorage.setItem(STORAGE_KEY, newTheme)
-  theme.value = newTheme
+  themeSignals.value = newTheme
 }
 
 function handleToggleTheme(darkMatchEvent: MediaQueryListEvent) {

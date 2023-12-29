@@ -1,6 +1,6 @@
 import { requestApi } from '@/shared/apis/backend/helpers'
 import type { PaginationData, PaginationParams } from '@/shared/apis/types'
-import { PUBLIC_KEY } from '@/shared/auth/auth'
+import { PUBLIC_KEY } from '@/shared/auth/auth-signals'
 import { encrypt } from '@/shared/utils/rsa'
 
 export type GetUsersParams = PaginationParams & {

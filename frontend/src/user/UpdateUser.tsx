@@ -19,7 +19,7 @@ import { Skeleton } from '@/shared/components/ui/Skeleton'
 import { useToast } from '@/shared/components/ui/use-toast'
 import { useFetch } from '@/shared/hooks/use-fetch'
 import { useInitial } from '@/shared/hooks/use-refresh'
-import { ADMIN, ROOT, USER } from '@/shared/auth/auth'
+import { ADMIN, ROOT, USER } from '@/shared/auth/auth-signals'
 
 const AUTHORITY_OPTIONS = [ADMIN, USER]
 

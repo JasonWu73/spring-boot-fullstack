@@ -12,7 +12,7 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger
 } from '@/shared/components/ui/NavigationMenu'
-import { getAuth, hasAdmin } from '@/shared/auth/auth'
+import { getAuth, hasAdmin } from '@/shared/auth/auth-signals'
 import { cn } from '@/shared/utils/helpers'
 
 export function AuthSwitch() {

@@ -28,7 +28,7 @@ import {
 } from '@/shared/constants'
 import { useFetch } from '@/shared/hooks/use-fetch'
 import { useRefresh } from '@/shared/hooks/use-refresh'
-import { hasRoot } from '@/shared/auth/auth'
+import { hasRoot } from '@/shared/auth/auth-signals'
 import { cn } from '@/shared/utils/helpers'
 import { ResetPasswordDialog } from '@/user/ResetPasswordDialog'
 import { getUserTableColumns } from '@/user/UserTableColumns'

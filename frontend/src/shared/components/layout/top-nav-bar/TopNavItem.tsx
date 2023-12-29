@@ -8,7 +8,7 @@ import {
   NavigationMenuItem,
   NavigationMenuList
 } from '@/shared/components/ui/NavigationMenu'
-import { hasUser } from '@/shared/auth/auth'
+import { hasUser } from '@/shared/auth/auth-signals'
 import { cn } from '@/shared/utils/helpers'
 
 type PageNavProps = {

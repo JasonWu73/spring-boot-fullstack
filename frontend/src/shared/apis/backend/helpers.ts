@@ -1,5 +1,5 @@
 import type { AuthResponse } from '@/shared/apis/backend/auth'
-import { clearAuth, getAuth, setAuth } from '@/shared/auth/auth'
+import { clearAuth, getAuth, setAuth } from '@/shared/auth/auth-signals'
 import { sendRequest, type ApiRequest } from '@/shared/utils/fetch'
 
 // 这里假设 Vite 运行时使用默认的 5173 端口

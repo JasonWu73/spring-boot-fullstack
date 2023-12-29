@@ -1,7 +1,10 @@
 import { PanelLeftClose, PanelLeftOpen } from 'lucide-react'
 
 import { Button } from '@/shared/components/ui/Button'
-import { getFolded, setFolded } from '@/shared/components/layout/panel-fold/panel-fold'
+import {
+  getFolded,
+  setFolded
+} from '@/shared/components/layout/panel-fold/panel-fold-signals'
 import { cn } from '@/shared/utils/helpers'
 
 /**

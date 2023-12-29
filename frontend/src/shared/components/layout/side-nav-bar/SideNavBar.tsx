@@ -5,7 +5,7 @@ import { BugOff, FileClock, Gauge, ShoppingCart, UserCog2 } from 'lucide-react'
 import { buttonVariants } from '@/shared/components/ui/Button'
 import { ScrollArea } from '@/shared/components/ui/ScrollArea'
 import { Separator } from '@/shared/components/ui/Separator'
-import { hasRoot } from '@/shared/auth/auth'
+import { hasRoot } from '@/shared/auth/auth-signals'
 import { cn } from '@/shared/utils/helpers'
 
 export function SideNavBar() {
