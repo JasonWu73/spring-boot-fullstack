@@ -13,7 +13,7 @@ const STORAGE_KEY = 'demo-auth'
 /**
  * 前端存储的身份验证数据类型。
  */
-type AuthSignals = {
+type Auth = {
   accessToken: string
   refreshToken: string
   nickname: string
@@ -33,7 +33,7 @@ export const USER = { value: 'user', label: '用户' }
  * <p>
  * 不要直接导出 Signal，而是应该导出方法来使用 Signal。
  */
-const auth = signal<AuthSignals | null>(undefined as unknown as AuthSignals)
+const auth = signal<Auth | null>(undefined as unknown as Auth)
 
 /**
  * 是否拥有超级管理员权限 Signal。
@@ -139,7 +139,7 @@ export function clearAuth() {
   auth.value = null
 }
 
-function getStorageAuth(): AuthSignals | null {
+function getStorageAuth(): Auth | null {
   const storageAuth = localStorage.getItem(STORAGE_KEY)
 
   if (!storageAuth) return null
@@ -147,7 +147,7 @@ function getStorageAuth(): AuthSignals | null {
   return JSON.parse(storageAuth)
 }
 
-function setStorageAuth(auth: AuthSignals | null) {
+function setStorageAuth(auth: Auth | null) {
   if (!auth) {
     localStorage.removeItem(STORAGE_KEY)
     return
@@ -156,7 +156,7 @@ function setStorageAuth(auth: AuthSignals | null) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(auth))
 }
 
-function toStorageAuth(data: AuthResponse): AuthSignals {
+function toStorageAuth(data: AuthResponse): Auth {
   return {
     accessToken: data.accessToken,
     refreshToken: data.refreshToken,
