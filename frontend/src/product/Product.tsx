@@ -1,9 +1,9 @@
-import { useSignal } from '@preact/signals-react'
+import React from 'react'
 
-import { getProductApi } from '@/shared/apis/dummyjson/product'
 import LoadingButton from '@/shared/components/ui/LoadingButton'
 import { useFetch } from '@/shared/hooks/use-fetch'
 import { useRefresh } from '@/shared/hooks/use-refresh'
+import { getProductApi } from '@/shared/apis/dummyjson/product'
 import { cn } from '@/shared/utils/helpers'
 
 export function Product() {
@@ -12,7 +12,7 @@ export function Product() {
   })
 
   // 成功获取商品的次数
-  const count = useSignal(0)
+  const [count, setCount] = React.useState(0)
 
   const {
     loading,
@@ -23,7 +23,7 @@ export function Product() {
     const response = await getProductApi(productId)
 
     if (response.data) {
-      count.value++
+      setCount(count + 1)
     }
 
     return response
@@ -36,7 +36,7 @@ export function Product() {
   }
 
   return (
-    <div className="mx-auto grid max-w-md grid-cols-1 grid-rows-[2rem_8rem_3rem_2rem] place-items-center gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow dark:border-slate-800 dark:bg-slate-950 lg:max-w-2xl">
+    <div className="mx-auto grid max-w-md grid-cols-1 grid-rows-[2rem_8rem_3rem_2rem] place-items-center gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow lg:max-w-2xl dark:border-slate-800 dark:bg-slate-950">
       <div className="row-span-1">
         {loading && <Title label="加载中..." />}
 

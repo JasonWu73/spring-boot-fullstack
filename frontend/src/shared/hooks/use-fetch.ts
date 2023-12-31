@@ -1,4 +1,3 @@
-import { useSignal } from '@preact/signals-react'
 import React from 'react'
 
 type ApiState<T> = {
@@ -79,17 +78,17 @@ type UseFetch<TData, TParam> = ApiState<TData> & {
 export function useFetch<TData, TParam>(
   callback: (params: TParam) => Promise<ApiResponse<TData>>
 ): UseFetch<TData, TParam> {
-  const apiState = useSignal<ApiState<TData>>({ loading: false })
+  const [apiState, setApiState] = React.useState<ApiState<TData>>({ loading: false })
 
   const prevParams = React.useRef<TParam>()
 
   async function fetchData(params: TParam): Promise<ApiResponse<TData>> {
-    apiState.value = {
+    setApiState({
       loading: true,
       status: undefined,
       data: undefined,
       error: undefined
-    }
+    })
 
     prevParams.current = params
 
@@ -111,37 +110,37 @@ export function useFetch<TData, TParam>(
   }
 
   function reset() {
-    apiState.value = {
+    setApiState({
       loading: false,
       status: undefined,
       data: undefined,
       error: undefined
-    }
+    })
   }
 
   function setResponseResult(response: ApiResponse<TData>) {
-    apiState.value = {
+    setApiState({
       loading: false,
       status: response.status,
       data: response.data,
       error: response.error
-    }
+    })
   }
 
   function setState(newState: SetApiStateAction<TData>) {
     if (typeof newState === 'function') {
       const updater = newState as ApiStateUpdater<TData>
 
-      apiState.value = updater(apiState.value)
+      updater(apiState)
 
       return
     }
 
-    apiState.value = newState
+    setApiState(newState)
   }
 
   return {
-    ...apiState.value,
+    ...apiState,
     fetchData,
     invalidateFetch,
     reset,

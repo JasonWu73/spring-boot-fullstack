@@ -1,4 +1,3 @@
-import { useSignal } from '@preact/signals-react'
 import React from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
@@ -18,13 +17,12 @@ export function FriendSearch() {
   })
 
   const [searchParams, setSearchParams] = useSearchParams()
-  const nameQuery = searchParams.get(URL_QUERY_KEY_QUERY) || ''
-  const query = useSignal(nameQuery)
+  const [query, setQuery] = React.useState(searchParams.get(URL_QUERY_KEY_QUERY) || '')
 
   const navigate = useNavigate()
 
   useKeypress({ key: 'Escape' }, () => {
-    query.value = ''
+    setQuery('')
 
     searchParams.delete(URL_QUERY_KEY_QUERY)
 
@@ -36,7 +34,7 @@ export function FriendSearch() {
 
   function handleSearch(event: React.ChangeEvent<HTMLInputElement>) {
     const name = event.target.value
-    query.value = name
+    setQuery(name)
 
     searchParams.delete(URL_QUERY_KEY_QUERY)
 
@@ -66,7 +64,7 @@ export function FriendSearch() {
       <ShortcutTip />
 
       <Input
-        value={query.value}
+        value={query}
         onChange={handleSearch}
         onFocus={handleFocus}
         ref={input}

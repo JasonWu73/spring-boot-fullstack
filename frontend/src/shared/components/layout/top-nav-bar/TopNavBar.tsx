@@ -1,25 +1,24 @@
-import { useSignal } from '@preact/signals-react'
 import React from 'react'
 
+import { Hamburger } from '@/shared/components/ui/Hamburger'
+import { ModeToggle } from '@/shared/components/ui/ModeToggle'
+import { setTheme } from '@/shared/components/ui/theme-signals'
 import { PanelFold } from '@/shared/components/layout/panel-fold/PanelFold'
 import { AuthSwitch } from '@/shared/components/layout/top-nav-bar/AuthSwitch'
 import { Logo } from '@/shared/components/layout/top-nav-bar/Logo'
 import { TopNavItem } from '@/shared/components/layout/top-nav-bar/TopNavItem'
-import { Hamburger } from '@/shared/components/ui/Hamburger'
-import { ModeToggle } from '@/shared/components/ui/ModeToggle'
-import { setTheme } from '@/shared/components/ui/theme-signals'
 
 type TopNavBarProps = {
   showPanelFold?: boolean
 }
 
 export function TopNavBar({ showPanelFold = false }: TopNavBarProps) {
-  const openHamburger = useSignal(false)
+  const [openHamburger, setOpenHamburger] = React.useState(false)
 
   function handleClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     // 当点击页面链接后，应该自动关闭汉堡包导航菜单
     if (e.target instanceof HTMLAnchorElement) {
-      openHamburger.value = false
+      setOpenHamburger(false)
     }
   }
 
@@ -34,7 +33,7 @@ export function TopNavBar({ showPanelFold = false }: TopNavBarProps) {
         <Logo />
       </div>
 
-      <TopNavItem open={openHamburger.value} />
+      <TopNavItem open={openHamburger} />
 
       <div className="flex gap-4">
         <div className="hidden sm:inline-block">
@@ -46,10 +45,7 @@ export function TopNavBar({ showPanelFold = false }: TopNavBarProps) {
           className="border-slate-900 focus-visible:ring-slate-300"
         />
 
-        <Hamburger
-          open={openHamburger.value}
-          onOpenChange={(open) => (openHamburger.value = open)}
-        />
+        <Hamburger open={openHamburger} onOpenChange={setOpenHamburger} />
       </div>
     </nav>
   )

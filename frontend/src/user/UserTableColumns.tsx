@@ -1,9 +1,8 @@
-import type { Signal } from '@preact/signals-react'
+import React from 'react'
+import { Link } from 'react-router-dom'
 import type { ColumnDef } from '@tanstack/react-table'
 import { MoreHorizontal } from 'lucide-react'
-import { Link } from 'react-router-dom'
 
-import type { User } from '@/shared/apis/backend/user'
 import { Badge } from '@/shared/components/ui/Badge'
 import { Button } from '@/shared/components/ui/Button'
 import { Checkbox } from '@/shared/components/ui/Checkbox'
@@ -19,13 +18,14 @@ import {
 } from '@/shared/components/ui/DropdownMenu'
 import { Switch } from '@/shared/components/ui/Switch'
 import { ADMIN, ROOT, USER, hasRoot } from '@/shared/auth/auth-signals'
+import type { User } from '@/shared/apis/backend/user'
 
 type UserTableColumnProps = {
   submitting: boolean
-  currentUser: Signal<User | null>
+  currentUser: React.MutableRefObject<User | null>
   onChangeStatus: (user: User, enabled: boolean) => void
-  openDeleteDialog: Signal<boolean>
-  openResetPasswordDialog: Signal<boolean>
+  setOpenDeleteDialog: React.Dispatch<React.SetStateAction<boolean>>
+  setOpenResetPasswordDialog: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 /**
@@ -35,8 +35,8 @@ export function getUserTableColumns({
   submitting,
   currentUser,
   onChangeStatus,
-  openDeleteDialog,
-  openResetPasswordDialog
+  setOpenDeleteDialog,
+  setOpenResetPasswordDialog
 }: UserTableColumnProps) {
   const isRoot = hasRoot()
 
@@ -193,8 +193,8 @@ export function getUserTableColumns({
                   <DropdownMenuItem className="p-0" asChild>
                     <button
                       onClick={() => {
-                        openDeleteDialog.value = true
-                        currentUser.value = user
+                        setOpenDeleteDialog(true)
+                        currentUser.current = user
                       }}
                       className="inline-block w-full cursor-pointer px-2 py-1.5 text-left text-red-500 dark:text-red-600"
                     >
@@ -205,8 +205,8 @@ export function getUserTableColumns({
                   <DropdownMenuItem className="p-0" asChild>
                     <button
                       onClick={() => {
-                        openResetPasswordDialog.value = true
-                        currentUser.value = user
+                        setOpenResetPasswordDialog(true)
+                        currentUser.current = user
                       }}
                       className="inline-block w-full cursor-pointer px-2 py-1.5 text-left text-red-500 dark:text-red-600"
                     >

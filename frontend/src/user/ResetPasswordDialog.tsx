@@ -1,11 +1,8 @@
-import { zodResolver } from '@hookform/resolvers/zod'
-import { ExclamationTriangleIcon } from '@radix-ui/react-icons'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { ExclamationTriangleIcon } from '@radix-ui/react-icons'
 
-import { requestApi } from '@/shared/apis/backend/helpers'
-import type { User } from '@/shared/apis/backend/user'
-import type { PaginationData } from '@/shared/apis/types'
 import { Alert, AlertDescription, AlertTitle } from '@/shared/components/ui/Alert'
 import { Button } from '@/shared/components/ui/Button'
 import { Code } from '@/shared/components/ui/Code'
@@ -22,9 +19,12 @@ import {
 import { Form } from '@/shared/components/ui/Form'
 import LoadingButton from '@/shared/components/ui/LoadingButton'
 import { useToast } from '@/shared/components/ui/use-toast'
-import { useFetch, type ApiResponse } from '@/shared/hooks/use-fetch'
 import { PUBLIC_KEY } from '@/shared/auth/auth-signals'
+import { useFetch, type ApiResponse } from '@/shared/hooks/use-fetch'
+import type { PaginationData } from '@/shared/apis/types'
 import { encrypt } from '@/shared/utils/rsa'
+import { requestApi } from '@/shared/apis/backend/helpers'
+import type { User } from '@/shared/apis/backend/user'
 
 const formSchema = z
   .object({

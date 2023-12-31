@@ -1,15 +1,7 @@
-import { useSignal } from '@preact/signals-react'
-import type { SortingState } from '@tanstack/react-table'
+import React from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
+import type { SortingState } from '@tanstack/react-table'
 
-import {
-  deleteUserApi,
-  getUsersApi,
-  updateUserStatusApi,
-  type AccountStatus,
-  type GetUsersParams,
-  type User
-} from '@/shared/apis/backend/user'
 import { Button, buttonVariants } from '@/shared/components/ui/Button'
 import { Code } from '@/shared/components/ui/Code'
 import { ConfirmDialog } from '@/shared/components/ui/ConfirmDialog'
@@ -20,15 +12,23 @@ import {
   type Pagination
 } from '@/shared/components/ui/DataTable'
 import { useToast } from '@/shared/components/ui/use-toast'
+import { useFetch } from '@/shared/hooks/use-fetch'
+import { useRefresh } from '@/shared/hooks/use-refresh'
+import { hasRoot } from '@/shared/auth/auth-signals'
 import {
   URL_QUERY_KEY_PAGE_NUM,
   URL_QUERY_KEY_PAGE_SIZE,
   URL_QUERY_KEY_SORT_COLUMN,
   URL_QUERY_KEY_SORT_ORDER
 } from '@/shared/constants'
-import { useFetch } from '@/shared/hooks/use-fetch'
-import { useRefresh } from '@/shared/hooks/use-refresh'
-import { hasRoot } from '@/shared/auth/auth-signals'
+import {
+  deleteUserApi,
+  getUsersApi,
+  updateUserStatusApi,
+  type AccountStatus,
+  type GetUsersParams,
+  type User
+} from '@/shared/apis/backend/user'
 import { cn } from '@/shared/utils/helpers'
 import { ResetPasswordDialog } from '@/user/ResetPasswordDialog'
 import { getUserTableColumns } from '@/user/UserTableColumns'
@@ -80,12 +80,12 @@ export function UserTable() {
     async (userId: number) => await deleteUserApi(userId)
   )
 
-  const indexes = useSignal<number[]>([]) // 选中的行的索引
+  const [indexes, setIndexes] = React.useState<number[]>([]) // 选中的行的索引
   const { toast } = useToast()
 
-  const openDeleteDialog = useSignal(false)
-  const openResetPasswordDialog = useSignal(false)
-  const currentUser = useSignal<User | null>(null)
+  const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false)
+  const [openResetPasswordDialog, setOpenResetPasswordDialog] = React.useState(false)
+  const currentUser = React.useRef<User | null>(null)
 
   function handlePaginate(paging: Pagination) {
     searchParams.set(URL_QUERY_KEY_PAGE_NUM, String(paging.pageNum))
@@ -111,7 +111,7 @@ export function UserTable() {
 
   function handleShowSelection() {
     const ids = (users?.list || [])
-      .filter((_, index) => indexes.value.includes(index))
+      .filter((_, index) => indexes.includes(index))
       .map((user) => user.id)
 
     if (ids.length === 0) {
@@ -165,9 +165,9 @@ export function UserTable() {
   }
 
   async function handleDeleteUser() {
-    if (!currentUser.value) return
+    if (!currentUser.current) return
 
-    const { id, username } = currentUser.value
+    const { id, username } = currentUser.current
     const { status, error } = await deleteUser(id)
 
     if (status !== 204) {
@@ -199,8 +199,8 @@ export function UserTable() {
           submitting: loadingUpdateUserStatus || loadingDeleteUser,
           currentUser,
           onChangeStatus: handleChangeStatus,
-          openDeleteDialog,
-          openResetPasswordDialog
+          setOpenDeleteDialog,
+          setOpenResetPasswordDialog
         })}
         data={users?.list || []}
         error={errorUsers}
@@ -220,7 +220,7 @@ export function UserTable() {
         }}
         onSorting={handleSorting}
         enableRowSelection
-        onSelect={(rowIndexes) => (indexes.value = rowIndexes)}
+        onSelect={setIndexes}
       >
         {hasRoot() && (
           <div>
@@ -244,24 +244,24 @@ export function UserTable() {
         )}
       </DataTable>
 
-      {currentUser.value && (
+      {currentUser.current && (
         <ConfirmDialog
-          open={openDeleteDialog.value}
-          onOpenChange={(open) => (openDeleteDialog.value = open)}
+          open={openDeleteDialog}
+          onOpenChange={setOpenDeleteDialog}
           title={
             <span>
-              您确定要删除用户 <Code>{currentUser.value.username}</Code> 吗？
+              您确定要删除用户 <Code>{currentUser.current.username}</Code> 吗？
             </span>
           }
           onConfirm={handleDeleteUser}
         />
       )}
 
-      {currentUser.value && (
+      {currentUser.current && (
         <ResetPasswordDialog
-          open={openResetPasswordDialog.value}
-          onOpenChange={(open) => (openResetPasswordDialog.value = open)}
-          user={currentUser.value}
+          open={openResetPasswordDialog}
+          onOpenChange={setOpenResetPasswordDialog}
+          user={currentUser.current}
           invalidateUsers={invalidateUsers}
         />
       )}

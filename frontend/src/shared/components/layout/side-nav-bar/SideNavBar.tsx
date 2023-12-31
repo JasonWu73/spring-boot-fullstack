@@ -11,7 +11,7 @@ import { cn } from '@/shared/utils/helpers'
 export function SideNavBar() {
   return (
     <ScrollArea className="h-[calc(100vh-6rem)] w-48">
-      <nav className="flex flex-col items-center gap-2">
+      <nav className="flex flex-col items-center gap-2 py-1">
         <div className="flex w-10/12 flex-col gap-0.5">
           <NavLink
             to="/dashboard"
