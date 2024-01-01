@@ -8,7 +8,7 @@ import { setShowAddFriend } from "@/split-bill/split-bill-signals";
 import { ShortcutTip } from "@/split-bill/ShortcutTip";
 
 export function FriendSearch() {
-  const input = React.useRef<HTMLInputElement | null>(null);
+  const input = React.useRef<HTMLInputElement>(null);
 
   useKeypress({ key: "\\", modifiers: ["ctrlKey"] }, () => {
     if (document.activeElement === input.current) return;

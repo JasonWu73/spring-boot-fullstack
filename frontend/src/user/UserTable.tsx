@@ -89,7 +89,7 @@ export function UserTable() {
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
   const [openResetPasswordDialog, setOpenResetPasswordDialog] =
     React.useState(false);
-  const currentUser = React.useRef<User | null>(null);
+  const currentUser = React.useRef<User>(null);
 
   function handlePaginate(paging: Pagination) {
     searchParams.set(URL_QUERY_KEY_PAGE_NUM, String(paging.pageNum));
