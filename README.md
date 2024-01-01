@@ -74,7 +74,7 @@ npm install react-router-dom
 
 # 安装信号库（仅用作全局状态管理）
 npm install @preact/signals-react
-npm install --save @types/use-sync-external-store
+npm install --save-dev @types/use-sync-external-store
 ```
 
 ## Docs
