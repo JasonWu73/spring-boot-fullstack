@@ -1,12 +1,12 @@
-import React from 'react'
-import { NavLink } from 'react-router-dom'
-import { BugOff, FileClock, Gauge, ShoppingCart, UserCog2 } from 'lucide-react'
+import React from "react";
+import { NavLink } from "react-router-dom";
+import { BugOff, FileClock, Gauge, ShoppingCart, UserCog2 } from "lucide-react";
 
-import { buttonVariants } from '@/shared/components/ui/Button'
-import { ScrollArea } from '@/shared/components/ui/ScrollArea'
-import { Separator } from '@/shared/components/ui/Separator'
-import { hasRoot } from '@/shared/auth/auth-signals'
-import { cn } from '@/shared/utils/helpers'
+import { buttonVariants } from "@/shared/components/ui/Button";
+import { ScrollArea } from "@/shared/components/ui/ScrollArea";
+import { Separator } from "@/shared/components/ui/Separator";
+import { hasRoot } from "@/shared/auth/auth-signals";
+import { cn } from "@/shared/utils/helpers";
 
 export function SideNavBar() {
   return (
@@ -17,10 +17,10 @@ export function SideNavBar() {
             to="/dashboard"
             className={({ isActive }) =>
               cn(
-                buttonVariants({ variant: 'link' }),
-                'grid grid-cols-[16px_1fr] grid-rows-1 items-center gap-2 rounded px-4 py-2 text-sm text-snow hover:bg-sky-500 hover:no-underline focus-visible:ring-slate-300 dark:text-snow hover:dark:bg-sky-600',
+                buttonVariants({ variant: "link" }),
+                "grid grid-cols-[16px_1fr] grid-rows-1 items-center gap-2 rounded px-4 py-2 text-sm text-snow hover:bg-sky-500 hover:no-underline focus-visible:ring-slate-300 dark:text-snow hover:dark:bg-sky-600",
                 isActive &&
-                  'rounded border border-sky-500 bg-sky-500 font-bold dark:border-sky-600 dark:bg-sky-600'
+                  "rounded border border-sky-500 bg-sky-500 font-bold dark:border-sky-600 dark:bg-sky-600",
               )
             }
           >
@@ -58,13 +58,13 @@ export function SideNavBar() {
         </Menu>
       </nav>
     </ScrollArea>
-  )
+  );
 }
 
 type MenuProps = {
-  children: React.ReactNode
-  title: string
-}
+  children: React.ReactNode;
+  title: string;
+};
 
 function Menu({ children, title }: MenuProps) {
   return (
@@ -72,13 +72,13 @@ function Menu({ children, title }: MenuProps) {
       <h2 className="w-10/12 pl-4 text-slate-400">{title}</h2>
       <ul className="flex w-10/12 flex-col gap-0.5">{children}</ul>
     </>
-  )
+  );
 }
 
 type MenuItemProps = {
-  children: React.ReactNode
-  link: string
-}
+  children: React.ReactNode;
+  link: string;
+};
 
 function MenuItem({ children, link }: MenuItemProps) {
   return (
@@ -87,19 +87,19 @@ function MenuItem({ children, link }: MenuItemProps) {
         to={link}
         className={({ isActive }) =>
           cn(
-            buttonVariants({ variant: 'link' }),
-            'grid grid-cols-[16px_1fr] grid-rows-1 items-center gap-2 rounded px-4 py-2 text-sm text-snow hover:bg-sky-500 hover:no-underline focus-visible:ring-slate-300 dark:text-snow hover:dark:bg-sky-600',
+            buttonVariants({ variant: "link" }),
+            "grid grid-cols-[16px_1fr] grid-rows-1 items-center gap-2 rounded px-4 py-2 text-sm text-snow hover:bg-sky-500 hover:no-underline focus-visible:ring-slate-300 dark:text-snow hover:dark:bg-sky-600",
             isActive &&
-              'rounded border border-sky-500 bg-sky-500 font-bold dark:border-sky-600 dark:bg-sky-600'
+              "rounded border border-sky-500 bg-sky-500 font-bold dark:border-sky-600 dark:bg-sky-600",
           )
         }
       >
         {children}
       </NavLink>
     </li>
-  )
+  );
 }
 
 function MenuSeparator() {
-  return <Separator className="my-2 w-4/5 dark:bg-night-4" />
+  return <Separator className="my-2 w-4/5 dark:bg-night-4" />;
 }

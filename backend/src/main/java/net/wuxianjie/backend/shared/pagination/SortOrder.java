@@ -1,13 +1,12 @@
 package net.wuxianjie.backend.shared.pagination;
 
 import com.fasterxml.jackson.annotation.JsonValue;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
-
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 /**
  * 排序方式。
@@ -16,7 +15,6 @@ import java.util.Optional;
 @ToString
 @RequiredArgsConstructor
 public enum SortOrder {
-
   /**
    * 升序。
    */
@@ -48,10 +46,11 @@ public enum SortOrder {
   public static Optional<SortOrder> resolve(final String value) {
     return Optional
       .ofNullable(value)
-      .flatMap(val -> Arrays
-        .stream(VALUES)
-        .filter(theEnum -> Objects.equals(theEnum.code, val))
-        .findFirst()
+      .flatMap(val ->
+        Arrays
+          .stream(VALUES)
+          .filter(theEnum -> Objects.equals(theEnum.code, val))
+          .findFirst()
       );
   }
 }

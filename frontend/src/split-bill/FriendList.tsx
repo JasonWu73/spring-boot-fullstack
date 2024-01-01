@@ -1,80 +1,92 @@
-import { ExclamationTriangleIcon, ReloadIcon, RocketIcon } from '@radix-ui/react-icons'
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
+import {
+  ExclamationTriangleIcon,
+  ReloadIcon,
+  RocketIcon,
+} from "@radix-ui/react-icons";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
-import { getFriendsApi } from '@/shared/apis/local/friend'
-import { Alert, AlertDescription, AlertTitle } from '@/shared/components/ui/Alert'
-import { Card } from '@/shared/components/ui/Card'
-import { Code } from '@/shared/components/ui/Code'
-import { ScrollArea } from '@/shared/components/ui/ScrollArea'
-import { useToast } from '@/shared/components/ui/use-toast'
-import { URL_QUERY_KEY_QUERY } from '@/shared/constants'
-import { useFetch } from '@/shared/hooks/use-fetch'
-import { useRefresh } from '@/shared/hooks/use-refresh'
-import { useTitle } from '@/shared/hooks/use-title'
+import { getFriendsApi } from "@/shared/apis/local/friend";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/shared/components/ui/Alert";
+import { Card } from "@/shared/components/ui/Card";
+import { Code } from "@/shared/components/ui/Code";
+import { ScrollArea } from "@/shared/components/ui/ScrollArea";
+import { useToast } from "@/shared/components/ui/use-toast";
+import { URL_QUERY_KEY_QUERY } from "@/shared/constants";
+import { useFetch } from "@/shared/hooks/use-fetch";
+import { useRefresh } from "@/shared/hooks/use-refresh";
+import { useTitle } from "@/shared/hooks/use-title";
 import {
   deleteFriend,
   getFriends,
   setFriends,
   setShowAddFriend,
-  type Friend
-} from '@/split-bill/split-bill-signals'
-import { FriendItem } from '@/split-bill/FriendItem'
-import { FriendSearch } from '@/split-bill/FriendSearch'
+  type Friend,
+} from "@/split-bill/split-bill-signals";
+import { FriendItem } from "@/split-bill/FriendItem";
+import { FriendSearch } from "@/split-bill/FriendSearch";
 
 export function FriendList() {
-  useTitle('好友列表')
+  useTitle("好友列表");
 
-  const [searchParams] = useSearchParams()
-  const nameQuery = searchParams.get(URL_QUERY_KEY_QUERY) || ''
+  const [searchParams] = useSearchParams();
+  const nameQuery = searchParams.get(URL_QUERY_KEY_QUERY) || "";
 
-  const friends = getFriends()
+  const friends = getFriends();
   const filteredFriends = nameQuery
     ? friends.filter((friend) =>
-        friend.name.toLowerCase().includes(nameQuery.toLowerCase())
+        friend.name.toLowerCase().includes(nameQuery.toLowerCase()),
       )
-    : friends
+    : friends;
 
-  const { loading, error, fetchData: getFriendsLocalApi } = useFetch(getFriendsApi)
+  const {
+    loading,
+    error,
+    fetchData: getFriendsLocalApi,
+  } = useFetch(getFriendsApi);
 
-  const location = useLocation()
+  const location = useLocation();
 
   useRefresh(() => {
     if (location.state?.noRefresh === true) {
       // 重置为可刷新，解决 F5 刷新时，无法刷新的问题
       if (location.state) {
-        location.state.noRefresh = false
+        location.state.noRefresh = false;
       }
-      return
+      return;
     }
 
-    setShowAddFriend(false)
+    setShowAddFriend(false);
 
     getFriendsLocalApi(null).then(({ data }) => {
       if (data) {
-        setFriends(data)
+        setFriends(data);
       }
-    })
-  })
+    });
+  });
 
-  const { toast } = useToast()
-  const navigate = useNavigate()
+  const { toast } = useToast();
+  const navigate = useNavigate();
 
   function handleDeleteFriend(friend: Friend) {
-    deleteFriend(friend.id)
+    deleteFriend(friend.id);
 
     toast({
-      title: '删除好友',
+      title: "删除好友",
       description: (
         <span>
           成功删除好友 <Code>{friend.name}</Code>
         </span>
-      )
-    })
+      ),
+    });
 
     navigate(`/split-bill${location.search}`, {
       replace: true,
-      state: { noRefresh: true }
-    })
+      state: { noRefresh: true },
+    });
   }
 
   return (
@@ -104,7 +116,9 @@ export function FriendList() {
               <Alert>
                 <RocketIcon className="h-4 w-4" />
                 <AlertTitle>温馨提示！</AlertTitle>
-                <AlertDescription>还没有好友，添加好友即可分摊账单</AlertDescription>
+                <AlertDescription>
+                  还没有好友，添加好友即可分摊账单
+                </AlertDescription>
               </Alert>
             )}
 
@@ -123,5 +137,5 @@ export function FriendList() {
         </ScrollArea>
       </Card>
     </>
-  )
+  );
 }

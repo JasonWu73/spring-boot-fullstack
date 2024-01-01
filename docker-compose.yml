@@ -1,9 +1,9 @@
-version: '3'
+version: "3"
 services:
   demo-db:
     image: mysql
     # 若服务器支持 x86 和 ARM 两种架构运行时
-    platform: 'linux/amd64'
+    platform: "linux/amd64"
     container_name: demo-db
     restart: always
     # 以 root 用户运行容器，这是 MySQL 官方要求的
@@ -13,15 +13,19 @@ services:
       MYSQL_ROOT_PASSWORD: qwe@123
       MYSQL_DATABASE: demo
     ports:
-      - '3307:3306'
+      - "3307:3306"
     volumes:
       # 初始化数据库表脚本，仅当容器第一次启动并且数据库为空（即数据目录为空）时执行
       - ./docker/init.sql:/docker-entrypoint-initdb.d/init.sql
       # 将数据库数据存放在宿主机中：`/Users/wxj/Downloads/demo/db`
       - /Users/wxj/Downloads/demo/db:/var/lib/mysql
-    command: ['--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
+    command:
+      [
+        "--character-set-server=utf8mb4",
+        "--collation-server=utf8mb4_unicode_ci",
+      ]
     healthcheck:
-      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
       timeout: 5s
       retries: 3
@@ -30,18 +34,28 @@ services:
 
   demo-redis:
     image: redis
-    platform: 'linux/amd64'
+    platform: "linux/amd64"
     container_name: demo-redis
     restart: always
     environment:
       TZ: Asia/Shanghai
     ports:
-      - '6380:6379'
+      - "6380:6379"
     volumes:
       - /Users/wxj/Downloads/demo/redis:/data
-    command: ['redis-server','--save', '60', '1', '--loglevel', 'warning','--requirepass','qwe@123']
+    command:
+      [
+        "redis-server",
+        "--save",
+        "60",
+        "1",
+        "--loglevel",
+        "warning",
+        "--requirepass",
+        "qwe@123",
+      ]
     healthcheck:
-      test: ['CMD','redis-cli','ping']
+      test: ["CMD", "redis-cli", "ping"]
       interval: 10s
       timeout: 5s
       retries: 3
@@ -50,7 +64,7 @@ services:
 
   demo-web:
     image: openjdk:17-jdk-slim
-    platform: 'linux/amd64'
+    platform: "linux/amd64"
     container_name: demo-web
     restart: always
     environment:
@@ -59,7 +73,7 @@ services:
     # 为了使 Spring Boot 项目自动识别 `/opt/config/application.yml`
     working_dir: /opt
     ports:
-      - '8081:8080'
+      - "8081:8080"
     volumes:
       # JAR 包所在路径，注意 `application.yml` 中使用的 MySQL 连接：
       # `docker compose up -d` 运行时：`jdbc:mysql://demo-db:3306`
@@ -73,7 +87,13 @@ services:
         condition: service_healthy
       demo-redis:
         condition: service_healthy
-    command: ['java', '-Djasypt.encryptor.password=wxj#secret_', '-jar', '/opt/web.jar']
+    command:
+      [
+        "java",
+        "-Djasypt.encryptor.password=wxj#secret_",
+        "-jar",
+        "/opt/web.jar",
+      ]
     networks:
       - demo_network
 
@@ -82,6 +102,4 @@ networks:
     driver: bridge
     driver_opts:
       com.docker.network.bridge.name: demo_network
-
-
 # 启动命令：docker compose up -d

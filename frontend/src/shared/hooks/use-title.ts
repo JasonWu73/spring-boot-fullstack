@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 
 /**
  * 用于修改页面标题的 Hook。
@@ -9,12 +9,12 @@ import React from 'react'
  */
 export function useTitle(title: string) {
   React.useEffect(() => {
-    const prevTitle = document.title
+    const prevTitle = document.title;
 
-    title && (document.title = title)
+    title && (document.title = title);
 
     return () => {
-      document.title = prevTitle
-    }
-  }, [title])
+      document.title = prevTitle;
+    };
+  }, [title]);
 }

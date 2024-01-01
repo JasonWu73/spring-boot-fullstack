@@ -1,20 +1,20 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
+import React from "react";
+import ReactDOM from "react-dom/client";
 
-import App from '@/App'
-import { configureNProgress } from '@/shared/utils/nprogress'
+import App from "@/App";
+import { configureNProgress } from "@/shared/utils/nprogress";
 
 // 自定义样式放在最后，覆盖前面的样式
-import '@/index.css'
+import "@/index.css";
 
-configureNProgress()
+configureNProgress();
 
 /* 通过 React 18 `createRoot` API 将 `App` 组件作为根组件渲染到 `id="root"` 的 HTML 元素中 */
-ReactDOM.createRoot(document.getElementById('root')!).render(
+ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>
-)
+  </React.StrictMode>,
+);
 
 /**
  * React 分为两个阶段：

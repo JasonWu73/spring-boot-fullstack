@@ -1,17 +1,17 @@
-import { ShieldPlus } from 'lucide-react'
+import { ShieldPlus } from "lucide-react";
 
-import { LoginForm } from '@/login/LoginForm'
+import { LoginForm } from "@/login/LoginForm";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle
-} from '@/shared/components/ui/Card'
-import { useTitle } from '@/shared/hooks/use-title'
+  CardTitle,
+} from "@/shared/components/ui/Card";
+import { useTitle } from "@/shared/hooks/use-title";
 
 export default function LoginPage() {
-  useTitle('登录')
+  useTitle("登录");
 
   return (
     <Card className="mx-auto mt-8 max-w-md lg:mt-24">
@@ -27,5 +27,5 @@ export default function LoginPage() {
         <LoginForm />
       </CardContent>
     </Card>
-  )
+  );
 }

@@ -1,5 +1,10 @@
 package net.wuxianjie.backend.demo.apicall;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import net.wuxianjie.backend.demo.requestparam.InnerData;
 import net.wuxianjie.backend.demo.requestparam.OuterData;
@@ -16,12 +21,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.Map;
 
 /**
  * 测试几种常用的 API 调用方式。
@@ -57,7 +56,8 @@ public class ApiCallController {
    */
   @PostMapping("/form")
   public ApiResponse<OuterData> sendPostFormRequest() {
-    final LinkedMultiValueMap<String, String> formData = getSendPostFormRequestParams();
+    final LinkedMultiValueMap<String, String> formData =
+      getSendPostFormRequestParams();
 
     return apiCaller.sendFormRequest(
       HttpMethod.POST,
@@ -99,15 +99,23 @@ public class ApiCallController {
 
   private static Map<String, String> getSendGetRequestParams() {
     return Map.of(
-      "name", "张三",
-      "num", "123",
-      "type", "1",
-      "dateTime", getNow()
+      "name",
+      "张三",
+      "num",
+      "123",
+      "type",
+      "1",
+      "dateTime",
+      getNow()
     );
   }
 
-  private static LinkedMultiValueMap<String, String> getSendPostFormRequestParams() {
-    final LinkedMultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
+  private static LinkedMultiValueMap<
+    String,
+    String
+  > getSendPostFormRequestParams() {
+    final LinkedMultiValueMap<String, String> formData =
+      new LinkedMultiValueMap<>();
 
     formData.add("name", "张三");
     formData.add("num", "123");
@@ -133,17 +141,13 @@ public class ApiCallController {
     return new OuterData(
       100L,
       "张三",
-      new InnerData(
-        new Date(),
-        LocalDate.now(),
-        LocalDateTime.now()
-      )
+      new InnerData(new Date(), LocalDate.now(), LocalDateTime.now())
     );
   }
 
   private static String getNow() {
-    return LocalDateTime.now().format(
-      DateTimeFormatter.ofPattern(JsonConfig.DATE_TIME_PATTERN)
-    );
+    return LocalDateTime
+      .now()
+      .format(DateTimeFormatter.ofPattern(JsonConfig.DATE_TIME_PATTERN));
   }
 }

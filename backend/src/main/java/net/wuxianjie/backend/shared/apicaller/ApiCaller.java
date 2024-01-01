@@ -1,5 +1,8 @@
 package net.wuxianjie.backend.shared.apicaller;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
+import java.util.function.Supplier;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
@@ -9,10 +12,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientResponseException;
-
-import java.nio.charset.StandardCharsets;
-import java.util.Map;
-import java.util.function.Supplier;
 
 /**
  * API 调用工具类。
@@ -37,15 +36,19 @@ public class ApiCaller {
     final Map<String, String> urlParams,
     final Class<T> responseType
   ) {
-    return executeRequest(() -> restClient
-      .get()
-      .uri(url, uriBuilder -> {
-        urlParams.forEach(uriBuilder::queryParam);
+    return executeRequest(() ->
+      restClient
+        .get()
+        .uri(
+          url,
+          uriBuilder -> {
+            urlParams.forEach(uriBuilder::queryParam);
 
-        return uriBuilder.build();
-      })
-      .retrieve()
-      .toEntity(responseType)
+            return uriBuilder.build();
+          }
+        )
+        .retrieve()
+        .toEntity(responseType)
     );
   }
 
@@ -63,14 +66,16 @@ public class ApiCaller {
     final HttpMethod method,
     final String url,
     final LinkedMultiValueMap<String, String> formData,
-    final Class<T> responseType) {
-    return executeRequest(() -> restClient
-      .method(method)
-      .uri(url)
-      .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-      .body(formData)
-      .retrieve()
-      .toEntity(responseType)
+    final Class<T> responseType
+  ) {
+    return executeRequest(() ->
+      restClient
+        .method(method)
+        .uri(url)
+        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+        .body(formData)
+        .retrieve()
+        .toEntity(responseType)
     );
   }
 
@@ -90,13 +95,14 @@ public class ApiCaller {
     final MultipartBodyBuilder formDataBuilder,
     final Class<T> responseType
   ) {
-    return executeRequest(() -> restClient
-      .method(method)
-      .uri(url)
-      .contentType(MediaType.MULTIPART_FORM_DATA)
-      .body(formDataBuilder.build())
-      .retrieve()
-      .toEntity(responseType)
+    return executeRequest(() ->
+      restClient
+        .method(method)
+        .uri(url)
+        .contentType(MediaType.MULTIPART_FORM_DATA)
+        .body(formDataBuilder.build())
+        .retrieve()
+        .toEntity(responseType)
     );
   }
 
@@ -116,13 +122,14 @@ public class ApiCaller {
     final Object jsonData,
     final Class<T> responseType
   ) {
-    return executeRequest(() -> restClient
-      .method(method)
-      .uri(url)
-      .contentType(MediaType.APPLICATION_JSON)
-      .body(jsonData)
-      .retrieve()
-      .toEntity(responseType)
+    return executeRequest(() ->
+      restClient
+        .method(method)
+        .uri(url)
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(jsonData)
+        .retrieve()
+        .toEntity(responseType)
     );
   }
 

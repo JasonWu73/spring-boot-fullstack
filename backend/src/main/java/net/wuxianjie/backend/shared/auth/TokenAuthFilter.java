@@ -4,6 +4,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import net.wuxianjie.backend.shared.auth.dto.CachedAuth;
@@ -12,8 +13,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
-
-import java.io.IOException;
 
 /**
  * 访问令牌（Access Token）身份验证过滤器。
@@ -69,9 +68,9 @@ public class TokenAuthFilter extends OncePerRequestFilter {
         new ApiException(
           HttpStatus.UNAUTHORIZED,
           "HTTP 请求头 [%s: %s] 格式错误".formatted(
-            HttpHeaders.AUTHORIZATION,
-            authorization
-          )
+              HttpHeaders.AUTHORIZATION,
+              authorization
+            )
         )
       );
 

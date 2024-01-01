@@ -1,38 +1,38 @@
-import React from 'react'
+import React from "react";
 
-import LoadingButton from '@/shared/components/ui/LoadingButton'
-import { useFetch } from '@/shared/hooks/use-fetch'
-import { useRefresh } from '@/shared/hooks/use-refresh'
-import { getProductApi } from '@/shared/apis/dummyjson/product'
-import { cn } from '@/shared/utils/helpers'
+import LoadingButton from "@/shared/components/ui/LoadingButton";
+import { useFetch } from "@/shared/hooks/use-fetch";
+import { useRefresh } from "@/shared/hooks/use-refresh";
+import { getProductApi } from "@/shared/apis/dummyjson/product";
+import { cn } from "@/shared/utils/helpers";
 
 export function Product() {
   useRefresh(() => {
-    getRandomProduct().then()
-  })
+    getRandomProduct().then();
+  });
 
   // 成功获取商品的次数
-  const [count, setCount] = React.useState(0)
+  const [count, setCount] = React.useState(0);
 
   const {
     loading,
     data: product,
     error,
-    fetchData: getProduct
+    fetchData: getProduct,
   } = useFetch(async (productId: number) => {
-    const response = await getProductApi(productId)
+    const response = await getProductApi(productId);
 
     if (response.data) {
-      setCount(count + 1)
+      setCount(count + 1);
     }
 
-    return response
-  })
+    return response;
+  });
 
   function getRandomProduct() {
-    const randomId = Math.floor(Math.random() * 110)
+    const randomId = Math.floor(Math.random() * 110);
 
-    return getProduct(randomId)
+    return getProduct(randomId);
   }
 
   return (
@@ -62,7 +62,11 @@ export function Product() {
       </div>
 
       <div className="row-span-1">
-        <LoadingButton loading={loading} onClick={getRandomProduct} className="my-4">
+        <LoadingButton
+          loading={loading}
+          onClick={getRandomProduct}
+          className="my-4"
+        >
           获取商品
         </LoadingButton>
       </div>
@@ -73,14 +77,16 @@ export function Product() {
         </p>
       </div>
     </div>
-  )
+  );
 }
 
 type TitleProps = {
-  label: string
-  isError?: boolean
-}
+  label: string;
+  isError?: boolean;
+};
 
 function Title({ label, isError = false }: TitleProps) {
-  return <h1 className={cn(isError && 'text-red-500 dark:text-red-600')}>{label}</h1>
+  return (
+    <h1 className={cn(isError && "text-red-500 dark:text-red-600")}>{label}</h1>
+  );
 }

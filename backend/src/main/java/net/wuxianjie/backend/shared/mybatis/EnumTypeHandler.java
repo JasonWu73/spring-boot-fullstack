@@ -1,17 +1,16 @@
 package net.wuxianjie.backend.shared.mybatis;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import org.apache.ibatis.type.BaseTypeHandler;
-import org.apache.ibatis.type.JdbcType;
-import org.springframework.stereotype.Component;
-
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Optional;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import org.apache.ibatis.type.BaseTypeHandler;
+import org.apache.ibatis.type.JdbcType;
+import org.springframework.stereotype.Component;
 
 /**
  * 实现枚举值与数据库中 {@code int} 类型值的自动进行转换。
@@ -59,10 +58,11 @@ public class EnumTypeHandler<T extends Enum<?> & EnumType>
   private T toEnum(final Class<T> enumClass, final int value) {
     return Optional
       .ofNullable(enumClass.getEnumConstants())
-      .flatMap(enums -> Arrays
-        .stream(enums)
-        .filter(theEnum -> theEnum.getCode() == value)
-        .findFirst()
+      .flatMap(enums ->
+        Arrays
+          .stream(enums)
+          .filter(theEnum -> theEnum.getCode() == value)
+          .findFirst()
       )
       .orElse(null);
   }

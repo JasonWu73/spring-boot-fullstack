@@ -1,13 +1,12 @@
 package net.wuxianjie.backend.shared.operationlog.dto;
 
 import jakarta.validation.constraints.NotNull;
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.wuxianjie.backend.shared.json.JsonConfig;
 import org.springframework.format.annotation.DateTimeFormat;
-
-import java.time.LocalDate;
 
 /**
  * 操作日志查询参数。

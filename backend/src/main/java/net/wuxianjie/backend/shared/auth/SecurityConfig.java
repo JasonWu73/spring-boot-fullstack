@@ -1,5 +1,6 @@
 package net.wuxianjie.backend.shared.auth;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import net.wuxianjie.backend.shared.exception.ApiException;
 import org.springframework.context.annotation.Bean;
@@ -24,8 +25,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
-import java.util.List;
-
 /**
  * Spring Security 配置。
  */
@@ -40,7 +39,8 @@ public class SecurityConfig {
    */
   public static final String API_PATH_PREFIX = "/api/";
 
-  private static final String AUTH_HIERARCHY = """
+  private static final String AUTH_HIERARCHY =
+    """
     root > admin
     admin > user""";
 
@@ -76,18 +76,23 @@ public class SecurityConfig {
    * @throws Exception 配置错误时抛出
    */
   @Bean
-  public SecurityFilterChain filterChain(final HttpSecurity http) throws Exception {
+  public SecurityFilterChain filterChain(final HttpSecurity http)
+    throws Exception {
     // 以下配置仅对 API 请求（即以 `/api/` 为前缀的 Path）生效
     http
       .securityMatcher("/api/**")
       // 按顺序比较，符合则退出后续比较
       .authorizeHttpRequests(auth -> {
         // 开放登录 API
-        auth.requestMatchers("/api/v1/auth/login").permitAll()
+        auth
+          .requestMatchers("/api/v1/auth/login")
+          .permitAll()
           // 开放公开的 API
-          .requestMatchers("/api/v1/public/**").permitAll()
+          .requestMatchers("/api/v1/public/**")
+          .permitAll()
           // 默认所有 API 都需要登录才能访问
-          .requestMatchers("/**").authenticated();
+          .requestMatchers("/**")
+          .authenticated();
       })
       // 添加自定义 Token 身份验证过滤器
       .addFilterBefore(
@@ -155,7 +160,8 @@ public class SecurityConfig {
     configuration.setAllowCredentials(true);
     configuration.setAllowedHeaders(List.of("*"));
 
-    final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    final UrlBasedCorsConfigurationSource source =
+      new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", configuration);
 
     return source;
@@ -192,7 +198,8 @@ public class SecurityConfig {
    */
   @Bean
   public DefaultMethodSecurityExpressionHandler expressionHandler() {
-    final DefaultMethodSecurityExpressionHandler handler = new DefaultMethodSecurityExpressionHandler();
+    final DefaultMethodSecurityExpressionHandler handler =
+      new DefaultMethodSecurityExpressionHandler();
     handler.setRoleHierarchy(roleHierarchy());
     return handler;
   }

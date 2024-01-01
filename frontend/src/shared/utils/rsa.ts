@@ -1,4 +1,4 @@
-import { JSEncrypt } from 'jsencrypt'
+import { JSEncrypt } from "jsencrypt";
 
 /**
  * 使用公钥加密字符串。
@@ -8,9 +8,9 @@ import { JSEncrypt } from 'jsencrypt'
  * @returns string 加密后的字符串
  */
 export function encrypt(publicKey: string, raw: string) {
-  const encrypt = new JSEncrypt()
-  encrypt.setPublicKey(publicKey)
-  return encrypt.encrypt(raw) as string
+  const encrypt = new JSEncrypt();
+  encrypt.setPublicKey(publicKey);
+  return encrypt.encrypt(raw) as string;
 }
 
 /**
@@ -21,7 +21,7 @@ export function encrypt(publicKey: string, raw: string) {
  * @returns string 解密后的字符串
  */
 export function decrypt(privateKey: string, encrypted: string) {
-  const encrypt = new JSEncrypt()
-  encrypt.setPrivateKey(privateKey)
-  return encrypt.decrypt(encrypted) as string
+  const encrypt = new JSEncrypt();
+  encrypt.setPrivateKey(privateKey);
+  return encrypt.decrypt(encrypted) as string;
 }

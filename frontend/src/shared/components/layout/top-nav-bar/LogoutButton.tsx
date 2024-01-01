@@ -1,17 +1,17 @@
-import { LogOut } from 'lucide-react'
+import { LogOut } from "lucide-react";
 
-import { logoutApi } from '@/shared/apis/backend/auth'
-import LoadingButton from '@/shared/components/ui/LoadingButton'
-import { useFetch } from '@/shared/hooks/use-fetch'
-import { clearAuth } from '@/shared/auth/auth-signals'
+import { logoutApi } from "@/shared/apis/backend/auth";
+import LoadingButton from "@/shared/components/ui/LoadingButton";
+import { useFetch } from "@/shared/hooks/use-fetch";
+import { clearAuth } from "@/shared/auth/auth-signals";
 
 export function LogoutButton() {
-  const { loading, fetchData: logout } = useFetch(logoutApi)
+  const { loading, fetchData: logout } = useFetch(logoutApi);
 
   async function handleLogout() {
-    await logout(null)
+    await logout(null);
 
-    clearAuth()
+    clearAuth();
   }
 
   return (
@@ -24,5 +24,5 @@ export function LogoutButton() {
       {!loading && <LogOut className="h-4 w-4" />}
       退出
     </LoadingButton>
-  )
+  );
 }

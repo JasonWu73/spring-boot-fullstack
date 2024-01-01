@@ -1,13 +1,12 @@
 package net.wuxianjie.backend.shared.auth;
 
 import com.fasterxml.jackson.annotation.JsonValue;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
-
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 /**
  * 系统可用权限。
@@ -16,7 +15,6 @@ import java.util.Optional;
 @ToString
 @RequiredArgsConstructor
 public enum Authority {
-
   /**
    * 超级管理员。
    * <p>

@@ -1,8 +1,8 @@
 package net.wuxianjie.backend.user;
 
 import lombok.RequiredArgsConstructor;
-import net.wuxianjie.backend.shared.auth.dto.CachedAuth;
 import net.wuxianjie.backend.shared.auth.TokenAuth;
+import net.wuxianjie.backend.shared.auth.dto.CachedAuth;
 import net.wuxianjie.backend.shared.exception.ApiException;
 import net.wuxianjie.backend.shared.json.JsonConverter;
 import org.springframework.data.redis.core.StringRedisTemplate;

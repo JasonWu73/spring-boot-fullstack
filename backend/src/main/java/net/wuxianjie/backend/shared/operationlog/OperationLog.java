@@ -1,8 +1,7 @@
 package net.wuxianjie.backend.shared.operationlog;
 
-import lombok.Data;
-
 import java.time.LocalDateTime;
+import lombok.Data;
 
 /**
  * 操作日志数据库表。

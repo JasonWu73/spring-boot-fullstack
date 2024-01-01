@@ -1,8 +1,7 @@
 package net.wuxianjie.backend.user;
 
-import lombok.Data;
-
 import java.time.LocalDateTime;
+import lombok.Data;
 
 /**
  * 用户数据库表。

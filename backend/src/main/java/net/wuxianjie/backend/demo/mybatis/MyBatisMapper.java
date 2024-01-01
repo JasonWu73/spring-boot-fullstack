@@ -1,15 +1,13 @@
 package net.wuxianjie.backend.demo.mybatis;
 
-import org.apache.ibatis.annotations.Mapper;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * MyBatis 测试。
  */
 @Mapper
 public interface MyBatisMapper {
-
   /**
    * 查询。
    *

@@ -6,7 +6,6 @@ import net.wuxianjie.backend.shared.auth.dto.CachedAuth;
  * 访问令牌身份验证接口。
  */
 public interface TokenAuth {
-
   /**
    * 验证访问令牌。
    *

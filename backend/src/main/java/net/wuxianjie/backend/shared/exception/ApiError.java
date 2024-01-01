@@ -1,11 +1,10 @@
 package net.wuxianjie.backend.shared.exception;
 
+import java.time.LocalDateTime;
+import java.util.Objects;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-
-import java.time.LocalDateTime;
-import java.util.Objects;
 
 /**
  * API 错误响应结果。
@@ -17,8 +16,12 @@ import java.util.Objects;
  * @param error 错误信息
  * @param path 请求地址
  */
-public record ApiError(LocalDateTime timestamp, int status, String error, String path) {
-
+public record ApiError(
+  LocalDateTime timestamp,
+  int status,
+  String error,
+  String path
+) {
   /**
    * 构造 API 错误响应结果。
    *
@@ -36,7 +39,11 @@ public record ApiError(LocalDateTime timestamp, int status, String error, String
    * @param error 错误信息
    * @param path 请求地址
    */
-  public ApiError(final HttpStatus status, final String error, final String path) {
+  public ApiError(
+    final HttpStatus status,
+    final String error,
+    final String path
+  ) {
     this(LocalDateTime.now(), status.value(), error, path);
   }
 
@@ -44,6 +51,9 @@ public record ApiError(LocalDateTime timestamp, int status, String error, String
     final ServletRequestAttributes requestAttributes =
       (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 
-    return Objects.requireNonNull(requestAttributes).getRequest().getRequestURI();
+    return Objects
+      .requireNonNull(requestAttributes)
+      .getRequest()
+      .getRequestURI();
   }
 }

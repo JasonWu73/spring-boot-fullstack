@@ -3,14 +3,14 @@ import {
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle
-} from '@/shared/components/ui/Card'
-import { useTitle } from '@/shared/hooks/use-title'
-import { UserSearch } from '@/user/UserSearch'
-import { UserTable } from '@/user/UserTable'
+  CardTitle,
+} from "@/shared/components/ui/Card";
+import { useTitle } from "@/shared/hooks/use-title";
+import { UserSearch } from "@/user/UserSearch";
+import { UserTable } from "@/user/UserTable";
 
 export default function UserListPage() {
-  useTitle('用户管理')
+  useTitle("用户管理");
 
   return (
     <Card className="mx-auto h-full w-full">
@@ -25,5 +25,5 @@ export default function UserListPage() {
         <UserTable />
       </CardContent>
     </Card>
-  )
+  );
 }

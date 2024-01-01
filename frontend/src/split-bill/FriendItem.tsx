@@ -1,57 +1,61 @@
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/shared/components/ui/Avatar'
-import { Button } from '@/shared/components/ui/Button'
-import { Code } from '@/shared/components/ui/Code'
-import { ConfirmDialog } from '@/shared/components/ui/ConfirmDialog'
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/shared/components/ui/Avatar";
+import { Button } from "@/shared/components/ui/Button";
+import { Code } from "@/shared/components/ui/Code";
+import { ConfirmDialog } from "@/shared/components/ui/ConfirmDialog";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
-  TooltipTrigger
-} from '@/shared/components/ui/Tooltip'
+  TooltipTrigger,
+} from "@/shared/components/ui/Tooltip";
 import {
   getLoadingFriend,
   setShowAddFriend,
-  type Friend
-} from '@/split-bill/split-bill-signals'
-import { cn, truncate } from '@/shared/utils/helpers'
+  type Friend,
+} from "@/split-bill/split-bill-signals";
+import { cn, truncate } from "@/shared/utils/helpers";
 
 type FriendItemProps = {
-  friend: Friend
-  onDeleteFriend: (friend: Friend) => void
-}
+  friend: Friend;
+  onDeleteFriend: (friend: Friend) => void;
+};
 
 export function FriendItem({ friend, onDeleteFriend }: FriendItemProps) {
-  const params = useParams()
-  const friendId = Number(params.friendId)
-  const selected = friend.id === friendId
+  const params = useParams();
+  const friendId = Number(params.friendId);
+  const selected = friend.id === friendId;
 
-  const name = truncate(friend.name, 5)
+  const name = truncate(friend.name, 5);
 
-  const location = useLocation()
-  const navigate = useNavigate()
-  const loading = getLoadingFriend()
+  const location = useLocation();
+  const navigate = useNavigate();
+  const loading = getLoadingFriend();
 
   function handleToggleSelect() {
     const url = selected
       ? `/split-bill${location.search}`
-      : `/split-bill/${friend.id}${location.search}`
+      : `/split-bill/${friend.id}${location.search}`;
 
     navigate(url, {
       state: {
-        noRefresh: true
-      }
-    })
+        noRefresh: true,
+      },
+    });
 
-    setShowAddFriend(false)
+    setShowAddFriend(false);
   }
 
   return (
     <li
       className={cn(
-        'group relative flex items-center justify-between gap-2 rounded px-4 py-2 hover:bg-amber-100 dark:hover:text-slate-950',
-        selected && 'bg-amber-100 dark:text-night'
+        "group relative flex items-center justify-between gap-2 rounded px-4 py-2 hover:bg-amber-100 dark:hover:text-slate-950",
+        selected && "bg-amber-100 dark:text-night",
       )}
     >
       <ConfirmDialog
@@ -108,8 +112,8 @@ export function FriendItem({ friend, onDeleteFriend }: FriendItemProps) {
       </div>
 
       <Button disabled={loading} onClick={handleToggleSelect}>
-        {selected ? '关闭' : '选择'}
+        {selected ? "关闭" : "选择"}
       </Button>
     </li>
-  )
+  );
 }

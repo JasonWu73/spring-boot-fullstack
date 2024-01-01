@@ -1,6 +1,6 @@
-import { sendRequest, type ApiRequest } from '@/shared/utils/fetch'
+import { sendRequest, type ApiRequest } from "@/shared/utils/fetch";
 
-const BASE_URL = `${window.location.origin}`
+const BASE_URL = `${window.location.origin}`;
 
 /**
  * 请求前端本的 JSON 文件。
@@ -11,10 +11,10 @@ const BASE_URL = `${window.location.origin}`
 export async function requestLocalApi<T>(request: ApiRequest) {
   const { status, data, error } = await sendRequest<T, string>({
     ...request,
-    url: `${BASE_URL}${request.url}`
-  })
+    url: `${BASE_URL}${request.url}`,
+  });
 
-  if (error) return { status, error }
+  if (error) return { status, error };
 
-  return { status, data }
+  return { status, data };
 }

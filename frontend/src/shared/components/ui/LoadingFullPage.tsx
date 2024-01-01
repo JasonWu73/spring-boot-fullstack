@@ -1,4 +1,4 @@
-import { Loading } from '@/shared/components/ui/Loading'
+import { Loading } from "@/shared/components/ui/Loading";
 
 export function LoadingFullPage() {
   return (
@@ -8,5 +8,5 @@ export function LoadingFullPage() {
         <span className="select-none">加载中...</span>
       </div>
     </div>
-  )
+  );
 }

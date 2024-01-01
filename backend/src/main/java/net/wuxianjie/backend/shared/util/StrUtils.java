@@ -1,8 +1,7 @@
 package net.wuxianjie.backend.shared.util;
 
-import org.springframework.util.StringUtils;
-
 import java.util.UUID;
+import org.springframework.util.StringUtils;
 
 /**
  * 字符串工具类。

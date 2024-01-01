@@ -5,14 +5,13 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 
 /**
  * JSON 解析配置。
@@ -70,33 +69,37 @@ public class JsonConfig {
   private static JavaTimeModule getJavaTimeModule() {
     final JavaTimeModule timeModule = new JavaTimeModule();
 
-    timeModule.addSerializer(LocalDateTime.class, new JsonSerializer<>() {
-
-      @Override
-      public void serialize(
-        final LocalDateTime value,
-        final JsonGenerator gen,
-        final SerializerProvider serializers
-      ) throws IOException {
-        gen.writeString(
-          value.format(DateTimeFormatter.ofPattern(DATE_TIME_PATTERN))
-        );
+    timeModule.addSerializer(
+      LocalDateTime.class,
+      new JsonSerializer<>() {
+        @Override
+        public void serialize(
+          final LocalDateTime value,
+          final JsonGenerator gen,
+          final SerializerProvider serializers
+        ) throws IOException {
+          gen.writeString(
+            value.format(DateTimeFormatter.ofPattern(DATE_TIME_PATTERN))
+          );
+        }
       }
-    });
+    );
 
-    timeModule.addDeserializer(LocalDateTime.class, new JsonDeserializer<>() {
-
-      @Override
-      public LocalDateTime deserialize(
-        final JsonParser p,
-        final DeserializationContext ctx
-      ) throws IOException {
-        return LocalDateTime.parse(
-          p.getValueAsString(),
-          DateTimeFormatter.ofPattern(DATE_TIME_PATTERN)
-        );
+    timeModule.addDeserializer(
+      LocalDateTime.class,
+      new JsonDeserializer<>() {
+        @Override
+        public LocalDateTime deserialize(
+          final JsonParser p,
+          final DeserializationContext ctx
+        ) throws IOException {
+          return LocalDateTime.parse(
+            p.getValueAsString(),
+            DateTimeFormatter.ofPattern(DATE_TIME_PATTERN)
+          );
+        }
       }
-    });
+    );
 
     return timeModule;
   }

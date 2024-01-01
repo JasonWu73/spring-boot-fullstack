@@ -1,12 +1,11 @@
 package net.wuxianjie.backend.user.dto;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.wuxianjie.backend.user.AccountStatus;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * 用户信息。
@@ -75,9 +74,7 @@ public class UserInfo {
       username,
       nickname,
       status,
-      authorities == null
-        ? List.of()
-        : List.of(authorities.split(","))
+      authorities == null ? List.of() : List.of(authorities.split(","))
     );
   }
 }

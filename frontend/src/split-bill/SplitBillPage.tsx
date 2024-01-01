@@ -1,45 +1,45 @@
-import React from 'react'
-import { Outlet, useNavigate } from 'react-router-dom'
+import React from "react";
+import { Outlet, useNavigate } from "react-router-dom";
 
-import { Button } from '@/shared/components/ui/Button'
-import { Loading } from '@/shared/components/ui/Loading'
-import { useKeypress } from '@/shared/hooks/use-keypress'
-import { useTitle } from '@/shared/hooks/use-title'
+import { Button } from "@/shared/components/ui/Button";
+import { Loading } from "@/shared/components/ui/Loading";
+import { useKeypress } from "@/shared/hooks/use-keypress";
+import { useTitle } from "@/shared/hooks/use-title";
 import {
   createSplitBillState,
   getShowAddFriend,
-  setShowAddFriend
-} from '@/split-bill/split-bill-signals'
-import { wait } from '@/shared/utils/helpers'
-import { FriendList } from '@/split-bill/FriendList'
+  setShowAddFriend,
+} from "@/split-bill/split-bill-signals";
+import { wait } from "@/shared/utils/helpers";
+import { FriendList } from "@/split-bill/FriendList";
 
 // 测试 React 懒加载非 `default` 导出的组件
 const AddFriend = React.lazy(() =>
   wait(2).then(() =>
-    import('@/split-bill/AddFriend').then((module) => ({
-      default: module.AddFriend
-    }))
-  )
-)
+    import("@/split-bill/AddFriend").then((module) => ({
+      default: module.AddFriend,
+    })),
+  ),
+);
 
 // 创建组件外 Signal
-createSplitBillState()
+createSplitBillState();
 
 export default function SplitBillPage() {
-  useTitle('分账 App')
+  useTitle("分账 App");
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  useKeypress({ key: 'Escape' }, () => {
-    setShowAddFriend(false)
+  useKeypress({ key: "Escape" }, () => {
+    setShowAddFriend(false);
 
-    navigate('/split-bill', { state: { noRefresh: true } })
-  })
+    navigate("/split-bill", { state: { noRefresh: true } });
+  });
 
-  const showAddFriend = getShowAddFriend()
+  const showAddFriend = getShowAddFriend();
 
   function handleToggleAddFriend() {
-    setShowAddFriend(!showAddFriend)
+    setShowAddFriend(!showAddFriend);
   }
 
   return (
@@ -57,7 +57,7 @@ export default function SplitBillPage() {
 
         <div className="self-end">
           <Button onClick={handleToggleAddFriend}>
-            {showAddFriend ? '关闭' : '添加好友'}
+            {showAddFriend ? "关闭" : "添加好友"}
           </Button>
         </div>
       </div>
@@ -66,5 +66,5 @@ export default function SplitBillPage() {
         <Outlet />
       </div>
     </div>
-  )
+  );
 }

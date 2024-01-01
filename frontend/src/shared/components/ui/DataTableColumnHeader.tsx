@@ -2,36 +2,37 @@ import {
   ArrowDownIcon,
   ArrowUpIcon,
   CaretSortIcon,
-  EyeNoneIcon
-} from '@radix-ui/react-icons'
-import type { Column } from '@tanstack/react-table'
-import React from 'react'
+  EyeNoneIcon,
+} from "@radix-ui/react-icons";
+import type { Column } from "@tanstack/react-table";
+import React from "react";
 
-import { Button } from '@/shared/components/ui/Button'
+import { Button } from "@/shared/components/ui/Button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
-  DropdownMenuTrigger
-} from '@/shared/components/ui/DropdownMenu'
-import { cn } from '@/shared/utils/helpers'
+  DropdownMenuTrigger,
+} from "@/shared/components/ui/DropdownMenu";
+import { cn } from "@/shared/utils/helpers";
 
-type DataTableColumnHeaderProps<TData, TValue> = React.HTMLAttributes<HTMLDivElement> & {
-  column: Column<TData, TValue>
-  title?: string
-  sortable?: boolean
-}
+type DataTableColumnHeaderProps<TData, TValue> =
+  React.HTMLAttributes<HTMLDivElement> & {
+    column: Column<TData, TValue>;
+    title?: string;
+    sortable?: boolean;
+  };
 
 function DataTableColumnHeader<TData, TValue>({
   column,
-  title = '',
+  title = "",
   className,
   children,
-  sortable = false
+  sortable = false,
 }: DataTableColumnHeaderProps<TData, TValue>) {
   return (
-    <div className={cn('flex items-center space-x-2', className)}>
+    <div className={cn("flex items-center space-x-2", className)}>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
@@ -44,9 +45,9 @@ function DataTableColumnHeader<TData, TValue>({
             {!sortable && <CaretSortIcon className="ml-2 h-4 w-4" />}
 
             {sortable &&
-              (column.getIsSorted() === 'desc' ? (
+              (column.getIsSorted() === "desc" ? (
                 <ArrowDownIcon className="ml-2 h-4 w-4" />
-              ) : column.getIsSorted() === 'asc' ? (
+              ) : column.getIsSorted() === "asc" ? (
                 <ArrowUpIcon className="ml-2 h-4 w-4" />
               ) : (
                 <CaretSortIcon className="ml-2 h-4 w-4" />
@@ -86,7 +87,7 @@ function DataTableColumnHeader<TData, TValue>({
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
-  )
+  );
 }
 
-export { DataTableColumnHeader }
+export { DataTableColumnHeader };

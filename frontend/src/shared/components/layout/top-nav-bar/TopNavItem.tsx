@@ -1,19 +1,19 @@
-import React from 'react'
-import { NavLink } from 'react-router-dom'
+import React from "react";
+import { NavLink } from "react-router-dom";
 
-import { AuthSwitch } from '@/shared/components/layout/top-nav-bar/AuthSwitch'
-import { buttonVariants } from '@/shared/components/ui/Button'
+import { AuthSwitch } from "@/shared/components/layout/top-nav-bar/AuthSwitch";
+import { buttonVariants } from "@/shared/components/ui/Button";
 import {
   NavigationMenu,
   NavigationMenuItem,
-  NavigationMenuList
-} from '@/shared/components/ui/NavigationMenu'
-import { hasUser } from '@/shared/auth/auth-signals'
-import { cn } from '@/shared/utils/helpers'
+  NavigationMenuList,
+} from "@/shared/components/ui/NavigationMenu";
+import { hasUser } from "@/shared/auth/auth-signals";
+import { cn } from "@/shared/utils/helpers";
 
 type PageNavProps = {
-  open: boolean
-}
+  open: boolean;
+};
 
 export function TopNavItem({ open }: PageNavProps) {
   return (
@@ -26,8 +26,8 @@ export function TopNavItem({ open }: PageNavProps) {
 
       <NavigationMenu
         className={cn(
-          'absolute left-0 top-16 z-50 h-[calc(100%-4rem)] w-full max-w-full -translate-x-full items-start bg-slate-950 pt-4 duration-500 lg:hidden dark:bg-night-1',
-          open && 'translate-x-0'
+          "absolute left-0 top-16 z-50 h-[calc(100%-4rem)] w-full max-w-full -translate-x-full items-start bg-slate-950 pt-4 duration-500 lg:hidden dark:bg-night-1",
+          open && "translate-x-0",
         )}
       >
         <NavigationMenuList className="flex-col gap-4">
@@ -35,7 +35,7 @@ export function TopNavItem({ open }: PageNavProps) {
         </NavigationMenuList>
       </NavigationMenu>
     </>
-  )
+  );
 }
 
 function NavItemList() {
@@ -49,13 +49,13 @@ function NavItemList() {
 
       {hasUser() && <NavItem link="/compound-component">复合组件</NavItem>}
     </>
-  )
+  );
 }
 
 type NavItemProps = {
-  children: React.ReactNode
-  link: string
-}
+  children: React.ReactNode;
+  link: string;
+};
 
 function NavItem({ children, link }: NavItemProps) {
   return (
@@ -64,14 +64,14 @@ function NavItem({ children, link }: NavItemProps) {
         to={link}
         className={({ isActive }) =>
           cn(
-            buttonVariants({ variant: 'link' }),
-            'text-base font-bold text-snow hover:text-sky-500 hover:no-underline focus-visible:ring-slate-300 dark:text-snow dark:hover:text-sky-600',
-            isActive && 'text-sky-500 dark:text-sky-600'
+            buttonVariants({ variant: "link" }),
+            "text-base font-bold text-snow hover:text-sky-500 hover:no-underline focus-visible:ring-slate-300 dark:text-snow dark:hover:text-sky-600",
+            isActive && "text-sky-500 dark:text-sky-600",
           )
         }
       >
         {children}
       </NavLink>
     </NavigationMenuItem>
-  )
+  );
 }

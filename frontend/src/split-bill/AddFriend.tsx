@@ -1,52 +1,60 @@
-import { zodResolver } from '@hookform/resolvers/zod'
-import { format } from 'date-fns'
-import { useForm } from 'react-hook-form'
-import { z } from 'zod'
+import { zodResolver } from "@hookform/resolvers/zod";
+import { format } from "date-fns";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
-import { Button } from '@/shared/components/ui/Button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/Card'
-import { FormCalendar, FormInput } from '@/shared/components/ui/CustomFormField'
-import { Form } from '@/shared/components/ui/Form'
-import { useTitle } from '@/shared/hooks/use-title'
-import { addFriend, setShowAddFriend } from '@/split-bill/split-bill-signals'
+import { Button } from "@/shared/components/ui/Button";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/shared/components/ui/Card";
+import {
+  FormCalendar,
+  FormInput,
+} from "@/shared/components/ui/CustomFormField";
+import { Form } from "@/shared/components/ui/Form";
+import { useTitle } from "@/shared/hooks/use-title";
+import { addFriend, setShowAddFriend } from "@/split-bill/split-bill-signals";
 
 const formSchema = z.object({
-  name: z.string().min(1, '必须输入姓名').trim(),
-  image: z.string().url({ message: '图片必须是有效的 URL' }).trim(),
+  name: z.string().min(1, "必须输入姓名").trim(),
+  image: z.string().url({ message: "图片必须是有效的 URL" }).trim(),
   birthday: z
-    .date({ required_error: '必须选择好友生日' })
-    .max(new Date(), '生日不能是未来的日期')
-})
+    .date({ required_error: "必须选择好友生日" })
+    .max(new Date(), "生日不能是未来的日期"),
+});
 
-type FormSchema = z.infer<typeof formSchema>
+type FormSchema = z.infer<typeof formSchema>;
 
 const defaultValues: FormSchema = {
-  name: '',
-  image: 'https://i.pravatar.cc/150',
-  birthday: undefined as unknown as Date
-}
+  name: "",
+  image: "https://i.pravatar.cc/150",
+  birthday: undefined as unknown as Date,
+};
 
 export function AddFriend() {
-  useTitle('添加好友')
+  useTitle("添加好友");
 
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
-    defaultValues
-  })
+    defaultValues,
+  });
 
   function onSubmit(values: FormSchema) {
-    const newId = Date.now()
+    const newId = Date.now();
 
     addFriend({
       id: newId,
       name: values.name,
       image: `${values.image}?u=${newId}`,
-      birthday: format(values.birthday, 'yyyy-MM-dd'),
+      birthday: format(values.birthday, "yyyy-MM-dd"),
       balance: 0,
-      creditRating: 0
-    })
+      creditRating: 0,
+    });
 
-    setShowAddFriend(false)
+    setShowAddFriend(false);
   }
 
   return (
@@ -57,7 +65,10 @@ export function AddFriend() {
 
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="flex flex-col gap-4"
+          >
             <FormInput
               control={form.control}
               name="name"
@@ -65,7 +76,7 @@ export function AddFriend() {
               label="👫 好友名字"
               labelWidth={100}
               placeholder="好友名字"
-              isError={form.getFieldState('name')?.invalid}
+              isError={form.getFieldState("name")?.invalid}
               className="bg-slate-50"
             />
 
@@ -76,7 +87,7 @@ export function AddFriend() {
               label="🌄 图片网址"
               labelWidth={100}
               placeholder="图片网址"
-              isError={form.getFieldState('image')?.invalid}
+              isError={form.getFieldState("image")?.invalid}
               className="bg-slate-50"
             />
 
@@ -86,8 +97,10 @@ export function AddFriend() {
               label="🎂 好友生日"
               labelWidth={100}
               placeholder="选择好友生日"
-              disabledWhen={(date) => date > new Date() || date < new Date('1900-01-01')}
-              isError={form.getFieldState('birthday')?.invalid}
+              disabledWhen={(date) =>
+                date > new Date() || date < new Date("1900-01-01")
+              }
+              isError={form.getFieldState("birthday")?.invalid}
               className="bg-slate-50"
             />
 
@@ -98,5 +111,5 @@ export function AddFriend() {
         </Form>
       </CardContent>
     </Card>
-  )
+  );
 }

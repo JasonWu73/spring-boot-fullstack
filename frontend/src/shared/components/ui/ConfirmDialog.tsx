@@ -1,5 +1,5 @@
-import { AlertOctagon } from 'lucide-react'
-import React from 'react'
+import { AlertOctagon } from "lucide-react";
+import React from "react";
 
 import {
   AlertDialog,
@@ -10,24 +10,24 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger
-} from '@/shared/components/ui/AlertDialog'
-import { buttonVariants } from '@/shared/components/ui/Button'
+  AlertDialogTrigger,
+} from "@/shared/components/ui/AlertDialog";
+import { buttonVariants } from "@/shared/components/ui/Button";
 
 type ConfirmDialogProps = {
-  open?: boolean
-  onOpenChange?: (open: boolean) => void
-  trigger?: React.ReactNode | string
-  title: React.ReactNode | string
-  onConfirm: () => void
-}
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  trigger?: React.ReactNode | string;
+  title: React.ReactNode | string;
+  onConfirm: () => void;
+};
 
 export function ConfirmDialog({
   open,
   onOpenChange,
   trigger,
   title,
-  onConfirm
+  onConfirm,
 }: ConfirmDialogProps) {
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
@@ -47,12 +47,12 @@ export function ConfirmDialog({
 
           <AlertDialogAction
             onClick={onConfirm}
-            className={buttonVariants({ variant: 'destructive' })}
+            className={buttonVariants({ variant: "destructive" })}
           >
             确认
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  )
+  );
 }

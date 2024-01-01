@@ -1,17 +1,17 @@
-import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts'
+import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 
-import { getLoginsTopApi } from '@/shared/apis/backend/operation-log'
-import { useFetch } from '@/shared/hooks/use-fetch'
-import { useRefresh } from '@/shared/hooks/use-refresh'
+import { getLoginsTopApi } from "@/shared/apis/backend/operation-log";
+import { useFetch } from "@/shared/hooks/use-fetch";
+import { useRefresh } from "@/shared/hooks/use-refresh";
 
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042']
+const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
 export function LoginsTopThree() {
-  const { data, fetchData: getLoginsTop } = useFetch(getLoginsTopApi)
+  const { data, fetchData: getLoginsTop } = useFetch(getLoginsTopApi);
 
   useRefresh(() => {
-    getLoginsTop(3).then()
-  })
+    getLoginsTop(3).then();
+  });
 
   return (
     <ResponsiveContainer width="100%" height={300}>
@@ -33,19 +33,19 @@ export function LoginsTopThree() {
         </Pie>
       </PieChart>
     </ResponsiveContainer>
-  )
+  );
 }
 
-const RADIAN = Math.PI / 180
+const RADIAN = Math.PI / 180;
 
 type renderCustomizedLabelProps = {
-  cx: number
-  cy: number
-  midAngle: number
-  innerRadius: number
-  outerRadius: number
-  percent: number
-}
+  cx: number;
+  cy: number;
+  midAngle: number;
+  innerRadius: number;
+  outerRadius: number;
+  percent: number;
+};
 
 function renderCustomizedLabel({
   cx,
@@ -53,21 +53,21 @@ function renderCustomizedLabel({
   midAngle,
   innerRadius,
   outerRadius,
-  percent
+  percent,
 }: renderCustomizedLabelProps) {
-  const radius = innerRadius + (outerRadius - innerRadius) * 0.5
-  const x = cx + radius * Math.cos(-midAngle * RADIAN)
-  const y = cy + radius * Math.sin(-midAngle * RADIAN)
+  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+  const x = cx + radius * Math.cos(-midAngle * RADIAN);
+  const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
   return (
     <text
       x={x}
       y={y}
       fill="white"
-      textAnchor={x > cx ? 'start' : 'end'}
+      textAnchor={x > cx ? "start" : "end"}
       dominantBaseline="central"
     >
       {`${(percent * 100).toFixed(0)}%`}
     </text>
-  )
+  );
 }

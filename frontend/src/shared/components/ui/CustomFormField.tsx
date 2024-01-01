@@ -1,55 +1,59 @@
-import React from 'react'
-import type { Control, FieldValues, Path } from 'react-hook-form'
-import { CalendarIcon } from '@radix-ui/react-icons'
-import { format } from 'date-fns'
-import { zhCN } from 'date-fns/locale'
+import React from "react";
+import type { Control, FieldValues, Path } from "react-hook-form";
+import { CalendarIcon } from "@radix-ui/react-icons";
+import { format } from "date-fns";
+import { zhCN } from "date-fns/locale";
 
-import { Button } from '@/shared/components/ui/Button'
-import { Calendar } from '@/shared/components/ui/Calendar'
+import { Button } from "@/shared/components/ui/Button";
+import { Calendar } from "@/shared/components/ui/Calendar";
 import {
   FormControl,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage
-} from '@/shared/components/ui/Form'
-import { Input, inputErrorClasses } from '@/shared/components/ui/Input'
-import { MultiSelect } from '@/shared/components/ui/MultiSelect'
-import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/Popover'
+  FormMessage,
+} from "@/shared/components/ui/Form";
+import { Input, inputErrorClasses } from "@/shared/components/ui/Input";
+import { MultiSelect } from "@/shared/components/ui/MultiSelect";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/shared/components/ui/Popover";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue
-} from '@/shared/components/ui/Select'
-import { Textarea } from '@/shared/components/ui/Textarea'
-import { cn } from '@/shared/utils/helpers'
+  SelectValue,
+} from "@/shared/components/ui/Select";
+import { Textarea } from "@/shared/components/ui/Textarea";
+import { cn } from "@/shared/utils/helpers";
 
 type FormInputProps<T extends FieldValues> = {
-  control: Control<T>
-  name: Path<T>
-  label: string
-  labelWidth: number
-  type?: React.HTMLInputTypeAttribute
-  placeholder?: string
-  disabled?: boolean
-  isError?: boolean
-  inputRef?: React.MutableRefObject<HTMLInputElement | null>
-  className?: string
-}
+  control: Control<T>;
+  name: Path<T>;
+  label: string;
+  labelWidth: number;
+  type?: React.HTMLInputTypeAttribute;
+  placeholder?: string;
+  disabled?: boolean;
+  isError?: boolean;
+  inputRef?: React.MutableRefObject<HTMLInputElement | null>;
+  className?: string;
+};
 
 export function FormInput<T extends FieldValues>({
   control,
   name,
   label,
   labelWidth,
-  type = 'text',
+  type = "text",
   placeholder,
   disabled,
   isError = false,
   inputRef,
-  className
+  className,
 }: FormInputProps<T>) {
   return (
     <FormField
@@ -72,10 +76,10 @@ export function FormInput<T extends FieldValues>({
               disabled={disabled}
               isError={isError}
               ref={(ref) => {
-                field.ref(ref)
+                field.ref(ref);
 
                 if (inputRef) {
-                  inputRef.current = ref
+                  inputRef.current = ref;
                 }
               }}
             />
@@ -85,12 +89,15 @@ export function FormInput<T extends FieldValues>({
         </FormItem>
       )}
     />
-  )
+  );
 }
 
-type FormTextareaProps<T extends FieldValues> = Omit<FormInputProps<T>, 'inputRef'> & {
-  textareaRef?: React.MutableRefObject<HTMLTextAreaElement | null>
-}
+type FormTextareaProps<T extends FieldValues> = Omit<
+  FormInputProps<T>,
+  "inputRef"
+> & {
+  textareaRef?: React.MutableRefObject<HTMLTextAreaElement | null>;
+};
 
 export function FormTextarea<T extends FieldValues>({
   control,
@@ -101,7 +108,7 @@ export function FormTextarea<T extends FieldValues>({
   disabled,
   isError = false,
   textareaRef,
-  className
+  className,
 }: FormTextareaProps<T>) {
   return (
     <FormField
@@ -123,10 +130,10 @@ export function FormTextarea<T extends FieldValues>({
               disabled={disabled}
               isError={isError}
               ref={(ref) => {
-                field.ref(ref)
+                field.ref(ref);
 
                 if (textareaRef) {
-                  textareaRef.current = ref
+                  textareaRef.current = ref;
                 }
               }}
             />
@@ -136,17 +143,20 @@ export function FormTextarea<T extends FieldValues>({
         </FormItem>
       )}
     />
-  )
+  );
 }
 
 type SelectOption = {
-  value: string
-  label: string
-}
+  value: string;
+  label: string;
+};
 
-type FormSelectProps<T extends FieldValues> = Omit<FormInputProps<T>, 'type'> & {
-  options: SelectOption[]
-}
+type FormSelectProps<T extends FieldValues> = Omit<
+  FormInputProps<T>,
+  "type"
+> & {
+  options: SelectOption[];
+};
 
 /**
  * 下拉组件不需要考虑 `placeholder`，因为应该给它默认值。
@@ -160,7 +170,7 @@ export function FormSelect<T extends FieldValues>({
   placeholder,
   disabled,
   isError = false,
-  className
+  className,
 }: FormSelectProps<T>) {
   return (
     <FormField
@@ -176,7 +186,7 @@ export function FormSelect<T extends FieldValues>({
           </FormLabel>
 
           <Select value={field.value} onValueChange={field.onChange}>
-            <FormControl className={cn('py-0', className)}>
+            <FormControl className={cn("py-0", className)}>
               <SelectTrigger disabled={disabled} isError={isError}>
                 <SelectValue placeholder={placeholder} />
               </SelectTrigger>
@@ -195,7 +205,7 @@ export function FormSelect<T extends FieldValues>({
         </FormItem>
       )}
     />
-  )
+  );
 }
 
 export function FormMultiSelect<T extends FieldValues>({
@@ -207,7 +217,7 @@ export function FormMultiSelect<T extends FieldValues>({
   placeholder,
   disabled,
   isError = false,
-  className
+  className,
 }: FormSelectProps<T>) {
   return (
     <FormField
@@ -237,12 +247,15 @@ export function FormMultiSelect<T extends FieldValues>({
         </FormItem>
       )}
     />
-  )
+  );
 }
 
-type FormCalendarProps<T extends FieldValues> = Omit<FormInputProps<T>, 'type'> & {
-  disabledWhen: (date: Date) => boolean
-}
+type FormCalendarProps<T extends FieldValues> = Omit<
+  FormInputProps<T>,
+  "type"
+> & {
+  disabledWhen: (date: Date) => boolean;
+};
 
 export function FormCalendar<T extends FieldValues>({
   control,
@@ -252,7 +265,7 @@ export function FormCalendar<T extends FieldValues>({
   placeholder,
   isError = false,
   disabledWhen,
-  className
+  className,
 }: FormCalendarProps<T>) {
   return (
     <FormField
@@ -272,10 +285,15 @@ export function FormCalendar<T extends FieldValues>({
               <FormControl className={cn(className)}>
                 <Button
                   variant="outline"
-                  className={cn('pl-3 text-left font-normal', inputErrorClasses(isError))}
+                  className={cn(
+                    "pl-3 text-left font-normal",
+                    inputErrorClasses(isError),
+                  )}
                 >
                   <span className="pr-2">
-                    {field.value ? format(field.value, 'yyyy-MM-dd') : placeholder}
+                    {field.value
+                      ? format(field.value, "yyyy-MM-dd")
+                      : placeholder}
                   </span>
                   <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                 </Button>
@@ -298,5 +316,5 @@ export function FormCalendar<T extends FieldValues>({
         </FormItem>
       )}
     />
-  )
+  );
 }

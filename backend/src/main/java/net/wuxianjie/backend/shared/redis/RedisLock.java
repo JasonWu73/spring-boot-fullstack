@@ -1,13 +1,12 @@
 package net.wuxianjie.backend.shared.redis;
 
+import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
-
-import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 基于 Redis 的分布式锁实现。
@@ -23,7 +22,8 @@ public class RedisLock {
   private final StringRedisTemplate stringRedisTemplate;
 
   // 存储每个锁的自动续期标志
-  private final ConcurrentHashMap<String, Boolean> renew = new ConcurrentHashMap<>();
+  private final ConcurrentHashMap<String, Boolean> renew =
+    new ConcurrentHashMap<>();
 
   /**
    * 上锁，支持对锁的自动续期。
@@ -63,18 +63,27 @@ public class RedisLock {
     renew.remove(key);
   }
 
-  private void startRenewTask(final String lockedKey, final String lockedValue) {
+  private void startRenewTask(
+    final String lockedKey,
+    final String lockedValue
+  ) {
     renew.put(lockedKey, true);
 
     new Thread(() -> {
       while (renew.getOrDefault(lockedKey, false)) {
-        final String currentValue = stringRedisTemplate.opsForValue().get(lockedKey);
+        final String currentValue = stringRedisTemplate
+          .opsForValue()
+          .get(lockedKey);
 
         // 锁已经被释放
         if (!Objects.equals(currentValue, lockedValue)) break;
 
         // 续期
-        stringRedisTemplate.expire(lockedKey, LOCK_TIMEOUT_SECONDS, TimeUnit.SECONDS);
+        stringRedisTemplate.expire(
+          lockedKey,
+          LOCK_TIMEOUT_SECONDS,
+          TimeUnit.SECONDS
+        );
 
         try {
           TimeUnit.SECONDS.sleep(LOCK_CHECK_SECONDS);
@@ -82,6 +91,7 @@ public class RedisLock {
           log.warn("Redis 分布式锁自动续期: 休眠异常");
         }
       }
-    }).start();
+    })
+      .start();
   }
 }

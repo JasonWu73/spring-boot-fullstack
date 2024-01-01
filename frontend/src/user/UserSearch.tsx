@@ -1,70 +1,73 @@
-import { zodResolver } from '@hookform/resolvers/zod'
-import React from 'react'
-import { useForm, type UseFormSetValue } from 'react-hook-form'
-import { z } from 'zod'
+import { zodResolver } from "@hookform/resolvers/zod";
+import React from "react";
+import { useForm, type UseFormSetValue } from "react-hook-form";
+import { z } from "zod";
 
-import { Button } from '@/shared/components/ui/Button'
-import { FormInput, FormSelect } from '@/shared/components/ui/CustomFormField'
-import { Form } from '@/shared/components/ui/Form'
-import { URL_QUERY_KEY_PAGE_NUM, URL_QUERY_KEY_PAGE_SIZE } from '@/shared/constants'
-import { ADMIN, ROOT, USER } from '@/shared/auth/auth-signals'
-import { useSearchParams } from 'react-router-dom'
+import { Button } from "@/shared/components/ui/Button";
+import { FormInput, FormSelect } from "@/shared/components/ui/CustomFormField";
+import { Form } from "@/shared/components/ui/Form";
+import {
+  URL_QUERY_KEY_PAGE_NUM,
+  URL_QUERY_KEY_PAGE_SIZE,
+} from "@/shared/constants";
+import { ADMIN, ROOT, USER } from "@/shared/auth/auth-signals";
+import { useSearchParams } from "react-router-dom";
 
 const statusOptions = [
-  { value: '', label: '全部' },
-  { value: '0', label: '禁用' },
-  { value: '1', label: '启用' }
-]
+  { value: "", label: "全部" },
+  { value: "0", label: "禁用" },
+  { value: "1", label: "启用" },
+];
 
-const authorityOptions = [{ value: '', label: '全部' }, ROOT, ADMIN, USER]
+const authorityOptions = [{ value: "", label: "全部" }, ROOT, ADMIN, USER];
 
 const formSchema = z.object({
   username: z.string().trim(),
   nickname: z.string().trim(),
   status: z.string().trim(),
-  authority: z.string().trim()
-})
+  authority: z.string().trim(),
+});
 
-type FormSchema = z.infer<typeof formSchema>
+type FormSchema = z.infer<typeof formSchema>;
 
 const defaultValues: FormSchema = {
-  username: '',
-  nickname: '',
-  status: '',
-  authority: ''
-}
+  username: "",
+  nickname: "",
+  status: "",
+  authority: "",
+};
 
 export function UserSearch() {
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
-    defaultValues
-  })
+    defaultValues,
+  });
 
-  const [searchParams, setSearchParams] = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  useQueryParams(searchParams, form.setValue)
+  useQueryParams(searchParams, form.setValue);
 
   function onSubmit(values: FormSchema) {
-    searchParams.delete(URL_QUERY_KEY_PAGE_NUM)
-    searchParams.delete(URL_QUERY_KEY_PAGE_SIZE)
-    searchParams.delete('username')
-    searchParams.delete('nickname')
-    searchParams.delete('status')
-    searchParams.delete('authority')
+    searchParams.delete(URL_QUERY_KEY_PAGE_NUM);
+    searchParams.delete(URL_QUERY_KEY_PAGE_SIZE);
+    searchParams.delete("username");
+    searchParams.delete("nickname");
+    searchParams.delete("status");
+    searchParams.delete("authority");
 
-    const { username, nickname, status, authority } = values
+    const { username, nickname, status, authority } = values;
 
-    if (username) searchParams.set('username', username)
-    if (nickname) searchParams.set('nickname', nickname)
-    if (status) searchParams.set('status', status)
-    if (authority) searchParams.set('authority', authority)
+    if (username) searchParams.set("username", username);
+    if (nickname) searchParams.set("nickname", nickname);
+    if (status) searchParams.set("status", status);
+    if (authority) searchParams.set("authority", authority);
 
-    setSearchParams(searchParams, { replace: true })
+    setSearchParams(searchParams, { replace: true });
   }
 
   function handleReset() {
-    form.reset()
-    onSubmit(defaultValues)
+    form.reset();
+    onSubmit(defaultValues);
   }
 
   return (
@@ -80,7 +83,7 @@ export function UserSearch() {
           label="用户名"
           labelWidth={45}
           placeholder="用户名"
-          isError={form.getFieldState('username')?.invalid}
+          isError={form.getFieldState("username")?.invalid}
         />
 
         <FormInput
@@ -90,7 +93,7 @@ export function UserSearch() {
           label="昵称"
           labelWidth={45}
           placeholder="昵称"
-          isError={form.getFieldState('nickname')?.invalid}
+          isError={form.getFieldState("nickname")?.invalid}
         />
 
         <FormSelect
@@ -99,7 +102,7 @@ export function UserSearch() {
           label="状态"
           labelWidth={45}
           options={statusOptions}
-          isError={form.getFieldState('status')?.invalid}
+          isError={form.getFieldState("status")?.invalid}
         />
 
         <FormSelect
@@ -108,34 +111,39 @@ export function UserSearch() {
           label="权限"
           labelWidth={45}
           options={authorityOptions}
-          isError={form.getFieldState('authority')?.invalid}
+          isError={form.getFieldState("authority")?.invalid}
         />
 
         <Button type="submit" className="self-end">
           查询
         </Button>
 
-        <Button type="reset" variant="outline" onClick={handleReset} className="self-end">
+        <Button
+          type="reset"
+          variant="outline"
+          onClick={handleReset}
+          className="self-end"
+        >
           重置
         </Button>
       </form>
     </Form>
-  )
+  );
 }
 
 function useQueryParams(
   searchParams: URLSearchParams,
-  setValue: UseFormSetValue<FormSchema>
+  setValue: UseFormSetValue<FormSchema>,
 ) {
   React.useEffect(() => {
-    const username = searchParams.get('username') || ''
-    const nickname = searchParams.get('nickname') || ''
-    const status = searchParams.get('status') || ''
-    const authority = searchParams.get('authority') || ''
+    const username = searchParams.get("username") || "";
+    const nickname = searchParams.get("nickname") || "";
+    const status = searchParams.get("status") || "";
+    const authority = searchParams.get("authority") || "";
 
-    setValue('username', username)
-    setValue('nickname', nickname)
-    setValue('status', status)
-    setValue('authority', authority)
-  }, [searchParams, setValue])
+    setValue("username", username);
+    setValue("nickname", nickname);
+    setValue("status", status);
+    setValue("authority", authority);
+  }, [searchParams, setValue]);
 }

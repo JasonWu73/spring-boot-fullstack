@@ -1,15 +1,15 @@
 package net.wuxianjie.backend.shared.util;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 /**
  * RSA 加密工具类。
@@ -67,7 +67,10 @@ public class RsaUtils {
    * @param privateKey Base64 私钥字符串
    * @return UTF-8 编码的原始字符串
    */
-  public static String decrypt(final String encrypted, final String privateKey) {
+  public static String decrypt(
+    final String encrypted,
+    final String privateKey
+  ) {
     final Cipher decryptCipher = getDecryptCipher(privateKey);
 
     final byte[] encryptedBytes = Base64.getDecoder().decode(encrypted);
@@ -97,7 +100,10 @@ public class RsaUtils {
     try {
       return keyFactory.generatePublic(keySpec);
     } catch (InvalidKeySpecException e) {
-      throw new RuntimeException("无效的公钥: %s".formatted(base64PublicKey), e);
+      throw new RuntimeException(
+        "无效的公钥: %s".formatted(base64PublicKey),
+        e
+      );
     }
   }
 
@@ -116,7 +122,10 @@ public class RsaUtils {
     try {
       return keyFactory.generatePrivate(keySpec);
     } catch (InvalidKeySpecException e) {
-      throw new RuntimeException("无效的私钥: %s".formatted(base64PrivateKey), e);
+      throw new RuntimeException(
+        "无效的私钥: %s".formatted(base64PrivateKey),
+        e
+      );
     }
   }
 

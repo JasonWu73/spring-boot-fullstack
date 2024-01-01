@@ -1,27 +1,33 @@
-import { ExclamationTriangleIcon, ReloadIcon } from '@radix-ui/react-icons'
+import { ExclamationTriangleIcon, ReloadIcon } from "@radix-ui/react-icons";
 
-import { getLoggedInUsersApi } from '@/shared/apis/backend/auth'
-import { Alert, AlertDescription, AlertTitle } from '@/shared/components/ui/Alert'
-import { ScrollArea } from '@/shared/components/ui/ScrollArea'
-import { useFetch } from '@/shared/hooks/use-fetch'
-import { useRefresh } from '@/shared/hooks/use-refresh'
+import { getLoggedInUsersApi } from "@/shared/apis/backend/auth";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/shared/components/ui/Alert";
+import { ScrollArea } from "@/shared/components/ui/ScrollArea";
+import { useFetch } from "@/shared/hooks/use-fetch";
+import { useRefresh } from "@/shared/hooks/use-refresh";
 
 export function LoggedInUsers() {
   const {
     loading,
     data: usernames,
     error,
-    fetchData: getLoggedInUsers
-  } = useFetch(getLoggedInUsersApi)
+    fetchData: getLoggedInUsers,
+  } = useFetch(getLoggedInUsersApi);
 
   useRefresh(() => {
-    getLoggedInUsers(null).then()
-  })
+    getLoggedInUsers(null).then();
+  });
 
   return (
     <ScrollArea className="h-72 rounded-md border">
       <div className="space-y-4 p-4">
-        <h4 className="mb-4 text-sm font-medium leading-none">当前已登录的用户</h4>
+        <h4 className="mb-4 text-sm font-medium leading-none">
+          当前已登录的用户
+        </h4>
 
         {loading && (
           <Alert>
@@ -50,5 +56,5 @@ export function LoggedInUsers() {
         )}
       </div>
     </ScrollArea>
-  )
+  );
 }

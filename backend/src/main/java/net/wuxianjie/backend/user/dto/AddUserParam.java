@@ -1,9 +1,8 @@
 package net.wuxianjie.backend.user.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.Data;
-
 import java.util.List;
+import lombok.Data;
 
 /**
  * 新增用户参数。

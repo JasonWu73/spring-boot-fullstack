@@ -1,195 +1,200 @@
-import React from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
-import type { SortingState } from '@tanstack/react-table'
+import React from "react";
+import { Link, useSearchParams } from "react-router-dom";
+import type { SortingState } from "@tanstack/react-table";
 
-import { Button, buttonVariants } from '@/shared/components/ui/Button'
-import { Code } from '@/shared/components/ui/Code'
-import { ConfirmDialog } from '@/shared/components/ui/ConfirmDialog'
+import { Button, buttonVariants } from "@/shared/components/ui/Button";
+import { Code } from "@/shared/components/ui/Code";
+import { ConfirmDialog } from "@/shared/components/ui/ConfirmDialog";
 import {
   DEFAULT_PAGE_NUM,
   DEFAULT_PAGE_SIZE,
   DataTable,
-  type Pagination
-} from '@/shared/components/ui/DataTable'
-import { useToast } from '@/shared/components/ui/use-toast'
-import { useFetch } from '@/shared/hooks/use-fetch'
-import { useRefresh } from '@/shared/hooks/use-refresh'
-import { hasRoot } from '@/shared/auth/auth-signals'
+  type Pagination,
+} from "@/shared/components/ui/DataTable";
+import { useToast } from "@/shared/components/ui/use-toast";
+import { useFetch } from "@/shared/hooks/use-fetch";
+import { useRefresh } from "@/shared/hooks/use-refresh";
+import { hasRoot } from "@/shared/auth/auth-signals";
 import {
   URL_QUERY_KEY_PAGE_NUM,
   URL_QUERY_KEY_PAGE_SIZE,
   URL_QUERY_KEY_SORT_COLUMN,
-  URL_QUERY_KEY_SORT_ORDER
-} from '@/shared/constants'
+  URL_QUERY_KEY_SORT_ORDER,
+} from "@/shared/constants";
 import {
   deleteUserApi,
   getUsersApi,
   updateUserStatusApi,
   type AccountStatus,
   type GetUsersParams,
-  type User
-} from '@/shared/apis/backend/user'
-import { cn } from '@/shared/utils/helpers'
-import { ResetPasswordDialog } from '@/user/ResetPasswordDialog'
-import { getUserTableColumns } from '@/user/UserTableColumns'
+  type User,
+} from "@/shared/apis/backend/user";
+import { cn } from "@/shared/utils/helpers";
+import { ResetPasswordDialog } from "@/user/ResetPasswordDialog";
+import { getUserTableColumns } from "@/user/UserTableColumns";
 
 type UpdateUserStatus = {
-  userId: number
-  status: AccountStatus
-}
+  userId: number;
+  status: AccountStatus;
+};
 
 export function UserTable() {
-  const [searchParams, setSearchParams] = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const pageNum = Number(searchParams.get(URL_QUERY_KEY_PAGE_NUM)) || DEFAULT_PAGE_NUM
-  const pageSize = Number(searchParams.get(URL_QUERY_KEY_PAGE_SIZE)) || DEFAULT_PAGE_SIZE
-  const sortColumn = searchParams.get(URL_QUERY_KEY_SORT_COLUMN) || 'createdAt'
-  const sortOrder = searchParams.get(URL_QUERY_KEY_SORT_ORDER) || 'desc'
-  const username = searchParams.get('username') || ''
-  const nickname = searchParams.get('nickname') || ''
-  const status = searchParams.get('status') || ''
-  const authority = searchParams.get('authority') || ''
+  const pageNum =
+    Number(searchParams.get(URL_QUERY_KEY_PAGE_NUM)) || DEFAULT_PAGE_NUM;
+  const pageSize =
+    Number(searchParams.get(URL_QUERY_KEY_PAGE_SIZE)) || DEFAULT_PAGE_SIZE;
+  const sortColumn = searchParams.get(URL_QUERY_KEY_SORT_COLUMN) || "createdAt";
+  const sortOrder = searchParams.get(URL_QUERY_KEY_SORT_ORDER) || "desc";
+  const username = searchParams.get("username") || "";
+  const nickname = searchParams.get("nickname") || "";
+  const status = searchParams.get("status") || "";
+  const authority = searchParams.get("authority") || "";
 
-  const params: GetUsersParams = { pageNum, pageSize }
+  const params: GetUsersParams = { pageNum, pageSize };
 
-  if (sortColumn) params.sortColumn = sortColumn
-  if (sortOrder) params.sortOrder = sortOrder === 'asc' ? 'asc' : 'desc'
-  if (username) params.username = username
-  if (nickname) params.nickname = nickname
-  if (status) params.status = status
-  if (authority) params.authority = authority
+  if (sortColumn) params.sortColumn = sortColumn;
+  if (sortOrder) params.sortOrder = sortOrder === "asc" ? "asc" : "desc";
+  if (username) params.username = username;
+  if (nickname) params.nickname = nickname;
+  if (status) params.status = status;
+  if (authority) params.authority = authority;
 
   const {
     loading: loadingUsers,
     data: users,
     error: errorUsers,
     fetchData: getUsers,
-    invalidateFetch: invalidateUsers
-  } = useFetch(getUsersApi)
+    invalidateFetch: invalidateUsers,
+  } = useFetch(getUsersApi);
 
   useRefresh(() => {
-    getUsers(params).then()
-  })
+    getUsers(params).then();
+  });
 
-  const { loading: loadingUpdateUserStatus, fetchData: updateUserStatus } = useFetch(
-    async ({ userId, status }: UpdateUserStatus) =>
-      await updateUserStatusApi(userId, status)
-  )
+  const { loading: loadingUpdateUserStatus, fetchData: updateUserStatus } =
+    useFetch(
+      async ({ userId, status }: UpdateUserStatus) =>
+        await updateUserStatusApi(userId, status),
+    );
 
   const { loading: loadingDeleteUser, fetchData: deleteUser } = useFetch(
-    async (userId: number) => await deleteUserApi(userId)
-  )
+    async (userId: number) => await deleteUserApi(userId),
+  );
 
-  const [indexes, setIndexes] = React.useState<number[]>([]) // 选中的行的索引
-  const { toast } = useToast()
+  const [indexes, setIndexes] = React.useState<number[]>([]); // 选中的行的索引
+  const { toast } = useToast();
 
-  const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false)
-  const [openResetPasswordDialog, setOpenResetPasswordDialog] = React.useState(false)
-  const currentUser = React.useRef<User | null>(null)
+  const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
+  const [openResetPasswordDialog, setOpenResetPasswordDialog] =
+    React.useState(false);
+  const currentUser = React.useRef<User | null>(null);
 
   function handlePaginate(paging: Pagination) {
-    searchParams.set(URL_QUERY_KEY_PAGE_NUM, String(paging.pageNum))
-    searchParams.set(URL_QUERY_KEY_PAGE_SIZE, String(paging.pageSize))
+    searchParams.set(URL_QUERY_KEY_PAGE_NUM, String(paging.pageNum));
+    searchParams.set(URL_QUERY_KEY_PAGE_SIZE, String(paging.pageSize));
 
-    setSearchParams(searchParams, { replace: true })
+    setSearchParams(searchParams, { replace: true });
   }
 
   const handleSorting = (sorting: SortingState) => {
-    searchParams.delete('createdAt')
-    searchParams.delete('updatedAt')
+    searchParams.delete("createdAt");
+    searchParams.delete("updatedAt");
 
-    const sortColumn = sorting[0]?.id === '更新时间' ? 'updatedAt' : 'createdAt'
-    const sortOrder = sorting[0]?.desc === true ? 'desc' : 'asc'
+    const sortColumn =
+      sorting[0]?.id === "更新时间" ? "updatedAt" : "createdAt";
+    const sortOrder = sorting[0]?.desc === true ? "desc" : "asc";
 
-    if (!sortColumn) return
+    if (!sortColumn) return;
 
-    searchParams.set(URL_QUERY_KEY_SORT_COLUMN, sortColumn)
-    searchParams.set(URL_QUERY_KEY_SORT_ORDER, sortOrder)
+    searchParams.set(URL_QUERY_KEY_SORT_COLUMN, sortColumn);
+    searchParams.set(URL_QUERY_KEY_SORT_ORDER, sortOrder);
 
-    setSearchParams(searchParams)
-  }
+    setSearchParams(searchParams);
+  };
 
   function handleShowSelection() {
     const ids = (users?.list || [])
       .filter((_, index) => indexes.includes(index))
-      .map((user) => user.id)
+      .map((user) => user.id);
 
     if (ids.length === 0) {
       toast({
-        title: '未选中任何行',
-        description: '请先选中要操作的行',
-        variant: 'destructive'
-      })
+        title: "未选中任何行",
+        description: "请先选中要操作的行",
+        variant: "destructive",
+      });
 
-      return
+      return;
     }
 
     toast({
-      title: '选中的行',
+      title: "选中的行",
       description: (
         <span>
-          被选中的行 ID(s)：<Code>{ids.join(', ')}</Code>
+          被选中的行 ID(s)：<Code>{ids.join(", ")}</Code>
         </span>
-      )
-    })
+      ),
+    });
   }
 
   async function handleChangeStatus(user: User, enabled: boolean) {
-    const newStatus = enabled ? 0 : 1
+    const newStatus = enabled ? 0 : 1;
 
     const { status, error } = await updateUserStatus({
       userId: user.id,
-      status: newStatus
-    })
+      status: newStatus,
+    });
 
     if (status !== 204) {
       toast({
-        title: '更新账号状态失败',
+        title: "更新账号状态失败",
         description: error,
-        variant: 'destructive'
-      })
+        variant: "destructive",
+      });
 
-      return
+      return;
     }
 
-    invalidateUsers().then()
+    invalidateUsers().then();
 
     toast({
-      title: '更新账号状态成功',
+      title: "更新账号状态成功",
       description: (
         <span>
-          {!enabled ? '启用' : '禁用'} <Code>{user.username}</Code> 账号
+          {!enabled ? "启用" : "禁用"} <Code>{user.username}</Code> 账号
         </span>
-      )
-    })
+      ),
+    });
   }
 
   async function handleDeleteUser() {
-    if (!currentUser.current) return
+    if (!currentUser.current) return;
 
-    const { id, username } = currentUser.current
-    const { status, error } = await deleteUser(id)
+    const { id, username } = currentUser.current;
+    const { status, error } = await deleteUser(id);
 
     if (status !== 204) {
       toast({
-        title: '删除用户失败',
+        title: "删除用户失败",
         description: error,
-        variant: 'destructive'
-      })
+        variant: "destructive",
+      });
 
-      return
+      return;
     }
 
-    invalidateUsers().then()
+    invalidateUsers().then();
 
     toast({
-      title: '删除用户成功',
+      title: "删除用户成功",
       description: (
         <span>
           成功删除用户 <Code>{username}</Code>
         </span>
-      )
-    })
+      ),
+    });
   }
 
   return (
@@ -200,7 +205,7 @@ export function UserTable() {
           currentUser,
           onChangeStatus: handleChangeStatus,
           setOpenDeleteDialog,
-          setOpenResetPasswordDialog
+          setOpenResetPasswordDialog,
         })}
         data={users?.list || []}
         error={errorUsers}
@@ -208,15 +213,15 @@ export function UserTable() {
         pagination={{
           pageNum,
           pageSize,
-          total: users?.total || 0
+          total: users?.total || 0,
         }}
         onPaginate={handlePaginate}
         sortColumn={{
           id:
-            searchParams.get(URL_QUERY_KEY_SORT_COLUMN) === 'updatedAt'
-              ? '更新时间'
-              : '创建时间',
-          desc: searchParams.get(URL_QUERY_KEY_SORT_ORDER) !== 'asc'
+            searchParams.get(URL_QUERY_KEY_SORT_COLUMN) === "updatedAt"
+              ? "更新时间"
+              : "创建时间",
+          desc: searchParams.get(URL_QUERY_KEY_SORT_ORDER) !== "asc",
         }}
         onSorting={handleSorting}
         enableRowSelection
@@ -231,11 +236,11 @@ export function UserTable() {
             <Link
               to="/users/add"
               className={cn(
-                'ml-2',
+                "ml-2",
                 buttonVariants({
-                  variant: 'default',
-                  size: 'sm'
-                })
+                  variant: "default",
+                  size: "sm",
+                }),
               )}
             >
               新增用户
@@ -266,5 +271,5 @@ export function UserTable() {
         />
       )}
     </>
-  )
+  );
 }

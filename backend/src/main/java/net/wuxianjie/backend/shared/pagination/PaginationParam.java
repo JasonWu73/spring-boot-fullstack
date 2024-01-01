@@ -39,13 +39,19 @@ public class PaginationParam {
   /**
    * 排序的列名。
    */
-  @Pattern(regexp = "^[a-zA-Z0-9_]+$", message = "排序的列名只能包含字母、数字和下划线")
+  @Pattern(
+    regexp = "^[a-zA-Z0-9_]+$",
+    message = "排序的列名只能包含字母、数字和下划线"
+  )
   private String sortColumn;
 
   /**
    * 排序方式，只能是 {@code asc} 或 {@code desc}。
    */
-  @EnumValidator(value = SortOrder.class, message = "排序方式只能是 asc 或 desc")
+  @EnumValidator(
+    value = SortOrder.class,
+    message = "排序方式只能是 asc 或 desc"
+  )
   private String sortOrder;
 
   /**

@@ -1,19 +1,17 @@
 package net.wuxianjie.backend.user;
 
+import java.util.List;
 import net.wuxianjie.backend.shared.pagination.PaginationParam;
 import net.wuxianjie.backend.user.dto.GetUserParam;
 import net.wuxianjie.backend.user.dto.UserInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import java.util.List;
-
 /**
  * 与用户表相关的数据库操作。
  */
 @Mapper
 public interface UserMapper {
-
   /**
    * 根据用户 ID 查询用户。
    *

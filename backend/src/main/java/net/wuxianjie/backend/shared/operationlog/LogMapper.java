@@ -1,19 +1,17 @@
 package net.wuxianjie.backend.shared.operationlog;
 
-import net.wuxianjie.backend.shared.operationlog.dto.GetLogParam;
+import java.util.List;
 import net.wuxianjie.backend.shared.operationlog.dto.ChartData;
+import net.wuxianjie.backend.shared.operationlog.dto.GetLogParam;
 import net.wuxianjie.backend.shared.pagination.PaginationParam;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-
-import java.util.List;
 
 /**
  * 与操作日志表相关的数据库操作。
  */
 @Mapper
 public interface LogMapper {
-
   /**
    * 根据查询条件获取操作日志分页列表。
    * <p>

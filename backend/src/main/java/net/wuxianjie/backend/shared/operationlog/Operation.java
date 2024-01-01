@@ -13,7 +13,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Operation {
-
   /**
    * 对本方法的操作描述。
    *

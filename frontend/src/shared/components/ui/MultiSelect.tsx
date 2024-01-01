@@ -1,27 +1,33 @@
-import { Check, ChevronsUpDown, X } from 'lucide-react'
-import * as React from 'react'
+import { Check, ChevronsUpDown, X } from "lucide-react";
+import * as React from "react";
 
-import { Badge } from '@/shared/components/ui/Badge'
+import { Badge } from "@/shared/components/ui/Badge";
 import {
   Command,
   CommandEmpty,
   CommandGroup,
   CommandInput,
-  CommandItem
-} from '@/shared/components/ui/Command'
-import { inputErrorClasses } from '@/shared/components/ui/Input'
-import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/Popover'
-import { cn } from '@/shared/utils/helpers'
+  CommandItem,
+} from "@/shared/components/ui/Command";
+import { inputErrorClasses } from "@/shared/components/ui/Input";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/shared/components/ui/Popover";
+import { cn } from "@/shared/utils/helpers";
 
 interface MultiSelectProps {
-  options: Record<'value' | 'label', string>[]
-  selected: Record<'value' | 'label', string>[]
-  onChange: React.Dispatch<React.SetStateAction<Record<'value' | 'label', string>[]>>
-  className?: string
-  placeholder?: string
+  options: Record<"value" | "label", string>[];
+  selected: Record<"value" | "label", string>[];
+  onChange: React.Dispatch<
+    React.SetStateAction<Record<"value" | "label", string>[]>
+  >;
+  className?: string;
+  placeholder?: string;
 
-  isError?: boolean
-  disabled?: boolean
+  isError?: boolean;
+  disabled?: boolean;
 }
 
 /**
@@ -30,12 +36,15 @@ interface MultiSelectProps {
  * {@link https://github.com/shadcn-ui/ui/issues/66 | Multi select ? · Issue #66 · shadcn-ui/ui}
  */
 const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
-  ({ isError = false, options, selected, onChange, className, ...props }, ref) => {
-    const [open, setOpen] = React.useState(false)
+  (
+    { isError = false, options, selected, onChange, className, ...props },
+    ref,
+  ) => {
+    const [open, setOpen] = React.useState(false);
 
-    const handleUnselect = (item: Record<'value' | 'label', string>) => {
-      onChange(selected.filter((i) => i.value !== item.value))
-    }
+    const handleUnselect = (item: Record<"value" | "label", string>) => {
+      onChange(selected.filter((i) => i.value !== item.value));
+    };
 
     return (
       <Popover open={open} onOpenChange={setOpen}>
@@ -45,9 +54,9 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
             role="combobox"
             aria-expanded={open}
             className={cn(
-              'flex h-9 w-full items-center justify-between rounded-md border bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-white placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-950 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-800 dark:ring-offset-slate-950 dark:placeholder:text-slate-400 dark:focus:ring-slate-300',
+              "flex h-9 w-full items-center justify-between rounded-md border bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-white placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-950 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-800 dark:ring-offset-slate-950 dark:placeholder:text-slate-400 dark:focus:ring-slate-300",
               inputErrorClasses(isError),
-              className
+              className,
             )}
             onClick={() => setOpen(!open)}
             {...props}
@@ -63,18 +72,18 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
                   {item.label}
                   <div
                     onKeyDown={(event) => {
-                      if (event.key === 'Enter') {
-                        handleUnselect(item)
+                      if (event.key === "Enter") {
+                        handleUnselect(item);
                       }
                     }}
                     onMouseDown={(event) => {
-                      event.preventDefault()
-                      event.stopPropagation()
+                      event.preventDefault();
+                      event.stopPropagation();
                     }}
                     onClick={(event) => {
-                      event.preventDefault()
-                      event.stopPropagation()
-                      handleUnselect(item)
+                      event.preventDefault();
+                      event.stopPropagation();
+                      handleUnselect(item);
                     }}
                   >
                     <X className="h-4 w-4 rounded-sm border-none hover:bg-slate-200 dark:hover:bg-night-1" />
@@ -84,7 +93,7 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
 
               {selected.length === 0 && (
                 <span className="text-slate-500 dark:text-slate-400">
-                  {props.placeholder ?? '请选择...'}
+                  {props.placeholder ?? "请选择..."}
                 </span>
               )}
             </div>
@@ -106,17 +115,17 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
                     onChange(
                       selected.some((item) => item.value === option.value)
                         ? selected.filter((item) => item.value !== option.value)
-                        : [...selected, option]
-                    )
-                    setOpen(true)
+                        : [...selected, option],
+                    );
+                    setOpen(true);
                   }}
                 >
                   <Check
                     className={cn(
-                      'mr-2 h-4 w-4',
+                      "mr-2 h-4 w-4",
                       selected.some((item) => item.value === option.value)
-                        ? 'opacity-100'
-                        : 'opacity-0'
+                        ? "opacity-100"
+                        : "opacity-0",
                     )}
                   />
                   {option.label}
@@ -126,10 +135,10 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
           </Command>
         </PopoverContent>
       </Popover>
-    )
-  }
-)
+    );
+  },
+);
 
-MultiSelect.displayName = 'MultiSelect'
+MultiSelect.displayName = "MultiSelect";
 
-export { MultiSelect }
+export { MultiSelect };

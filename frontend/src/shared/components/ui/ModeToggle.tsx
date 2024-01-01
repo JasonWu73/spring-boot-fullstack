@@ -1,19 +1,19 @@
-import { Monitor, Moon, Sun } from 'lucide-react'
+import { Monitor, Moon, Sun } from "lucide-react";
 
-import { Button } from '@/shared/components/ui/Button'
+import { Button } from "@/shared/components/ui/Button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger
-} from '@/shared/components/ui/DropdownMenu'
+  DropdownMenuTrigger,
+} from "@/shared/components/ui/DropdownMenu";
 
-export type Theme = 'dark' | 'light' | 'system'
+export type Theme = "dark" | "light" | "system";
 
 type ModeToggleProps = {
-  setTheme: (theme: Theme) => void
-  className?: string
-}
+  setTheme: (theme: Theme) => void;
+  className?: string;
+};
 
 export function ModeToggle({ setTheme, className }: ModeToggleProps) {
   return (
@@ -27,19 +27,19 @@ export function ModeToggle({ setTheme, className }: ModeToggleProps) {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setTheme('light')}>
+        <DropdownMenuItem onClick={() => setTheme("light")}>
           <Sun className="mr-2 h-4 w-4" />
           亮色
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme('dark')}>
+        <DropdownMenuItem onClick={() => setTheme("dark")}>
           <Moon className="mr-2 h-4 w-4" />
           暗色
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme('system')}>
+        <DropdownMenuItem onClick={() => setTheme("system")}>
           <Monitor className="mr-2 h-4 w-4" />
           跟随系统
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }

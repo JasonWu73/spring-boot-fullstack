@@ -1,18 +1,17 @@
 package net.wuxianjie.backend.shared.operationlog;
 
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import net.wuxianjie.backend.shared.auth.annotation.Admin;
-import net.wuxianjie.backend.shared.operationlog.dto.GetLogParam;
 import net.wuxianjie.backend.shared.operationlog.dto.ChartData;
+import net.wuxianjie.backend.shared.operationlog.dto.GetLogParam;
 import net.wuxianjie.backend.shared.pagination.PaginationParam;
 import net.wuxianjie.backend.shared.pagination.PaginationResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 /**
  * 操作日志 API。

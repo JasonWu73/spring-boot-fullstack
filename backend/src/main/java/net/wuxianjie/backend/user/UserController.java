@@ -39,7 +39,9 @@ public class UserController {
    * @return 204 No Content
    */
   @PutMapping("/me")
-  public ResponseEntity<Void> updateMe(@Valid @RequestBody final UpdateMeParam param) {
+  public ResponseEntity<Void> updateMe(
+    @Valid @RequestBody final UpdateMeParam param
+  ) {
     userService.updateMe(param);
     return ResponseEntity.noContent().build();
   }
@@ -86,7 +88,9 @@ public class UserController {
    */
   @Admin
   @PostMapping
-  public ResponseEntity<Void> addUser(@Valid @RequestBody final AddUserParam param) {
+  public ResponseEntity<Void> addUser(
+    @Valid @RequestBody final AddUserParam param
+  ) {
     userService.addUser(param);
     return ResponseEntity.noContent().build();
   }

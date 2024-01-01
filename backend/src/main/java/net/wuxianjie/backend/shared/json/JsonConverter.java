@@ -52,7 +52,10 @@ public class JsonConverter {
    * @param <T> 目标对象的泛型类型参数
    * @return 指定泛型的对象
    */
-  public <T> T parseJson(final String json, final TypeReference<T> valueTypeRef) {
+  public <T> T parseJson(
+    final String json,
+    final TypeReference<T> valueTypeRef
+  ) {
     try {
       return objectMapper.readValue(json, valueTypeRef);
     } catch (final Exception e) {

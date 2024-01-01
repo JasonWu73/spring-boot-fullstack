@@ -1,6 +1,8 @@
 package net.wuxianjie.backend.shared.auth;
 
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.Optional;
 import net.wuxianjie.backend.shared.auth.dto.CachedAuth;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -9,9 +11,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.util.StringUtils;
-
-import java.util.List;
-import java.util.Optional;
 
 /**
  * 身份验证工具类。
@@ -24,7 +23,9 @@ public class AuthUtils {
    * @return 当前登录用户信息
    */
   public static Optional<CachedAuth> getCurrentUser() {
-    final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    final Authentication auth = SecurityContextHolder
+      .getContext()
+      .getAuthentication();
 
     if (auth == null || auth instanceof AnonymousAuthenticationToken) {
       return Optional.empty();
@@ -54,7 +55,9 @@ public class AuthUtils {
     final UsernamePasswordAuthenticationToken token =
       new UsernamePasswordAuthenticationToken(auth, null, authorities);
 
-    token.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+    token.setDetails(
+      new WebAuthenticationDetailsSource().buildDetails(request)
+    );
 
     SecurityContextHolder.getContext().setAuthentication(token);
   }

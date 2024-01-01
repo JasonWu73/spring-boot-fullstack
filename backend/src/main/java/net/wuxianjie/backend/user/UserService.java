@@ -1,5 +1,10 @@
 package net.wuxianjie.backend.user;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import net.wuxianjie.backend.shared.auth.AuthUtils;
 import net.wuxianjie.backend.shared.auth.Authority;
@@ -13,12 +18,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * 用户业务逻辑实现。
@@ -74,7 +73,10 @@ public class UserService {
       final String newPassword = decryptPassword(param.getNewPassword());
 
       if (Objects.equals(newPassword, oldPassword)) {
-        throw new ApiException(HttpStatus.BAD_REQUEST, "新密码不能与旧密码相同");
+        throw new ApiException(
+          HttpStatus.BAD_REQUEST,
+          "新密码不能与旧密码相同"
+        );
       }
 
       if (!passwordEncoder.matches(oldPassword, user.getHashedPassword())) {
@@ -183,13 +185,19 @@ public class UserService {
       .ofNullable(userMapper.selectById(userId))
       .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "用户不存在"));
 
-    final String newAuthorities = checkAuthorities(param.getAuthorities(), true);
+    final String newAuthorities = checkAuthorities(
+      param.getAuthorities(),
+      true
+    );
 
     if (
       isRootAccount(user.getAuthorities()) &&
       !Objects.equals(user.getAuthorities(), newAuthorities)
     ) {
-      throw new ApiException(HttpStatus.FORBIDDEN, "超级管理员账号不允许再调整权限");
+      throw new ApiException(
+        HttpStatus.FORBIDDEN,
+        "超级管理员账号不允许再调整权限"
+      );
     }
 
     user.setUpdatedAt(LocalDateTime.now());
@@ -229,7 +237,10 @@ public class UserService {
    * @param userId 需要更新数据的用户 ID
    * @param param 更新用户状态参数
    */
-  public void updateUserStatus(final long userId, final UpdateUserStatusParam param) {
+  public void updateUserStatus(
+    final long userId,
+    final UpdateUserStatusParam param
+  ) {
     final User user = Optional
       .ofNullable(userMapper.selectById(userId))
       .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "用户不存在"));
@@ -257,12 +268,19 @@ public class UserService {
     final String oldPassword,
     final String newPassword
   ) {
-    if (!StringUtils.hasText(oldPassword) && !StringUtils.hasText(newPassword)) {
+    if (
+      !StringUtils.hasText(oldPassword) && !StringUtils.hasText(newPassword)
+    ) {
       return false;
     }
 
-    if (!StringUtils.hasText(oldPassword) || !StringUtils.hasText(newPassword)) {
-      throw new ApiException(HttpStatus.BAD_REQUEST, "旧密码和新密码必须同时提供");
+    if (
+      !StringUtils.hasText(oldPassword) || !StringUtils.hasText(newPassword)
+    ) {
+      throw new ApiException(
+        HttpStatus.BAD_REQUEST,
+        "旧密码和新密码必须同时提供"
+      );
     }
 
     return true;
@@ -272,7 +290,8 @@ public class UserService {
     final String password;
 
     try {
-      password = RsaUtils.decrypt(encryptedPassword, AuthServiceImpl.PRIVATE_KEY);
+      password =
+        RsaUtils.decrypt(encryptedPassword, AuthServiceImpl.PRIVATE_KEY);
     } catch (Exception e) {
       throw new ApiException(HttpStatus.BAD_REQUEST, "密码错误");
     }
@@ -286,7 +305,8 @@ public class UserService {
   ) {
     if (authorities == null || authorities.isEmpty()) return null;
 
-    return authorities.stream()
+    return authorities
+      .stream()
       .distinct()
       .filter(auth -> {
         if (StringUtils.hasText(auth)) {
@@ -321,6 +341,8 @@ public class UserService {
   }
 
   private static boolean isRootAccount(final String authorities) {
-    return authorities != null && authorities.contains(Authority.ROOT.getCode());
+    return (
+      authorities != null && authorities.contains(Authority.ROOT.getCode())
+    );
   }
 }

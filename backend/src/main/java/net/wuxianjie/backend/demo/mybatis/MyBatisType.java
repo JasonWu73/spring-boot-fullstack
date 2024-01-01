@@ -13,7 +13,6 @@ import net.wuxianjie.backend.shared.mybatis.EnumType;
 @ToString
 @RequiredArgsConstructor
 public enum MyBatisType implements EnumType {
-
   TYPE_1(100),
   TYPE_2(200);
 

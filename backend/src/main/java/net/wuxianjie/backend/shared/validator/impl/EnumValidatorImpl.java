@@ -2,19 +2,19 @@ package net.wuxianjie.backend.shared.validator.impl;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import lombok.extern.slf4j.Slf4j;
-import net.wuxianjie.backend.shared.validator.EnumValidator;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
+import net.wuxianjie.backend.shared.validator.EnumValidator;
 
 /**
  * 实现 {@link EnumValidator} 注解的验证逻辑。
  **/
 @Slf4j
-public class EnumValidatorImpl implements ConstraintValidator<EnumValidator, Object> {
+public class EnumValidatorImpl
+  implements ConstraintValidator<EnumValidator, Object> {
 
   /**
    * 枚举类中返回所对应验证值的方法名。
@@ -64,7 +64,10 @@ public class EnumValidatorImpl implements ConstraintValidator<EnumValidator, Obj
   }
 
   @Override
-  public boolean isValid(final Object value, final ConstraintValidatorContext context) {
+  public boolean isValid(
+    final Object value,
+    final ConstraintValidatorContext context
+  ) {
     return isPassed || value == null || values.contains(value);
   }
 }

@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.Date;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -14,10 +17,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.util.Date;
 
 /**
  * 测试几种常用的请求参数接收方式。
@@ -41,12 +40,25 @@ public class RequestParamController {
   public OuterData getData(
     @RequestParam final String name,
     @NotNull(message = "num 不能为 null") final Integer num,
-    @EnumValidator(value = Type.class, message = "type 值不合法") final Integer type,
-    @DateTimeFormat(pattern = JsonConfig.DATE_TIME_PATTERN) final LocalDateTime dateTime
+    @EnumValidator(
+      value = Type.class,
+      message = "type 值不合法"
+    ) final Integer type,
+    @DateTimeFormat(
+      pattern = JsonConfig.DATE_TIME_PATTERN
+    ) final LocalDateTime dateTime
   ) {
-    log.info("name={}, num={}, type={}, dateTime={}", name, num, type, dateTime);
+    log.info(
+      "name={}, num={}, type={}, dateTime={}",
+      name,
+      num,
+      type,
+      dateTime
+    );
 
-    final LocalDateTime returned = dateTime == null ? LocalDateTime.now() : dateTime;
+    final LocalDateTime returned = dateTime == null
+      ? LocalDateTime.now()
+      : dateTime;
 
     return new OuterData(
       100L,
@@ -86,7 +98,6 @@ public class RequestParamController {
   @ToString
   @RequiredArgsConstructor
   enum Type {
-
     ONE(1);
 
     @JsonValue

@@ -1,5 +1,6 @@
 package net.wuxianjie.backend.demo.redis;
 
+import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.wuxianjie.backend.shared.redis.RedisLock;
@@ -8,8 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * Redis 分布式锁示例。
@@ -37,7 +36,10 @@ public class RedisController {
   }
 
   private void executeSync() {
-    System.out.printf("[%s] 准备开始执行业务逻辑%n", Thread.currentThread().getName());
+    System.out.printf(
+      "[%s] 准备开始执行业务逻辑%n",
+      Thread.currentThread().getName()
+    );
 
     // 生成锁的唯一值
     final String identifier = StrUtils.generateUuid();

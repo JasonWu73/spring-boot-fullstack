@@ -7,46 +7,46 @@ import {
   type ColumnDef,
   type ColumnSort,
   type SortingState,
-  type VisibilityState
-} from '@tanstack/react-table'
-import React from 'react'
+  type VisibilityState,
+} from "@tanstack/react-table";
+import React from "react";
 
-import { DataTablePagination } from '@/shared/components/ui/DataTablePagination'
-import { DataTableViewOptions } from '@/shared/components/ui/DataTableViewOptions'
-import { Skeleton } from '@/shared/components/ui/Skeleton'
+import { DataTablePagination } from "@/shared/components/ui/DataTablePagination";
+import { DataTableViewOptions } from "@/shared/components/ui/DataTableViewOptions";
+import { Skeleton } from "@/shared/components/ui/Skeleton";
 import {
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
-  TableRow
-} from '@/shared/components/ui/Table'
+  TableRow,
+} from "@/shared/components/ui/Table";
 
-export const DEFAULT_PAGE_NUM = 1
-export const DEFAULT_PAGE_SIZE = 10
+export const DEFAULT_PAGE_NUM = 1;
+export const DEFAULT_PAGE_SIZE = 10;
 
-export type Pagination = { pageNum: number; pageSize: number; total: number }
+export type Pagination = { pageNum: number; pageSize: number; total: number };
 
 type DataTableProps<T> = {
-  columns: ColumnDef<T>[]
-  data: T[]
-  error?: string
-  loading?: boolean
+  columns: ColumnDef<T>[];
+  data: T[];
+  error?: string;
+  loading?: boolean;
 
-  manualPagination?: boolean
-  pagination?: Pagination
-  onPaginate?: (pagination: Pagination) => void
+  manualPagination?: boolean;
+  pagination?: Pagination;
+  onPaginate?: (pagination: Pagination) => void;
 
-  manualSorting?: boolean
-  sortColumn?: ColumnSort
-  onSorting?: (sorting: SortingState) => void
+  manualSorting?: boolean;
+  sortColumn?: ColumnSort;
+  onSorting?: (sorting: SortingState) => void;
 
-  enableRowSelection?: boolean
-  onSelect?: (rowIndexes: number[]) => void
+  enableRowSelection?: boolean;
+  onSelect?: (rowIndexes: number[]) => void;
 
-  children?: React.ReactNode
-}
+  children?: React.ReactNode;
+};
 
 /**
  * 数据表格组件。
@@ -84,24 +84,25 @@ export function DataTable<T>({
   enableRowSelection = false,
   onSelect,
 
-  children
+  children,
 }: DataTableProps<T>) {
-  const [sorting, setSorting] = React.useState<SortingState>([])
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
-  const [rowSelection, setRowSelection] = React.useState({})
+  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [columnVisibility, setColumnVisibility] =
+    React.useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = React.useState({});
 
   const table = useReactTable({
     state: {
       pagination: {
         pageIndex: (pagination?.pageNum || DEFAULT_PAGE_NUM) - 1,
-        pageSize: pagination?.pageSize || DEFAULT_PAGE_SIZE
+        pageSize: pagination?.pageSize || DEFAULT_PAGE_SIZE,
       },
 
       sorting: sortColumn ? [sortColumn] : sorting,
 
       columnVisibility,
 
-      rowSelection
+      rowSelection,
     },
 
     data,
@@ -110,29 +111,31 @@ export function DataTable<T>({
 
     getPaginationRowModel: getPaginationRowModel(),
     manualPagination, // 是否手动分页
-    pageCount: Math.ceil((pagination?.total || 0) / (pagination?.pageSize || 1)), // 手动分页需要设置的总页数
+    pageCount: Math.ceil(
+      (pagination?.total || 0) / (pagination?.pageSize || 1),
+    ), // 手动分页需要设置的总页数
     onPaginationChange: (updater) => {
-      if (typeof updater === 'function') {
-        const prev = table.getState().pagination
-        const next = updater({ ...prev })
+      if (typeof updater === "function") {
+        const prev = table.getState().pagination;
+        const next = updater({ ...prev });
 
         onPaginate?.({
           pageNum: next.pageIndex + 1,
           pageSize: next.pageSize,
-          total: pagination!.total
-        })
+          total: pagination!.total,
+        });
       }
     },
 
     getSortedRowModel: getSortedRowModel(),
     manualSorting,
     onSortingChange: (updater) => {
-      if (typeof updater === 'function') {
-        const prev = table.getState().sorting
-        const next = updater([...prev])
+      if (typeof updater === "function") {
+        const prev = table.getState().sorting;
+        const next = updater([...prev]);
 
-        setSorting(next)
-        onSorting?.(next)
+        setSorting(next);
+        onSorting?.(next);
       }
     },
 
@@ -140,19 +143,19 @@ export function DataTable<T>({
 
     enableRowSelection,
     onRowSelectionChange: (updater) => {
-      if (typeof updater === 'function') {
-        const prev = table.getState().rowSelection
-        const next = updater({ ...prev })
+      if (typeof updater === "function") {
+        const prev = table.getState().rowSelection;
+        const next = updater({ ...prev });
 
-        setRowSelection(next)
+        setRowSelection(next);
 
         // 提取选中数据的索引以供外部组件使用
-        const rowIndexes = Object.keys(next).map((key) => Number(key))
+        const rowIndexes = Object.keys(next).map((key) => Number(key));
 
-        onSelect?.(rowIndexes)
+        onSelect?.(rowIndexes);
       }
-    }
-  })
+    },
+  });
 
   return (
     <>
@@ -171,9 +174,12 @@ export function DataTable<T>({
                     <TableHead key={header.id}>
                       {header.isPlaceholder
                         ? null
-                        : flexRender(header.column.columnDef.header, header.getContext())}
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
                     </TableHead>
-                  )
+                  );
                 })}
               </TableRow>
             ))}
@@ -194,16 +200,24 @@ export function DataTable<T>({
             {!loading &&
               table.getRowModel().rows?.length > 0 &&
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
                     </TableCell>
                   ))}
                 </TableRow>
               ))}
 
-            {!loading && error && <ErrorRow columnLen={columns.length} error={error} />}
+            {!loading && error && (
+              <ErrorRow columnLen={columns.length} error={error} />
+            )}
 
             {!loading && !error && table.getRowModel().rows?.length === 0 && (
               <ErrorRow columnLen={columns.length} />
@@ -220,21 +234,23 @@ export function DataTable<T>({
         />
       )}
     </>
-  )
+  );
 }
 
-type ErrorRowProps = { columnLen: number; error?: string }
+type ErrorRowProps = { columnLen: number; error?: string };
 
 function ErrorRow({ columnLen, error }: ErrorRowProps) {
   return (
     <TableRow>
       <TableCell colSpan={columnLen} className="h-24 text-center">
         {error && (
-          <span className="font-bold text-red-500 dark:text-red-600">{error}</span>
+          <span className="font-bold text-red-500 dark:text-red-600">
+            {error}
+          </span>
         )}
 
-        {!error && '暂无数据'}
+        {!error && "暂无数据"}
       </TableCell>
     </TableRow>
-  )
+  );
 }

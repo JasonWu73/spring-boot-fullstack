@@ -14,7 +14,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  * </ul>
  */
 @EnableScheduling
-@SpringBootApplication(exclude = {UserDetailsServiceAutoConfiguration.class})
+@SpringBootApplication(exclude = { UserDetailsServiceAutoConfiguration.class })
 public class BackendApp {
 
   /**

@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 
 /**
  * 保存函数或对象的引用，即在拥有最新值的同时，也可作为 `useEffect`、`useMemo` 和 `useCallback` 等 Hook 的依赖项。
@@ -8,11 +8,11 @@ import React from 'react'
  * @param objFn 函数或对象
  */
 export function useSavedRef<T>(objFn: T) {
-  const ref = React.useRef(objFn)
+  const ref = React.useRef(objFn);
 
   React.useLayoutEffect(() => {
-    ref.current = objFn
-  }, [objFn])
+    ref.current = objFn;
+  }, [objFn]);
 
-  return ref
+  return ref;
 }

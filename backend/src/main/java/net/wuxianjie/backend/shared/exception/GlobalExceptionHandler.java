@@ -3,6 +3,10 @@ package net.wuxianjie.backend.shared.exception;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.wuxianjie.backend.shared.auth.SecurityConfig;
@@ -30,11 +34,6 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.util.Optional;
-
 /**
  * 全局异常处理器。
  */
@@ -43,7 +42,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class GlobalExceptionHandler {
 
-  private static final String SPA_INDEX_PAGE_PATH = "classpath:/static/index.html";
+  private static final String SPA_INDEX_PAGE_PATH =
+    "classpath:/static/index.html";
 
   private final ResourceLoader resourceLoader;
 
@@ -64,10 +64,9 @@ public class GlobalExceptionHandler {
    * @param request HTTP 请求对象
    * @return JSON 数据或 SPA 首页
    */
-  @ExceptionHandler({
-    NoResourceFoundException.class,
-    NoHandlerFoundException.class
-  })
+  @ExceptionHandler(
+    { NoResourceFoundException.class, NoHandlerFoundException.class }
+  )
   public ResponseEntity<?> handleNoResourceFoundException(
     final HttpServletRequest request
   ) {
@@ -78,7 +77,9 @@ public class GlobalExceptionHandler {
       return ResponseEntity
         .status(HttpStatus.NOT_FOUND)
         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-        .body(new ApiError(HttpStatus.NOT_FOUND, "未找到请求的资源", requestPath));
+        .body(
+          new ApiError(HttpStatus.NOT_FOUND, "未找到请求的资源", requestPath)
+        );
     }
 
     return ResponseEntity
@@ -142,8 +143,8 @@ public class GlobalExceptionHandler {
 
     Optional
       .ofNullable(e.getConstraintViolations())
-      .ifPresent(violations -> violations
-        .forEach(violation -> {
+      .ifPresent(violations ->
+        violations.forEach(violation -> {
           if (!stringBuilder.isEmpty()) {
             stringBuilder.append(ApiException.MESSAGE_SEPARATOR);
           }
@@ -187,7 +188,8 @@ public class GlobalExceptionHandler {
         if (error.isBindingFailure()) {
           final String field = error.getField();
           final Object rejectedValue = error.getRejectedValue();
-          final String reason = "参数值不合法 [%s=%s]".formatted(field, rejectedValue);
+          final String reason =
+            "参数值不合法 [%s=%s]".formatted(field, rejectedValue);
 
           stringBuilder.append(reason);
           return;
@@ -209,10 +211,12 @@ public class GlobalExceptionHandler {
    * @param e {@link MissingServletRequestParameterException}
    * @return API 错误信息
    */
-  @ExceptionHandler({
-    MissingServletRequestParameterException.class,
-    MissingServletRequestPartException.class
-  })
+  @ExceptionHandler(
+    {
+      MissingServletRequestParameterException.class,
+      MissingServletRequestPartException.class,
+    }
+  )
   public ResponseEntity<ApiError> handleMissingServletRequestParameterException(
     final Exception e
   ) {
@@ -228,7 +232,9 @@ public class GlobalExceptionHandler {
 
     String reason = "缺少必填参数 [%s]".formatted(paramName);
 
-    return handleApiException(new ApiException(HttpStatus.BAD_REQUEST, reason, e));
+    return handleApiException(
+      new ApiException(HttpStatus.BAD_REQUEST, reason, e)
+    );
   }
 
   /**
@@ -243,9 +249,12 @@ public class GlobalExceptionHandler {
   ) {
     final String paramName = e.getName();
     final Object paramValue = e.getValue();
-    final String reason = "参数值不合法 [%s=%s]".formatted(paramName, paramValue);
+    final String reason =
+      "参数值不合法 [%s=%s]".formatted(paramName, paramValue);
 
-    return handleApiException(new ApiException(HttpStatus.BAD_REQUEST, reason, e));
+    return handleApiException(
+      new ApiException(HttpStatus.BAD_REQUEST, reason, e)
+    );
   }
 
   /**
@@ -275,9 +284,12 @@ public class GlobalExceptionHandler {
     final HttpRequestMethodNotSupportedException e,
     final HttpServletRequest request
   ) {
-    final String reason = "不支持的请求方法 [%s]".formatted(request.getMethod());
+    final String reason =
+      "不支持的请求方法 [%s]".formatted(request.getMethod());
 
-    return handleApiException(new ApiException(HttpStatus.METHOD_NOT_ALLOWED, reason, e));
+    return handleApiException(
+      new ApiException(HttpStatus.METHOD_NOT_ALLOWED, reason, e)
+    );
   }
 
   /**
@@ -292,12 +304,15 @@ public class GlobalExceptionHandler {
     final HttpMediaTypeException e,
     final HttpServletRequest request
   ) {
-    final String reason = "不支持的媒体类型 [%s: %s]".formatted(
-      HttpHeaders.CONTENT_TYPE,
-      request.getHeader(HttpHeaders.CONTENT_TYPE)
-    );
+    final String reason =
+      "不支持的媒体类型 [%s: %s]".formatted(
+          HttpHeaders.CONTENT_TYPE,
+          request.getHeader(HttpHeaders.CONTENT_TYPE)
+        );
 
-    return handleApiException(new ApiException(HttpStatus.NOT_ACCEPTABLE, reason, e));
+    return handleApiException(
+      new ApiException(HttpStatus.NOT_ACCEPTABLE, reason, e)
+    );
   }
 
   /**
@@ -307,7 +322,9 @@ public class GlobalExceptionHandler {
    * @return API 错误信息
    */
   @ExceptionHandler(MultipartException.class)
-  public ResponseEntity<ApiError> handleMultipartException(final MultipartException e) {
+  public ResponseEntity<ApiError> handleMultipartException(
+    final MultipartException e
+  ) {
     return handleApiException(
       new ApiException(HttpStatus.NOT_ACCEPTABLE, "仅支持 Multipart 请求", e)
     );
@@ -337,10 +354,14 @@ public class GlobalExceptionHandler {
     log.error("服务端异常: {}", e.getMessage());
   }
 
-  private static boolean isJsonRequest(final String requestPath, final String accept) {
-    return
+  private static boolean isJsonRequest(
+    final String requestPath,
+    final String accept
+  ) {
+    return (
       requestPath.startsWith(SecurityConfig.API_PATH_PREFIX) ||
-      accept.contains(MediaType.APPLICATION_JSON_VALUE);
+      accept.contains(MediaType.APPLICATION_JSON_VALUE)
+    );
   }
 
   private String getIndexHtml() {

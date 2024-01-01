@@ -1,65 +1,79 @@
-import { zodResolver } from '@hookform/resolvers/zod'
-import { ExclamationTriangleIcon } from '@radix-ui/react-icons'
-import { useForm } from 'react-hook-form'
-import { useNavigate, useParams } from 'react-router-dom'
-import { z } from 'zod'
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
+import { useForm } from "react-hook-form";
+import { useNavigate, useParams } from "react-router-dom";
+import { z } from "zod";
 
-import { getUserApi, updateUserApi, type User } from '@/shared/apis/backend/user'
-import { Alert, AlertDescription, AlertTitle } from '@/shared/components/ui/Alert'
-import { Button } from '@/shared/components/ui/Button'
-import { Code } from '@/shared/components/ui/Code'
+import {
+  getUserApi,
+  updateUserApi,
+  type User,
+} from "@/shared/apis/backend/user";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/shared/components/ui/Alert";
+import { Button } from "@/shared/components/ui/Button";
+import { Code } from "@/shared/components/ui/Code";
 import {
   FormInput,
   FormMultiSelect,
-  FormTextarea
-} from '@/shared/components/ui/CustomFormField'
-import { Form } from '@/shared/components/ui/Form'
-import LoadingButton from '@/shared/components/ui/LoadingButton'
-import { Skeleton } from '@/shared/components/ui/Skeleton'
-import { useToast } from '@/shared/components/ui/use-toast'
-import { useFetch } from '@/shared/hooks/use-fetch'
-import { useInitial } from '@/shared/hooks/use-refresh'
-import { ADMIN, ROOT, USER } from '@/shared/auth/auth-signals'
+  FormTextarea,
+} from "@/shared/components/ui/CustomFormField";
+import { Form } from "@/shared/components/ui/Form";
+import LoadingButton from "@/shared/components/ui/LoadingButton";
+import { Skeleton } from "@/shared/components/ui/Skeleton";
+import { useToast } from "@/shared/components/ui/use-toast";
+import { useFetch } from "@/shared/hooks/use-fetch";
+import { useInitial } from "@/shared/hooks/use-refresh";
+import { ADMIN, ROOT, USER } from "@/shared/auth/auth-signals";
 
-const AUTHORITY_OPTIONS = [ADMIN, USER]
+const AUTHORITY_OPTIONS = [ADMIN, USER];
 
 const formSchema = z.object({
-  nickname: z.string().min(1, '必须输入昵称').trim(),
+  nickname: z.string().min(1, "必须输入昵称").trim(),
   authorities: z.array(z.record(z.string().trim())),
-  remark: z.string().trim()
-})
+  remark: z.string().trim(),
+});
 
-type FormSchema = z.infer<typeof formSchema>
+type FormSchema = z.infer<typeof formSchema>;
 
 const defaultValues: FormSchema = {
-  nickname: '',
+  nickname: "",
   authorities: [],
-  remark: ''
-}
+  remark: "",
+};
 
 export function UpdateUser() {
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
-    defaultValues
-  })
+    defaultValues,
+  });
 
-  const { loading, data: user, error, fetchData: getUser } = useFetch(getUserApi)
+  const {
+    loading,
+    data: user,
+    error,
+    fetchData: getUser,
+  } = useFetch(getUserApi);
 
-  const params = useParams()
-  const userId = Number(params.userId)
+  const params = useParams();
+  const userId = Number(params.userId);
 
   useInitial(() => {
     getUser(userId).then(({ data }) => {
       if (data) {
-        initializeUserData(data)
+        initializeUserData(data);
       }
-    })
-  })
+    });
+  });
 
-  const { loading: submitting, fetchData: updateUser } = useFetch(updateUserApi)
+  const { loading: submitting, fetchData: updateUser } =
+    useFetch(updateUserApi);
 
-  const navigate = useNavigate()
-  const { toast } = useToast()
+  const navigate = useNavigate();
+  const { toast } = useToast();
 
   function initializeUserData(user: User) {
     form.reset({
@@ -73,46 +87,46 @@ export function UpdateUser() {
               ? ADMIN.label
               : authority === USER.value
                 ? USER.label
-                : ''
+                : "",
       })),
-      remark: user.remark
-    })
+      remark: user.remark,
+    });
   }
 
   async function onSubmit(values: FormSchema) {
-    if (!user) return
+    if (!user) return;
 
     const { status, error } = await updateUser({
       userId: user.id,
       nickname: values.nickname,
       authorities: values.authorities.map((authority) => authority.value),
-      remark: values.remark
-    })
+      remark: values.remark,
+    });
 
     if (status !== 204) {
       toast({
-        title: '更新用户失败',
+        title: "更新用户失败",
         description: error,
-        variant: 'destructive'
-      })
+        variant: "destructive",
+      });
 
-      return
+      return;
     }
 
     toast({
-      title: '更新用户成功',
+      title: "更新用户成功",
       description: (
         <span>
           成功更新用户 <Code>{user.username}</Code>
         </span>
-      )
-    })
+      ),
+    });
 
-    goBackToUserListPage()
+    goBackToUserListPage();
   }
 
   function goBackToUserListPage() {
-    navigate('/users')
+    navigate("/users");
   }
 
   return (
@@ -121,7 +135,10 @@ export function UpdateUser() {
 
       {!loading && (
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="flex flex-col gap-4"
+          >
             {error && (
               <Alert variant="destructive">
                 <ExclamationTriangleIcon className="h-4 w-4" />
@@ -139,7 +156,9 @@ export function UpdateUser() {
               <label>账号状态：</label>
               <span>
                 {user?.status === 1 ? (
-                  <span className="text-green-500 dark:text-green-600">启用</span>
+                  <span className="text-green-500 dark:text-green-600">
+                    启用
+                  </span>
                 ) : (
                   <span className="text-red-500 dark:text-red-600">禁用</span>
                 )}
@@ -163,7 +182,7 @@ export function UpdateUser() {
               label="昵称"
               labelWidth={60}
               placeholder="昵称"
-              isError={form.getFieldState('nickname')?.invalid}
+              isError={form.getFieldState("nickname")?.invalid}
             />
 
             <FormMultiSelect
@@ -173,7 +192,7 @@ export function UpdateUser() {
               labelWidth={60}
               placeholder="请选择功能权限"
               options={AUTHORITY_OPTIONS}
-              isError={form.getFieldState('authorities')?.invalid}
+              isError={form.getFieldState("authorities")?.invalid}
             />
 
             <FormTextarea
@@ -182,7 +201,7 @@ export function UpdateUser() {
               label="备注"
               labelWidth={60}
               placeholder="备注"
-              isError={form.getFieldState('remark')?.invalid}
+              isError={form.getFieldState("remark")?.invalid}
             />
 
             <div className="flex gap-2 sm:justify-end">
@@ -195,7 +214,11 @@ export function UpdateUser() {
                 返回
               </Button>
 
-              <LoadingButton type="submit" loading={submitting} className="self-end">
+              <LoadingButton
+                type="submit"
+                loading={submitting}
+                className="self-end"
+              >
                 提交
               </LoadingButton>
             </div>
@@ -203,7 +226,7 @@ export function UpdateUser() {
         </Form>
       )}
     </>
-  )
+  );
 }
 
 function FormSkeleton() {
@@ -237,5 +260,5 @@ function FormSkeleton() {
         <Skeleton className="h-9 w-20 self-end" />
       </div>
     </div>
-  )
+  );
 }

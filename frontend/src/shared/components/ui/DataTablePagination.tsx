@@ -2,45 +2,45 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   DoubleArrowLeftIcon,
-  DoubleArrowRightIcon
-} from '@radix-ui/react-icons'
-import type { Table } from '@tanstack/react-table'
+  DoubleArrowRightIcon,
+} from "@radix-ui/react-icons";
+import type { Table } from "@tanstack/react-table";
 
-import { Button } from '@/shared/components/ui/Button'
+import { Button } from "@/shared/components/ui/Button";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue
-} from '@/shared/components/ui/Select'
+  SelectValue,
+} from "@/shared/components/ui/Select";
 
-const PAGE_SIZE_OPTIONS = [10, 20, 30, 40, 50]
+const PAGE_SIZE_OPTIONS = [10, 20, 30, 40, 50];
 
 type DataTablePaginationProps<TData> = {
-  total: number
-  table: Table<TData>
-  needsSelection?: boolean
-}
+  total: number;
+  table: Table<TData>;
+  needsSelection?: boolean;
+};
 
 function DataTablePagination<TData>({
   total,
   table,
-  needsSelection = false
+  needsSelection = false,
 }: DataTablePaginationProps<TData>) {
   function getPageSizeSelectItems() {
-    const pageSizeOptions = [...PAGE_SIZE_OPTIONS]
-    const currentPageSize = table.getState().pagination.pageSize
+    const pageSizeOptions = [...PAGE_SIZE_OPTIONS];
+    const currentPageSize = table.getState().pagination.pageSize;
 
     if (!PAGE_SIZE_OPTIONS.includes(currentPageSize)) {
-      pageSizeOptions.unshift(currentPageSize)
+      pageSizeOptions.unshift(currentPageSize);
     }
 
     return pageSizeOptions.map((predefinedPageSize) => (
       <SelectItem key={predefinedPageSize} value={`${predefinedPageSize}`}>
         {predefinedPageSize}
       </SelectItem>
-    ))
+    ));
   }
 
   return (
@@ -48,7 +48,7 @@ function DataTablePagination<TData>({
       <div className="hidden flex-1 text-sm lg:flex">
         {needsSelection && (
           <>
-            已选中 {table.getFilteredSelectedRowModel().rows.length} /{' '}
+            已选中 {table.getFilteredSelectedRowModel().rows.length} /{" "}
             {table.getFilteredRowModel().rows.length} 行
           </>
         )}
@@ -60,7 +60,7 @@ function DataTablePagination<TData>({
           <Select
             value={`${table.getState().pagination.pageSize}`}
             onValueChange={(value) => {
-              table.setPageSize(Number(value))
+              table.setPageSize(Number(value));
             }}
           >
             <SelectTrigger className="h-8 w-[70px]">
@@ -71,8 +71,8 @@ function DataTablePagination<TData>({
         </div>
 
         <div className="flex items-center justify-center text-sm font-medium">
-          第 {table.getState().pagination.pageIndex + 1} / {table.getPageCount()} 页 共{' '}
-          {total} 条
+          第 {table.getState().pagination.pageIndex + 1} /{" "}
+          {table.getPageCount()} 页 共 {total} 条
         </div>
 
         <div className="flex items-center space-x-2">
@@ -118,7 +118,7 @@ function DataTablePagination<TData>({
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export { DataTablePagination }
+export { DataTablePagination };

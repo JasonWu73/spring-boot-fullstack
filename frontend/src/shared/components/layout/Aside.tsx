@@ -1,17 +1,17 @@
-import React from 'react'
+import React from "react";
 
-import { SideNavBar } from '@/shared/components/layout/side-nav-bar/SideNavBar'
-import { cn } from '@/shared/utils/helpers'
+import { SideNavBar } from "@/shared/components/layout/side-nav-bar/SideNavBar";
+import { cn } from "@/shared/utils/helpers";
 
-type AsideProps = React.ComponentPropsWithoutRef<'header'>
+type AsideProps = React.ComponentPropsWithoutRef<"header">;
 
 export function Aside({ className, ...props }: AsideProps) {
   return (
     <aside
-      className={cn('bg-night-1 p-4 text-snow dark:bg-night-1', className)}
+      className={cn("bg-night-1 p-4 text-snow dark:bg-night-1", className)}
       {...props}
     >
       <SideNavBar />
     </aside>
-  )
+  );
 }

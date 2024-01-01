@@ -1,16 +1,16 @@
-import { LogSearch } from '@/operation-log/LogSearch'
-import { LogTable } from '@/operation-log/LogTable'
+import { LogSearch } from "@/operation-log/LogSearch";
+import { LogTable } from "@/operation-log/LogTable";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle
-} from '@/shared/components/ui/Card'
-import { useTitle } from '@/shared/hooks/use-title'
+  CardTitle,
+} from "@/shared/components/ui/Card";
+import { useTitle } from "@/shared/hooks/use-title";
 
 export default function LogListPage() {
-  useTitle('操作日志')
+  useTitle("操作日志");
 
   return (
     <Card className="mx-auto h-full w-full">
@@ -25,5 +25,5 @@ export default function LogListPage() {
         <LogTable />
       </CardContent>
     </Card>
-  )
+  );
 }

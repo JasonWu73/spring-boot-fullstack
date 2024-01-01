@@ -1,15 +1,14 @@
 package net.wuxianjie.backend.shared.validator;
 
+import static java.lang.annotation.ElementType.*;
+
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
-import net.wuxianjie.backend.shared.validator.impl.EnumValidatorImpl;
-
 import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
-import static java.lang.annotation.ElementType.*;
+import net.wuxianjie.backend.shared.validator.impl.EnumValidatorImpl;
 
 /**
  * 枚举值验证注解，即用枚举类验证值是否合法。
@@ -18,12 +17,11 @@ import static java.lang.annotation.ElementType.*;
  * <p>
  * 注意：{@code null} 值被认为是合法的。
  **/
-@Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE})
+@Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE })
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = EnumValidatorImpl.class)
 @Repeatable(EnumValidator.List.class)
 public @interface EnumValidator {
-
   Class<? extends Enum<?>> value();
 
   String message() default "类型不合法";
@@ -32,10 +30,9 @@ public @interface EnumValidator {
 
   Class<? extends Payload>[] payload() default {};
 
-  @Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE})
+  @Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE })
   @Retention(RetentionPolicy.RUNTIME)
   @interface List {
-
     EnumValidator[] value();
   }
 }

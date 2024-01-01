@@ -1,10 +1,9 @@
 package net.wuxianjie.backend.version;
 
+import java.time.LocalDateTime;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.time.LocalDateTime;
 
 /**
  * 版本号 API。
@@ -35,7 +34,14 @@ public class VersionController {
    * <p>
    * 每次在生产环境中发布新包时都要更新版本号及构建时间。
    */
-  private static final LocalDateTime BUILT_AT = LocalDateTime.of(2023, 12, 24, 20, 49, 46);
+  private static final LocalDateTime BUILT_AT = LocalDateTime.of(
+    2023,
+    12,
+    24,
+    20,
+    49,
+    46
+  );
 
   /**
    * 获取项目版本号。

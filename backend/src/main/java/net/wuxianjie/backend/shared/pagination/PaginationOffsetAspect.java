@@ -1,13 +1,12 @@
 package net.wuxianjie.backend.shared.pagination;
 
+import java.util.Arrays;
+import java.util.Optional;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
-
-import java.util.Arrays;
-import java.util.Optional;
 
 /**
  * 自动设置分页查询参数偏移量 OFFSET 的切面。
@@ -52,11 +51,12 @@ public class PaginationOffsetAspect {
   public void setPaginationOffsetParam(final JoinPoint joinPoint) {
     Optional
       .ofNullable(joinPoint.getArgs())
-      .flatMap(args -> Arrays
-        .stream(args)
-        .filter(arg -> (arg instanceof PaginationParam))
-        .findFirst()
-        .map(arg -> (PaginationParam) arg)
+      .flatMap(args ->
+        Arrays
+          .stream(args)
+          .filter(arg -> (arg instanceof PaginationParam))
+          .findFirst()
+          .map(arg -> (PaginationParam) arg)
       )
       .ifPresent(PaginationParam::setOffset);
   }

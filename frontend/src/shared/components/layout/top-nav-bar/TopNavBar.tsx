@@ -1,24 +1,24 @@
-import React from 'react'
+import React from "react";
 
-import { Hamburger } from '@/shared/components/ui/Hamburger'
-import { ModeToggle } from '@/shared/components/ui/ModeToggle'
-import { setTheme } from '@/shared/components/ui/theme-signals'
-import { PanelFold } from '@/shared/components/layout/panel-fold/PanelFold'
-import { AuthSwitch } from '@/shared/components/layout/top-nav-bar/AuthSwitch'
-import { Logo } from '@/shared/components/layout/top-nav-bar/Logo'
-import { TopNavItem } from '@/shared/components/layout/top-nav-bar/TopNavItem'
+import { Hamburger } from "@/shared/components/ui/Hamburger";
+import { ModeToggle } from "@/shared/components/ui/ModeToggle";
+import { setTheme } from "@/shared/components/ui/theme-signals";
+import { PanelFold } from "@/shared/components/layout/panel-fold/PanelFold";
+import { AuthSwitch } from "@/shared/components/layout/top-nav-bar/AuthSwitch";
+import { Logo } from "@/shared/components/layout/top-nav-bar/Logo";
+import { TopNavItem } from "@/shared/components/layout/top-nav-bar/TopNavItem";
 
 type TopNavBarProps = {
-  showPanelFold?: boolean
-}
+  showPanelFold?: boolean;
+};
 
 export function TopNavBar({ showPanelFold = false }: TopNavBarProps) {
-  const [openHamburger, setOpenHamburger] = React.useState(false)
+  const [openHamburger, setOpenHamburger] = React.useState(false);
 
   function handleClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     // 当点击页面链接后，应该自动关闭汉堡包导航菜单
     if (e.target instanceof HTMLAnchorElement) {
-      setOpenHamburger(false)
+      setOpenHamburger(false);
     }
   }
 
@@ -48,5 +48,5 @@ export function TopNavBar({ showPanelFold = false }: TopNavBarProps) {
         <Hamburger open={openHamburger} onOpenChange={setOpenHamburger} />
       </div>
     </nav>
-  )
+  );
 }

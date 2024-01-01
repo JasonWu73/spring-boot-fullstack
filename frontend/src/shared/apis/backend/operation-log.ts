@@ -1,28 +1,28 @@
-import { requestApi } from '@/shared/apis/backend/helpers'
-import type { PaginationData, PaginationParams } from '@/shared/apis/types'
+import { requestApi } from "@/shared/apis/backend/helpers";
+import type { PaginationData, PaginationParams } from "@/shared/apis/types";
 
 export type GetLogsParams = PaginationParams & {
-  startAt: string
-  endAt: string
-  clientIp?: string
-  username?: string
-  message?: string
-}
+  startAt: string;
+  endAt: string;
+  clientIp?: string;
+  username?: string;
+  message?: string;
+};
 
 export type Log = {
-  id: number
-  requestedAt: string
-  clientIp: string
-  username: string
-  message: string
-}
+  id: number;
+  requestedAt: string;
+  clientIp: string;
+  username: string;
+  message: string;
+};
 
 type ChartDataItem = {
-  name: string
-  value: number
-}
+  name: string;
+  value: number;
+};
 
-export type ChartData = ChartDataItem[]
+export type ChartData = ChartDataItem[];
 
 /**
  * 获取操作日志分页数据。
@@ -32,9 +32,9 @@ export type ChartData = ChartDataItem[]
  */
 export async function getLogsApi(params: GetLogsParams) {
   return await requestApi<PaginationData<Log>>({
-    url: '/api/v1/operation-logs',
-    urlParams: params
-  })
+    url: "/api/v1/operation-logs",
+    urlParams: params,
+  });
 }
 
 /**
@@ -45,8 +45,8 @@ export async function getLogsApi(params: GetLogsParams) {
  */
 export async function getLoginsTopApi(num: number) {
   return await requestApi<ChartData>({
-    url: `/api/v1/operation-logs/logins-top/${num}`
-  })
+    url: `/api/v1/operation-logs/logins-top/${num}`,
+  });
 }
 
 /**
@@ -57,6 +57,6 @@ export async function getLoginsTopApi(num: number) {
  */
 export async function getLoginsHistoryApi(days: number) {
   return await requestApi<ChartData>({
-    url: `/api/v1/operation-logs/logins-history/${days}`
-  })
+    url: `/api/v1/operation-logs/logins-history/${days}`,
+  });
 }

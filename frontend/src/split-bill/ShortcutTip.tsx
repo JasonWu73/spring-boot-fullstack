@@ -2,9 +2,9 @@ import {
   Accordion,
   AccordionContent,
   AccordionItem,
-  AccordionTrigger
-} from '@/shared/components/ui/Accordion'
-import { Code } from '@/shared/components/ui/Code'
+  AccordionTrigger,
+} from "@/shared/components/ui/Accordion";
+import { Code } from "@/shared/components/ui/Code";
 
 export function ShortcutTip() {
   return (
@@ -24,5 +24,5 @@ export function ShortcutTip() {
         </AccordionContent>
       </AccordionItem>
     </Accordion>
-  )
+  );
 }

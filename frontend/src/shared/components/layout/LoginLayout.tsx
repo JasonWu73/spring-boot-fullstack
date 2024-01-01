@@ -1,9 +1,9 @@
-import React from 'react'
-import { Outlet } from 'react-router-dom'
+import React from "react";
+import { Outlet } from "react-router-dom";
 
-import { Footer } from '@/shared/components/layout/Footer'
-import { Header } from '@/shared/components/layout/Header'
-import { LoadingFullPage } from '@/shared/components/ui/LoadingFullPage'
+import { Footer } from "@/shared/components/layout/Footer";
+import { Header } from "@/shared/components/layout/Header";
+import { LoadingFullPage } from "@/shared/components/ui/LoadingFullPage";
 
 export function LoginLayout() {
   return (
@@ -18,5 +18,5 @@ export function LoginLayout() {
 
       <Footer className="border-t border-t-slate-600 bg-night text-snow dark:bg-night" />
     </div>
-  )
+  );
 }

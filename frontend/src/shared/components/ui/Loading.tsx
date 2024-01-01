@@ -1,9 +1,9 @@
-import React from 'react'
+import React from "react";
 
-import { endNProgress, startNProgress } from '@/shared/utils/nprogress'
+import { endNProgress, startNProgress } from "@/shared/utils/nprogress";
 
 export function Loading() {
-  useNProgress()
+  useNProgress();
 
   return (
     <div className="flex items-center justify-center gap-2">
@@ -12,13 +12,13 @@ export function Loading() {
       <div className="h-4 w-4 animate-bounce rounded-full bg-lime-500 dark:bg-lime-600"></div>
       <span className="sr-only">加载中...</span>
     </div>
-  )
+  );
 }
 
 function useNProgress() {
   React.useEffect(() => {
-    startNProgress()
+    startNProgress();
 
-    return () => endNProgress()
-  }, [])
+    return () => endNProgress();
+  }, []);
 }

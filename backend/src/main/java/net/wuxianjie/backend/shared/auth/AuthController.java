@@ -1,6 +1,7 @@
 package net.wuxianjie.backend.shared.auth;
 
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import net.wuxianjie.backend.shared.auth.dto.AuthResult;
 import net.wuxianjie.backend.shared.auth.dto.LoginParam;
@@ -8,8 +9,6 @@ import net.wuxianjie.backend.shared.operationlog.Operation;
 import net.wuxianjie.backend.user.AuthServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * 身份验证 API。

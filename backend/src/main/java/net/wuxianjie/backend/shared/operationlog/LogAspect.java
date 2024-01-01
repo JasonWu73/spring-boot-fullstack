@@ -1,6 +1,8 @@
 package net.wuxianjie.backend.shared.operationlog;
 
 import jakarta.servlet.http.HttpServletRequest;
+import java.lang.reflect.Method;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import net.wuxianjie.backend.shared.auth.AuthUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -8,9 +10,6 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
-
-import java.lang.reflect.Method;
-import java.time.LocalDateTime;
 
 /**
  * 用于记录操作日志的切面。
@@ -49,7 +48,8 @@ public class LogAspect {
    * @throws Throwable 如果实际方法抛出异常，则继续抛出
    */
   @Around("@annotation(Operation)")
-  public Object recordOperationLog(final ProceedingJoinPoint joinPoint) throws Throwable {
+  public Object recordOperationLog(final ProceedingJoinPoint joinPoint)
+    throws Throwable {
     final LocalDateTime requestedAt = LocalDateTime.now();
 
     final Object result = joinPoint.proceed();
@@ -58,11 +58,16 @@ public class LogAspect {
     operation.setRequestedAt(requestedAt);
 
     final String remoteAddr = request.getRemoteAddr();
-    operation.setClientIp(LOCALHOST_ADDRESS.equals(remoteAddr) ? LOCALHOST : remoteAddr);
+    operation.setClientIp(
+      LOCALHOST_ADDRESS.equals(remoteAddr) ? LOCALHOST : remoteAddr
+    );
 
-    AuthUtils.getCurrentUser().ifPresent(auth -> operation.setUsername(auth.username()));
+    AuthUtils
+      .getCurrentUser()
+      .ifPresent(auth -> operation.setUsername(auth.username()));
 
-    final Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
+    final Method method =
+      ((MethodSignature) joinPoint.getSignature()).getMethod();
     final Operation annotation = method.getAnnotation(Operation.class);
     operation.setMessage(annotation.value());
 

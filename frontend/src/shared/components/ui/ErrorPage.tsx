@@ -1,7 +1,7 @@
-import { useRouteError } from 'react-router-dom'
+import { useRouteError } from "react-router-dom";
 
 export default function ErrorPage() {
-  const error = useRouteError() as Error
+  const error = useRouteError() as Error;
 
   return (
     <div className="relative mt-8 flex flex-col items-center gap-4 text-slate-950 dark:text-snow">
@@ -13,5 +13,5 @@ export default function ErrorPage() {
 
       <p className="italic text-red-500 dark:text-red-600">{error.message}</p>
     </div>
-  )
+  );
 }

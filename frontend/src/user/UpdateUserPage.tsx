@@ -3,13 +3,13 @@ import {
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle
-} from '@/shared/components/ui/Card'
-import { useTitle } from '@/shared/hooks/use-title'
-import { UpdateUser } from '@/user/UpdateUser'
+  CardTitle,
+} from "@/shared/components/ui/Card";
+import { useTitle } from "@/shared/hooks/use-title";
+import { UpdateUser } from "@/user/UpdateUser";
 
 export default function UpdateUserPage() {
-  useTitle('用户详情')
+  useTitle("用户详情");
 
   return (
     <Card className="mx-auto w-full md:w-4/5 lg:w-2/3">
@@ -22,5 +22,5 @@ export default function UpdateUserPage() {
         <UpdateUser />
       </CardContent>
     </Card>
-  )
+  );
 }

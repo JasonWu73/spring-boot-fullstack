@@ -1,31 +1,31 @@
-import { endNProgress, startNProgress } from '@/shared/utils/nprogress'
+import { endNProgress, startNProgress } from "@/shared/utils/nprogress";
 
-type ContentType = 'JSON' | 'URLENCODED' | 'FILE'
-type Headers = Record<string, string>
-type UrlParams = Record<string, string | number | null | undefined>
-type BodyData = Record<string, unknown> | FormData
+type ContentType = "JSON" | "URLENCODED" | "FILE";
+type Headers = Record<string, string>;
+type UrlParams = Record<string, string | number | null | undefined>;
+type BodyData = Record<string, unknown> | FormData;
 
-export type Method = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'
+export type Method = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
 
 export type ApiRequest = {
-  url: string
-  method?: Method
-  contentType?: ContentType
-  headers?: Headers
-  urlParams?: UrlParams
-  bodyData?: BodyData
-}
+  url: string;
+  method?: Method;
+  contentType?: ContentType;
+  headers?: Headers;
+  urlParams?: UrlParams;
+  bodyData?: BodyData;
+};
 
 type ApiResponse<TData, TError> = {
   /**
    * HTTP 响应状态码。
    */
-  status?: number
+  status?: number;
 
   /**
    * API 响应结果。
    */
-  data?: TData
+  data?: TData;
 
   /**
    * API 响应错误信息。
@@ -35,8 +35,8 @@ type ApiResponse<TData, TError> = {
    *   <li>当类型为 `string` 时，表示请求发送失败时的错误信息</li>
    * </ul>
    */
-  error?: TError | string
-}
+  error?: TError | string;
+};
 
 /**
  * 发送 HTTP API 请求，并以 JSON 数据格式解析响应结果。
@@ -58,112 +58,115 @@ type ApiResponse<TData, TError> = {
  */
 export async function sendRequest<TData, TError>({
   url,
-  method = 'GET',
-  contentType = 'JSON',
+  method = "GET",
+  contentType = "JSON",
   headers = {},
   urlParams,
-  bodyData
+  bodyData,
 }: ApiRequest): Promise<ApiResponse<TData, TError>> {
   try {
-    const targetUrl = appendUrlParams(url, urlParams)
+    const targetUrl = appendUrlParams(url, urlParams);
 
-    startNProgress()
+    startNProgress();
 
     const response = await fetch(targetUrl, {
       method,
       headers: getHeaders(headers, contentType),
-      body: getBody(bodyData, contentType)
-    })
+      body: getBody(bodyData, contentType),
+    });
 
     // 如果 HTTP 状态码为 204，表示请求成功，但无响应结果
     if (response.status === 204) {
-      return { status: response.status }
+      return { status: response.status };
     }
 
     // 以 JSON 数据格式解析请求
-    const responseData = await response.json()
+    const responseData = await response.json();
 
     // 请求失败时，返回异常响应结果
     if (!response.ok) {
-      return { status: response.status, error: responseData }
+      return { status: response.status, error: responseData };
     }
 
-    return { status: response.status, data: responseData }
+    return { status: response.status, data: responseData };
   } catch (error) {
-    return { error: error instanceof Error ? error.message : String(error) }
+    return { error: error instanceof Error ? error.message : String(error) };
   } finally {
-    endNProgress()
+    endNProgress();
   }
 }
 
 function appendUrlParams(url: string, urlParams?: UrlParams) {
-  if (!urlParams) return url
+  if (!urlParams) return url;
 
-  const urlObj = new URL(url)
+  const urlObj = new URL(url);
 
   Object.keys(urlParams).forEach((key) => {
-    const value = urlParams[key]
+    const value = urlParams[key];
 
-    urlObj.searchParams.append(key, value ? String(value) : '')
-  })
+    urlObj.searchParams.append(key, value ? String(value) : "");
+  });
 
-  return urlObj.toString()
+  return urlObj.toString();
 }
 
 function getHeaders(headers: Headers, contentType?: ContentType) {
   const jsonAcceptHeaders = {
-    Accept: 'application/json',
-    ...headers
-  }
+    Accept: "application/json",
+    ...headers,
+  };
 
-  const contentTypeValue = getContentTypeValue(contentType)
+  const contentTypeValue = getContentTypeValue(contentType);
 
-  if (!contentTypeValue) return jsonAcceptHeaders
+  if (!contentTypeValue) return jsonAcceptHeaders;
 
   return {
     ...jsonAcceptHeaders,
-    'Content-Type': contentTypeValue
-  }
+    "Content-Type": contentTypeValue,
+  };
 }
 
 function getContentTypeValue(contentType?: ContentType) {
   switch (contentType) {
-    case 'FILE': {
-      return undefined // 不要设置 Content-Type，让浏览器自动设置
+    case "FILE": {
+      return undefined; // 不要设置 Content-Type，让浏览器自动设置
     }
-    case 'URLENCODED': {
-      return 'application/x-www-form-urlencoded'
+    case "URLENCODED": {
+      return "application/x-www-form-urlencoded";
     }
-    case 'JSON': {
-      return 'application/json'
+    case "JSON": {
+      return "application/json";
     }
     default: {
-      return undefined
+      return undefined;
     }
   }
 }
 
 function getBody(bodyData?: BodyData, contentType?: ContentType) {
-  if (!bodyData) return undefined
+  if (!bodyData) return undefined;
 
   switch (contentType) {
-    case 'FILE': {
-      return bodyData as FormData
+    case "FILE": {
+      return bodyData as FormData;
     }
-    case 'URLENCODED': {
-      return getUrlEncodedData(bodyData as UrlParams)
+    case "URLENCODED": {
+      return getUrlEncodedData(bodyData as UrlParams);
     }
-    case 'JSON': {
-      return JSON.stringify(bodyData)
+    case "JSON": {
+      return JSON.stringify(bodyData);
     }
     default: {
-      return undefined
+      return undefined;
     }
   }
 }
 
 function getUrlEncodedData(bodyData: UrlParams) {
   return Object.keys(bodyData)
-    .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(bodyData[key] ?? '')}`)
-    .join('&')
+    .map(
+      (key) =>
+        `${encodeURIComponent(key)}=${encodeURIComponent(bodyData[key] ?? "")}`,
+    )
+    .join("&");
 }

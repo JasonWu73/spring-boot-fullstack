@@ -1,15 +1,14 @@
 package net.wuxianjie.backend.demo.requestparam;
 
 import jakarta.validation.constraints.NotNull;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.wuxianjie.backend.shared.json.JsonConfig;
 import org.springframework.format.annotation.DateTimeFormat;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
 
 /**
  * 嵌套在外部数据中的内部数据。

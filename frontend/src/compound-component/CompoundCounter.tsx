@@ -1,14 +1,16 @@
-import { Minus, Plus } from 'lucide-react'
+import { Minus, Plus } from "lucide-react";
 
-import { Counter } from '@/compound-component/Counter'
-import { Code } from '@/shared/components/ui/Code'
-import { Separator } from '@/shared/components/ui/Separator'
+import { Counter } from "@/compound-component/Counter";
+import { Code } from "@/shared/components/ui/Code";
+import { Separator } from "@/shared/components/ui/Separator";
 
 export function CompoundCounter() {
   return (
     <>
       <Counter className="flex flex-col items-center justify-center gap-4">
-        <Counter.Label className="font-semibold">Counter 复合组件</Counter.Label>
+        <Counter.Label className="font-semibold">
+          Counter 复合组件
+        </Counter.Label>
 
         <div className="flex items-center justify-center gap-2">
           <Counter.Decrease icon={<Minus />} />
@@ -20,7 +22,9 @@ export function CompoundCounter() {
       <Separator className="my-4" />
 
       <Counter className="flex flex-col items-center justify-center gap-4">
-        <Counter.Label className="font-semibold">Counter 复合组件</Counter.Label>
+        <Counter.Label className="font-semibold">
+          Counter 复合组件
+        </Counter.Label>
 
         <div className="flex items-center justify-center gap-2">
           <Counter.Increase icon="▶️" />
@@ -45,5 +49,5 @@ export function CompoundCounter() {
         </div>
       </Counter>
     </>
-  )
+  );
 }

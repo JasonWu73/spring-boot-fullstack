@@ -1,12 +1,16 @@
-import { useForm } from 'react-hook-form'
-import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { ExclamationTriangleIcon } from '@radix-ui/react-icons'
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 
-import { Alert, AlertDescription, AlertTitle } from '@/shared/components/ui/Alert'
-import { Button } from '@/shared/components/ui/Button'
-import { Code } from '@/shared/components/ui/Code'
-import { FormInput } from '@/shared/components/ui/CustomFormField'
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/shared/components/ui/Alert";
+import { Button } from "@/shared/components/ui/Button";
+import { Code } from "@/shared/components/ui/Code";
+import { FormInput } from "@/shared/components/ui/CustomFormField";
 import {
   Dialog,
   DialogClose,
@@ -14,97 +18,97 @@ import {
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogTitle
-} from '@/shared/components/ui/Dialog'
-import { Form } from '@/shared/components/ui/Form'
-import LoadingButton from '@/shared/components/ui/LoadingButton'
-import { useToast } from '@/shared/components/ui/use-toast'
-import { PUBLIC_KEY } from '@/shared/auth/auth-signals'
-import { useFetch, type ApiResponse } from '@/shared/hooks/use-fetch'
-import type { PaginationData } from '@/shared/apis/types'
-import { encrypt } from '@/shared/utils/rsa'
-import { requestApi } from '@/shared/apis/backend/helpers'
-import type { User } from '@/shared/apis/backend/user'
+  DialogTitle,
+} from "@/shared/components/ui/Dialog";
+import { Form } from "@/shared/components/ui/Form";
+import LoadingButton from "@/shared/components/ui/LoadingButton";
+import { useToast } from "@/shared/components/ui/use-toast";
+import { PUBLIC_KEY } from "@/shared/auth/auth-signals";
+import { useFetch, type ApiResponse } from "@/shared/hooks/use-fetch";
+import type { PaginationData } from "@/shared/apis/types";
+import { encrypt } from "@/shared/utils/rsa";
+import { requestApi } from "@/shared/apis/backend/helpers";
+import type { User } from "@/shared/apis/backend/user";
 
 const formSchema = z
   .object({
-    password: z.string().min(1, '必须输入密码'),
-    confirmPassword: z.string().min(1, '必须输入确认密码')
+    password: z.string().min(1, "必须输入密码"),
+    confirmPassword: z.string().min(1, "必须输入确认密码"),
   })
   .refine(({ password, confirmPassword }) => password === confirmPassword, {
-    message: '密码和确认密码必须相同',
-    path: ['confirmPassword']
-  })
+    message: "密码和确认密码必须相同",
+    path: ["confirmPassword"],
+  });
 
-type FormSchema = z.infer<typeof formSchema>
+type FormSchema = z.infer<typeof formSchema>;
 
 type ResetPasswordDialogProps = {
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  user: User
-  invalidateUsers: () => Promise<ApiResponse<PaginationData<User>>>
-}
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  user: User;
+  invalidateUsers: () => Promise<ApiResponse<PaginationData<User>>>;
+};
 
 const defaultValues: FormSchema = {
-  password: '',
-  confirmPassword: ''
-}
+  password: "",
+  confirmPassword: "",
+};
 
 export function ResetPasswordDialog({
   open,
   onOpenChange,
   user,
-  invalidateUsers
+  invalidateUsers,
 }: ResetPasswordDialogProps) {
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
-    defaultValues
-  })
+    defaultValues,
+  });
 
-  const { loading, error, fetchData, reset } = useFetch(requestApi<void>)
+  const { loading, error, fetchData, reset } = useFetch(requestApi<void>);
 
-  const { toast } = useToast()
+  const { toast } = useToast();
 
   async function resetPassword(userId: number, password: string) {
     return await fetchData({
       url: `/api/v1/users/${userId}/password`,
-      method: 'PUT',
-      bodyData: { password: encrypt(PUBLIC_KEY, password) }
-    })
+      method: "PUT",
+      bodyData: { password: encrypt(PUBLIC_KEY, password) },
+    });
   }
 
   async function onSubmit(values: FormSchema) {
-    const { status } = await resetPassword(user.id, values.password)
+    const { status } = await resetPassword(user.id, values.password);
 
-    if (status !== 204) return
+    if (status !== 204) return;
 
-    invalidateUsers().then()
+    invalidateUsers().then();
 
-    resetForm()
-    onOpenChange(false)
+    resetForm();
+    onOpenChange(false);
 
     toast({
-      title: '重置用户密码成功',
+      title: "重置用户密码成功",
       description: (
         <span>
           成功重置用户 <Code>{user.username}</Code> 登录密码
         </span>
-      )
-    })
+      ),
+    });
   }
 
   function resetForm() {
-    form.reset()
+    form.reset();
 
-    reset()
+    reset();
   }
 
   function handleOpenChange(open: boolean) {
     if (!open) {
-      resetForm()
+      resetForm();
     }
 
-    onOpenChange(open)
+    onOpenChange(open);
   }
 
   return (
@@ -114,7 +118,9 @@ export function ResetPasswordDialog({
           <DialogTitle>
             重置用户 <Code>{user.username}</Code> 密码
           </DialogTitle>
-          <DialogDescription>重置后，用户将使用新密码登录系统</DialogDescription>
+          <DialogDescription>
+            重置后，用户将使用新密码登录系统
+          </DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
@@ -138,7 +144,7 @@ export function ResetPasswordDialog({
               label="密码"
               labelWidth={60}
               placeholder="密码"
-              isError={form.getFieldState('password')?.invalid}
+              isError={form.getFieldState("password")?.invalid}
             />
 
             <FormInput
@@ -148,7 +154,7 @@ export function ResetPasswordDialog({
               label="确认密码"
               labelWidth={60}
               placeholder="确认密码"
-              isError={form.getFieldState('confirmPassword')?.invalid}
+              isError={form.getFieldState("confirmPassword")?.invalid}
             />
 
             <DialogFooter>
@@ -166,5 +172,5 @@ export function ResetPasswordDialog({
         </Form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

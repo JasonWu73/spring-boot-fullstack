@@ -1,10 +1,10 @@
-import NProgress from 'nprogress'
-import 'nprogress/nprogress.css'
+import NProgress from "nprogress";
+import "nprogress/nprogress.css";
 
 /**
  * NProgress 加载计数器，防止因多个异步请求导致 NProgress 过早结束。
  */
-let counter = 0
+let counter = 0;
 
 /**
  * 全局配置 NProgress。
@@ -15,26 +15,26 @@ let counter = 0
  */
 export function configureNProgress() {
   NProgress.configure({
-    showSpinner: false
-  })
+    showSpinner: false,
+  });
 }
 
 /**
  * 开始 NProgress 加载。
  */
 export function startNProgress() {
-  counter++
-  NProgress.start()
+  counter++;
+  NProgress.start();
 }
 
 /**
  * 结束 NProgress 加载。
  */
 export function endNProgress() {
-  counter--
+  counter--;
 
-  if (counter > 0) return
+  if (counter > 0) return;
 
-  counter = 0
-  NProgress.done()
+  counter = 0;
+  NProgress.done();
 }

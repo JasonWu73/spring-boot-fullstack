@@ -6,21 +6,21 @@ import {
   ResponsiveContainer,
   Tooltip,
   XAxis,
-  YAxis
-} from 'recharts'
+  YAxis,
+} from "recharts";
 
-import { getLoginsHistoryApi } from '@/shared/apis/backend/operation-log'
-import { useFetch } from '@/shared/hooks/use-fetch'
-import { useRefresh } from '@/shared/hooks/use-refresh'
+import { getLoginsHistoryApi } from "@/shared/apis/backend/operation-log";
+import { useFetch } from "@/shared/hooks/use-fetch";
+import { useRefresh } from "@/shared/hooks/use-refresh";
 
-const colors = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', 'red', 'pink']
+const colors = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "red", "pink"];
 
 export function LoginHistoryChart() {
-  const { data, fetchData: getLoginsHistory } = useFetch(getLoginsHistoryApi)
+  const { data, fetchData: getLoginsHistory } = useFetch(getLoginsHistoryApi);
 
   useRefresh(() => {
-    getLoginsHistory(7).then()
-  })
+    getLoginsHistory(7).then();
+  });
 
   return (
     <ResponsiveContainer width="100%" height={300}>
@@ -30,7 +30,7 @@ export function LoginHistoryChart() {
           top: 20,
           right: 30,
           left: 20,
-          bottom: 5
+          bottom: 5,
         }}
       >
         <CartesianGrid strokeDasharray="3 3" />
@@ -41,7 +41,7 @@ export function LoginHistoryChart() {
           dataKey="value"
           fill="#8884d8"
           shape={<TriangleBar />}
-          label={{ position: 'top' }}
+          label={{ position: "top" }}
         >
           {data?.map((_, index) => (
             <Cell key={`cell-${index}`} fill={colors[index % 20]} />
@@ -49,7 +49,7 @@ export function LoginHistoryChart() {
         </Bar>
       </BarChart>
     </ResponsiveContainer>
-  )
+  );
 }
 
 function getPath(x: number, y: number, width: number, height: number) {
@@ -60,19 +60,21 @@ function getPath(x: number, y: number, width: number, height: number) {
   C${x + width / 2},${y + height / 3} ${x + (2 * width) / 3},${y + height} ${
     x + width
   }, ${y + height}
-  Z`
+  Z`;
 }
 
 type TriangleBarProps = {
-  fill?: string
-  x?: number
-  y?: number
-  width?: number
-  height?: number
-}
+  fill?: string;
+  x?: number;
+  y?: number;
+  width?: number;
+  height?: number;
+};
 
 function TriangleBar(props: TriangleBarProps) {
-  const { fill, x, y, width, height } = props
+  const { fill, x, y, width, height } = props;
 
-  return <path d={getPath(x!, y!, width!, height!)} stroke="none" fill={fill} />
+  return (
+    <path d={getPath(x!, y!, width!, height!)} stroke="none" fill={fill} />
+  );
 }
