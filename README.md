@@ -80,15 +80,18 @@ npm install --save @types/use-sync-external-store
 ## Docs
 
 - Tailwind CSS
+
   - [Install Tailwind CSS with Vite | Tailwind CSS](https://tailwindcss.com/docs/guides/vite)
   - [Configuration | Tailwind CSS](https://tailwindcss.com/docs/configuration)
   - [Content | Tailwind CSS](https://tailwindcss.com/docs/content-configuration)
 
 - shadcn/ui
+
   - [Vite | shadcn/ui](https://ui.shadcn.com/docs/installation/vite)
   - [Dark mode | vite | shadcn/ui](https://ui.shadcn.com/docs/dark-mode/vite)
 
 - Preact.js/signals
+
   - [React Signals | preactjs/signals | GitHub](https://github.com/preactjs/signals/blob/main/packages/react/README.md)
   - [Introducing Signals | Preact](https://preactjs.com/blog/introducing-signals/)
 
