@@ -23,8 +23,9 @@ export function useRefresh(callback: RefreshCallback) {
 
   React.useEffect(() => {
     // 为了避免高频率的重复点击相同的 URL，导致重复刷新组件，故这里加了一个 1 秒的防抖
-    if (prevTimestamp.current && Date.now() - prevTimestamp.current < 1_000)
+    if (prevTimestamp.current && Date.now() - prevTimestamp.current < 1_000) {
       return;
+    }
 
     prevTimestamp.current = Date.now();
 
@@ -47,8 +48,9 @@ export function useInitial(callback: RefreshCallback) {
 
   React.useEffect(() => {
     // 为避免 React Strict Mode 下的重复渲染，故这里加了一个 1 秒的防抖
-    if (prevTimestamp.current && Date.now() - prevTimestamp.current < 1_000)
+    if (prevTimestamp.current && Date.now() - prevTimestamp.current < 1_000) {
       return;
+    }
 
     prevTimestamp.current = Date.now();
 

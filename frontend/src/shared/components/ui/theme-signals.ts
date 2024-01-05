@@ -29,6 +29,8 @@ export function createThemeState(
   theme.value = (localStorage.getItem(STORAGE_KEY) as Theme) || defaultTheme;
 
   effect(() => {
+    localStorage.setItem(STORAGE_KEY, theme.value);
+
     resetTheme();
 
     if (theme.value !== "system") {
@@ -53,7 +55,6 @@ export function createThemeState(
  * @param newTheme 新主题
  */
 export function setTheme(newTheme: Theme) {
-  localStorage.setItem(STORAGE_KEY, newTheme);
   theme.value = newTheme;
 }
 
