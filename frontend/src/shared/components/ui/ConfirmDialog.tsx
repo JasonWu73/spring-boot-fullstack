@@ -1,5 +1,5 @@
-import { AlertOctagon } from "lucide-react";
 import React from "react";
+import { AlertTriangle } from "lucide-react";
 
 import {
   AlertDialog,
@@ -19,7 +19,9 @@ type ConfirmDialogProps = {
   onOpenChange?: (open: boolean) => void;
   trigger?: React.ReactNode | string;
   title: React.ReactNode | string;
+  description?: React.ReactNode | string;
   onConfirm: () => void;
+  onCancel?: () => void;
 };
 
 export function ConfirmDialog({
@@ -27,7 +29,9 @@ export function ConfirmDialog({
   onOpenChange,
   trigger,
   title,
+  description,
   onConfirm,
+  onCancel,
 }: ConfirmDialogProps) {
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
@@ -35,15 +39,20 @@ export function ConfirmDialog({
 
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>{title}</AlertDialogTitle>
-          <AlertDialogDescription className="flex items-center">
-            <AlertOctagon className="mr-1 h-4 w-4 text-amber-500 dark:text-amber-600" />
-            此操作无法撤消，请谨慎操作！
-          </AlertDialogDescription>
+          <div className="flex gap-4 items-center">
+            <AlertTriangle className="mr-1 h-9 w-9 text-amber-500 dark:text-amber-600" />
+
+            <div>
+              <AlertDialogTitle>{title}</AlertDialogTitle>
+              <AlertDialogDescription className="flex items-center">
+                {description || "此操作无法撤消，请谨慎操作！"}
+              </AlertDialogDescription>
+            </div>
+          </div>
         </AlertDialogHeader>
 
         <AlertDialogFooter>
-          <AlertDialogCancel>取消</AlertDialogCancel>
+          <AlertDialogCancel onClick={onCancel}>取消</AlertDialogCancel>
 
           <AlertDialogAction
             onClick={onConfirm}
