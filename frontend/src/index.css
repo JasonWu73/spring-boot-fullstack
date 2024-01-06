@@ -64,12 +64,18 @@
 html {
   @apply bg-gray-100;
   @apply text-slate-950;
+
+  /* 滚动条亮色主题 */
+  color-scheme: light;
 }
 
 /* 暗色主题 */
 html.dark {
   @apply bg-night-2;
   @apply text-snow;
+
+  /* 滚动条暗色主题 */
+  color-scheme: dark;
 }
 /* ----- 结束：系统主题 ----- */
 
