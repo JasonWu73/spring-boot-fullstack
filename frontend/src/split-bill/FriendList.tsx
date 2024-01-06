@@ -14,7 +14,7 @@ import {
 import { Card } from "@/shared/components/ui/Card";
 import { Code } from "@/shared/components/ui/Code";
 import { ScrollArea } from "@/shared/components/ui/ScrollArea";
-import { useToast } from "@/shared/components/ui/use-toast";
+import { toast } from "@/shared/components/ui/use-toast";
 import { URL_QUERY_KEY_QUERY } from "@/shared/constants";
 import { useFetch } from "@/shared/hooks/use-fetch";
 import { useRefresh } from "@/shared/hooks/use-refresh";
@@ -68,7 +68,6 @@ export function FriendList() {
     });
   });
 
-  const { toast } = useToast();
   const navigate = useNavigate();
 
   function handleDeleteFriend(friend: Friend) {

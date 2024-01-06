@@ -13,7 +13,7 @@ import {
 } from "@/shared/components/ui/CustomFormField";
 import { Form } from "@/shared/components/ui/Form";
 import LoadingButton from "@/shared/components/ui/LoadingButton";
-import { useToast } from "@/shared/components/ui/use-toast";
+import { toast } from "@/shared/components/ui/use-toast";
 import { useFetch } from "@/shared/hooks/use-fetch";
 import { ADMIN, USER } from "@/shared/auth/auth-signals";
 
@@ -52,7 +52,6 @@ export function AddUser() {
 
   const { loading: submitting, fetchData: addUser } = useFetch(addUserApi);
 
-  const { toast } = useToast();
   const navigate = useNavigate();
 
   async function onSubmit(values: FormSchema) {

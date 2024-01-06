@@ -22,9 +22,9 @@ import {
 } from "@/shared/components/ui/Dialog";
 import { Form } from "@/shared/components/ui/Form";
 import LoadingButton from "@/shared/components/ui/LoadingButton";
-import { useToast } from "@/shared/components/ui/use-toast";
+import { toast } from "@/shared/components/ui/use-toast";
 import { PUBLIC_KEY } from "@/shared/auth/auth-signals";
-import { useFetch, type ApiResponse } from "@/shared/hooks/use-fetch";
+import { type ApiResponse, useFetch } from "@/shared/hooks/use-fetch";
 import type { PaginationData } from "@/shared/apis/types";
 import { encrypt } from "@/shared/utils/rsa";
 import { requestApi } from "@/shared/apis/backend/helpers";
@@ -66,8 +66,6 @@ export function ResetPasswordDialog({
   });
 
   const { loading, error, fetchData, reset } = useFetch(requestApi<void>);
-
-  const { toast } = useToast();
 
   async function resetPassword(userId: number, password: string) {
     return await fetchData({

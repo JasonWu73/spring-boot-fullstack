@@ -7,7 +7,7 @@ import { loginApi } from "@/shared/apis/backend/auth";
 import { FormInput } from "@/shared/components/ui/CustomFormField";
 import { Form } from "@/shared/components/ui/Form";
 import LoadingButton from "@/shared/components/ui/LoadingButton";
-import { useToast } from "@/shared/components/ui/use-toast";
+import { toast } from "@/shared/components/ui/use-toast";
 import { useFetch } from "@/shared/hooks/use-fetch";
 import { getAuth, setAuth } from "@/shared/auth/auth-signals";
 
@@ -35,8 +35,6 @@ export function LoginForm() {
     async ({ username, password }: FormSchema) =>
       await loginApi(username, password),
   );
-
-  const { toast } = useToast();
 
   const location = useLocation();
   const targetUrl = location.state?.from || DEFAULT_REDIRECT_URL;

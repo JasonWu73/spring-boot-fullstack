@@ -19,7 +19,7 @@ import { FormInput } from "@/shared/components/ui/CustomFormField";
 import { Form } from "@/shared/components/ui/Form";
 import LoadingButton from "@/shared/components/ui/LoadingButton";
 import { Skeleton } from "@/shared/components/ui/Skeleton";
-import { useToast } from "@/shared/components/ui/use-toast";
+import { toast } from "@/shared/components/ui/use-toast";
 import { useFetch } from "@/shared/hooks/use-fetch";
 import { useInitial } from "@/shared/hooks/use-refresh";
 import { clearAuth, updateNickname } from "@/shared/auth/auth-signals";
@@ -73,8 +73,6 @@ export function Profile() {
   });
 
   const { loading: submitting, fetchData: updateMe } = useFetch(updateMeApi);
-
-  const { toast } = useToast();
 
   function initializeUserData(user: User) {
     form.reset({

@@ -11,7 +11,7 @@ import {
   DataTable,
   type Pagination,
 } from "@/shared/components/ui/DataTable";
-import { useToast } from "@/shared/components/ui/use-toast";
+import { toast } from "@/shared/components/ui/use-toast";
 import { useFetch } from "@/shared/hooks/use-fetch";
 import { useRefresh } from "@/shared/hooks/use-refresh";
 import { hasRoot } from "@/shared/auth/auth-signals";
@@ -84,7 +84,6 @@ export function UserTable() {
   );
 
   const [indexes, setIndexes] = React.useState<number[]>([]); // 选中的行的索引
-  const { toast } = useToast();
 
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
   const [openResetPasswordDialog, setOpenResetPasswordDialog] =
