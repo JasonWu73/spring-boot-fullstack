@@ -65,7 +65,7 @@ export function AddUser() {
 
     if (status !== 204) {
       toast({
-        title: "新增用户失败",
+        title: "用户新增失败",
         description: error,
         variant: "destructive",
       });
@@ -74,7 +74,7 @@ export function AddUser() {
     }
 
     toast({
-      title: "新增用户成功",
+      title: "用户新增成功",
       description: (
         <span>
           成功新增用户 <Code>{values.username}</Code>

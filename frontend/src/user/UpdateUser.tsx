@@ -104,7 +104,7 @@ export function UpdateUser() {
 
     if (status !== 204) {
       toast({
-        title: "更新用户失败",
+        title: "用户更新失败",
         description: error,
         variant: "destructive",
       });
@@ -113,7 +113,7 @@ export function UpdateUser() {
     }
 
     toast({
-      title: "更新用户成功",
+      title: "用户更新成功",
       description: (
         <span>
           成功更新用户 <Code>{user.username}</Code>

@@ -86,10 +86,10 @@ export function ResetPasswordDialog({
     onOpenChange(false);
 
     toast({
-      title: "重置用户密码成功",
+      title: "密码重置成功",
       description: (
         <span>
-          成功重置用户 <Code>{user.username}</Code> 登录密码
+          已重置用户 <Code>{user.username}</Code> 的登录密码
         </span>
       ),
     });

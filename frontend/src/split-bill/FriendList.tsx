@@ -74,10 +74,10 @@ export function FriendList() {
     deleteFriend(friend.id);
 
     toast({
-      title: "删除好友",
+      title: "好友删除成功",
       description: (
         <span>
-          成功删除好友 <Code>{friend.name}</Code>
+          已删除好友 <Code>{friend.name}</Code>
         </span>
       ),
     });

@@ -148,7 +148,7 @@ export function UserTable() {
 
     if (status !== 204) {
       toast({
-        title: "更新账号状态失败",
+        title: "账号状态更新失败",
         description: error,
         variant: "destructive",
       });
@@ -159,7 +159,7 @@ export function UserTable() {
     invalidateUsers().then();
 
     toast({
-      title: "更新账号状态成功",
+      title: "账号状态更新成功",
       description: (
         <span>
           {!enabled ? "启用" : "禁用"} <Code>{user.username}</Code> 账号
@@ -176,7 +176,7 @@ export function UserTable() {
 
     if (status !== 204) {
       toast({
-        title: "删除用户失败",
+        title: "用户删除失败",
         description: error,
         variant: "destructive",
       });
@@ -187,10 +187,10 @@ export function UserTable() {
     invalidateUsers().then();
 
     toast({
-      title: "删除用户成功",
+      title: "用户删除成功",
       description: (
         <span>
-          成功删除用户 <Code>{username}</Code>
+          已删除用户 <Code>{username}</Code>
         </span>
       ),
     });

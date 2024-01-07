@@ -94,7 +94,7 @@ export function Profile() {
 
     if (status !== 204) {
       toast({
-        title: "更新资料失败",
+        title: "个人资料更新失败",
         description: error,
         variant: "destructive",
       });
@@ -103,8 +103,8 @@ export function Profile() {
     }
 
     toast({
-      title: "更新资料成功",
-      description: <span>您已成功更新个人资料。</span>,
+      title: "个人资料更新成功",
+      description: <span>您已更新个人资料。</span>,
     });
 
     // 若修改了密码，则需要重新登录
