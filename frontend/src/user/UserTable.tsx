@@ -162,7 +162,7 @@ export function UserTable() {
       title: "账号状态更新成功",
       description: (
         <span>
-          {!enabled ? "启用" : "禁用"} <Code>{user.username}</Code> 账号
+          已{!enabled ? "启用" : "禁用"} <Code>{user.username}</Code> 账号
         </span>
       ),
     });

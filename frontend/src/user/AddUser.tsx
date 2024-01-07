@@ -77,7 +77,7 @@ export function AddUser() {
       title: "用户新增成功",
       description: (
         <span>
-          成功新增用户 <Code>{values.username}</Code>
+          已新增用户 <Code>{values.username}</Code>
         </span>
       ),
     });

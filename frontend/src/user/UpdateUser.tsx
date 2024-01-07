@@ -116,7 +116,7 @@ export function UpdateUser() {
       title: "用户更新成功",
       description: (
         <span>
-          成功更新用户 <Code>{user.username}</Code>
+          已更新用户 <Code>{user.username}</Code>
         </span>
       ),
     });

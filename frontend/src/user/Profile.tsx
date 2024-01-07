@@ -104,7 +104,7 @@ export function Profile() {
 
     toast({
       title: "个人资料更新成功",
-      description: <span>您已更新个人资料。</span>,
+      description: "已更新个人资料",
     });
 
     // 若修改了密码，则需要重新登录
