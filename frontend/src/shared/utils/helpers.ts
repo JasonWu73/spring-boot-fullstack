@@ -6,7 +6,7 @@ import { twMerge } from "tailwind-merge";
  *
  * @param inputs CSS 类名
  * @returns string 合并后的 CSS 类名
- * @see <a href="https://ui.shadcn.com/docs/installation/vite">Vite - shadcn/ui</a>
+ * @see https://ui.shadcn.com/docs/installation/vite
  */
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -18,7 +18,7 @@ export function cn(...inputs: ClassValue[]) {
  * @param strings 模板字符串
  * @param values 模板字符串中的变量
  * @returns string 模板字符串
- * @see <a href="https://github.com/tailwindlabs/prettier-plugin-tailwindcss#sorting-classes-in-template-literals">Sorting classes in template literals | tailwindlabs/prettier-plugin-tailwindcss</a>
+ * @see https://github.com/tailwindlabs/prettier-plugin-tailwindcss#sorting-classes-in-template-literals
  */
 export function tw(strings: TemplateStringsArray, ...values: unknown[]) {
   return String.raw({ raw: strings }, ...values);
@@ -26,7 +26,7 @@ export function tw(strings: TemplateStringsArray, ...values: unknown[]) {
 
 /**
  * 截断字符串值，使其长度等于指定的最大长度。
- * <p>
+ *
  * 将长字符串的末尾替换为省略号 `…`（实际上省略号是单个 Unicode 字符，不是 `...` 这样的三个点）。
  *
  * @param value 要截断的字符串值

@@ -30,22 +30,21 @@ type ApiResponse<TData, TError> = {
   /**
    * API 响应错误信息。
    *
-   * <ul>
-   *   <li>当类型为 `TError` 时，表示 API 响应的错误信息</li>
-   *   <li>当类型为 `string` 时，表示请求发送失败时的错误信息</li>
-   * </ul>
+   * - 当类型为 `TError` 时，表示 API 响应的错误信息
+   * - 当类型为 `string` 时，表示请求发送失败时的错误信息
    */
   error?: TError | string;
 };
 
 /**
  * 发送 HTTP API 请求，并以 JSON 数据格式解析响应结果。
- * <p>
- * 不建议使用 `signal`（`AbortController`）实现中途放弃请求，因为这只会不易于前端 F12 调试（看不到响应内容），而后端仍然会处理请求。前端要做的事应该只是忽略请求的结果，而非中途放弃请求。
  *
- * <ul>
- *   <li>请求头中的 `Accept` 默认为 `application/json`</li>
- * </ul>
+ * 请求头中的 `Accept` 默认为 `application/json`。
+ *
+ * 不建议使用 `signal`（`AbortController`）实现中途放弃请求，因为这只会不易于前端 F12 调试（看不到响应内容），而后端仍然会处理请求。
+ *
+ * 前端要做的事应该只是忽略请求的结果，而非中途放弃请求。
+ *
  *
  * @param options 请求配置项
  * @param options.url URL 地址

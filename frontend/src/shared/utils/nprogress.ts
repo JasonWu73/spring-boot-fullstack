@@ -9,9 +9,7 @@ let counter = 0;
 /**
  * 全局配置 NProgress。
  *
- * <ul>
- *   <li>不显示 NProgress Spinner 图标</li>
- * </ul>
+ * 1. 不显示 NProgress Spinner 图标
  */
 export function configureNProgress() {
   NProgress.configure({
