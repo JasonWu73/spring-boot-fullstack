@@ -41,6 +41,7 @@ type FormInputProps<T extends FieldValues> = {
   isError?: boolean;
   inputRef?: React.MutableRefObject<HTMLInputElement | null>;
   className?: string;
+  autoComplete?: string;
 };
 
 export function FormInput<T extends FieldValues>({
@@ -54,6 +55,7 @@ export function FormInput<T extends FieldValues>({
   isError = false,
   inputRef,
   className,
+  autoComplete,
 }: FormInputProps<T>) {
   return (
     <FormField
@@ -71,6 +73,7 @@ export function FormInput<T extends FieldValues>({
           <FormControl className={cn(className)}>
             <Input
               {...field}
+              autoComplete={autoComplete}
               type={type}
               placeholder={placeholder}
               disabled={disabled}

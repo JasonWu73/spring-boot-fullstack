@@ -66,7 +66,6 @@ export function LoginForm() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        autoComplete="off"
         className="flex flex-col gap-4"
       >
         <FormInput
@@ -76,6 +75,7 @@ export function LoginForm() {
           label="用户名"
           labelWidth={100}
           placeholder="用户名"
+          autoComplete="username"
           isError={form.getFieldState("username")?.invalid}
         />
 
@@ -86,6 +86,7 @@ export function LoginForm() {
           label="密码"
           labelWidth={100}
           placeholder="密码"
+          autoComplete="current-password"
           isError={form.getFieldState("password")?.invalid}
         />
 
