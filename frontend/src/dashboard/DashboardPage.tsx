@@ -1,6 +1,7 @@
-import { LoggedInUsers } from "@/dashboard/LoggedInUsers";
-import { LoginHistoryChart } from "@/dashboard/LoginHistoryChart";
-import { LoginsTopThree } from "@/dashboard/LoginsTopThree";
+import { Navigate } from "react-router-dom";
+
+import { useTitle } from "@/shared/hooks/use-title";
+import { hasAdmin } from "@/shared/auth/auth-signals";
 import {
   Card,
   CardContent,
@@ -8,9 +9,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/shared/components/ui/Card";
-import { useTitle } from "@/shared/hooks/use-title";
-import { hasAdmin } from "@/shared/auth/auth-signals";
-import { Navigate } from "react-router-dom";
+import { LoggedInUsers } from "@/dashboard/LoggedInUsers";
+import { LoginHistoryChart } from "@/dashboard/LoginHistoryChart";
+import { LoginsTopThree } from "@/dashboard/LoginsTopThree";
 
 /**
  * 1. 登录次数最多的前三个用户，饼图（占总登录数），点击饼图的某一块，跳转到用户详情页
