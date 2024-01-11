@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.wuxianjie.backend.user.UserMapper">
@@ -40,7 +40,10 @@
       <arg column="remark" javaType="string" />
       <arg column="username" javaType="string" />
       <arg column="nickname" javaType="string" />
-      <arg column="status" javaType="net.wuxianjie.backend.user.AccountStatus" />
+      <arg
+        column="status"
+        javaType="net.wuxianjie.backend.user.AccountStatus"
+      />
       <arg column="authorities" javaType="string" />
     </constructor>
   </resultMap>
