@@ -52,7 +52,7 @@ type UseFetch<TData, TParam> = ApiState<TData> & {
   fetchData: (params: TParam) => Promise<ApiResponse<TData>>;
 
   /**
-   * 使数据失效，在后台发送 API 重新获取数据。
+   * 使数据失效，即通过后台再次发送 API 重新获取数据，但不重置 `loading` 状态。
    */
   invalidateFetch: () => Promise<ApiResponse<TData>>;
 

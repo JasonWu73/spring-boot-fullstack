@@ -1,15 +1,15 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import { Navigate, useLocation } from "react-router-dom";
 import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
+import { useFetch } from "@/shared/hooks/use-fetch";
 import { loginApi } from "@/shared/apis/backend/auth";
+import { getAuth, setAuth } from "@/shared/auth/auth-signals";
 import { FormInput } from "@/shared/components/ui/CustomFormField";
 import { Form } from "@/shared/components/ui/Form";
 import LoadingButton from "@/shared/components/ui/LoadingButton";
 import { toast } from "@/shared/components/ui/use-toast";
-import { useFetch } from "@/shared/hooks/use-fetch";
-import { getAuth, setAuth } from "@/shared/auth/auth-signals";
 
 const DEFAULT_REDIRECT_URL = "/";
 
