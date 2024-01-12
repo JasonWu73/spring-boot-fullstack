@@ -42,7 +42,7 @@ const formSchema = z
   .refine(
     ({ newPassword, confirmPassword }) => newPassword === confirmPassword,
     {
-      message: "新密码和确认密码必须相同",
+      message: "确认密码和新密码必须相同",
       path: ["confirmPassword"],
     },
   );
