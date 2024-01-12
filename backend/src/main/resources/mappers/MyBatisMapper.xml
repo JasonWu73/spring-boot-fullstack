@@ -11,8 +11,8 @@
       name,
       type,
       date,
-      local_date_time as localDateTime,
-      local_date as localDate
+      local_date_time AS localDateTime,
+      local_date AS localDate
     FROM mybatis
   </select>
 
@@ -34,6 +34,6 @@
   </insert>
 
   <delete id="truncateTable">
-    truncate table mybatis
+    TRUNCATE TABLE mybatis
   </delete>
 </mapper>

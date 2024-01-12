@@ -8,8 +8,8 @@
   >
     SELECT
       id,
-      requested_at as requestedAt,
-      client_ip as clientIp,
+      requested_at AS requestedAt,
+      client_ip AS clientIp,
       username,
       message
     FROM operation_log
