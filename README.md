@@ -19,6 +19,9 @@ POST /orders/1/lines  <---> orders[1].lines.push(data)
 # Vite 创建 React + TS 项目
 npm create vite@latest my-react-app -- --template react-ts
 
+# 去除意义不大的 ESLint 规则插件
+npm uninstall eslint-plugin-react-refresh
+
 # 配置别名
 # 1. 修改 `tsconfig.json` 在 `compilerOptions` 中添加：
 #    /* 配置别名 */
