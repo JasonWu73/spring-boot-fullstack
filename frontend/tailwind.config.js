@@ -2,13 +2,17 @@ import animatePlugin from "tailwindcss-animate";
 
 /** @type {import('tailwindcss').Config} */
 export default {
-  darkMode: ["class"], // 启用暗色模式
+  // 启用暗色模式
+  darkMode: ["class"],
+
   content: {
     /* 使用相对于 `tailwind.config.js`，而非相对于当前所在目录的相对路径 */
     relative: true,
+
     files: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   },
   theme: {
+    /* 由 shad-cn/ui 生成 */
     container: {
       center: true,
       padding: "2rem",
@@ -16,10 +20,13 @@ export default {
         "2xl": "1400px",
       },
     },
+
     extend: {
       height: {
+        // 因手机浏览器的地址栏会占用部分高度，导致 `100vh` 会出现垂直滚动条，故使用 `100dvh`
         screen: ["100vh /* fallback for Opera, IE and etc. */", "100dvh"],
       },
+
       /* 扩展自定义颜色 */
       colors: {
         night: {
