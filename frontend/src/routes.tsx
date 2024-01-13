@@ -1,15 +1,15 @@
 import React from "react";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 
-import DashboardPage from "@/dashboard/DashboardPage";
 import { SecureRoute } from "@/shared/auth/SecureRoute";
-import { AdminLayout } from "@/shared/components/layout/AdminLayout";
 import { LoginLayout } from "@/shared/components/layout/LoginLayout";
 import { MainLayout } from "@/shared/components/layout/MainLayout";
-import ErrorPage from "@/shared/components/ui/ErrorPage";
+import { AdminLayout } from "@/shared/components/layout/AdminLayout";
 import { Loading } from "@/shared/components/ui/Loading";
+import ErrorPage from "@/shared/components/ui/ErrorPage";
 import NotFoundPage from "@/shared/components/ui/NotFoundPage";
 import { wait } from "@/shared/utils/helpers";
+import DashboardPage from "@/dashboard/DashboardPage";
 
 const LoginPage = React.lazy(() => import("@/login/LoginPage"));
 const ProfilePage = React.lazy(() => import("@/user/ProfilePage"));
