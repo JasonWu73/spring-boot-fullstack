@@ -97,7 +97,3 @@ npm install --save-dev @types/use-sync-external-store
 
   - [React Signals | preactjs/signals | GitHub](https://github.com/preactjs/signals/blob/main/packages/react/README.md)
   - [Introducing Signals | Preact](https://preactjs.com/blog/introducing-signals/)
-
-## Tutorials
-
-- [The Ultimate React Course 2024: React, Redux & More | Udemy](https://www.udemy.com/course/the-ultimate-react-course/)
