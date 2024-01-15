@@ -1,4 +1,3 @@
-import React from "react";
 import ReactDOM from "react-dom/client";
 
 import App from "@/App";
@@ -10,11 +9,7 @@ import "@/index.css";
 configureNProgress();
 
 /* 通过 React 18 `createRoot` API 将 `App` 组件作为根组件渲染到 `id="root"` 的 HTML 元素中 */
-ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-);
+ReactDOM.createRoot(document.getElementById("root")!).render(<App />);
 
 /**
  * React 分为两个阶段：
