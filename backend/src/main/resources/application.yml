@@ -1,15 +1,22 @@
 # 部署时，可提取部分需要修改的配置项到与 Jar 同级目录的 `config/application.yml` 中
 
+# 注意：一定要在外部 `config/application.yml` 写明需要覆盖的配置项，
+# 否则会使用 Jar 包内 `application.yml` 中已经有配置，导致程序未按预期执行
+
 server:
+  # 服务的 HTTP 端口
   port: 8080
 spring:
   datasource:
+    # 数据库地址
     url: jdbc:mysql://localhost:3306/demo
     username: ENC(ANOf5l6jbyPQN8dk9dHy9C8sd0ZhowraFYXInEcG8am+ybTJhQwxR+MKN/bl54Z4)
     password: ENC(H0yLbj9m4Y9UpTSt4spGMqmOR/pvL0yDFCKp04gGBJCa+C+vgj27kXST+nCzP72z)
   data:
     redis:
+      # Redis 地址
       host: localhost
+      # Redis 端口
       port: 6379
       password: ENC(/hSZu9OFtlFU1xHCzThMmTYbu+e8JD8G9wF+9d1ygtf7hD/tyFEvjcZU92xgvGgp)
   servlet:
