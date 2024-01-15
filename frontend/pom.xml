@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <project
   xmlns="http://maven.apache.org/POM/4.0.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -26,7 +26,6 @@
       <plugin>
         <groupId>com.github.eirslett</groupId>
         <artifactId>frontend-maven-plugin</artifactId>
-
         <executions>
           <!-- 安装 Node.js 和 NPM -->
           <execution>
@@ -36,8 +35,10 @@
             </goals>
           </execution>
 
-          <!-- 安装前端依赖库至 `node_modules` 目录。
-            虽然是前后端分离项目，但我是全栈开发，所以这里无需再安装前端依赖库
+          <!--
+            安装前端依赖库至 `node_modules` 目录。
+            虽然是前后端分离项目，但我是全栈开发（本地项目文件系统中肯定是已经有 `node_modules` 目录及完整依赖），
+            故此处无需再重复安装前端依赖库，从而大大加快了项目构建速度
           -->
           <!--
           <execution>
@@ -67,7 +68,9 @@
           <nodeVersion>${node.version}</nodeVersion>
 
           <!-- Node.js 淘宝镜像源 -->
-          <nodeDownloadRoot>https://npm.taobao.org/mirrors/node/</nodeDownloadRoot>
+          <nodeDownloadRoot>
+            https://npm.taobao.org/mirrors/node/
+          </nodeDownloadRoot>
 
           <!-- Node.js 和 NPM 的安装目录 -->
           <installDirectory>target</installDirectory>

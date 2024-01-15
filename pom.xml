@@ -28,7 +28,7 @@
     <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
   </properties>
 
-  <!-- 子项目中非 Spring Boot 中定义的依赖包版本号 -->
+  <!-- 子项目中未在 Spring Boot 中定义的依赖包版本号 -->
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -45,7 +45,7 @@
     </dependencies>
   </dependencyManagement>
 
-  <!-- 子项目中非 Spring Boot 中定义的插件版本号 -->
+  <!-- 子项目中未在 Spring Boot 中定义的插件版本号 -->
   <build>
     <pluginManagement>
       <plugins>
@@ -70,8 +70,9 @@
     </pluginManagement>
   </build>
 
-  <!-- Maven 会按照 `<modules>` 元素中的顺序来执行模块，故 `frontend` 必须放在 `backend` 之前，
-    这才会保证在父 pom.xml 目录中执行 `mvn clean package` 时，能正确打包 SPA 应用到 Spring Boot 中
+  <!--
+    Maven 会按照 `<modules>` 元素中定义的顺序来执行模块，故 `frontend` 必须放在 `backend` 之前，
+    以保证在父 `pom.xml` 目录中执行 `mvn clean package` 时，能在打包 SPA 应用之后，再将其拷贝至 Spring Boot 中
   -->
   <modules>
     <module>frontend</module>

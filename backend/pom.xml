@@ -19,7 +19,8 @@
   </properties>
 
   <dependencies>
-    <!-- Jasypt：加解密 Spring Boot 配置文件，
+    <!--
+      Jasypt：加解密 Spring Boot 配置文件，
       对应 Jasypt Maven 插件：`com.github.ulisesbocchio:jasypt-maven-plugin`
     -->
     <dependency>
@@ -40,7 +41,7 @@
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
 
-    <!-- Spring Security 启动器：提供认证（Authentication）和授权（Authorization）功能 -->
+    <!-- Spring Security 启动器：提供认证（Authentication）和授权（Authorization）实现 -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-security</artifactId>
@@ -58,7 +59,7 @@
       <artifactId>spring-boot-starter-aop</artifactId>
     </dependency>
 
-    <!-- 元数据工具：支持 `application.yml` 中配置属性的自动补全、配置提示和文档化支持 -->
+    <!-- 元数据工具：支持 `application.yml` 中对于配置属性的自动补全、提示和文档化支持 -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-configuration-processor</artifactId>
@@ -111,7 +112,9 @@
         </configuration>
       </plugin>
 
-      <!-- Jasypt Maven 插件
+      <!--
+        Jasypt Maven 插件
+
         对应 Jasypt Compile 依赖：`com.github.ulisesbocchio:jasypt-spring-boot-starter`
 
         1. 加密字符串：
@@ -165,7 +168,7 @@
         </configuration>
       </plugin>
 
-      <!-- 将 SPA 应用拷贝到 `backend/target/classes/static` 中 -->
+      <!-- 将 SPA 应用拷贝到 `backend/target/classes/static` 目录中 -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
