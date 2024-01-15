@@ -1,7 +1,7 @@
 {
   "info": {
     "_postman_id": "53e9f0f9-0e9a-45fd-992f-715d8dcae30a",
-    "name": "spring-boot-demo",
+    "name": "spring-boot-fullstack-backend",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -489,7 +489,7 @@
           "response": []
         },
         {
-          "name": "获取登录数前几的用户",
+          "name": "获取登录数前 N 名的用户",
           "request": {
             "method": "GET",
             "header": [
@@ -506,7 +506,8 @@
               "variable": [
                 {
                   "key": "num",
-                  "value": "3"
+                  "value": "3",
+                  "description": "取值范围为 1 ~ 10"
                 }
               ]
             }
@@ -514,7 +515,7 @@
           "response": []
         },
         {
-          "name": "获取最近几天的登录数",
+          "name": "获取最近 N 天的登录数",
           "request": {
             "method": "GET",
             "header": [
@@ -537,7 +538,8 @@
               "variable": [
                 {
                   "key": "days",
-                  "value": "2"
+                  "value": "2",
+                  "description": "取值范围为 1 ~ 30"
                 }
               ]
             }
