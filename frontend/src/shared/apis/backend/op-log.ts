@@ -1,7 +1,7 @@
 import { requestApi } from "@/shared/apis/backend/helpers";
-import type { PaginationData, PaginationParams } from "@/shared/apis/types";
+import type { PageData, PageParams } from "@/shared/apis/types";
 
-export type GetLogsParams = PaginationParams & {
+export type GetLogsParams = PageParams & {
   startAt: string;
   endAt: string;
   clientIp?: string;
@@ -22,7 +22,7 @@ type ChartDataItem = {
   value: number;
 };
 
-export type ChartData = ChartDataItem[];
+type ChartData = ChartDataItem[];
 
 /**
  * 获取操作日志分页数据。
@@ -31,7 +31,7 @@ export type ChartData = ChartDataItem[];
  * @returns Promise 响应结果
  */
 export async function getLogsApi(params: GetLogsParams) {
-  return await requestApi<PaginationData<Log>>({
+  return await requestApi<PageData<Log>>({
     url: "/api/v1/op-logs",
     urlParams: params,
   });
