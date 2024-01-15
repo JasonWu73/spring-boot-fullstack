@@ -38,7 +38,7 @@ export function LoginsTopThree() {
 
 const RADIAN = Math.PI / 180;
 
-type renderCustomizedLabelProps = {
+type RenderCustomizedLabelProps = {
   cx: number;
   cy: number;
   midAngle: number;
@@ -54,7 +54,7 @@ function renderCustomizedLabel({
   innerRadius,
   outerRadius,
   percent,
-}: renderCustomizedLabelProps) {
+}: RenderCustomizedLabelProps) {
   const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
   const y = cy + radius * Math.sin(-midAngle * RADIAN);
