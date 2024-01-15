@@ -22,7 +22,7 @@ export default function DashboardPage() {
   return (
     <Card className="mx-auto mt-8 max-w-7xl">
       <CardHeader className="text-center">
-        <CardTitle>Dashboard</CardTitle>
+        <CardTitle>仪表板</CardTitle>
 
         <CardDescription>
           通常用于展示用户关心的重要指标、图表、图形和其他信息，以便用户可以一目了然地监视和了解系统的整体状况

@@ -25,7 +25,7 @@ export function SideNavBar() {
             }
           >
             <Gauge className="h-5 w-5" />
-            <span>Dashboard</span>
+            <span>仪表板</span>
           </NavLink>
         </div>
 
@@ -69,7 +69,7 @@ type MenuProps = {
 function Menu({ children, title }: MenuProps) {
   return (
     <>
-      <h2 className="w-10/12 pl-4 text-slate-400">{title}</h2>
+      <h3 className="w-10/12 pl-4 text-slate-400">{title}</h3>
       <ul className="flex w-10/12 flex-col gap-0.5">{children}</ul>
     </>
   );
