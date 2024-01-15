@@ -39,7 +39,7 @@ export function ConfirmDialog({
 
       <AlertDialogContent>
         <AlertDialogHeader>
-          <div className="flex gap-4 items-center">
+          <div className="flex items-center gap-4">
             <AlertTriangle className="mr-1 h-9 w-9 text-amber-500 dark:text-amber-600" />
 
             <div>
