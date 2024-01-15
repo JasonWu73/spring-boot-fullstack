@@ -16,19 +16,22 @@ import javax.crypto.NoSuchPaddingException;
  */
 public class RsaUtils {
 
+  /**
+   * 虽然 1024 位的密钥长度被认为是相对安全的，但 2048 或 4096 位更加安全。
+   */
+  private static final int RSA_KEY_LENGTH = 2048;
+
   private static final String RSA_CRYPTO_ALGORITHM = "RSA";
 
   /**
    * 生成新的 RSA 2048 位密钥对，密钥对使用 Base64 编码。
-   * <p>
-   * 虽然 1024 位的密钥长度被认为是相对安全的，但 2048 或 4096 位更加安全。
    *
    * @return Base64 编码的密钥对
    */
   public static RsaKeyPair generateKeyPair() {
     final KeyPairGenerator rsa = getKeyPairGenerator();
 
-    rsa.initialize(2048);
+    rsa.initialize(RSA_KEY_LENGTH);
 
     final KeyPair keyPair = rsa.generateKeyPair();
 
@@ -136,7 +139,7 @@ public class RsaUtils {
       rsa = KeyPairGenerator.getInstance(RSA_CRYPTO_ALGORITHM);
     } catch (NoSuchAlgorithmException e) {
       throw new RuntimeException(
-        "不支持的加密算法 [%s]".formatted(RSA_CRYPTO_ALGORITHM),
+        "不支持的加密算法: %s".formatted(RSA_CRYPTO_ALGORITHM),
         e
       );
     }
@@ -175,7 +178,7 @@ public class RsaUtils {
       cipher = Cipher.getInstance(RSA_CRYPTO_ALGORITHM);
     } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
       throw new RuntimeException(
-        "不支持加密算法 [%s]".formatted(RSA_CRYPTO_ALGORITHM),
+        "不支持的加密算法: %s".formatted(RSA_CRYPTO_ALGORITHM),
         e
       );
     }
@@ -190,7 +193,7 @@ public class RsaUtils {
       keyFactory = KeyFactory.getInstance(RSA_CRYPTO_ALGORITHM);
     } catch (NoSuchAlgorithmException e) {
       throw new RuntimeException(
-        "不支持加密算法 [%s]".formatted(RSA_CRYPTO_ALGORITHM),
+        "不支持的加密算法: %s".formatted(RSA_CRYPTO_ALGORITHM),
         e
       );
     }
@@ -201,7 +204,7 @@ public class RsaUtils {
   /**
    * RSA 密钥对。
    *
-   * @param publicKey  Base64 公钥字符串
+   * @param publicKey Base64 公钥字符串
    * @param privateKey Base64 私钥字符串
    */
   public record RsaKeyPair(String publicKey, String privateKey) {}
