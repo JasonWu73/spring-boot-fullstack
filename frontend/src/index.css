@@ -38,7 +38,7 @@
     --nprogress-dark-color: #dc2626;
   }
 
-  /* ----- 开始：自定义标题的预设样式 ----- */
+  /* ----- 自定义标题的预设样式 ----- */
   h1 {
     @apply text-xl;
     @apply font-semibold;
@@ -53,13 +53,12 @@
     @apply text-base;
     @apply font-semibold;
   }
-  /* ----- 结束：自定义标题的预设样式 ----- */
 }
 
 @tailwind components;
 @tailwind utilities;
 
-/* ----- 开始：系统主题 ----- */
+/* ----- 系统主题 ----- */
 /* 亮色主题 */
 html {
   @apply bg-gray-100;
@@ -77,9 +76,9 @@ html.dark {
   /* 滚动条暗色主题 */
   color-scheme: dark;
 }
-/* ----- 结束：系统主题 ----- */
 
-/* ----- 开始：选中文本时的背景色 ----- */
+/* ----- 选中文本时的背景色 ----- */
+/* 亮色主题 */
 ::selection {
   @apply bg-teal-500;
   @apply text-teal-50;
@@ -90,9 +89,8 @@ html.dark ::selection {
   @apply bg-teal-600;
   @apply text-teal-100;
 }
-/* ----- 结束：选中文本时的背景色 ----- */
 
-/* ----- 开始：NProgress 样式 ----- */
+/* ----- NProgress 亮色主题样式 ----- */
 #nprogress .bar {
   background-color: var(--nprogress-color);
 }
@@ -108,7 +106,7 @@ html.dark ::selection {
   border-left-color: var(--nprogress-color);
 }
 
-/* NProgress 暗色主题下的样式 */
+/* ----- NProgress 暗色主题样式 ----- */
 html.dark #nprogress .bar {
   background-color: var(--nprogress-dark-color);
 }
@@ -123,4 +121,3 @@ html.dark #nprogress .spinner-icon {
   border-top-color: var(--nprogress-dark-color);
   border-left-color: var(--nprogress-dark-color);
 }
-/* ----- 结束：NProgress 样式 ----- */
