@@ -28,7 +28,7 @@ public class PageOffsetAspect {
    * <ol>
    *   <li>类名后缀为 {@code Controller}</li>
    *   <li>方法的访问修饰符为 {@code public}</li>
-   *   <li>方法存在 {@link PageParam} 参数</li>
+   *   <li>方法存在 {@link PaginationParam} 参数</li>
    * </ol>
    *
    * <h2>切点表达式</h2>
@@ -38,7 +38,7 @@ public class PageOffsetAspect {
    * }</pre>
    */
   @Pointcut(
-    "execution(public * *..*Controller.*(.., net.wuxianjie.backend.shared.page.PageParam, ..))"
+    "execution(public * *..*Controller.*(.., net.wuxianjie.backend.shared.page.PaginationParam, ..))"
   )
   private void getPagination() {}
 
@@ -54,10 +54,10 @@ public class PageOffsetAspect {
       .flatMap(args ->
         Arrays
           .stream(args)
-          .filter(arg -> (arg instanceof PageParam))
+          .filter(arg -> (arg instanceof PaginationParam))
           .findFirst()
-          .map(arg -> (PageParam) arg)
+          .map(arg -> (PaginationParam) arg)
       )
-      .ifPresent(PageParam::setOffset);
+      .ifPresent(PaginationParam::setOffset);
   }
 }

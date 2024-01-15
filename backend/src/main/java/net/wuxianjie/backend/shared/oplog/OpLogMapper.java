@@ -3,7 +3,7 @@ package net.wuxianjie.backend.shared.oplog;
 import java.util.List;
 import net.wuxianjie.backend.shared.oplog.dto.ChartData;
 import net.wuxianjie.backend.shared.oplog.dto.GetOpLogParam;
-import net.wuxianjie.backend.shared.page.PageParam;
+import net.wuxianjie.backend.shared.page.PaginationParam;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -22,12 +22,12 @@ public interface OpLogMapper {
    *   <li>支持排序的列有：请求时间</li>
    * </ul>
    *
-   * @param pageParam 分页参数
+   * @param paginationParam 分页参数
    * @param logParam 查询条件
    * @return 操作日志分页列表
    */
   List<OpLog> selectByQueryLimit(
-    @Param("p") PageParam pageParam,
+    @Param("p") PaginationParam paginationParam,
     @Param("q") GetOpLogParam logParam
   );
 

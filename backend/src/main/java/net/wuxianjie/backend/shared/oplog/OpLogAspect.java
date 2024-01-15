@@ -28,9 +28,9 @@ import org.springframework.stereotype.Component;
 public class OpLogAspect {
 
   private static final String LOCALHOST = "localhost";
-  private static final String LOCALHOST_ADDR = "0:0:0:0:0:0:0:1";
+  private static final String LOCALHOST_ADDRESS = "0:0:0:0:0:0:0:1";
 
-  private final HttpServletRequest req;
+  private final HttpServletRequest request;
 
   private final OpLogMapper opLogMapper;
 
@@ -62,7 +62,7 @@ public class OpLogAspect {
 
     operation.setRequestedAt(requestedAt);
 
-    operation.setClientIp(getClientIp(req));
+    operation.setClientIp(getClientIp(request));
 
     operation.setUsername(
       AuthUtils.getCurrentUser().map(CachedAuth::username).orElse(null)
@@ -75,10 +75,10 @@ public class OpLogAspect {
     return result;
   }
 
-  private String getClientIp(final HttpServletRequest req) {
-    final String remoteAddr = req.getRemoteAddr();
+  private String getClientIp(final HttpServletRequest request) {
+    final String remoteAddr = request.getRemoteAddr();
 
-    return LOCALHOST_ADDR.equals(remoteAddr) ? LOCALHOST : remoteAddr;
+    return LOCALHOST_ADDRESS.equals(remoteAddr) ? LOCALHOST : remoteAddr;
   }
 
   private String getOperation(final ProceedingJoinPoint joinPoint) {

@@ -8,8 +8,8 @@ import lombok.RequiredArgsConstructor;
 import net.wuxianjie.backend.shared.auth.annotation.Admin;
 import net.wuxianjie.backend.shared.oplog.dto.ChartData;
 import net.wuxianjie.backend.shared.oplog.dto.GetOpLogParam;
-import net.wuxianjie.backend.shared.page.PageParam;
-import net.wuxianjie.backend.shared.page.PageResult;
+import net.wuxianjie.backend.shared.page.PaginationParam;
+import net.wuxianjie.backend.shared.page.PaginationResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,17 +32,17 @@ public class OpLogController {
    * <p>
    * 权限要求：管理员。
    *
-   * @param pageParam 分页参数
+   * @param paginationParam 分页参数
    * @param logParam 查询参数
    * @return 操作日志分页列表
    */
   @Admin
   @GetMapping
-  public PageResult<OpLog> getLogs(
-    @Valid final PageParam pageParam,
+  public PaginationResult<OpLog> getLogs(
+    @Valid final PaginationParam paginationParam,
     @Valid final GetOpLogParam logParam
   ) {
-    return opLogService.getLogs(pageParam, logParam);
+    return opLogService.getLogs(paginationParam, logParam);
   }
 
   /**

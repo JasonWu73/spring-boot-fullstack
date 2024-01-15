@@ -11,7 +11,7 @@ import java.util.List;
  * @param list 数据列表
  * @param <T> 数据列表中列表项的泛型类型参数
  */
-public record PageResult<T>(
+public record PaginationResult<T>(
   int pageNum,
   int pageSize,
   long total,

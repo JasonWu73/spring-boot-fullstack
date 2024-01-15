@@ -11,7 +11,7 @@ import net.wuxianjie.backend.shared.validator.EnumValidator;
  * 分页查询参数。
  **/
 @Data
-public class PageParam {
+public class PaginationParam {
 
   /**
    * 页码。

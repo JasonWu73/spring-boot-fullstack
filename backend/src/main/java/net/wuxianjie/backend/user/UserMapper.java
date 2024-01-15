@@ -1,7 +1,7 @@
 package net.wuxianjie.backend.user;
 
 import java.util.List;
-import net.wuxianjie.backend.shared.page.PageParam;
+import net.wuxianjie.backend.shared.page.PaginationParam;
 import net.wuxianjie.backend.user.dto.GetUserParam;
 import net.wuxianjie.backend.user.dto.UserInfo;
 import org.apache.ibatis.annotations.Mapper;
@@ -45,12 +45,12 @@ public interface UserMapper {
    *   <li>支持排序的列有：创建时间、更新时间</li>
    * </ul>
    *
-   * @param pageParam 分页参数
+   * @param paginationParam 分页参数
    * @param userParam 查询条件
    * @return 用户分页列表
    */
   List<UserInfo> selectByQueryLimit(
-    @Param("p") PageParam pageParam,
+    @Param("p") PaginationParam paginationParam,
     @Param("q") GetUserParam userParam
   );
 

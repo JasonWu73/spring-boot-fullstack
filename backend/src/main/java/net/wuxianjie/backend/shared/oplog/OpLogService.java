@@ -4,8 +4,8 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import net.wuxianjie.backend.shared.oplog.dto.ChartData;
 import net.wuxianjie.backend.shared.oplog.dto.GetOpLogParam;
-import net.wuxianjie.backend.shared.page.PageParam;
-import net.wuxianjie.backend.shared.page.PageResult;
+import net.wuxianjie.backend.shared.page.PaginationParam;
+import net.wuxianjie.backend.shared.page.PaginationResult;
 import net.wuxianjie.backend.shared.util.StrUtils;
 import org.springframework.stereotype.Service;
 
@@ -21,12 +21,12 @@ public class OpLogService {
   /**
    * 获取操作日志分页列表。
    *
-   * @param pageParam 分页参数
+   * @param paginationParam 分页参数
    * @param logParam 查询参数
    * @return 操作日志分页列表
    */
-  public PageResult<OpLog> getLogs(
-    final PageParam pageParam,
+  public PaginationResult<OpLog> getLogs(
+    final PaginationParam paginationParam,
     final GetOpLogParam logParam
   ) {
     // 构造符合数据库 Like 条件的模糊查询参数
@@ -34,7 +34,7 @@ public class OpLogService {
 
     // 根据查询条件获取分页列表
     final List<OpLog> list = opLogMapper.selectByQueryLimit(
-      pageParam,
+      paginationParam,
       logParam
     );
 
@@ -42,9 +42,9 @@ public class OpLogService {
     final long total = opLogMapper.countByQuery(logParam);
 
     // 返回分页结果
-    return new PageResult<>(
-      pageParam.getPageNum(),
-      pageParam.getPageSize(),
+    return new PaginationResult<>(
+      paginationParam.getPageNum(),
+      paginationParam.getPageSize(),
       total,
       list
     );
