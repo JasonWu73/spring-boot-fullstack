@@ -1,4 +1,4 @@
-package net.wuxianjie.backend.shared.pagination;
+package net.wuxianjie.backend.shared.page;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
@@ -11,7 +11,7 @@ import net.wuxianjie.backend.shared.validator.EnumValidator;
  * 分页查询参数。
  **/
 @Data
-public class PaginationParam {
+public class PageParam {
 
   /**
    * 页码。
@@ -55,7 +55,7 @@ public class PaginationParam {
   private String sortOrder;
 
   /**
-   * 由程序自动设置偏移量参数，详见 {@link PaginationOffsetAspect}。
+   * 由程序自动设置偏移量参数，详见 {@link PageOffsetAspect}。
    */
   public void setOffset() {
     setOffset((pageNum - 1) * pageSize);

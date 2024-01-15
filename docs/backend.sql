@@ -32,10 +32,10 @@ CREATE TABLE `mybatis` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
--- Table structure for operation_log
+-- Table structure for op_log
 -- ----------------------------
-DROP TABLE IF EXISTS `operation_log`;
-CREATE TABLE `operation_log` (
+DROP TABLE IF EXISTS op_log;
+CREATE TABLE `op_log` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `requested_at` datetime DEFAULT NULL,
   `client_ip` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,

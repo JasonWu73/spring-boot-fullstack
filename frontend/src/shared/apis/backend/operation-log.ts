@@ -32,31 +32,31 @@ export type ChartData = ChartDataItem[];
  */
 export async function getLogsApi(params: GetLogsParams) {
   return await requestApi<PaginationData<Log>>({
-    url: "/api/v1/operation-logs",
+    url: "/api/v1/op-logs",
     urlParams: params,
   });
 }
 
 /**
- * 获取登录数前几的用户。
+ * 获取登录数前 N 名的用户。
  *
- * @param num 前几
+ * @param num 前 N 名
  * @returns Promise 响应结果
  */
 export async function getLoginsTopApi(num: number) {
   return await requestApi<ChartData>({
-    url: `/api/v1/operation-logs/logins-top/${num}`,
+    url: `/api/v1/op-logs/logins-top/${num}`,
   });
 }
 
 /**
- * 获取最近几天的登录数。
+ * 获取最近 N 天的登录数。
  *
- * @param days 最近几天
+ * @param days 最近 N 天
  * @returns Promise 响应结果
  */
-export async function getLoginsHistoryApi(days: number) {
+export async function getLoginsHistApi(days: number) {
   return await requestApi<ChartData>({
-    url: `/api/v1/operation-logs/logins-history/${days}`,
+    url: `/api/v1/op-logs/logins-hist/${days}`,
   });
 }

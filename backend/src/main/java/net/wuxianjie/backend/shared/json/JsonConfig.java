@@ -2,7 +2,13 @@ package net.wuxianjie.backend.shared.json;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.io.IOException;
@@ -20,7 +26,7 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 public class JsonConfig {
 
   /**
-   * 系统中使用的日期时间格式。
+   * 项目中约定的日期时间格式。
    */
   public static final String DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
 

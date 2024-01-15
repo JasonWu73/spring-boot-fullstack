@@ -1,4 +1,4 @@
-package net.wuxianjie.backend.shared.operationlog.dto;
+package net.wuxianjie.backend.shared.oplog.dto;
 
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -14,7 +14,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetLogParam {
+public class GetOpLogParam {
 
   /**
    * 开始日期。

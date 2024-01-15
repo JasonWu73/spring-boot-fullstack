@@ -9,8 +9,8 @@ import lombok.RequiredArgsConstructor;
 import net.wuxianjie.backend.shared.auth.AuthUtils;
 import net.wuxianjie.backend.shared.auth.Authority;
 import net.wuxianjie.backend.shared.exception.ApiException;
-import net.wuxianjie.backend.shared.pagination.PaginationParam;
-import net.wuxianjie.backend.shared.pagination.PaginationResult;
+import net.wuxianjie.backend.shared.page.PageParam;
+import net.wuxianjie.backend.shared.page.PageResult;
 import net.wuxianjie.backend.shared.util.RsaUtils;
 import net.wuxianjie.backend.shared.util.StrUtils;
 import net.wuxianjie.backend.user.dto.*;
@@ -98,26 +98,26 @@ public class UserService {
    * <p>
    * 需要构造符合数据库 Like 条件的模糊查询参数。
    *
-   * @param paginationParam 分页参数
+   * @param pageParam 分页参数
    * @param userParam       用户查询参数
    * @return 用户分页列表
    */
-  public PaginationResult<UserInfo> getUsers(
-    final PaginationParam paginationParam,
+  public PageResult<UserInfo> getUsers(
+    final PageParam pageParam,
     final GetUserParam userParam
   ) {
     setFuzzyQuery(userParam);
 
     final List<UserInfo> list = userMapper.selectByQueryLimit(
-      paginationParam,
+      pageParam,
       userParam
     );
 
     final long total = userMapper.countByQuery(userParam);
 
-    return new PaginationResult<>(
-      paginationParam.getPageNum(),
-      paginationParam.getPageSize(),
+    return new PageResult<>(
+      pageParam.getPageNum(),
+      pageParam.getPageSize(),
       total,
       list
     );

@@ -9,7 +9,7 @@ server:
 spring:
   datasource:
     # 数据库地址
-    url: jdbc:mysql://localhost:3306/demo
+    url: jdbc:mysql://localhost:3306/backend
     username: ENC(ANOf5l6jbyPQN8dk9dHy9C8sd0ZhowraFYXInEcG8am+ybTJhQwxR+MKN/bl54Z4)
     password: ENC(H0yLbj9m4Y9UpTSt4spGMqmOR/pvL0yDFCKp04gGBJCa+C+vgj27kXST+nCzP72z)
   data:

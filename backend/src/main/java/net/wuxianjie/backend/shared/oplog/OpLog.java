@@ -1,4 +1,4 @@
-package net.wuxianjie.backend.shared.operationlog;
+package net.wuxianjie.backend.shared.oplog;
 
 import java.time.LocalDateTime;
 import lombok.Data;
@@ -7,7 +7,7 @@ import lombok.Data;
  * 操作日志数据库表。
  */
 @Data
-public class OperationLog {
+public class OpLog {
 
   /**
    * 日志 ID。

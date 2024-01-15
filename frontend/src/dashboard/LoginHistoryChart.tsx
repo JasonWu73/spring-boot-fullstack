@@ -9,14 +9,14 @@ import {
   YAxis,
 } from "recharts";
 
-import { getLoginsHistoryApi } from "@/shared/apis/backend/operation-log";
+import { getLoginsHistApi } from "@/shared/apis/backend/operation-log";
 import { useFetch } from "@/shared/hooks/use-fetch";
 import { useRefresh } from "@/shared/hooks/use-refresh";
 
 const colors = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "red", "pink"];
 
 export function LoginHistoryChart() {
-  const { data, fetchData: getLoginsHistory } = useFetch(getLoginsHistoryApi);
+  const { data, fetchData: getLoginsHistory } = useFetch(getLoginsHistApi);
 
   useRefresh(() => {
     getLoginsHistory(7).then();

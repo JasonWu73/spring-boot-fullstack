@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="net.wuxianjie.backend.shared.operationlog.LogMapper">
+<mapper namespace="net.wuxianjie.backend.shared.oplog.OpLogMapper">
   <select
     id="selectByQueryLimit"
-    resultType="net.wuxianjie.backend.shared.operationlog.OperationLog"
+    resultType="net.wuxianjie.backend.shared.oplog.OpLog"
   >
     select
       id,
@@ -12,7 +12,7 @@
       client_ip as clientIp,
       username,
       message
-    from operation_log
+    from op_log
     <include refid="whereQuery" />
     <if test="p.sortColumn == 'requestedAt'">
       order by ${p.sortColumn} ${p.sortOrder}
@@ -22,7 +22,7 @@
 
   <select id="countByQuery" resultType="long">
     select count(1)
-    from operation_log
+    from op_log
     <include refid="whereQuery" />
   </select>
 
@@ -44,32 +44,32 @@
 
   <select
     id="selectLoginsLimit"
-    resultType="net.wuxianjie.backend.shared.operationlog.dto.ChartData"
+    resultType="net.wuxianjie.backend.shared.oplog.dto.ChartData"
   >
     select
       username as name,
       sum(if(message = '登录', 1, 0)) as value
-    from operation_log
-    group by username
+    from op_log
+    group by name
     order by value desc
     limit #{limit}
   </select>
 
   <select
     id="selectLoginsHistory"
-    resultType="net.wuxianjie.backend.shared.operationlog.dto.ChartData"
+    resultType="net.wuxianjie.backend.shared.oplog.dto.ChartData"
   >
     select
       date_format(requested_at, '%Y-%m-%d') as name,
       sum(if(message = '登录', 1, 0)) as value
-    from operation_log
+    from op_log
     where requested_at &gt;= date_sub(curdate(), interval #{days} day)
     group by name
     order by name
   </select>
 
   <insert id="insert">
-    insert into operation_log (
+    insert into op_log (
       requested_at,
       client_ip,
       username,

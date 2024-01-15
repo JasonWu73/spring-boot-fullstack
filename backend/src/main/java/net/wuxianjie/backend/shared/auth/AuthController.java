@@ -5,10 +5,16 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import net.wuxianjie.backend.shared.auth.dto.AuthResult;
 import net.wuxianjie.backend.shared.auth.dto.LoginParam;
-import net.wuxianjie.backend.shared.operationlog.Operation;
+import net.wuxianjie.backend.shared.oplog.Operation;
 import net.wuxianjie.backend.user.AuthServiceImpl;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 身份验证 API。

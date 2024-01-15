@@ -1,4 +1,4 @@
-package net.wuxianjie.backend.shared.pagination;
+package net.wuxianjie.backend.shared.page;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
  **/
 @Aspect
 @Component
-public class PaginationOffsetAspect {
+public class PageOffsetAspect {
 
   /**
    * Controller 分页查询方法的切点：
@@ -28,7 +28,7 @@ public class PaginationOffsetAspect {
    * <ol>
    *   <li>类名后缀为 {@code Controller}</li>
    *   <li>方法的访问修饰符为 {@code public}</li>
-   *   <li>方法存在 {@link PaginationParam} 参数</li>
+   *   <li>方法存在 {@link PageParam} 参数</li>
    * </ol>
    *
    * <h2>切点表达式</h2>
@@ -38,7 +38,7 @@ public class PaginationOffsetAspect {
    * }</pre>
    */
   @Pointcut(
-    "execution(public * *..*Controller.*(.., net.wuxianjie.backend.shared.pagination.PaginationParam, ..))"
+    "execution(public * *..*Controller.*(.., net.wuxianjie.backend.shared.page.PageParam, ..))"
   )
   private void getPagination() {}
 
@@ -54,10 +54,10 @@ public class PaginationOffsetAspect {
       .flatMap(args ->
         Arrays
           .stream(args)
-          .filter(arg -> (arg instanceof PaginationParam))
+          .filter(arg -> (arg instanceof PageParam))
           .findFirst()
-          .map(arg -> (PaginationParam) arg)
+          .map(arg -> (PageParam) arg)
       )
-      .ifPresent(PaginationParam::setOffset);
+      .ifPresent(PageParam::setOffset);
   }
 }

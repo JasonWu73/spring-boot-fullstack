@@ -4,8 +4,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import net.wuxianjie.backend.shared.auth.annotation.Admin;
 import net.wuxianjie.backend.shared.auth.annotation.Root;
-import net.wuxianjie.backend.shared.pagination.PaginationParam;
-import net.wuxianjie.backend.shared.pagination.PaginationResult;
+import net.wuxianjie.backend.shared.page.PageParam;
+import net.wuxianjie.backend.shared.page.PageResult;
 import net.wuxianjie.backend.user.dto.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -51,17 +51,17 @@ public class UserController {
    * <p>
    * 权限要求：管理员。
    *
-   * @param paginationParam 分页参数
+   * @param pageParam 分页参数
    * @param userParam 用户查询参数
    * @return 用户分页列表
    */
   @Admin
   @GetMapping
-  public PaginationResult<UserInfo> getUsers(
-    @Valid final PaginationParam paginationParam,
+  public PageResult<UserInfo> getUsers(
+    @Valid final PageParam pageParam,
     @Valid final GetUserParam userParam
   ) {
-    return userService.getUsers(paginationParam, userParam);
+    return userService.getUsers(pageParam, userParam);
   }
 
   /**

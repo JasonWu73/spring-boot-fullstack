@@ -1,4 +1,4 @@
-package net.wuxianjie.backend.shared.pagination;
+package net.wuxianjie.backend.shared.page;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import java.util.List;
  * @param list 数据列表
  * @param <T> 数据列表中列表项的泛型类型参数
  */
-public record PaginationResult<T>(
+public record PageResult<T>(
   int pageNum,
   int pageSize,
   long total,
