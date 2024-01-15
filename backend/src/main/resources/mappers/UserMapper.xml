@@ -3,36 +3,36 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.wuxianjie.backend.user.UserMapper">
   <select id="selectById" resultType="net.wuxianjie.backend.user.User">
-    SELECT
+    select
       id,
-      created_at AS createdAt,
-      updated_at AS updatedAt,
+      created_at as createdAt,
+      updated_at as updatedAt,
       remark,
       username,
       nickname,
-      hashed_password AS hashedPassword,
+      hashed_password as hashedPassword,
       status,
       authorities
-    FROM user
-    WHERE id = #{id}
+    from user
+    where id = #{id}
   </select>
 
   <select id="selectByUsername" resultType="net.wuxianjie.backend.user.User">
-    SELECT
+    select
       id,
-      created_at AS createdAt,
-      updated_at AS updatedAt,
+      created_at as createdAt,
+      updated_at as updatedAt,
       remark,
       username,
       nickname,
-      hashed_password AS hashedPassword,
+      hashed_password as hashedPassword,
       status,
       authorities
-    FROM user
-    WHERE username = #{username}
+    from user
+    where username = #{username}
   </select>
 
-  <resultMap id="userBaseMap" type="net.wuxianjie.backend.user.dto.UserInfo">
+  <resultMap id="userInfo" type="net.wuxianjie.backend.user.dto.UserInfo">
     <constructor>
       <idArg column="id" javaType="long" />
       <arg column="createdAt" javaType="java.time.LocalDateTime" />
@@ -48,73 +48,68 @@
     </constructor>
   </resultMap>
 
-  <select id="selectInfoById" resultMap="userBaseMap">
-    SELECT
+  <select id="selectInfoById" resultMap="userInfo">
+    select
       id,
-      created_at AS createdAt,
-      updated_at AS updatedAt,
+      created_at as createdAt,
+      updated_at as updatedAt,
       remark,
       username,
       nickname,
       status,
       authorities
-    FROM user
-    WHERE id = #{userId}
+    from user
+    where id = #{userId}
   </select>
 
-  <select id="selectByQueryLimit" resultMap="userBaseMap">
-    SELECT
+  <select id="selectByQueryLimit" resultMap="userInfo">
+    select
       id,
-      created_at AS createdAt,
-      updated_at AS updatedAt,
+      created_at as createdAt,
+      updated_at as updatedAt,
       remark,
       username,
       nickname,
       status,
       authorities
-    FROM user
+    from user
     <include refid="whereQuery" />
-    <if
-      test="p.sortColumn != null
-            and p.sortColumn == 'createdAt'
-            or p.sortColumn == 'updatedAt'"
-    >
-      ORDER BY ${p.sortColumn} ${p.sortOrder}
+    <if test="p.sortColumn == 'createdAt' or p.sortColumn == 'updatedAt'">
+      order by ${p.sortColumn} ${p.sortOrder}
     </if>
-    LIMIT #{p.offset}, #{p.pageSize}
+    limit #{p.offset}, #{p.pageSize}
   </select>
 
   <select id="countByQuery" resultType="long">
-    SELECT COUNT(1)
-    FROM user
+    select count(1)
+    from user
     <include refid="whereQuery" />
   </select>
 
   <sql id="whereQuery">
     <where>
-      <if test="q.username != null and q.username != ''">
-        AND username LIKE #{q.username}
+      <if test="q.username != null">
+        and username like #{q.username}
       </if>
-      <if test="q.nickname != null and q.nickname != ''">
-        AND nickname LIKE #{q.nickname}
+      <if test="q.nickname != null">
+        and nickname like #{q.nickname}
       </if>
-      <!-- 不要使用 `<if test="q.status != ''">`，因为 `0` 会被认识为空字符串 -->
       <if test="q.status != null">
-        AND status = #{q.status}
+        and status = #{q.status}
       </if>
-      <if test="q.authority != null and q.authority != ''">
-        AND (
+      <if test="q.authority != null">
+        and (
           authorities = #{q.authority}
-          OR authorities LIKE CONCAT(#{q.authority}, ',%')
-          OR authorities LIKE CONCAT('%,', #{q.authority}, ',%')
-          OR authorities LIKE CONCAT('%,', #{q.authority})
+          or authorities like concat(#{q.authority}, ',%')
+          or authorities like concat('%,', #{q.authority}, ',%')
+          or authorities like concat('%,', #{q.authority})
         )
       </if>
     </where>
   </sql>
 
   <insert id="insert">
-    INSERT INTO user (
+    insert into user (
       created_at,
       updated_at,
       remark,
@@ -124,7 +119,7 @@
       status,
       authorities
     )
-    VALUES (
+    values (
       #{createdAt},
       #{updatedAt},
       #{remark},
@@ -137,20 +132,19 @@
   </insert>
 
   <update id="updateById">
-    UPDATE user
-    SET
+    update user
+    set
       updated_at = #{updatedAt},
       remark = #{remark},
       nickname = #{nickname},
       hashed_password = #{hashedPassword},
       status = #{status},
       authorities = #{authorities}
-    WHERE id = #{id}
+    where id = #{id}
   </update>
 
   <delete id="deleteById">
-    DELETE
-    FROM user
-    WHERE id = #{userId}
+    delete from user
+    where id = #{userId}
   </delete>
 </mapper>

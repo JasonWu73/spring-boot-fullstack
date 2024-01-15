@@ -6,38 +6,38 @@
     id="selectByQueryLimit"
     resultType="net.wuxianjie.backend.shared.operationlog.OperationLog"
   >
-    SELECT
+    select
       id,
-      requested_at AS requestedAt,
-      client_ip AS clientIp,
+      requested_at as requestedAt,
+      client_ip as clientIp,
       username,
       message
-    FROM operation_log
+    from operation_log
     <include refid="whereQuery" />
-    <if test="p.sortColumn != null and p.sortColumn == 'requestedAt'">
-      ORDER BY ${p.sortColumn} ${p.sortOrder}
+    <if test="p.sortColumn == 'requestedAt'">
+      order by ${p.sortColumn} ${p.sortOrder}
     </if>
-    LIMIT #{p.offset}, #{p.pageSize}
+    limit #{p.offset}, #{p.pageSize}
   </select>
 
   <select id="countByQuery" resultType="long">
-    SELECT COUNT(1)
-    FROM operation_log
+    select count(1)
+    from operation_log
     <include refid="whereQuery" />
   </select>
 
   <sql id="whereQuery">
     <where>
-      AND requested_at &gt;= CONCAT(#{q.startAt}, ' 00:00:00')
-      AND requested_at &lt;= CONCAT(#{q.endAt}, ' 23:59:59')
-      <if test="q.clientIp != null and q.clientIp != ''">
-        AND client_ip LIKE #{q.clientIp}
+      and requested_at &gt;= concat(#{q.startAt}, ' 00:00:00')
+      and requested_at &lt;= concat(#{q.endAt}, ' 23:59:59')
+      <if test="q.clientIp != null">
+        and client_ip like #{q.clientIp}
       </if>
-      <if test="q.username != null and q.username != ''">
-        AND username LIKE #{q.username}
+      <if test="q.username != null">
+        and username like #{q.username}
       </if>
-      <if test="q.message != null and q.message != ''">
-        AND message LIKE #{q.message}
+      <if test="q.message != null">
+        and message like #{q.message}
       </if>
     </where>
   </sql>
@@ -46,34 +46,36 @@
     id="selectLoginsLimit"
     resultType="net.wuxianjie.backend.shared.operationlog.dto.ChartData"
   >
-    SELECT username AS name,
-           SUM(IF(message = '登录', 1, 0)) AS value
-    FROM operation_log
-    GROUP BY username
-    ORDER BY value DESC
-    LIMIT #{limit}
+    select
+      username as name,
+      sum(if(message = '登录', 1, 0)) as value
+    from operation_log
+    group by username
+    order by value desc
+    limit #{limit}
   </select>
 
   <select
     id="selectLoginsHistory"
     resultType="net.wuxianjie.backend.shared.operationlog.dto.ChartData"
   >
-    SELECT DATE_FORMAT(requested_at, '%Y-%m-%d') AS name,
-           SUM(IF(message = '登录', 1, 0)) AS value
-    FROM operation_log
-    WHERE requested_at &gt;= DATE_SUB(CURDATE(), INTERVAL #{days} DAY)
-    GROUP BY name
-    ORDER BY name
+    select
+      date_format(requested_at, '%Y-%m-%d') as name,
+      sum(if(message = '登录', 1, 0)) as value
+    from operation_log
+    where requested_at &gt;= date_sub(curdate(), interval #{days} day)
+    group by name
+    order by name
   </select>
 
   <insert id="insert">
-    INSERT INTO operation_log (
+    insert into operation_log (
       requested_at,
       client_ip,
       username,
       message
     )
-    VALUES (
+    values (
       #{requestedAt},
       #{clientIp},
       #{username},

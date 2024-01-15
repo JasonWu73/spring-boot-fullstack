@@ -6,25 +6,25 @@
     id="selectAllData"
     resultType="net.wuxianjie.backend.demo.mybatis.MyBatisData"
   >
-    SELECT
+    select
       id,
       name,
       type,
       date,
-      local_date_time AS localDateTime,
-      local_date AS localDate
-    FROM mybatis
+      local_date_time as localDateTime,
+      local_date as localDate
+    from mybatis
   </select>
 
   <insert id="insertData">
-    INSERT INTO mybatis (
+    insert into mybatis (
       name,
       type,
       date,
       local_date_time,
       local_date
     )
-    VALUES (
+    values (
       #{name},
       #{type},
       #{date},
@@ -34,6 +34,6 @@
   </insert>
 
   <delete id="truncateTable">
-    TRUNCATE TABLE mybatis
+    truncate table mybatis
   </delete>
 </mapper>
