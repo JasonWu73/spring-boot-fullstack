@@ -55,7 +55,7 @@ public class PaginationParam {
   private String sortOrder;
 
   /**
-   * 由程序自动设置偏移量参数，详见 {@link PageOffsetAspect}。
+   * 由程序自动设置偏移量参数，详见 {@link PaginationOffsetAspect}。
    */
   public void setOffset() {
     setOffset((pageNum - 1) * pageSize);

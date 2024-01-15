@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
  **/
 @Aspect
 @Component
-public class PageOffsetAspect {
+public class PaginationOffsetAspect {
 
   /**
    * Controller 分页查询方法的切点：
