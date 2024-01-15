@@ -38,11 +38,11 @@ public class OpLogController {
    */
   @Admin
   @GetMapping
-  public PageResult<OpLog> getOpLogs(
+  public PageResult<OpLog> getLogs(
     @Valid final PageParam pageParam,
     @Valid final GetOpLogParam logParam
   ) {
-    return opLogService.getOpOpLogs(pageParam, logParam);
+    return opLogService.getLogs(pageParam, logParam);
   }
 
   /**

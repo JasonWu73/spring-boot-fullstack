@@ -9,7 +9,7 @@ import {
   YAxis,
 } from "recharts";
 
-import { getLoginsHistApi } from "@/shared/apis/backend/operation-log";
+import { getLoginsHistApi } from "@/shared/apis/backend/op-log";
 import { useFetch } from "@/shared/hooks/use-fetch";
 import { useRefresh } from "@/shared/hooks/use-refresh";
 

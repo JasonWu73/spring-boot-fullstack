@@ -21,7 +21,7 @@ import LoadingButton from "@/shared/components/ui/LoadingButton";
 import { Skeleton } from "@/shared/components/ui/Skeleton";
 import { toast } from "@/shared/components/ui/use-toast";
 import { useFetch } from "@/shared/hooks/use-fetch";
-import { useInitial } from "@/shared/hooks/use-refresh";
+import { useRefresh } from "@/shared/hooks/use-refresh";
 import { clearAuth, updateNickname } from "@/shared/auth/auth-signals";
 
 const formSchema = z
@@ -64,7 +64,7 @@ export function Profile() {
 
   const { loading, data: user, error, fetchData: getUser } = useFetch(getMeApi);
 
-  useInitial(() => {
+  useRefresh(() => {
     getUser(null).then(({ data }) => {
       if (data) {
         initializeUserData(data);

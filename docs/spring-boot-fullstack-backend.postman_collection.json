@@ -440,9 +440,9 @@
               }
             ],
             "url": {
-              "raw": "{{BASE_URL}}/api/v1/operation-logs?pageNum=1&pageSize=10&sortColumn=requestedAt&sortOrder=desc&startAt=2023-11-17&endAt=2023-11-17",
+              "raw": "{{BASE_URL}}/api/v1/op-logs?pageNum=1&pageSize=10&sortColumn=requestedAt&sortOrder=desc&startAt=2023-11-17&endAt=2023-11-17",
               "host": ["{{BASE_URL}}"],
-              "path": ["api", "v1", "operation-logs"],
+              "path": ["api", "v1", "op-logs"],
               "query": [
                 {
                   "key": "pageNum",
@@ -500,9 +500,9 @@
               }
             ],
             "url": {
-              "raw": "{{BASE_URL}}/api/v1/operation-logs/logins-top/:num",
+              "raw": "{{BASE_URL}}/api/v1/op-logs/logins-top/:num",
               "host": ["{{BASE_URL}}"],
-              "path": ["api", "v1", "operation-logs", "logins-top", ":num"],
+              "path": ["api", "v1", "op-logs", "logins-top", ":num"],
               "variable": [
                 {
                   "key": "num",
@@ -526,15 +526,9 @@
               }
             ],
             "url": {
-              "raw": "{{BASE_URL}}/api/v1/operation-logs/logins-history/:days",
+              "raw": "{{BASE_URL}}/api/v1/op-logs/logins-history/:days",
               "host": ["{{BASE_URL}}"],
-              "path": [
-                "api",
-                "v1",
-                "operation-logs",
-                "logins-history",
-                ":days"
-              ],
+              "path": ["api", "v1", "op-logs", "logins-history", ":days"],
               "variable": [
                 {
                   "key": "days",

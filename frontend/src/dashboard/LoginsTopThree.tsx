@@ -1,6 +1,6 @@
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 
-import { getLoginsTopApi } from "@/shared/apis/backend/operation-log";
+import { getLoginsTopApi } from "@/shared/apis/backend/op-log";
 import { useFetch } from "@/shared/hooks/use-fetch";
 import { useRefresh } from "@/shared/hooks/use-refresh";
 

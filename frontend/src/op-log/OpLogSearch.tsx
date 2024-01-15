@@ -38,7 +38,7 @@ const defaultValues: FormSchema = {
   message: "",
 };
 
-export function LogSearch() {
+export function OpLogSearch() {
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues,

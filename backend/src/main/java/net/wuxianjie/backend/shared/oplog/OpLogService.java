@@ -25,7 +25,7 @@ public class OpLogService {
    * @param logParam 查询参数
    * @return 操作日志分页列表
    */
-  public PageResult<OpLog> getOpOpLogs(
+  public PageResult<OpLog> getLogs(
     final PageParam pageParam,
     final GetOpLogParam logParam
   ) {

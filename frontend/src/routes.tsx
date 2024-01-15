@@ -20,9 +20,7 @@ const SplitBillPage = React.lazy(() => import("@/split-bill/SplitBillPage"));
 const UserListPage = React.lazy(() => import("@/user/UserListPage"));
 const AddUserPage = React.lazy(() => import("@/user/AddUserPage"));
 const UpdateUserPage = React.lazy(() => import("@/user/UpdateUserPage"));
-const OperationLogListPage = React.lazy(
-  () => import("@/operation-log/LogListPage"),
-);
+const OpLogListPage = React.lazy(() => import("@/op-log/OpLogListPage"));
 const CounterPage = React.lazy(
   () => import("@/compound-component/CounterPage"),
 );
@@ -101,7 +99,7 @@ export const router = createBrowserRouter([
               { path: "/users", element: <UserListPage /> },
               { path: "/users/add", element: <AddUserPage /> },
               { path: "/users/:userId", element: <UpdateUserPage /> },
-              { path: "/operation-logs", element: <OperationLogListPage /> },
+              { path: "/op-logs", element: <OpLogListPage /> },
               {
                 element: <SecureRoute authority="root" />,
                 children: [

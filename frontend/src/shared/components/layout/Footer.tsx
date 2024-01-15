@@ -1,10 +1,10 @@
-import { ReloadIcon } from "@radix-ui/react-icons";
 import React from "react";
+import { ReloadIcon } from "@radix-ui/react-icons";
 
 import { getVersionApi } from "@/shared/apis/backend/version";
 import { useFetch } from "@/shared/hooks/use-fetch";
-import { useInitial } from "@/shared/hooks/use-refresh";
 import { cn } from "@/shared/utils/helpers";
+import { useSavedRef } from "@/shared/hooks/use-saved";
 
 type FooterProps = React.ComponentPropsWithoutRef<"footer">;
 
@@ -16,9 +16,11 @@ export function Footer({ className, ...props }: FooterProps) {
     fetchData: getVersion,
   } = useFetch(getVersionApi);
 
-  useInitial(() => {
-    getVersion(null).then();
-  });
+  const getVersionRef = useSavedRef(getVersion);
+
+  React.useEffect(() => {
+    getVersionRef.current(null).then();
+  }, [getVersionRef]);
 
   const { developer, name, version, builtAt } = versionInfo ?? {};
 

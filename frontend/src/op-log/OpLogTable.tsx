@@ -5,7 +5,7 @@ import {
   getLogsApi,
   type GetLogsParams,
   type Log,
-} from "@/shared/apis/backend/operation-log";
+} from "@/shared/apis/backend/op-log";
 import {
   DataTable,
   DEFAULT_PAGE_NUM,
@@ -61,7 +61,7 @@ const columns: ColumnDef<Log>[] = [
   },
 ];
 
-export function LogTable() {
+export function OpLogTable() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const pageNum =

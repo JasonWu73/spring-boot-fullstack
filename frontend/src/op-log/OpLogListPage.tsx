@@ -1,5 +1,5 @@
-import { LogSearch } from "@/operation-log/LogSearch";
-import { LogTable } from "@/operation-log/LogTable";
+import { OpLogSearch } from "@/op-log/OpLogSearch";
+import { OpLogTable } from "@/op-log/OpLogTable";
 import {
   Card,
   CardContent,
@@ -9,7 +9,7 @@ import {
 } from "@/shared/components/ui/Card";
 import { useTitle } from "@/shared/hooks/use-title";
 
-export default function LogListPage() {
+export default function OpLogListPage() {
   useTitle("操作日志");
 
   return (
@@ -20,9 +20,9 @@ export default function LogListPage() {
       </CardHeader>
 
       <CardContent>
-        <LogSearch />
+        <OpLogSearch />
 
-        <LogTable />
+        <OpLogTable />
       </CardContent>
     </Card>
   );
