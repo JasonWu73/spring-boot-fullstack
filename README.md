@@ -89,3 +89,8 @@ npm install react-router-dom
 npm install @preact/signals-react
 npm install --save-dev @types/use-sync-external-store
 ```
+
+## 教程
+
+- [The Ultimate React Course 2024: React, Redux & More](https://www.udemy.com/course/the-ultimate-react-course/)
+- [https://www.udemy.com/course/react-the-complete-guide-incl-redux/](https://www.udemy.com/course/react-the-complete-guide-incl-redux/)
