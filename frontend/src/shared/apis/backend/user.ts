@@ -1,9 +1,9 @@
 import { requestApi } from "@/shared/apis/backend/helpers";
-import type { PageData, PageParams } from "@/shared/apis/types";
+import type { PaginationData, PaginationParams } from "@/shared/apis/types";
 import { PUBLIC_KEY } from "@/shared/auth/auth-signals";
 import { encrypt } from "@/shared/utils/rsa";
 
-export type GetUsersParams = PageParams & {
+export type GetUsersParams = PaginationParams & {
   username?: string;
   nickname?: string;
   status?: string;
@@ -28,7 +28,7 @@ export type User = {
  * @returns Promise 响应结果
  */
 export async function getUsersApi(params: GetUsersParams) {
-  return await requestApi<PageData<User>>({
+  return await requestApi<PaginationData<User>>({
     url: "/api/v1/users",
     urlParams: params,
   });

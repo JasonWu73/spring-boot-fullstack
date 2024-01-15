@@ -1,7 +1,7 @@
 /**
  * 分页参数类型。
  */
-export type PageParams = {
+export type PaginationParams = {
   pageNum: number;
   pageSize: number;
   sortColumn?: string;
@@ -11,7 +11,7 @@ export type PageParams = {
 /**
  * 分页数据类型。
  */
-export type PageData<T> = {
+export type PaginationData<T> = {
   pageNum: number;
   pageSize: number;
   total: number;

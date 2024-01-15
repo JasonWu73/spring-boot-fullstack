@@ -25,7 +25,7 @@ import LoadingButton from "@/shared/components/ui/LoadingButton";
 import { toast } from "@/shared/components/ui/use-toast";
 import { PUBLIC_KEY } from "@/shared/auth/auth-signals";
 import { type ApiResponse, useFetch } from "@/shared/hooks/use-fetch";
-import type { PageData } from "@/shared/apis/types";
+import type { PaginationData } from "@/shared/apis/types";
 import { encrypt } from "@/shared/utils/rsa";
 import { requestApi } from "@/shared/apis/backend/helpers";
 import type { User } from "@/shared/apis/backend/user";
@@ -46,7 +46,7 @@ type ResetPasswordDialogProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   user: User;
-  invalidateUsers: () => Promise<ApiResponse<PageData<User>>>;
+  invalidateUsers: () => Promise<ApiResponse<PaginationData<User>>>;
 };
 
 const defaultValues: FormSchema = {
