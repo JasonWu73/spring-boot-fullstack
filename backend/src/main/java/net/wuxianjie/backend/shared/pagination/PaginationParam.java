@@ -1,4 +1,4 @@
-package net.wuxianjie.backend.shared.page;
+package net.wuxianjie.backend.shared.pagination;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;

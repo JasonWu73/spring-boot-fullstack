@@ -1,4 +1,4 @@
-package net.wuxianjie.backend.shared.page;
+package net.wuxianjie.backend.shared.pagination;
 
 import java.util.List;
 

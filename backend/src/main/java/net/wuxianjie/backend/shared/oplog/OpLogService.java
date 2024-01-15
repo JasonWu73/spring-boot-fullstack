@@ -4,8 +4,8 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import net.wuxianjie.backend.shared.oplog.dto.ChartData;
 import net.wuxianjie.backend.shared.oplog.dto.GetOpLogParam;
-import net.wuxianjie.backend.shared.page.PaginationParam;
-import net.wuxianjie.backend.shared.page.PaginationResult;
+import net.wuxianjie.backend.shared.pagination.PaginationParam;
+import net.wuxianjie.backend.shared.pagination.PaginationResult;
 import net.wuxianjie.backend.shared.util.StrUtils;
 import org.springframework.stereotype.Service;
 

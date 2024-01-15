@@ -1,7 +1,7 @@
 package net.wuxianjie.backend.user;
 
 import java.util.List;
-import net.wuxianjie.backend.shared.page.PaginationParam;
+import net.wuxianjie.backend.shared.pagination.PaginationParam;
 import net.wuxianjie.backend.user.dto.GetUserParam;
 import net.wuxianjie.backend.user.dto.UserInfo;
 import org.apache.ibatis.annotations.Mapper;

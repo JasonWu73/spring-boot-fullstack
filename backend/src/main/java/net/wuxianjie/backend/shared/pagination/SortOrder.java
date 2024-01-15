@@ -1,4 +1,4 @@
-package net.wuxianjie.backend.shared.page;
+package net.wuxianjie.backend.shared.pagination;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.Arrays;

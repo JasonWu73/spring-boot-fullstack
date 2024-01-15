@@ -1,4 +1,4 @@
-package net.wuxianjie.backend.shared.page;
+package net.wuxianjie.backend.shared.pagination;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -38,7 +38,7 @@ public class PageOffsetAspect {
    * }</pre>
    */
   @Pointcut(
-    "execution(public * *..*Controller.*(.., net.wuxianjie.backend.shared.page.PaginationParam, ..))"
+    "execution(public * *..*Controller.*(.., net.wuxianjie.backend.shared.pagination.PaginationParam, ..))"
   )
   private void getPagination() {}
 

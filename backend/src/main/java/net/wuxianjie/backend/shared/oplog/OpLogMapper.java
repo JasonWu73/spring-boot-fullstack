@@ -3,7 +3,7 @@ package net.wuxianjie.backend.shared.oplog;
 import java.util.List;
 import net.wuxianjie.backend.shared.oplog.dto.ChartData;
 import net.wuxianjie.backend.shared.oplog.dto.GetOpLogParam;
-import net.wuxianjie.backend.shared.page.PaginationParam;
+import net.wuxianjie.backend.shared.pagination.PaginationParam;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
