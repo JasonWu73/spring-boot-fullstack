@@ -22,7 +22,7 @@ services:
     command:
       [
         "--character-set-server=utf8mb4",
-        "--collation-server=utf8mb4_unicode_ci",
+        "--collation-server=utf8mb4_unicode_ci"
       ]
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
@@ -44,16 +44,7 @@ services:
     volumes:
       - /Users/wxj/Downloads/demo/redis:/data
     command:
-      [
-        "redis-server",
-        "--save",
-        "60",
-        "1",
-        "--loglevel",
-        "warning",
-        "--requirepass",
-        "qwe@123",
-      ]
+      ["redis-server", "--save", "60", "1", "--loglevel", "warning", "--requirepass", "qwe@123"]
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
@@ -88,12 +79,7 @@ services:
       demo-redis:
         condition: service_healthy
     command:
-      [
-        "java",
-        "-Djasypt.encryptor.password=wxj#secret_",
-        "-jar",
-        "/opt/web.jar",
-      ]
+      ["java", "-Djasypt.encryptor.password=wxj#secret_", "-jar", "/opt/web.jar"]
     networks:
       - demo_network
 

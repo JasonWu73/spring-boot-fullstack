@@ -10,7 +10,7 @@
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
     <version>3.2.1</version>
-    <relativePath /> <!-- lookup parent from repository -->
+    <relativePath/> <!-- lookup parent from repository -->
   </parent>
 
   <groupId>net.wuxianjie</groupId>
@@ -28,7 +28,7 @@
     <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
   </properties>
 
-  <!-- 子项目中未在 Spring Boot 中定义的依赖包版本号 -->
+  <!-- 未在 Spring Boot 中定义的依赖包版本号 -->
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -45,7 +45,7 @@
     </dependencies>
   </dependencyManagement>
 
-  <!-- 子项目中未在 Spring Boot 中定义的插件版本号 -->
+  <!-- 未在 Spring Boot 中定义的插件版本号 -->
   <build>
     <pluginManagement>
       <plugins>
