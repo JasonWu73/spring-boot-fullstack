@@ -17,7 +17,7 @@ POST /orders/1/lines  <---> orders[1].lines.push(data)
 
 ```bash
 # Vite 创建 React + TypeScript 项目
-npm create vite@latest my-react-app -- --template react-ts
+npm create vite@latest react-app -- --template react-ts
 
 # 去除意义不大的 ESLint 规则插件
 npm uninstall eslint-plugin-react-refresh
