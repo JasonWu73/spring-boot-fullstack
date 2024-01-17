@@ -42,32 +42,6 @@ npm uninstall eslint-plugin-react-refresh
 # 安装 Node 的类型定义，避免 IDE 因无法识别 Node 类型的而产生的警告
 npm install --save-dev @types/node
 
-# 安装 Prettier
-#
-# 1. `.prettierignore` 与 `.gitignore` 内容一致
-#
-# 2. `prettier.config.js`
-#
-# 3. `package.json` 中 `scripts` 添加（添加后运行 `npm run check` 以检查 Prettier 是否配置正确）：
-#
-#   3.1 "check": "prettier --check ."
-#
-#   3.2 "reformat": "prettier --write ."
-npm install --save-dev --save-exact prettier
-
-# 安装 `eslint-config-prettier`，关闭所有不必要或可能与 Prettier 冲突的 ESLint 规则
-# 调整 `.eslintrc.cjs`，在 `extends` 的最后一项添加 `prettier`
-npm install --save-dev eslint-config-prettier
-
-# 安装 Tailwind CSS 的 Prettier 插件
-#
-# 调整 `prettier.config.js`：
-#
-# 1. 添加 `tailwindFunctions: ["clsx", "tw"]`
-#
-# 2. 在 `plugins` 的最后一项添加 `"prettier-plugin-tailwindcss"`
-npm install --save-dev prettier-plugin-tailwindcss
-
 # 安装 Tailwind CSS
 npm install --save-dev tailwindcss postcss autoprefixer
 
