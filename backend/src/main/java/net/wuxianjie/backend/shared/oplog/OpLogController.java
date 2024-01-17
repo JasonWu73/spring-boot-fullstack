@@ -56,10 +56,9 @@ public class OpLogController {
   @Admin
   @GetMapping("/logins-top/{num}")
   public List<ChartData> getLoginsTop(
-    @Min(value = 1, message = "不能少于 1 名") @Max(
-      value = 10,
-      message = "不能多于 10 名"
-    ) @PathVariable final int num
+    @Min(value = 1, message = "不能少于 1 名")
+    @Max(value = 10, message = "不能多于 10 名")
+    @PathVariable final int num
   ) {
     return opLogService.getLoginsTop(num);
   }
@@ -75,10 +74,9 @@ public class OpLogController {
   @Admin
   @GetMapping("/logins-hist/{days}")
   public List<ChartData> getLoginsHist(
-    @Min(value = 1, message = "不能少天 1 天") @Max(
-      value = 30,
-      message = "不能多于 30 天"
-    ) @PathVariable final int days
+    @Min(value = 1, message = "不能少天 1 天")
+    @Max(value = 30, message = "不能多于 30 天")
+    @PathVariable final int days
   ) {
     return opLogService.getLoginsHist(days);
   }
