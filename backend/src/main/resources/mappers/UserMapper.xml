@@ -34,17 +34,17 @@
 
   <resultMap id="userInfo" type="net.wuxianjie.backend.user.dto.UserInfo">
     <constructor>
-      <idArg column="id" javaType="long" />
-      <arg column="createdAt" javaType="java.time.LocalDateTime" />
-      <arg column="updatedAt" javaType="java.time.LocalDateTime" />
-      <arg column="remark" javaType="string" />
-      <arg column="username" javaType="string" />
-      <arg column="nickname" javaType="string" />
+      <idArg column="id" javaType="long"/>
+      <arg column="createdAt" javaType="java.time.LocalDateTime"/>
+      <arg column="updatedAt" javaType="java.time.LocalDateTime"/>
+      <arg column="remark" javaType="string"/>
+      <arg column="username" javaType="string"/>
+      <arg column="nickname" javaType="string"/>
       <arg
         column="status"
         javaType="net.wuxianjie.backend.user.AccountStatus"
       />
-      <arg column="authorities" javaType="string" />
+      <arg column="authorities" javaType="string"/>
     </constructor>
   </resultMap>
 
@@ -73,7 +73,7 @@
       status,
       authorities
     from user
-    <include refid="whereQuery" />
+    <include refid="whereQuery"/>
     <if test="p.sortColumn == 'createdAt' or p.sortColumn == 'updatedAt'">
       order by ${p.sortColumn} ${p.sortOrder}
     </if>
@@ -83,7 +83,7 @@
   <select id="countByQuery" resultType="long">
     select count(1)
     from user
-    <include refid="whereQuery" />
+    <include refid="whereQuery"/>
   </select>
 
   <sql id="whereQuery">
@@ -99,10 +99,10 @@
       </if>
       <if test="q.authority != null">
         and (
-          authorities = #{q.authority}
-          or authorities like concat(#{q.authority}, ',%')
-          or authorities like concat('%,', #{q.authority}, ',%')
-          or authorities like concat('%,', #{q.authority})
+          authorities = #{q.authority} or
+          authorities like concat(#{q.authority}, ',%') or
+          authorities like concat('%,', #{q.authority}, ',%') or
+          authorities like concat('%,', #{q.authority})
         )
       </if>
     </where>

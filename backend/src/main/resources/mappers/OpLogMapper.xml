@@ -13,7 +13,7 @@
       username,
       message
     from op_log
-    <include refid="whereQuery" />
+    <include refid="whereQuery"/>
     <if test="p.sortColumn == 'requestedAt'">
       order by ${p.sortColumn} ${p.sortOrder}
     </if>
@@ -23,7 +23,7 @@
   <select id="countByQuery" resultType="long">
     select count(1)
     from op_log
-    <include refid="whereQuery" />
+    <include refid="whereQuery"/>
   </select>
 
   <sql id="whereQuery">
