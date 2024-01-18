@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 
-import reactLogo from "@/shared/assets/images/react.svg";
 import { buttonVariants } from "@/shared/components/ui/Button";
 import { cn } from "@/shared/utils/helpers";
 
@@ -14,7 +13,7 @@ export function Logo() {
       )}
     >
       <span className="flex items-center gap-2">
-        <img src={reactLogo} alt="React Logo" />
+        <img src="/img/react.svg" alt="React Logo" />
         <h2 className="uppercase">React</h2>
       </span>
     </Link>

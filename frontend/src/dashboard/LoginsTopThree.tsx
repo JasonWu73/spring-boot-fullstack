@@ -1,73 +1,59 @@
-import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
+import React from 'react'
+import * as echarts from 'echarts'
 
-import { getLoginsTopApi } from "@/shared/apis/backend/op-log";
-import { useFetch } from "@/shared/hooks/use-fetch";
-import { useRefresh } from "@/shared/hooks/use-refresh";
-
-const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
+import { useRefresh } from '@/shared/hooks/use-refresh'
+import { useFetch } from '@/shared/hooks/use-fetch'
+import { getLoginsTopApi } from '@/shared/apis/backend/op-log'
 
 export function LoginsTopThree() {
-  const { data, fetchData: getLoginsTop } = useFetch(getLoginsTopApi);
+  const containerRef = React.useRef<HTMLDivElement>(null)
+  const chartRef = React.useRef<echarts.EChartsType>()
+  const { data, fetchData: getLoginsTop } = useFetch(getLoginsTopApi)
 
   useRefresh(() => {
-    getLoginsTop(3).then();
-  });
+    getLoginsTop(3).then()
+  })
 
-  return (
-    <ResponsiveContainer width="100%" height={300}>
-      <PieChart>
-        <Tooltip />
-        <Pie
-          data={data}
-          cx="50%"
-          cy="50%"
-          labelLine={false}
-          label={renderCustomizedLabel}
-          outerRadius={80}
-          fill="#8884d8"
-          dataKey="value"
-        >
-          {data?.map((_, index) => (
-            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-          ))}
-        </Pie>
-      </PieChart>
-    </ResponsiveContainer>
-  );
-}
+  React.useEffect(() => {
+    // 初始化图表
+    if (!chartRef.current || chartRef.current.isDisposed()) {
+      chartRef.current = echarts.init(containerRef.current!)
+      chartRef.current.showLoading()
+    }
 
-const RADIAN = Math.PI / 180;
+    if (!data) return
 
-type RenderCustomizedLabelProps = {
-  cx: number;
-  cy: number;
-  midAngle: number;
-  innerRadius: number;
-  outerRadius: number;
-  percent: number;
-};
+    const chart = chartRef.current
 
-function renderCustomizedLabel({
-  cx,
-  cy,
-  midAngle,
-  innerRadius,
-  outerRadius,
-  percent,
-}: RenderCustomizedLabelProps) {
-  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-  const x = cx + radius * Math.cos(-midAngle * RADIAN);
-  const y = cy + radius * Math.sin(-midAngle * RADIAN);
+    chart.hideLoading()
 
-  return (
-    <text
-      x={x}
-      y={y}
-      fill="white"
-      textAnchor={x > cx ? "start" : "end"}
-      dominantBaseline="central"
-    >
-      {`${(percent * 100).toFixed(0)}%`}
-    </text>
-  );
+    chart.setOption({
+      tooltip: {
+        trigger: 'item'
+      },
+      series: [
+        {
+          type: 'pie',
+          data: data
+        }
+      ]
+    })
+
+    // 监听图表容器的大小并改变图表大小
+    window.addEventListener('resize', resizeChart)
+
+    function resizeChart() {
+      return chart.resize()
+    }
+
+    return () => {
+      // 销毁图表实例
+      chart.dispose()
+
+      // 移除监听
+      window.removeEventListener('resize', resizeChart)
+    }
+  }, [data])
+
+  return <div ref={containerRef} className="w-full h-96 text-center"/>
 }
