@@ -14,7 +14,7 @@ export function SideNavBar() {
       <nav className="flex flex-col items-center gap-2 py-1">
         <div className="flex w-10/12 flex-col gap-0.5">
           <NavLink
-            to="/dashboard"
+            to="/"
             className={({ isActive }) =>
               cn(
                 buttonVariants({ variant: "link" }),

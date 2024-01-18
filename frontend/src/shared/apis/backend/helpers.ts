@@ -50,7 +50,7 @@ export async function requestApi<T>(request: ApiRequest) {
 
   if (!auth) return await requestBackendApi<T>(request);
 
-  const { expiresAt, accessToken } = auth;
+  const { expiredAt, accessToken } = auth;
 
   const response = await requestBackendApi<T>({
     ...request,
@@ -64,7 +64,7 @@ export async function requestApi<T>(request: ApiRequest) {
   }
 
   // 为了测试和发现问题，故意设置 60 秒后就刷新访问令牌
-  if (expiresAt - Date.now() < (TOKEN_EXPIRES_IN_SECONDS - 60) * 1000) {
+  if (expiredAt - Date.now() < (TOKEN_EXPIRES_IN_SECONDS - 60) * 1000) {
     await refreshAuth();
   }
 
