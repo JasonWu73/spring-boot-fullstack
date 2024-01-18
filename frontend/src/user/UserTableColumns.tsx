@@ -79,26 +79,12 @@ export function getUserTableColumns({
     {
       id: "用户名",
       accessorKey: "username",
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column}>
-          用户名
-          <span className="ml-1 text-xs text-slate-500">（可用作登录）</span>
-        </DataTableColumnHeader>
-      ),
-      cell: ({ row }) => {
-        return <Code>{row.original.username}</Code>;
-      },
+      header: ({ column }) => <DataTableColumnHeader column={column} title="用户名"/>,
+      cell: ({ row }) => <Code>{row.original.username}</Code>
     },
     {
       id: "账号状态",
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column}>
-          账号状态
-          <span className="ml-1 text-xs text-slate-500">
-            （禁用后不可登录）
-          </span>
-        </DataTableColumnHeader>
-      ),
+      header: ({ column }) => <DataTableColumnHeader column={column} title="账号状态"/>,
       cell: ({ row }) => {
         const user = row.original;
         const enabled = user.status === 1;

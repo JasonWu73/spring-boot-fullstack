@@ -15,7 +15,7 @@ import {
   TooltipTrigger,
 } from "@/shared/components/ui/Tooltip";
 import {
-  getLoadingFriend,
+  isLoadingFriend,
   setShowAddFriend,
   type Friend,
 } from "@/split-bill/split-bill-signals";
@@ -35,7 +35,7 @@ export function FriendItem({ friend, onDeleteFriend }: FriendItemProps) {
 
   const location = useLocation();
   const navigate = useNavigate();
-  const loading = getLoadingFriend();
+  const loading = isLoadingFriend();
 
   function handleToggleSelect() {
     const url = selected

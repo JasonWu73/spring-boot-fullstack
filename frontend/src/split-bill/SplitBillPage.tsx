@@ -6,8 +6,7 @@ import { Loading } from "@/shared/components/ui/Loading";
 import { useKeypress } from "@/shared/hooks/use-keypress";
 import { useTitle } from "@/shared/hooks/use-title";
 import {
-  createSplitBillState,
-  getShowAddFriend,
+  isShowAddFriend,
   setShowAddFriend,
 } from "@/split-bill/split-bill-signals";
 import { wait } from "@/shared/utils/helpers";
@@ -22,9 +21,6 @@ const AddFriend = React.lazy(() =>
   ),
 );
 
-// 创建组件外 Signal
-createSplitBillState();
-
 export default function SplitBillPage() {
   useTitle("分账 App");
 
@@ -36,7 +32,7 @@ export default function SplitBillPage() {
     navigate("/split-bill", { state: { noRefresh: true } });
   });
 
-  const showAddFriend = getShowAddFriend();
+  const showAddFriend = isShowAddFriend();
 
   function handleToggleAddFriend() {
     setShowAddFriend(!showAddFriend);

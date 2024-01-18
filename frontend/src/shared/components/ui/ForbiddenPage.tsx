@@ -2,10 +2,10 @@ import { Link } from 'react-router-dom'
 
 export default function ForbiddenPage() {
   return (
-    <div className="relative mt-8 flex flex-col items-center gap-4 text-slate-950 dark:text-snow">
+    <div className="relative flex flex-col items-center gap-4 mt-8 text-slate-950 dark:text-snow">
       <h1 className="text-9xl font-extrabold tracking-widest">403</h1>
 
-      <div className="absolute top-[5.5rem] rotate-12 rounded-sm bg-orange-600 px-2 text-sm text-snow">
+      <div className="absolute top-[5.5rem] px-2 rounded-sm rotate-12 text-sm text-snow bg-orange-600">
         Access Is Denied
       </div>
 

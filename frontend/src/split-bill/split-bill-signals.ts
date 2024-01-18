@@ -1,58 +1,44 @@
-import { effect, signal } from "@preact/signals-react";
+import { effect, signal } from '@preact/signals-react'
 
-const STORAGE_KEY = "demo-friends";
+const STORAGE_KEY = 'demo-friends'
 
+/**
+ * 好友数据类型。
+ */
 export type Friend = {
-  id: number;
-  name: string;
-  image: string;
-  balance: number;
-  creditRating: number;
-  birthday: string;
-};
+  id: number
+  name: string
+  image: string
+  balance: number
+  creditRating: number
+  birthday: string
+}
 
-/**
- * 好友列表 Signal。
- * <p>
- * 不要直接导出 Signal，而是应该导出方法来使用 Signal。
- */
-const friends = signal(undefined as unknown as Friend[]);
-
-/**
- * 是否显示添加好友的表单 Signal。
- * <p>
- * 不要直接导出 Signal，而是应该导出方法来使用 Signal。
- */
-const showAddFriend = signal(false);
-
-/**
- * 是否正在加载好友详情 Signal。
- */
-const loadingFriend = signal(false);
+// ----- Signals（不要直接导出 Signal，而是应该导出方法来使用 Signal）-----
+const friends = signal(undefined as unknown as Friend[])
+const showAddFriend = signal(false)
+const loadingFriend = signal(false)
 
 /**
  * 创建分账数据 Signal。
- * <p>
- * 仅可在应用启动时初始化一次。
  */
 export function createSplitBillState() {
-  if (friends.value !== undefined) return;
+  if (friends.value !== undefined) return
 
-  friends.value = getStorageFriends();
+  friends.value = getStorageFriends()
 
-  // 监听好友列表的变化，将其存储到本地存储中
   effect(() => {
-    setStorageFriends(friends.value);
-  });
+    setStorageFriends(friends.value)
+  })
 }
 
 /**
- * 获取是否显示添加好友的表单。
+ * 是否显示添加好友的表单。
  *
- * @returns boolean 是否显示添加好友的表单
+ * @returns {boolean} 是否显示添加好友的表单
  */
-export function getShowAddFriend() {
-  return showAddFriend.value;
+export function isShowAddFriend(): boolean {
+  return showAddFriend.value
 }
 
 /**
@@ -61,16 +47,16 @@ export function getShowAddFriend() {
  * @param show 是否显示添加好友的表单
  */
 export function setShowAddFriend(show: boolean) {
-  showAddFriend.value = show;
+  showAddFriend.value = show
 }
 
 /**
- * 获取是否正在加载好友详情。
+ * 是否正在加载好友详情。
  *
- * @returns boolean 是否正在加载好友详情
+ * @returns {boolean} 是否正在加载好友详情
  */
-export function getLoadingFriend() {
-  return loadingFriend.value;
+export function isLoadingFriend(): boolean {
+  return loadingFriend.value
 }
 
 /**
@@ -79,47 +65,47 @@ export function getLoadingFriend() {
  * @param isLoading 是否正在加载好友详情
  */
 export function setLoadingFriend(isLoading: boolean) {
-  loadingFriend.value = isLoading;
+  loadingFriend.value = isLoading
 }
 
 /**
  * 获取好友列表。
  *
- * @returns Friend[] 好友列表
+ * @returns {Friend[]} 好友列表
  */
-export function getFriends() {
-  return friends.value;
+export function getFriends(): Friend[] {
+  return friends.value
 }
 
 /**
- * 设置好友列表。
- * <p>
+ * 保存好友列表数据。
+ *
  * 若本地存储中已有好友列表数据，则不会覆盖。
  *
- * @param newFriends 好友列表
+ * @param newFriends 需要考虑是否保存的好友列表
  */
 export function setFriends(newFriends: Friend[]) {
-  if (getStorageFriends().length > 0) return;
+  if (getStorageFriends().length > 0) return
 
-  friends.value = newFriends;
+  friends.value = newFriends
 }
 
 /**
  * 添加好友。
  *
- * @param friend 要添加的好友
+ * @param friend 需要添加的好友
  */
 export function addFriend(friend: Friend) {
-  friends.value = [...friends.value, friend];
+  friends.value = [...friends.value, friend]
 }
 
 /**
  * 删除好友。
  *
- * @param friendId 要删除的好友 ID
+ * @param friendId 需要删除的好友 ID
  */
 export function deleteFriend(friendId: number) {
-  friends.value = friends.value.filter((friend) => friend.id !== friendId);
+  friends.value = friends.value.filter(friend => friend.id !== friendId)
 }
 
 /**
@@ -129,16 +115,16 @@ export function deleteFriend(friendId: number) {
  * @param expense 本次消费金额
  */
 export function updateBalance(friendId: number, expense: number) {
-  friends.value = friends.value.map((friend) => {
+  friends.value = friends.value.map(friend => {
     if (friend.id === friendId) {
       return {
         ...friend,
-        balance: Number((friend.balance - expense).toFixed(2)),
-      };
+        balance: Number((friend.balance - expense).toFixed(2))
+      }
     }
 
-    return friend;
-  });
+    return friend
+  })
 }
 
 /**
@@ -148,27 +134,27 @@ export function updateBalance(friendId: number, expense: number) {
  * @param creditRating 最新的信用等级
  */
 export function updateCredit(friendId: number, creditRating: number) {
-  friends.value = friends.value.map((friend) => {
+  friends.value = friends.value.map(friend => {
     if (friend.id === friendId) {
       return {
         ...friend,
-        creditRating,
-      };
+        creditRating
+      }
     }
 
-    return friend;
-  });
+    return friend
+  })
 }
 
 /**
- * 从本地存储中获取好友列表。
+ * 从 Local Storage 中获取好友列表。
  *
- * @returns Friend[] 好友列表
+ * @returns {Friend[]} 好友列表
  */
 export function getStorageFriends(): Friend[] {
-  return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+  return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]')
 }
 
 function setStorageFriends(friends: Friend[]) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(friends));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(friends))
 }
