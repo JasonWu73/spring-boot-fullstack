@@ -8,7 +8,7 @@
 
     /* Bundler mode */
     "moduleResolution": "bundler",
-    "allowImportingTsExtensions": false,
+    "allowImportingTsExtensions": false, // import TS 文件时不用指定 `.tsx` 后缀
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
