@@ -1,6 +1,7 @@
 package net.wuxianjie.backend.shared.util;
 
 import lombok.extern.slf4j.Slf4j;
+import net.wuxianjie.backend.shared.util.RsaUtils.KeyPair;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -22,7 +23,7 @@ class RsaUtilsTest {
 
   @Test
   void generateKeyPair() {
-    final RsaUtils.RsaKeyPair keyPair = RsaUtils.generateKeyPair();
+    final KeyPair keyPair = RsaUtils.generateKeyPair();
 
     Assertions.assertThat(keyPair.publicKey()).isNotBlank().isBase64();
     Assertions.assertThat(keyPair.privateKey()).isNotBlank().isBase64();
@@ -33,8 +34,8 @@ class RsaUtilsTest {
   @Test
   void encrypt() {
     final String encrypted = RsaUtils.encrypt(RAW, PUBLIC_KEY);
-    final String decrypted = RsaUtils.decrypt(encrypted, PRIVATE_KEY);
 
+    final String decrypted = RsaUtils.decrypt(encrypted, PRIVATE_KEY);
     Assertions.assertThat(decrypted).isEqualTo(RAW);
 
     log.info("原文: {}\n密文: {}", RAW, encrypted);
@@ -43,7 +44,6 @@ class RsaUtilsTest {
   @Test
   void decrypt() {
     final String decrypted = RsaUtils.decrypt(ENCRYPTED, PRIVATE_KEY);
-
     Assertions.assertThat(decrypted).isEqualTo(RAW);
   }
 }

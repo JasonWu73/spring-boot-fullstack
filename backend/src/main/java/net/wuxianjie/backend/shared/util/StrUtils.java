@@ -22,14 +22,14 @@ public class StrUtils {
    *
    * <ul>
    *   <li>
-   *     当 {@code value} 不为空时，则将字符串中的任意数量的空白字符替换为 {@code %}，例如：
+   *     当 {@code value} 不为空时，则将字符串中任意数量的空白字符替换为 {@code %}，例如：
    *     <pre>{@code "  KeyOne    KeyTwo  " -> "%KeyOne%KeyTwo%"}</pre>
    *   </li>
    *   <li>当 {@code value} 为空时，则返回 {@code null}</li>
    * </ul>
    *
    * @param value 原始值
-   * @return LIKE 值
+   * @return 如果 `value` 非空（至少包含一个非空字符），则返回符合数据库 LIKE 操作的字符串；否则，返回 `null`
    */
   public static String toLikeValue(final String value) {
     if (!StringUtils.hasText(value)) return null;
