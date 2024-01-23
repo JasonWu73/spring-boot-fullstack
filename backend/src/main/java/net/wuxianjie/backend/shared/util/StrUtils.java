@@ -9,9 +9,9 @@ import org.springframework.util.StringUtils;
 public class StrUtils {
 
   /**
-   * 生成无 {@code -} 的 UUID。
+   * 生成无 `-` 的 UUID。
    *
-   * @return 无 {@code -} 的 UUID
+   * @return 无 `-` 的 UUID
    */
   public static String generateUuid() {
     return UUID.randomUUID().toString().replace("-", "");
@@ -22,10 +22,10 @@ public class StrUtils {
    *
    * <ul>
    *   <li>
-   *     当 {@code value} 不为空时，则将字符串中任意数量的空白字符替换为 {@code %}，例如：
+   *     当 `value` 不为空时，则将字符串中任意数量的空白字符替换为 `%`，例如：
    *     <pre>{@code "  KeyOne    KeyTwo  " -> "%KeyOne%KeyTwo%"}</pre>
    *   </li>
-   *   <li>当 {@code value} 为空时，则返回 {@code null}</li>
+   *   <li>当 `value` 为空时，则返回 `null`</li>
    * </ul>
    *
    * @param value 原始值
