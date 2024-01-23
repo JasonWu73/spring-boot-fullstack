@@ -18,6 +18,22 @@ public class StrUtils {
   }
 
   /**
+   * 将字节数组转换为十六进制字符串。
+   *
+   * @param bytes 字节数组
+   * @return 十六进制字符串
+   */
+  public static String toHex(final byte[] bytes) {
+    final StringBuilder stringBuilder = new StringBuilder();
+
+    for (final byte aByte : bytes) {
+      stringBuilder.append(String.format("%02X", aByte));
+    }
+
+    return stringBuilder.toString();
+  }
+
+  /**
    * 按如下规则生成数据库 LIKE 值：
    *
    * <ul>
