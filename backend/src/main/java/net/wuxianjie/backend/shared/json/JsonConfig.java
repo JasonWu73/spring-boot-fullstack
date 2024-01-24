@@ -39,24 +39,21 @@ public class JsonConfig {
    */
   @Bean
   public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {
-    final MappingJackson2HttpMessageConverter converter =
-      new MappingJackson2HttpMessageConverter();
-
+    final MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
     converter.setObjectMapper(objectMapper());
-
     return converter;
   }
 
   /**
-   * 配置 Jackson 的 {@code ObjectMapper}，即 Spring MVC 中默认使用的 JSON 解析工具。
+   * 配置 Jackson 的 `ObjectMapper`，即 Spring MVC 中默认使用的 JSON 解析工具。
    *
    * <ul>
    *   <li>配置日期时间的解析字符串格式，包含 {@link java.util.Date} 与 Java 8 引入的 {@link java.time.LocalDateTime} 和 {@link java.time.LocalDate}</li>
-   *   <li>若空字符串转换为 POJO 时（非 {@code String} 类型），则会转换为 {@code null}</li>
+   *   <li>若空字符串转换为 POJO 时（非 `String` 类型），则会转换为 `null`</li>
    *   <li>忽略未知的 JSON 字段，即遇到未知字段时不抛出异常</li>
    * </ul>
    *
-   * @return {@code ObjectMapper} 实例
+   * @return 自定义的 {@link ObjectMapper} 实例
    */
   @Bean
   public ObjectMapper objectMapper() {
@@ -75,37 +72,29 @@ public class JsonConfig {
   private static JavaTimeModule getJavaTimeModule() {
     final JavaTimeModule timeModule = new JavaTimeModule();
 
-    timeModule.addSerializer(
-      LocalDateTime.class,
-      new JsonSerializer<>() {
-        @Override
-        public void serialize(
-          final LocalDateTime value,
-          final JsonGenerator gen,
-          final SerializerProvider serializers
-        ) throws IOException {
-          gen.writeString(
-            value.format(DateTimeFormatter.ofPattern(DATE_TIME_PATTERN))
-          );
-        }
+    timeModule.addSerializer(LocalDateTime.class, new JsonSerializer<>() {
+      @Override
+      public void serialize(
+        final LocalDateTime value,
+        final JsonGenerator gen,
+        final SerializerProvider serializers
+      ) throws IOException {
+        gen.writeString(value.format(DateTimeFormatter.ofPattern(DATE_TIME_PATTERN)));
       }
-    );
+    });
 
-    timeModule.addDeserializer(
-      LocalDateTime.class,
-      new JsonDeserializer<>() {
-        @Override
-        public LocalDateTime deserialize(
-          final JsonParser p,
-          final DeserializationContext ctx
-        ) throws IOException {
-          return LocalDateTime.parse(
-            p.getValueAsString(),
-            DateTimeFormatter.ofPattern(DATE_TIME_PATTERN)
-          );
-        }
+    timeModule.addDeserializer(LocalDateTime.class, new JsonDeserializer<>() {
+      @Override
+      public LocalDateTime deserialize(
+        final JsonParser p,
+        final DeserializationContext ctx
+      ) throws IOException {
+        return LocalDateTime.parse(
+          p.getValueAsString(),
+          DateTimeFormatter.ofPattern(DATE_TIME_PATTERN)
+        );
       }
-    );
+    });
 
     return timeModule;
   }
