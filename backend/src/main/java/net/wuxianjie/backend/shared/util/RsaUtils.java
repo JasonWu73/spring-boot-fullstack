@@ -1,6 +1,5 @@
 package net.wuxianjie.backend.shared.util;
 
-import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.KeyPairGenerator;
@@ -47,13 +46,13 @@ public class RsaUtils {
   /**
    * 使用公钥加密字符串。
    *
-   * @param raw 需要加密的原始字符串，使用 UTF-8 编码
+   * @param raw 需要加密的原始字符串
    * @param publicKey Base64 公钥字符串
    * @return Base64 编码的密文
    */
   public static String encrypt(final String raw, final String publicKey) {
     final Cipher encryptCipher = getEncryptCipher(publicKey);
-    final byte[] messageBytes = raw.getBytes(StandardCharsets.UTF_8);
+    final byte[] messageBytes = raw.getBytes();
     final byte[] bytes;
     try {
       bytes = encryptCipher.doFinal(messageBytes);
@@ -69,7 +68,7 @@ public class RsaUtils {
    *
    * @param encrypted 需要解密的密文
    * @param privateKey Base64 私钥字符串
-   * @return UTF-8 编码的原始字符串
+   * @return 原始字符串
    */
   public static String decrypt(final String encrypted, final String privateKey) {
     final Cipher decryptCipher = getDecryptCipher(privateKey);
@@ -81,7 +80,7 @@ public class RsaUtils {
       throw new RuntimeException("使用私钥解密失败", e);
     }
 
-    return new String(bytes, StandardCharsets.UTF_8);
+    return new String(bytes);
   }
 
   /**
