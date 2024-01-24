@@ -9,6 +9,8 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
+import java.util.Optional;
 
 /**
  * 网络 Socket 工具类。
@@ -19,6 +21,8 @@ public class SocketUtils {
 
   /**
    * 发送 TCP 数据包。
+   * <p>
+   * 默认 2 秒的等待连接时间，5 秒的读取超时时间。
    *
    * @param ip TCP 服务端 IP
    * @param port TCP 服务端端口
@@ -30,10 +34,30 @@ public class SocketUtils {
     final int port,
     final byte[] data
   ) {
+    return sendTcp(ip, port, data, 2_000, 5_000);
+  }
+
+  /**
+   * 发送 TCP 数据包。
+   *
+   * @param ip TCP 服务端 IP
+   * @param port TCP 服务端端口
+   * @param data 要发送的数据
+   * @param connectTimeout 连接超时时间，单位：毫秒
+   * @param readTimeout 读取超时时间，单位：毫秒
+   * @return TCP 服务端的响应结果
+   */
+  public static byte[] sendTcp(
+    final String ip,
+    final int port,
+    final byte[] data,
+    final int connectTimeout,
+    final int readTimeout
+  ) {
     // 创建 TCP 客户端
     try (final Socket client = new Socket()) {
-      // 连接服务端，并设置 3 秒的最长等待连接时间
-      client.connect(new InetSocketAddress(ip, port), 3_000);
+      // 连接服务端，并设置最长等待连接时间
+      client.connect(new InetSocketAddress(ip, port), connectTimeout);
 
       // ----- 向服务端发送数据 -----
       final OutputStream output = client.getOutputStream();
@@ -44,8 +68,8 @@ public class SocketUtils {
       client.shutdownOutput();
 
       // ----- 读取服务端的响应数据 -----
-      // 设置 2 秒的最长数据读取时间
-      client.setSoTimeout(2_000);
+      // 设置最长数据读取时间
+      client.setSoTimeout(readTimeout);
 
       return read(client.getInputStream());
     } catch (IOException e) {
@@ -58,16 +82,38 @@ public class SocketUtils {
 
   /**
    * 发送 UDP 数据包。
+   * <p>
+   * 默认读取超时时间为 2 秒。
    *
    * @param ip UDP 服务端 IP
    * @param port UDP 服务端端口
    * @param data 要发送的数据
    * @return UDP 服务端的响应结果
    */
-  public static byte[] sendUdp(
+  public static Optional<byte[]> sendUdp(
     final String ip,
     final int port,
     final byte[] data
+  ) {
+    return sendUdp(ip, port, data, 2_000);
+  }
+
+  /**
+   * 发送 UDP 数据包。
+   * <p>
+   * 当读取超时时，则认为服务端没有响应数据。
+   *
+   * @param ip UDP 服务端 IP
+   * @param port UDP 服务端端口
+   * @param data 要发送的数据
+   * @param readTimeout 读取超时时间，单位：毫秒
+   * @return UDP 服务端的响应结果
+   */
+  public static Optional<byte[]> sendUdp(
+    final String ip,
+    final int port,
+    final byte[] data,
+    final int readTimeout
   ) {
     // 创建 UDP 客户端
     try (final DatagramSocket client = new DatagramSocket()) {
@@ -78,10 +124,11 @@ public class SocketUtils {
       client.send(packet);
 
       // ----- 读取服务端的响应数据 -----
-      // 设置 2 秒的最长数据读取时间
-      client.setSoTimeout(2_000);
+      // 设置较短的最长数据读取时间
+      // 与 TCP 不同，UDP 是面向无连接的协议，故这里约定超时就代表没有响应数据
+      client.setSoTimeout(readTimeout);
 
-      return read(client, packet);
+      return Optional.ofNullable(read(client, packet));
     } catch (IOException e) {
       throw new RuntimeException(
         "UDP 通信失败 [ip=%s;port=%s;hexData=%s]".formatted(ip, port, StrUtils.toHex(data)),
@@ -106,16 +153,21 @@ public class SocketUtils {
     final DatagramSocket client,
     final DatagramPacket packet
   ) throws IOException {
-    final ByteArrayOutputStream output = new ByteArrayOutputStream();
+    try {
+      final ByteArrayOutputStream output = new ByteArrayOutputStream();
 
-    // ❗️要重置缓存区，否则会导致数据读取不完整
-    packet.setData(new byte[BUFFER_SIZE]);
+      // ❗️要重置缓存区，否则会导致数据读取不完整
+      packet.setData(new byte[BUFFER_SIZE]);
 
-    do {
-      client.receive(packet);
-      output.write(packet.getData(), packet.getOffset(), packet.getLength());
-    } while (packet.getLength() >= BUFFER_SIZE);
+      do {
+        client.receive(packet);
+        output.write(packet.getData(), packet.getOffset(), packet.getLength());
+      } while (packet.getLength() >= BUFFER_SIZE);
 
-    return output.toByteArray();
+      return output.toByteArray();
+    } catch (SocketTimeoutException e) {
+      // 如果服务端超时没有响应，则返回空数据
+      return null;
+    }
   }
 }

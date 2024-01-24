@@ -65,7 +65,7 @@ public class StrUtils {
    * </ul>
    *
    * @param value 原始值
-   * @return 如果 `value` 非空（至少包含一个非空字符），则返回符合数据库 LIKE 操作的字符串；否则，返回 `null`
+   * @return 如果 `value` 非空（至少包含一个非空字符），则返回符合数据库 LIKE 操作的字符串，否则返回 `null`
    */
   public static String toLikeValue(final String value) {
     if (!StringUtils.hasText(value)) return null;
