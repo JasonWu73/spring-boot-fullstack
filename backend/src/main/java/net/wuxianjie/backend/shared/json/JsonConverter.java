@@ -23,7 +23,7 @@ public class JsonConverter {
   public String toJson(final Object obj) {
     try {
       return objectMapper.writeValueAsString(obj);
-    } catch (final Exception e) {
+    } catch (Exception e) {
       throw new RuntimeException(e);
     }
   }
@@ -36,10 +36,10 @@ public class JsonConverter {
    * @param <T> 目标对象的泛型类型参数
    * @return 指定类型的对象
    */
-  public <T> T parseJson(final String json, final Class<T> valueType) {
+  public <T> T parse(final String json, final Class<T> valueType) {
     try {
       return objectMapper.readValue(json, valueType);
-    } catch (final Exception e) {
+    } catch (Exception e) {
       throw new RuntimeException(e);
     }
   }
@@ -52,13 +52,10 @@ public class JsonConverter {
    * @param <T> 目标对象的泛型类型参数
    * @return 指定泛型的对象
    */
-  public <T> T parseJson(
-    final String json,
-    final TypeReference<T> valueTypeRef
-  ) {
+  public <T> T parse(final String json, final TypeReference<T> valueTypeRef) {
     try {
       return objectMapper.readValue(json, valueTypeRef);
-    } catch (final Exception e) {
+    } catch (Exception e) {
       throw new RuntimeException(e);
     }
   }

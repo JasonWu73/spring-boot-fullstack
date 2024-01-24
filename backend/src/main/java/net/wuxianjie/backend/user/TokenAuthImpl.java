@@ -38,6 +38,6 @@ public class TokenAuthImpl implements TokenAuth {
       throw new ApiException(HttpStatus.UNAUTHORIZED, "访问令牌已过期");
     }
 
-    return jsonConverter.parseJson(authJson, CachedAuth.class);
+    return jsonConverter.parse(authJson, CachedAuth.class);
   }
 }
