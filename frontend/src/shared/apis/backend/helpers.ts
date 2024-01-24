@@ -57,7 +57,7 @@ export async function requestApi<T>(request: ApiRequest) {
     headers: { ...request.headers, Authorization: `Bearer ${accessToken}` },
   });
 
-  // 检查是否需要重新登录
+  // 判断是否需要重新登录
   if (response.status === 401) {
     clearAuth();
     return { status: response.status, error: "登录过期" };
