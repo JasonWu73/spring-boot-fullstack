@@ -34,6 +34,26 @@ public class StrUtils {
   }
 
   /**
+   * 将十六进制字符串转换为字节数组。
+   *
+   * @param hex 十六进制字符串
+   * @return 字节数组
+   */
+  public static byte[] toBytes(final String hex) {
+    final int length = hex.length();
+    final byte[] bytes = new byte[length / 2];
+
+    for (int i = 0; i < length; i += 2) {
+      bytes[i / 2] = (byte) (
+        (Character.digit(hex.charAt(i), 16) << 4) +
+        Character.digit(hex.charAt(i + 1), 16)
+      );
+    }
+
+    return bytes;
+  }
+
+  /**
    * 按如下规则生成数据库 LIKE 值：
    *
    * <ul>
