@@ -17,6 +17,11 @@ import java.util.Optional;
  */
 public class SocketUtils {
 
+  /**
+   * 缓存区大小，单位：字节。
+   * <p>
+   * TCP 通信时，该值决定了一次读取的最大数据量，但一定会读取完所有数据。而 UDP 通信时，该值决定了读取的最大数据量，因为仅读取一次。
+   */
   private static final int BUFFER_SIZE = 1024;
 
   /**
@@ -84,6 +89,8 @@ public class SocketUtils {
    * 发送 UDP 数据包。
    * <p>
    * 默认读取超时时间为 2 秒。
+   * <p>
+   * UDP 是一种面向无连接的协议，故数据包是否发送成功，客户端无从得知（除非服务端有返回数据），这也意味着无法判定 UDP 是否通信成功。
    *
    * @param ip UDP 服务端 IP
    * @param port UDP 服务端端口
@@ -102,6 +109,8 @@ public class SocketUtils {
    * 发送 UDP 数据包。
    * <p>
    * 当读取超时时，则认为服务端没有响应数据。
+   * <p>
+   * UDP 是一种面向无连接的协议，故数据包是否发送成功，客户端无从得知（除非服务端有返回数据），这也意味着无法判定 UDP 是否通信成功。
    *
    * @param ip UDP 服务端 IP
    * @param port UDP 服务端端口
@@ -128,6 +137,7 @@ public class SocketUtils {
       // 与 TCP 不同，UDP 是面向无连接的协议，故这里约定超时就代表没有响应数据
       client.setSoTimeout(readTimeout);
 
+      // 使用已设置地址的 `DatagramPacket`，从而实现只接收目标服务端的响应数据
       return Optional.ofNullable(read(client, packet));
     } catch (IOException e) {
       throw new RuntimeException(
@@ -153,20 +163,19 @@ public class SocketUtils {
     final DatagramSocket client,
     final DatagramPacket packet
   ) throws IOException {
-    try {
-      final ByteArrayOutputStream output = new ByteArrayOutputStream();
+    final ByteArrayOutputStream output = new ByteArrayOutputStream();
 
-      // ❗️要重置缓存区，否则会导致数据读取不完整
+    try {
+      // ❗️因为只读取一次，故预设的缓存区大小将影响能读取的最多数据量
       packet.setData(new byte[BUFFER_SIZE]);
 
-      do {
-        client.receive(packet);
-        output.write(packet.getData(), packet.getOffset(), packet.getLength());
-      } while (packet.getLength() >= BUFFER_SIZE);
+      client.receive(packet);
+      output.write(packet.getData(), packet.getOffset(), packet.getLength());
 
       return output.toByteArray();
     } catch (SocketTimeoutException e) {
-      // 如果服务端超时没有响应，则返回空数据
+      // 如果读取 UDP 服务端响应数据超时，则认为服务端没有响应数据
+      // 这里不能判定为通信失败，因为 UDP 是面向无连接的协议
       return null;
     }
   }
