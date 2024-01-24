@@ -1,18 +1,10 @@
 package net.wuxianjie.backend.version;
 
-import java.time.LocalDateTime;
-
 /**
  * 项目版本号信息。
  *
- * @param name 项目名称
- * @param developer 项目开发者
- * @param version 项目版本号
- * @param builtAt 构建时间
+ * @param version 版本号
+ * @param appName 应用名
+ * @param developer 开发者
  */
-public record Version(
-  String name,
-  String developer,
-  String version,
-  LocalDateTime builtAt
-) {}
+public record Version(String version, String appName, String developer) {}

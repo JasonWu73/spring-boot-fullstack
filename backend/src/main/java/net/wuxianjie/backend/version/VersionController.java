@@ -1,6 +1,5 @@
 package net.wuxianjie.backend.version;
 
-import java.time.LocalDateTime;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,9 +12,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class VersionController {
 
   /**
+   * 项目版本号。
+   * <p>
+   * 每次在生产环境中发布新包时都要更新版本号。
+   */
+  private static final String VERSION = "v1.0.0";
+
+  /**
    * 项目名称。
    */
-  private static final String NAME = "Spring Boot Demo";
+  private static final String APP_NAME = "Spring Boot Demo";
 
   /**
    * 项目开发者。
@@ -23,33 +29,12 @@ public class VersionController {
   private static final String DEVELOPER = "吴仙杰";
 
   /**
-   * 项目版本号。
-   * <p>
-   * 每次在生产环境中发布新包时都要更新版本号及构建时间。
-   */
-  private static final String VERSION = "v1.0.0";
-
-  /**
-   * 项目构建时间。
-   * <p>
-   * 每次在生产环境中发布新包时都要更新版本号及构建时间。
-   */
-  private static final LocalDateTime BUILT_AT = LocalDateTime.of(
-    2023,
-    12,
-    24,
-    20,
-    49,
-    46
-  );
-
-  /**
    * 获取项目版本号。
    * <p>
-   * 每次在生产环境中发布新包时都要更新版本号及构建时间。
+   * 每次在生产环境中发布新包时都要更新版本号。
    */
   @GetMapping("/public/version")
   public Version getVersion() {
-    return new Version(NAME, DEVELOPER, VERSION, BUILT_AT);
+    return new Version(VERSION, APP_NAME, DEVELOPER);
   }
 }

@@ -1,11 +1,10 @@
-import { requestApi } from "@/shared/apis/backend/helpers";
+import { requestApi } from '@/shared/apis/backend/helpers'
 
 type Version = {
-  name: string;
-  version: string;
-  developer: string;
-  builtAt: string;
-};
+  version: string
+  appName: string
+  developer: string
+}
 
 /**
  * 获取版本信息。
@@ -14,6 +13,6 @@ type Version = {
  */
 export async function getVersionApi() {
   return await requestApi<Version>({
-    url: "/api/v1/public/version",
-  });
+    url: '/api/v1/public/version'
+  })
 }
