@@ -34,8 +34,8 @@ class RsaUtilsTest {
   @Test
   void encrypt() {
     final String encrypted = RsaUtils.encrypt(RAW, PUBLIC_KEY);
-
     final String decrypted = RsaUtils.decrypt(encrypted, PRIVATE_KEY);
+
     Assertions.assertThat(decrypted).isEqualTo(RAW);
 
     log.info("原文: {}\n密文: {}", RAW, encrypted);
@@ -44,6 +44,7 @@ class RsaUtilsTest {
   @Test
   void decrypt() {
     final String decrypted = RsaUtils.decrypt(ENCRYPTED, PRIVATE_KEY);
+
     Assertions.assertThat(decrypted).isEqualTo(RAW);
   }
 }
