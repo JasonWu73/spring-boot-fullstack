@@ -11,10 +11,11 @@ import lombok.ToString;
 /**
  * 排序方式。
  */
+@RequiredArgsConstructor
 @Getter
 @ToString
-@RequiredArgsConstructor
 public enum SortOrder {
+
   /**
    * 升序。
    */
@@ -46,11 +47,9 @@ public enum SortOrder {
   public static Optional<SortOrder> resolve(final String value) {
     return Optional
       .ofNullable(value)
-      .flatMap(val ->
-        Arrays
-          .stream(VALUES)
-          .filter(theEnum -> Objects.equals(theEnum.code, val))
-          .findFirst()
-      );
+      .flatMap(val -> Arrays
+        .stream(VALUES)
+        .filter(theEnum -> Objects.equals(theEnum.code, val))
+        .findFirst());
   }
 }
