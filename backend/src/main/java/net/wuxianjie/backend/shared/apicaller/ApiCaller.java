@@ -31,25 +31,19 @@ public class ApiCaller {
    * @param <T> 响应结果的泛型类型参数
    * @return 响应结果
    */
-  public <T> ApiResponse<T> sendGetRequest(
+  public <T> ApiResponse<T> get(
     final String url,
     final Map<String, String> urlParams,
     final Class<T> responseType
   ) {
-    return executeRequest(() ->
-      restClient
-        .get()
-        .uri(
-          url,
-          uriBuilder -> {
-            urlParams.forEach(uriBuilder::queryParam);
-
-            return uriBuilder.build();
-          }
-        )
-        .retrieve()
-        .toEntity(responseType)
-    );
+    return getResponse(() -> restClient
+      .get()
+      .uri(url, uriBuilder -> {
+        urlParams.forEach(uriBuilder::queryParam);
+        return uriBuilder.build();
+      })
+      .retrieve()
+      .toEntity(responseType));
   }
 
   /**
@@ -62,21 +56,19 @@ public class ApiCaller {
    * @param <T> 响应结果的泛型类型参数
    * @return 响应结果
    */
-  public <T> ApiResponse<T> sendFormRequest(
+  public <T> ApiResponse<T> form(
     final HttpMethod method,
     final String url,
     final LinkedMultiValueMap<String, String> formData,
     final Class<T> responseType
   ) {
-    return executeRequest(() ->
-      restClient
-        .method(method)
-        .uri(url)
-        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-        .body(formData)
-        .retrieve()
-        .toEntity(responseType)
-    );
+    return getResponse(() -> restClient
+      .method(method)
+      .uri(url)
+      .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+      .body(formData)
+      .retrieve()
+      .toEntity(responseType));
   }
 
   /**
@@ -89,21 +81,19 @@ public class ApiCaller {
    * @param <T> 响应结果的泛型类型参数
    * @return 响应结果
    */
-  public <T> ApiResponse<T> sendUploadRequest(
+  public <T> ApiResponse<T> upload(
     final HttpMethod method,
     final String url,
     final MultipartBodyBuilder formDataBuilder,
     final Class<T> responseType
   ) {
-    return executeRequest(() ->
-      restClient
-        .method(method)
-        .uri(url)
-        .contentType(MediaType.MULTIPART_FORM_DATA)
-        .body(formDataBuilder.build())
-        .retrieve()
-        .toEntity(responseType)
-    );
+    return getResponse(() -> restClient
+      .method(method)
+      .uri(url)
+      .contentType(MediaType.MULTIPART_FORM_DATA)
+      .body(formDataBuilder.build())
+      .retrieve()
+      .toEntity(responseType));
   }
 
   /**
@@ -116,29 +106,24 @@ public class ApiCaller {
    * @param <T> 响应结果的泛型类型参数
    * @return 响应结果
    */
-  public <T> ApiResponse<T> sendJsonRequest(
+  public <T> ApiResponse<T> json(
     final HttpMethod method,
     final String url,
     final Object jsonData,
     final Class<T> responseType
   ) {
-    return executeRequest(() ->
-      restClient
-        .method(method)
-        .uri(url)
-        .contentType(MediaType.APPLICATION_JSON)
-        .body(jsonData)
-        .retrieve()
-        .toEntity(responseType)
-    );
+    return getResponse(() -> restClient
+      .method(method)
+      .uri(url)
+      .contentType(MediaType.APPLICATION_JSON)
+      .body(jsonData)
+      .retrieve()
+      .toEntity(responseType));
   }
 
-  public <T> ApiResponse<T> executeRequest(
-    final Supplier<ResponseEntity<T>> requestSupplier
-  ) {
+  public <T> ApiResponse<T> getResponse(final Supplier<ResponseEntity<T>> responseSupplier) {
     try {
-      final ResponseEntity<T> response = requestSupplier.get();
-
+      final ResponseEntity<T> response = responseSupplier.get();
       return new ApiResponse<>(
         response.getStatusCode(),
         response.getBody(),
@@ -148,7 +133,7 @@ public class ApiCaller {
       return new ApiResponse<>(
         e.getStatusCode(),
         null,
-        e.getResponseBodyAsString(StandardCharsets.UTF_8) // 要指定编码，否则中文会乱码
+        e.getResponseBodyAsString(StandardCharsets.UTF_8) // 指定默认编码，以免中文乱码
       );
     }
   }

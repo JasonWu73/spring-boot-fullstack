@@ -35,9 +35,7 @@ public class ApiCallerConfig {
     return RestClient
       .builder()
       .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
-      .messageConverters(converters ->
-        converters.add(0, mappingJackson2HttpMessageConverter)
-      )
+      .messageConverters(converters -> converters.add(0, mappingJackson2HttpMessageConverter))
       .build();
   }
 }

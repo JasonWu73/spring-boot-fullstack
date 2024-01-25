@@ -44,7 +44,7 @@ public class ApiCallController {
   public ApiResponse<OuterData> sendGetRequest() {
     final Map<String, String> urlParams = getSendGetRequestParams();
 
-    return apiCaller.sendGetRequest(
+    return apiCaller.get(
       "http://localhost:%s/api/v1/public/params".formatted(port),
       urlParams,
       OuterData.class
@@ -59,7 +59,7 @@ public class ApiCallController {
     final LinkedMultiValueMap<String, String> formData =
       getSendPostFormRequestParams();
 
-    return apiCaller.sendFormRequest(
+    return apiCaller.form(
       HttpMethod.POST,
       "http://localhost:%s/api/v1/public/params".formatted(port),
       formData,
@@ -74,7 +74,7 @@ public class ApiCallController {
   public ApiResponse<Uploaded> sendPostUploadRequest() {
     final MultipartBodyBuilder formDataBuilder = getSendPostUploadRequest();
 
-    return apiCaller.sendUploadRequest(
+    return apiCaller.upload(
       HttpMethod.POST,
       "http://localhost:%s/api/v1/public/params/upload".formatted(port),
       formDataBuilder,
@@ -89,7 +89,7 @@ public class ApiCallController {
   public ApiResponse<OuterData> sendPostJsonRequest() {
     final OuterData jsonData = getSendPostJsonRequestParams();
 
-    return apiCaller.sendJsonRequest(
+    return apiCaller.json(
       HttpMethod.POST,
       "http://localhost:%s/api/v1/public/params/json".formatted(port),
       jsonData,
