@@ -38,7 +38,7 @@ public class PaginationOffsetAspect {
   /**
    * 为分页查询方法设置分页查询参数的偏移量 OFFSET。
    *
-   * @param joinPoint 连接点，通常指的是方法的调用
+   * @param joinPoint 连接点
    */
   @Before("getPagination()")
   public void setPaginationOffsetParam(final JoinPoint joinPoint) {

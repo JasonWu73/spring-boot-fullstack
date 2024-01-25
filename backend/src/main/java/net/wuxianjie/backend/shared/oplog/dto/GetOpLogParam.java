@@ -2,9 +2,7 @@ package net.wuxianjie.backend.shared.oplog.dto;
 
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import net.wuxianjie.backend.shared.json.JsonConfig;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -12,8 +10,6 @@ import org.springframework.format.annotation.DateTimeFormat;
  * 操作日志查询参数。
  */
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class GetOpLogParam {
 
   /**

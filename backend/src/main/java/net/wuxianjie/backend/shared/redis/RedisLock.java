@@ -63,8 +63,6 @@ public class RedisLock {
     new Thread(() -> {
       while (renew.getOrDefault(lockedKey, false)) {
         final String currentValue = stringRedisTemplate.opsForValue().get(lockedKey);
-
-        // 锁已经被释放
         if (!Objects.equals(currentValue, lockedValue)) break;
 
         // 续期

@@ -55,8 +55,8 @@ export async function getLoginsTopApi(num: number) {
  * @param days 最近 N 天
  * @returns Promise 响应结果
  */
-export async function getLoginsHistApi(days: number) {
+export async function getLoginsHistoryApi(days: number) {
   return await requestApi<ChartData>({
-    url: `/api/v1/op-logs/logins-hist/${days}`,
+    url: `/api/v1/op-logs/logins-history/${days}`,
   });
 }

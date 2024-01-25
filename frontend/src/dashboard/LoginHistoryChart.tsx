@@ -1,14 +1,14 @@
 import React from 'react'
 import * as echarts from 'echarts'
 
-import { getLoginsHistApi } from "@/shared/apis/backend/op-log";
+import { getLoginsHistoryApi } from "@/shared/apis/backend/op-log";
 import { useFetch } from "@/shared/hooks/use-fetch";
 import { useRefresh } from "@/shared/hooks/use-refresh";
 
 export function LoginHistoryChart() {
   const containerRef = React.useRef<HTMLDivElement>(null)
   const chartRef = React.useRef<echarts.EChartsType>()
-  const { data, fetchData: getLoginsHistory } = useFetch(getLoginsHistApi);
+  const { data, fetchData: getLoginsHistory } = useFetch(getLoginsHistoryApi);
 
   useRefresh(() => {
     getLoginsHistory(7).then();

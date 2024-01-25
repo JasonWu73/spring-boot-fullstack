@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.wuxianjie.backend.shared.oplog.OpLogMapper">
   <select
     id="selectByQueryLimit"
@@ -14,7 +13,13 @@
       message
     from op_log
     <include refid="whereQuery"/>
-    <if test="p.sortColumn == 'requestedAt'">
+    <if
+      test="
+        p.sortColumn == 'requestedAt' or
+        p.sortColumn == 'clientIp' or
+        p.sortColumn == 'username'
+      "
+    >
       order by ${p.sortColumn} ${p.sortOrder}
     </if>
     limit #{p.offset}, #{p.pageSize}
@@ -30,21 +35,15 @@
     <where>
       and requested_at &gt;= concat(#{q.startAt}, ' 00:00:00')
       and requested_at &lt;= concat(#{q.endAt}, ' 23:59:59')
-      <if test="q.clientIp != null">
-        and client_ip like #{q.clientIp}
-      </if>
-      <if test="q.username != null">
-        and username like #{q.username}
-      </if>
-      <if test="q.message != null">
-        and message like #{q.message}
-      </if>
+      <if test="q.clientIp != null">and client_ip like #{q.clientIp}</if>
+      <if test="q.username != null">and username like #{q.username}</if>
+      <if test="q.message != null">and message like #{q.message}</if>
     </where>
   </sql>
 
   <select
     id="selectLoginsLimit"
-    resultType="net.wuxianjie.backend.shared.oplog.dto.ChartData"
+    resultType="net.wuxianjie.backend.shared.dto.ChartData"
   >
     select
       username as name,
@@ -57,7 +56,7 @@
 
   <select
     id="selectLoginsHistory"
-    resultType="net.wuxianjie.backend.shared.oplog.dto.ChartData"
+    resultType="net.wuxianjie.backend.shared.dto.ChartData"
   >
     select
       date_format(requested_at, '%Y-%m-%d') as name,

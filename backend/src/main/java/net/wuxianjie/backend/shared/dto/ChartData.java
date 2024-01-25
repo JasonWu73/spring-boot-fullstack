@@ -1,4 +1,4 @@
-package net.wuxianjie.backend.shared.oplog.dto;
+package net.wuxianjie.backend.shared.dto;
 
 /**
  * 图表数据。

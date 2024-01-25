@@ -3,6 +3,7 @@ package net.wuxianjie.backend.shared.oplog;
 import jakarta.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import net.wuxianjie.backend.shared.auth.AuthUtils;
 import net.wuxianjie.backend.shared.auth.dto.CachedAuth;
@@ -14,20 +15,13 @@ import org.springframework.stereotype.Component;
 
 /**
  * 用于记录操作日志的切面。
- * <p>
- * <h2>连接点（JoinPoint）和切点（Pointcut）的区别</h2>
- *
- * <ul>
- *   <li>作用范围：连接点代表程序中的某一个具体的点，比如一个具体的方法调用；而切点代表一组连接点，定义了通知（Advice）应该应用的目标范围</li>
- *   <li>使用场景：在编写通知时，使用连接点参数来获取当前上下文信息；而使用切点定义通知应用的位置</li>
- * </ul>
  */
 @Aspect
 @Component
 @RequiredArgsConstructor
 public class OpLogAspect {
 
-  private static final String LOCALHOST = "localhost";
+  private static final String LOCALHOST = "127.0.0.1";
   private static final String LOCALHOST_ADDRESS = "0:0:0:0:0:0:0:1";
 
   private final HttpServletRequest request;
@@ -45,31 +39,23 @@ public class OpLogAspect {
    * </ul>
    *
    * @param joinPoint 连接点
-   * @return 实际方法的执行结果
-   * @throws Throwable 如果实际方法抛出了异常，则继续抛出
+   * @return 目标方法的执行结果
+   * @throws Throwable 继续抛出在执行目标方法时产生的异常
    */
   @Around("@annotation(net.wuxianjie.backend.shared.oplog.Operation)")
-  public Object recordOperationLog(final ProceedingJoinPoint joinPoint)
-    throws Throwable {
+  public Object recordOperationLog(final ProceedingJoinPoint joinPoint) throws Throwable {
     // 记录本次请求的时间
     final LocalDateTime requestedAt = LocalDateTime.now();
 
-    // 执行实际方法
+    // 执行目标方法
     final Object result = joinPoint.proceed();
 
     // ----- 记录操作日志 -----
     final OpLog operation = new OpLog();
-
     operation.setRequestedAt(requestedAt);
-
     operation.setClientIp(getClientIp(request));
-
-    operation.setUsername(
-      AuthUtils.getCurrentUser().map(CachedAuth::username).orElse(null)
-    );
-
+    operation.setUsername(AuthUtils.getCurrentUser().map(CachedAuth::username).orElse(null));
     operation.setMessage(getOperation(joinPoint));
-
     opLogMapper.insert(operation);
 
     return result;
@@ -77,16 +63,12 @@ public class OpLogAspect {
 
   private String getClientIp(final HttpServletRequest request) {
     final String remoteAddr = request.getRemoteAddr();
-
-    return LOCALHOST_ADDRESS.equals(remoteAddr) ? LOCALHOST : remoteAddr;
+    return Objects.equals(remoteAddr, LOCALHOST_ADDRESS) ? LOCALHOST : remoteAddr;
   }
 
   private String getOperation(final ProceedingJoinPoint joinPoint) {
-    final Method method =
-      ((MethodSignature) joinPoint.getSignature()).getMethod();
-
+    final Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
     final Operation annotation = method.getAnnotation(Operation.class);
-
     return annotation.value();
   }
 }
