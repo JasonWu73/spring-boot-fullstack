@@ -13,13 +13,12 @@ import org.apache.ibatis.type.JdbcType;
 import org.springframework.stereotype.Component;
 
 /**
- * 实现枚举值与数据库中 {@code int} 类型值的自动进行转换。
+ * 实现枚举值与数据库中 `int` 值的自动类型转换。
  */
 @Component
 @NoArgsConstructor
 @AllArgsConstructor
-public class EnumTypeHandler<T extends Enum<?> & EnumType>
-  extends BaseTypeHandler<EnumType> {
+public class EnumTypeHandler<T extends Enum<?> & EnumType> extends BaseTypeHandler<EnumType> {
 
   private Class<T> enumType;
 
@@ -34,10 +33,8 @@ public class EnumTypeHandler<T extends Enum<?> & EnumType>
   }
 
   @Override
-  public EnumType getNullableResult(
-    final ResultSet rs,
-    final String columnName
-  ) throws SQLException {
+  public EnumType getNullableResult(final ResultSet rs, final String columnName)
+    throws SQLException {
     return toEnum(enumType, rs.getInt(columnName));
   }
 
@@ -48,22 +45,18 @@ public class EnumTypeHandler<T extends Enum<?> & EnumType>
   }
 
   @Override
-  public EnumType getNullableResult(
-    final CallableStatement cs,
-    final int columnIndex
-  ) throws SQLException {
+  public EnumType getNullableResult(final CallableStatement cs, final int columnIndex)
+    throws SQLException {
     return toEnum(enumType, cs.getInt(columnIndex));
   }
 
   private T toEnum(final Class<T> enumClass, final int value) {
     return Optional
       .ofNullable(enumClass.getEnumConstants())
-      .flatMap(enums ->
-        Arrays
-          .stream(enums)
-          .filter(theEnum -> theEnum.getCode() == value)
-          .findFirst()
-      )
+      .flatMap(enums -> Arrays
+        .stream(enums)
+        .filter(theEnum -> theEnum.getCode() == value)
+        .findFirst())
       .orElse(null);
   }
 }
