@@ -22,8 +22,7 @@ public class RedisLock {
   private final StringRedisTemplate stringRedisTemplate;
 
   // 存储每个锁的自动续期标志
-  private final ConcurrentHashMap<String, Boolean> renew =
-    new ConcurrentHashMap<>();
+  private final ConcurrentHashMap<String, Boolean> renew = new ConcurrentHashMap<>();
 
   /**
    * 上锁，支持对锁的自动续期。
@@ -36,12 +35,10 @@ public class RedisLock {
     final Boolean locked = stringRedisTemplate
       .opsForValue()
       .setIfAbsent(key, value, LOCK_TIMEOUT_SECONDS, TimeUnit.SECONDS);
-
     if (locked == null || !locked) return false;
 
     // 开启自动续期
-    startRenewTask(key, value);
-
+    renewLock(key, value);
     return true;
   }
 
@@ -53,37 +50,25 @@ public class RedisLock {
    */
   public void unlock(final String key, final String value) {
     final String currentValue = stringRedisTemplate.opsForValue().get(key);
-
-    // 锁已经被释放
     if (!Objects.equals(currentValue, value)) return;
-
     stringRedisTemplate.delete(key);
 
     // 停止自动续期
     renew.remove(key);
   }
 
-  private void startRenewTask(
-    final String lockedKey,
-    final String lockedValue
-  ) {
+  private void renewLock(final String lockedKey, final String lockedValue) {
     renew.put(lockedKey, true);
 
     new Thread(() -> {
       while (renew.getOrDefault(lockedKey, false)) {
-        final String currentValue = stringRedisTemplate
-          .opsForValue()
-          .get(lockedKey);
+        final String currentValue = stringRedisTemplate.opsForValue().get(lockedKey);
 
         // 锁已经被释放
         if (!Objects.equals(currentValue, lockedValue)) break;
 
         // 续期
-        stringRedisTemplate.expire(
-          lockedKey,
-          LOCK_TIMEOUT_SECONDS,
-          TimeUnit.SECONDS
-        );
+        stringRedisTemplate.expire(lockedKey, LOCK_TIMEOUT_SECONDS, TimeUnit.SECONDS);
 
         try {
           TimeUnit.SECONDS.sleep(LOCK_CHECK_SECONDS);
@@ -91,7 +76,6 @@ public class RedisLock {
           log.warn("Redis 分布式锁自动续期: 休眠异常");
         }
       }
-    })
-      .start();
+    }).start();
   }
 }
