@@ -34,13 +34,9 @@ public class ApiException extends RuntimeException {
    *
    * @param status HTTP 响应状态码
    * @param reason 错误信息
-   * @param cause  嵌套异常
+   * @param cause 嵌套异常
    */
-  public ApiException(
-    final HttpStatus status,
-    final String reason,
-    final Throwable cause
-  ) {
+  public ApiException(final HttpStatus status, final String reason, final Throwable cause) {
     super(reason, cause);
     this.status = status;
     this.reason = reason;
@@ -60,7 +56,6 @@ public class ApiException extends RuntimeException {
     if (cause == null) return null;
 
     final StringBuilder stringBuilder = new StringBuilder();
-
     stringBuilder
       .append("嵌套异常 [")
       .append(cause.getClass().getName())
@@ -69,7 +64,6 @@ public class ApiException extends RuntimeException {
       .append("]");
 
     final StringBuilder nestedMessage = getNestedMessage(cause.getCause());
-
     if (nestedMessage == null) return stringBuilder;
 
     return stringBuilder.append(MESSAGE_SEPARATOR).append(nestedMessage);

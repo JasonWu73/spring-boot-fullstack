@@ -6,8 +6,8 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-@Slf4j
 @Disabled
+@Slf4j
 class RsaUtilsTest {
 
   private static final String PUBLIC_KEY =

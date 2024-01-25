@@ -7,8 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-@Slf4j
 @Disabled
+@Slf4j
 class PasswordEncoderTest {
 
   private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();

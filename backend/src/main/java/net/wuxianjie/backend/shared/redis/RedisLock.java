@@ -11,9 +11,9 @@ import org.springframework.stereotype.Component;
 /**
  * 基于 Redis 的分布式锁实现。
  */
-@Slf4j
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class RedisLock {
 
   private static final int LOCK_TIMEOUT_SECONDS = 30;
