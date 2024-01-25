@@ -4,3 +4,6 @@
 # IntelliJ IDEA
 .idea/
 *.iml
+
+# 项目输出
+logs/

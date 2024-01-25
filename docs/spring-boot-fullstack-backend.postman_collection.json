@@ -1,922 +1,1148 @@
 {
-  "info": {
-    "_postman_id": "53e9f0f9-0e9a-45fd-992f-715d8dcae30a",
-    "name": "spring-boot-fullstack-backend",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-  },
-  "item": [
-    {
-      "name": "身份验证",
-      "item": [
-        {
-          "name": "登录",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "if (pm.response.status === \"OK\") {",
-                  "  const data = pm.response.json();",
-                  "  pm.collectionVariables.set('accessToken', data.accessToken);",
-                  "  pm.collectionVariables.set('refreshToken', data.refreshToken);",
-                  "}",
-                  ""
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"username\": \"ZRNE+4q5IFyPLycCpwvlUg8WvlcCjXStdHF7hnVkLqRwCPTMzoZ4g9L/glqv5EbXPn/Irix5mt/tTTubenAHXW1QwzKutBPYDylQmb6yonVyo3tm0EUnvj61czR0MCZF1st7aHuy8qAFVtf76blBjd6vqRY27572BUwlDn+boL4aStL0dopTPs9UJTcLNvCfKJmup7mKmKSHEEaRoY8XHdn+gufzSZwZmbBGCdjQAixmrgguF+s9FBzko0m+wlY+UQo28GdLoYzxVqNfS8KIdgwup/3rnIAPka7n2BFgLHJlnE4647GIBjUQZ2jk2otbrn6QEUX0wAcWCo5TwzXa+g==\", // 加密后的用户名（不区分大小写），必填\n  \"password\": \"BmoQzfEaVa1D0RgnRcBj17++JZAFqYKiCalbkaDlpkjehqANdU1MfUwZvLhoJMyaU9xZSfdGhaKt3VuD7tfXLUOsk+tvaRDqoaSgsqUjas3fhoQMcPFcGfqpNj9J8OTSeXeLpaw69R3dc1ZzYga6Xx9KhNX3BT7bhehYNkGvWginPUNDy6sBQm9r/GsLFMNq7MOjNYyJGBwRcowkoYp2hwBdd6hn21/g9XbPEPd57uRsHRidmCz2hdOiTb3WVnsoLIzYdoTEUJIOH9wuqUTnRLCMgCBg/hqKd3xGttZctblDUs4fM/2oATACdFArAxvITqPfK7iXF/SdgLqO40a55w==\" // 加密后的密码，必填\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{BASE_URL}}/api/v1/auth/login",
-              "host": ["{{BASE_URL}}"],
-              "path": ["api", "v1", "auth", "login"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "刷新身份验证信息",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "if (pm.response.status === \"OK\") {",
-                  "  const data = pm.response.json();",
-                  "  pm.collectionVariables.set('accessToken', data.accessToken);",
-                  "  pm.collectionVariables.set('refreshToken', data.refreshToken);",
-                  "}",
-                  ""
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{accessToken}}",
-                "type": "default"
-              }
-            ],
-            "url": {
-              "raw": "{{BASE_URL}}/api/v1/auth/refresh/:refreshToken",
-              "host": ["{{BASE_URL}}"],
-              "path": ["api", "v1", "auth", "refresh", ":refreshToken"],
-              "variable": [
-                {
-                  "key": "refreshToken",
-                  "value": "{{refreshToken}}"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "退出登录",
-          "request": {
-            "method": "DELETE",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{accessToken}}",
-                "type": "default"
-              }
-            ],
-            "url": {
-              "raw": "{{BASE_URL}}/api/v1/auth/logout",
-              "host": ["{{BASE_URL}}"],
-              "path": ["api", "v1", "auth", "logout"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "获取已登录用户名列表",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [""],
-                "type": "text/javascript"
-              }
-            }
-          ],
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{accessToken}}",
-                "type": "default"
-              }
-            ],
-            "url": {
-              "raw": "{{BASE_URL}}/api/v1/auth/logged-in-users",
-              "host": ["{{BASE_URL}}"],
-              "path": ["api", "v1", "auth", "logged-in-users"]
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "用户管理",
-      "item": [
-        {
-          "name": "获取当前用户数据",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{accessToken}}",
-                "type": "default"
-              }
-            ],
-            "url": {
-              "raw": "{{BASE_URL}}/api/v1/users/me",
-              "host": ["{{BASE_URL}}"],
-              "path": ["api", "v1", "users", "me"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "更新当前用户信息",
-          "request": {
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{accessToken}}",
-                "type": "default"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"nickname\": \"吴仙杰\", // 昵称，必填\n  \"oldPassword\": \"Qm+TowObbPw0jWJp/bzu+uwqihWstzT4H49R0A1VbYZRt4lAZ8TshxZ3IwGC2PHHqbM1S+kJ3Z7W +Km6OeNf4u2oae5wbcNxb4RurOBHkTJA4xfmKfzmGD37gG9xIiCMrLxxOvuFSvTZDrmPufMNTcJ3NvLoP82QqgHvTMiAh2A=\", // 加密后的旧密码\n  \"newPassword\": \"HpTcmgLTKMaxzwJHF+HkrJXR/ffnNIwp5AW51vRtRUu4ITjGUED+6g96hHk8zc9r0SdKwWIgTzE0iZPTKaO0NFSXJA6uuIyaQIqLv1PPRdOCN6UeHqgf+noUEXBl5cw5pvMVAUZMFh7fr9otL8H6i+U4G0c8xDyxVI8bBiQ3fVo=\" // 加密后的新密码，`oldPassword` 与 `newPassword` 要么同时存在，要么同时不存在\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{BASE_URL}}/api/v1/users/me",
-              "host": ["{{BASE_URL}}"],
-              "path": ["api", "v1", "users", "me"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "获取用户分页列表",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{accessToken}}",
-                "type": "default"
-              }
-            ],
-            "url": {
-              "raw": "{{BASE_URL}}/api/v1/users?pageNum=1&pageSize=10&sortColumn=createdAt&sortOrder=desc",
-              "host": ["{{BASE_URL}}"],
-              "path": ["api", "v1", "users"],
-              "query": [
-                {
-                  "key": "pageNum",
-                  "value": "1"
-                },
-                {
-                  "key": "pageSize",
-                  "value": "10"
-                },
-                {
-                  "key": "sortColumn",
-                  "value": "createdAt"
-                },
-                {
-                  "key": "sortOrder",
-                  "value": "desc"
-                },
-                {
-                  "key": "username",
-                  "value": "u e",
-                  "disabled": true
-                },
-                {
-                  "key": "nickname",
-                  "value": "用",
-                  "disabled": true
-                },
-                {
-                  "key": "status",
-                  "value": "1",
-                  "disabled": true
-                },
-                {
-                  "key": "authority",
-                  "value": "admin",
-                  "disabled": true
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "获取用户详情",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{accessToken}}",
-                "type": "default"
-              }
-            ],
-            "url": {
-              "raw": "{{BASE_URL}}/api/v1/users/:userId",
-              "host": ["{{BASE_URL}}"],
-              "path": ["api", "v1", "users", ":userId"],
-              "variable": [
-                {
-                  "key": "userId",
-                  "value": "2"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "新增用户",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{accessToken}}",
-                "type": "default"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"username\": \"test6\", // 用户名，必填\n  \"nickname\": \"测试用户\", // 昵称，必填\n  \"password\": \"Qm+TowObbPw0jWJp/bzu+uwqihWstzT4H49R0A1VbYZRt4lAZ8TshxZ3IwGC2PHHqbM1S+kJ3Z7W+Km6OeNf4u2oae5wbcNxb4RurOBHkTJA4xfmKfzmGD37gG9xIiCMrLxxOvuFSvTZDrmPufMNTcJ3NvLoP82QqgHvTMiAh2A=\", // 加密后的密码，必填\n  \"authorities\": [\"admin\"], // 功能权限列表\n  \"remark\": \"测试账号，用完即删\" // 备注\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{BASE_URL}}/api/v1/users",
-              "host": ["{{BASE_URL}}"],
-              "path": ["api", "v1", "users"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "更新用户",
-          "request": {
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{accessToken}}",
-                "type": "default"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"nickname\": \"更新测试\", // 昵称，必填\n  \"authorities\": [\"user\"], // 功能权限列表\n  \"remark\": \"更新测试账号，用完即删\" // 备注\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{BASE_URL}}/api/v1/users/:userId",
-              "host": ["{{BASE_URL}}"],
-              "path": ["api", "v1", "users", ":userId"],
-              "variable": [
-                {
-                  "key": "userId",
-                  "value": "11"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "重置用户密码",
-          "request": {
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{accessToken}}",
-                "type": "default"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"password\": \"Qm+TowObbPw0jWJp/bzu+uwqihWstzT4H49R0A1VbYZRt4lAZ8TshxZ3IwGC2PHHqbM1S+kJ3Z7W+Km6OeNf4u2oae5wbcNxb4RurOBHkTJA4xfmKfzmGD37gG9xIiCMrLxxOvuFSvTZDrmPufMNTcJ3NvLoP82QqgHvTMiAh2A=\" // 加密后的密码，必填\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{BASE_URL}}/api/v1/users/:userId/password",
-              "host": ["{{BASE_URL}}"],
-              "path": ["api", "v1", "users", ":userId", "password"],
-              "variable": [
-                {
-                  "key": "userId",
-                  "value": "1"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "禁用/启用用户",
-          "request": {
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{accessToken}}",
-                "type": "default"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"status\": 0 // 账号状态，0：禁用，1：启用\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{BASE_URL}}/api/v1/users/:userId/status",
-              "host": ["{{BASE_URL}}"],
-              "path": ["api", "v1", "users", ":userId", "status"],
-              "variable": [
-                {
-                  "key": "userId",
-                  "value": "11"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "删除用户",
-          "request": {
-            "method": "DELETE",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{accessToken}}",
-                "type": "default"
-              }
-            ],
-            "url": {
-              "raw": "{{BASE_URL}}/api/v1/users/:userId",
-              "host": ["{{BASE_URL}}"],
-              "path": ["api", "v1", "users", ":userId"],
-              "variable": [
-                {
-                  "key": "userId",
-                  "value": "11"
-                }
-              ]
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "操作日志",
-      "item": [
-        {
-          "name": "获取操作日志分页列表",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{accessToken}}",
-                "type": "default"
-              }
-            ],
-            "url": {
-              "raw": "{{BASE_URL}}/api/v1/op-logs?pageNum=1&pageSize=10&sortColumn=requestedAt&sortOrder=desc&startAt=2023-11-17&endAt=2023-11-17",
-              "host": ["{{BASE_URL}}"],
-              "path": ["api", "v1", "op-logs"],
-              "query": [
-                {
-                  "key": "pageNum",
-                  "value": "1"
-                },
-                {
-                  "key": "pageSize",
-                  "value": "10"
-                },
-                {
-                  "key": "sortColumn",
-                  "value": "requestedAt"
-                },
-                {
-                  "key": "sortOrder",
-                  "value": "desc"
-                },
-                {
-                  "key": "startAt",
-                  "value": "2023-11-17"
-                },
-                {
-                  "key": "endAt",
-                  "value": "2023-11-17"
-                },
-                {
-                  "key": "clientIp",
-                  "value": "127",
-                  "disabled": true
-                },
-                {
-                  "key": "username",
-                  "value": "su",
-                  "disabled": true
-                },
-                {
-                  "key": "message",
-                  "value": "登 录",
-                  "disabled": true
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "获取登录数前 N 名的用户",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{accessToken}}",
-                "type": "default"
-              }
-            ],
-            "url": {
-              "raw": "{{BASE_URL}}/api/v1/op-logs/logins-top/:num",
-              "host": ["{{BASE_URL}}"],
-              "path": ["api", "v1", "op-logs", "logins-top", ":num"],
-              "variable": [
-                {
-                  "key": "num",
-                  "value": "3",
-                  "description": "取值范围为 1 ~ 10"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "获取最近 N 天的登录数",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{accessToken}}",
-                "type": "default"
-              }
-            ],
-            "url": {
-              "raw": "{{BASE_URL}}/api/v1/op-logs/logins-history/:days",
-              "host": ["{{BASE_URL}}"],
-              "path": ["api", "v1", "op-logs", "logins-history", ":days"],
-              "variable": [
-                {
-                  "key": "days",
-                  "value": "2",
-                  "description": "取值范围为 1 ~ 30"
-                }
-              ]
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "测试",
-      "item": [
-        {
-          "name": "MyBatis",
-          "item": [
-            {
-              "name": "查询",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{BASE_URL}}/api/v1/public/mybatis",
-                  "host": ["{{BASE_URL}}"],
-                  "path": ["api", "v1", "public", "mybatis"]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "新增",
-              "request": {
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "value": "application/atom+xml",
-                    "type": "default",
-                    "disabled": true
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"name\": \"测试数据\", // 名称不能为空\n  \"date\": \"2023-11-12 18:25:41\", // date 不能为 null\n  \"localDateTime\": \"2023-11-12 18:25:41\", // localDateTime 不能为 null\n  \"localDate\": \"2023-11-12\" // localDate 不能为 null\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                },
-                "url": {
-                  "raw": "{{BASE_URL}}/api/v1/public/mybatis",
-                  "host": ["{{BASE_URL}}"],
-                  "path": ["api", "v1", "public", "mybatis"]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "清空表",
-              "request": {
-                "method": "DELETE",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "value": "application/atom+xml",
-                    "type": "default",
-                    "disabled": true
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"name\": \"测试数据\", // 名称不能为空\n  \"date\": \"2023-11-12 18:25:41\", // date 不能为 null\n  \"localDateTime\": \"2023-11-12 18:25:41\", // localDateTime 不能为 null\n  \"localDate\": \"2023-11-12\" // localDate 不能为 null\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                },
-                "url": {
-                  "raw": "{{BASE_URL}}/api/v1/public/mybatis",
-                  "host": ["{{BASE_URL}}"],
-                  "path": ["api", "v1", "public", "mybatis"]
-                }
-              },
-              "response": []
-            }
-          ]
-        },
-        {
-          "name": "Redis",
-          "item": [
-            {
-              "name": "通过分布式锁执行同步操作",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{BASE_URL}}/api/v1/public/redis/lock",
-                  "host": ["{{BASE_URL}}"],
-                  "path": ["api", "v1", "public", "redis", "lock"]
-                }
-              },
-              "response": []
-            }
-          ]
-        },
-        {
-          "name": "API 调用",
-          "item": [
-            {
-              "name": "GET URL 传参",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{BASE_URL}}/api/v1/public/api-call/params",
-                  "host": ["{{BASE_URL}}"],
-                  "path": ["api", "v1", "public", "api-call", "params"]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "POST x-www-form-urlencoded 传参（仅支持文本）",
-              "request": {
-                "method": "POST",
-                "header": [],
-                "url": {
-                  "raw": "{{BASE_URL}}/api/v1/public/api-call/form",
-                  "host": ["{{BASE_URL}}"],
-                  "path": ["api", "v1", "public", "api-call", "form"]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "POST form-data 传参（支持文本和文件）",
-              "request": {
-                "method": "POST",
-                "header": [],
-                "url": {
-                  "raw": "{{BASE_URL}}/api/v1/public/api-call/upload",
-                  "host": ["{{BASE_URL}}"],
-                  "path": ["api", "v1", "public", "api-call", "upload"]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "POST JSON 传参",
-              "request": {
-                "method": "POST",
-                "header": [],
-                "url": {
-                  "raw": "{{BASE_URL}}/api/v1/public/api-call/json",
-                  "host": ["{{BASE_URL}}"],
-                  "path": ["api", "v1", "public", "api-call", "json"]
-                }
-              },
-              "response": []
-            }
-          ]
-        },
-        {
-          "name": "请求传参",
-          "item": [
-            {
-              "name": "GET URL 传参",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{BASE_URL}}/api/v1/public/params?name=GET 传参&num=0&type=1&dateTime=2023-02-28 11:11:11",
-                  "host": ["{{BASE_URL}}"],
-                  "path": ["api", "v1", "public", "params"],
-                  "query": [
-                    {
-                      "key": "name",
-                      "value": "GET 传参"
-                    },
-                    {
-                      "key": "num",
-                      "value": "0"
-                    },
-                    {
-                      "key": "type",
-                      "value": "1"
-                    },
-                    {
-                      "key": "dateTime",
-                      "value": "2023-02-28 11:11:11"
-                    }
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "POST x-www-form-urlencoded 传参（仅支持文本）",
-              "request": {
-                "method": "POST",
-                "header": [],
-                "body": {
-                  "mode": "urlencoded",
-                  "urlencoded": [
-                    {
-                      "key": "name",
-                      "value": "POST x-www-form-urlencoded 请求",
-                      "type": "text"
-                    },
-                    {
-                      "key": "num",
-                      "value": "0",
-                      "type": "text"
-                    },
-                    {
-                      "key": "type",
-                      "value": "1",
-                      "type": "text"
-                    },
-                    {
-                      "key": "dateTime",
-                      "value": "2023-02-28 11:11:11",
-                      "type": "text"
-                    }
-                  ]
-                },
-                "url": {
-                  "raw": "{{BASE_URL}}/api/v1/public/params",
-                  "host": ["{{BASE_URL}}"],
-                  "path": ["api", "v1", "public", "params"]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "POST form-data 传参（支持文本和文件）",
-              "request": {
-                "method": "POST",
-                "header": [],
-                "body": {
-                  "mode": "formdata",
-                  "formdata": [
-                    {
-                      "key": "name",
-                      "value": "POST form-data 请求",
-                      "type": "text"
-                    },
-                    {
-                      "key": "num",
-                      "value": "0",
-                      "type": "text"
-                    },
-                    {
-                      "key": "type",
-                      "value": "1",
-                      "type": "text"
-                    },
-                    {
-                      "key": "dateTime",
-                      "value": "2023-02-28 11:11:11",
-                      "type": "text"
-                    }
-                  ]
-                },
-                "url": {
-                  "raw": "{{BASE_URL}}/api/v1/public/params",
-                  "host": ["{{BASE_URL}}"],
-                  "path": ["api", "v1", "public", "params"]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "POST form-data 上传文件",
-              "request": {
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Accept",
-                    "value": "application/json",
-                    "type": "default",
-                    "disabled": true
-                  }
-                ],
-                "body": {
-                  "mode": "formdata",
-                  "formdata": [
-                    {
-                      "key": "message",
-                      "value": "测试文件",
-                      "type": "text"
-                    },
-                    {
-                      "key": "file",
-                      "type": "file",
-                      "src": "/Users/wxj/Workspace/部署的服务/独立音频/独立音频备份系统部署手册.pdf"
-                    }
-                  ]
-                },
-                "url": {
-                  "raw": "{{BASE_URL}}/api/v1/public/params/upload",
-                  "host": ["{{BASE_URL}}"],
-                  "path": ["api", "v1", "public", "params", "upload"]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "POST JSON 传参",
-              "request": {
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "value": "application/atom+xml",
-                    "type": "default",
-                    "disabled": true
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"id\": 100,\n  \"name\": \"POST JSON 请求\",\n  \"inner\": {\n    \"date\": \"2023-01-01 12:00:30\",\n    \"localDate\": \"2023-01-01\",\n    \"dateTime\": \"2023-01-01 12:00:30\"\n  }\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                },
-                "url": {
-                  "raw": "{{BASE_URL}}/api/v1/public/params/json",
-                  "host": ["{{BASE_URL}}"],
-                  "path": ["api", "v1", "public", "params", "json"]
-                }
-              },
-              "response": []
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "获取项目版本号",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "{{BASE_URL}}/api/v1/public/version",
-          "host": ["{{BASE_URL}}"],
-          "path": ["api", "v1", "public", "version"]
-        }
-      },
-      "response": []
-    }
-  ],
-  "event": [
-    {
-      "listen": "prerequest",
-      "script": {
-        "type": "text/javascript",
-        "exec": [""]
-      }
-    },
-    {
-      "listen": "test",
-      "script": {
-        "type": "text/javascript",
-        "exec": [""]
-      }
-    }
-  ],
-  "variable": [
-    {
-      "key": "BASE_URL",
-      "value": "http://localhost:8080",
-      "type": "default"
-    },
-    {
-      "key": "accessToken",
-      "value": ""
-    },
-    {
-      "key": "refreshToken",
-      "value": ""
-    }
-  ]
+	"info": {
+		"_postman_id": "53e9f0f9-0e9a-45fd-992f-715d8dcae30a",
+		"name": "spring-boot-fullstack-backend",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "身份验证",
+			"item": [
+				{
+					"name": "登录",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.status === \"OK\") {",
+									"  const data = pm.response.json();",
+									"  pm.collectionVariables.set('accessToken', data.accessToken);",
+									"  pm.collectionVariables.set('refreshToken', data.refreshToken);",
+									"}",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"ZRNE+4q5IFyPLycCpwvlUg8WvlcCjXStdHF7hnVkLqRwCPTMzoZ4g9L/glqv5EbXPn/Irix5mt/tTTubenAHXW1QwzKutBPYDylQmb6yonVyo3tm0EUnvj61czR0MCZF1st7aHuy8qAFVtf76blBjd6vqRY27572BUwlDn+boL4aStL0dopTPs9UJTcLNvCfKJmup7mKmKSHEEaRoY8XHdn+gufzSZwZmbBGCdjQAixmrgguF+s9FBzko0m+wlY+UQo28GdLoYzxVqNfS8KIdgwup/3rnIAPka7n2BFgLHJlnE4647GIBjUQZ2jk2otbrn6QEUX0wAcWCo5TwzXa+g==\", // 加密后的用户名（不区分大小写），必填\n  \"password\": \"BmoQzfEaVa1D0RgnRcBj17++JZAFqYKiCalbkaDlpkjehqANdU1MfUwZvLhoJMyaU9xZSfdGhaKt3VuD7tfXLUOsk+tvaRDqoaSgsqUjas3fhoQMcPFcGfqpNj9J8OTSeXeLpaw69R3dc1ZzYga6Xx9KhNX3BT7bhehYNkGvWginPUNDy6sBQm9r/GsLFMNq7MOjNYyJGBwRcowkoYp2hwBdd6hn21/g9XbPEPd57uRsHRidmCz2hdOiTb3WVnsoLIzYdoTEUJIOH9wuqUTnRLCMgCBg/hqKd3xGttZctblDUs4fM/2oATACdFArAxvITqPfK7iXF/SdgLqO40a55w==\" // 加密后的密码，必填\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/auth/login",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "刷新身份验证信息",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.status === \"OK\") {",
+									"  const data = pm.response.json();",
+									"  pm.collectionVariables.set('accessToken', data.accessToken);",
+									"  pm.collectionVariables.set('refreshToken', data.refreshToken);",
+									"}",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/auth/refresh/:refreshToken",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"refresh",
+								":refreshToken"
+							],
+							"variable": [
+								{
+									"key": "refreshToken",
+									"value": "{{refreshToken}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "退出登录",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/auth/logout",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "获取已登录用户名列表",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/auth/logged-in-users",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"logged-in-users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "用户管理",
+			"item": [
+				{
+					"name": "获取当前用户数据",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/users/me",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "更新当前用户信息",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nickname\": \"吴仙杰\", // 昵称，必填\n  \"oldPassword\": \"Qm+TowObbPw0jWJp/bzu+uwqihWstzT4H49R0A1VbYZRt4lAZ8TshxZ3IwGC2PHHqbM1S+kJ3Z7W +Km6OeNf4u2oae5wbcNxb4RurOBHkTJA4xfmKfzmGD37gG9xIiCMrLxxOvuFSvTZDrmPufMNTcJ3NvLoP82QqgHvTMiAh2A=\", // 加密后的旧密码\n  \"newPassword\": \"HpTcmgLTKMaxzwJHF+HkrJXR/ffnNIwp5AW51vRtRUu4ITjGUED+6g96hHk8zc9r0SdKwWIgTzE0iZPTKaO0NFSXJA6uuIyaQIqLv1PPRdOCN6UeHqgf+noUEXBl5cw5pvMVAUZMFh7fr9otL8H6i+U4G0c8xDyxVI8bBiQ3fVo=\" // 加密后的新密码，`oldPassword` 与 `newPassword` 要么同时存在，要么同时不存在\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/users/me",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "获取用户分页列表",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/users?pageNum=1&pageSize=10&sortColumn=createdAt&sortOrder=desc",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users"
+							],
+							"query": [
+								{
+									"key": "pageNum",
+									"value": "1"
+								},
+								{
+									"key": "pageSize",
+									"value": "10"
+								},
+								{
+									"key": "sortColumn",
+									"value": "createdAt"
+								},
+								{
+									"key": "sortOrder",
+									"value": "desc"
+								},
+								{
+									"key": "username",
+									"value": "u e",
+									"disabled": true
+								},
+								{
+									"key": "nickname",
+									"value": "用",
+									"disabled": true
+								},
+								{
+									"key": "status",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "authority",
+									"value": "admin",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "获取用户详情",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/users/:userId",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								":userId"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "新增用户",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"test6\", // 用户名，必填\n  \"nickname\": \"测试用户\", // 昵称，必填\n  \"password\": \"Qm+TowObbPw0jWJp/bzu+uwqihWstzT4H49R0A1VbYZRt4lAZ8TshxZ3IwGC2PHHqbM1S+kJ3Z7W+Km6OeNf4u2oae5wbcNxb4RurOBHkTJA4xfmKfzmGD37gG9xIiCMrLxxOvuFSvTZDrmPufMNTcJ3NvLoP82QqgHvTMiAh2A=\", // 加密后的密码，必填\n  \"authorities\": [\"admin\"], // 功能权限列表\n  \"remark\": \"测试账号，用完即删\" // 备注\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/users",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "更新用户",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nickname\": \"更新测试\", // 昵称，必填\n  \"authorities\": [\"user\"], // 功能权限列表\n  \"remark\": \"更新测试账号，用完即删\" // 备注\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/users/:userId",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								":userId"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "11"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "重置用户密码",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"password\": \"Qm+TowObbPw0jWJp/bzu+uwqihWstzT4H49R0A1VbYZRt4lAZ8TshxZ3IwGC2PHHqbM1S+kJ3Z7W+Km6OeNf4u2oae5wbcNxb4RurOBHkTJA4xfmKfzmGD37gG9xIiCMrLxxOvuFSvTZDrmPufMNTcJ3NvLoP82QqgHvTMiAh2A=\" // 加密后的密码，必填\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/users/:userId/password",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								":userId",
+								"password"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "禁用/启用用户",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"status\": 0 // 账号状态，0：禁用，1：启用\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/users/:userId/status",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								":userId",
+								"status"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "11"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "删除用户",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/users/:userId",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								":userId"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "11"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "操作日志",
+			"item": [
+				{
+					"name": "获取操作日志分页列表",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/op-logs?pageNum=1&pageSize=10&sortColumn=username&sortOrder=desc&startAt=2023-11-17&endAt=2023-11-17",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"op-logs"
+							],
+							"query": [
+								{
+									"key": "pageNum",
+									"value": "1"
+								},
+								{
+									"key": "pageSize",
+									"value": "10"
+								},
+								{
+									"key": "sortColumn",
+									"value": "username",
+									"description": "请求时间、IP、用户名"
+								},
+								{
+									"key": "sortOrder",
+									"value": "desc"
+								},
+								{
+									"key": "startAt",
+									"value": "2023-11-17"
+								},
+								{
+									"key": "endAt",
+									"value": "2023-11-17"
+								},
+								{
+									"key": "clientIp",
+									"value": "127",
+									"disabled": true
+								},
+								{
+									"key": "username",
+									"value": "su",
+									"disabled": true
+								},
+								{
+									"key": "message",
+									"value": "登 录",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "获取登录数前 N 名的用户",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/op-logs/logins-top/:num",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"op-logs",
+								"logins-top",
+								":num"
+							],
+							"variable": [
+								{
+									"key": "num",
+									"value": "3",
+									"description": "取值范围为 1 ~ 10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "获取最近 N 天的登录数",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/op-logs/logins-history/:days",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"op-logs",
+								"logins-history",
+								":days"
+							],
+							"variable": [
+								{
+									"key": "days",
+									"value": "1",
+									"description": "取值范围为 1 ~ 30"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "测试",
+			"item": [
+				{
+					"name": "MyBatis",
+					"item": [
+						{
+							"name": "查询",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/public/mybatis",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"public",
+										"mybatis"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "新增",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/atom+xml",
+										"type": "default",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"测试数据\", // 名称不能为空\n  \"date\": \"2023-11-12 18:25:41\", // date 不能为 null\n  \"localDateTime\": \"2023-11-12 18:25:41\", // localDateTime 不能为 null\n  \"localDate\": \"2023-11-12\" // localDate 不能为 null\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/public/mybatis",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"public",
+										"mybatis"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "清空表",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/atom+xml",
+										"type": "default",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"测试数据\", // 名称不能为空\n  \"date\": \"2023-11-12 18:25:41\", // date 不能为 null\n  \"localDateTime\": \"2023-11-12 18:25:41\", // localDateTime 不能为 null\n  \"localDate\": \"2023-11-12\" // localDate 不能为 null\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/public/mybatis",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"public",
+										"mybatis"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Redis",
+					"item": [
+						{
+							"name": "通过分布式锁执行同步操作",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/public/redis/lock",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"public",
+										"redis",
+										"lock"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "API 调用",
+					"item": [
+						{
+							"name": "GET URL 传参",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/public/api-call/params",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"public",
+										"api-call",
+										"params"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "POST x-www-form-urlencoded 传参（仅支持文本）",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/public/api-call/form",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"public",
+										"api-call",
+										"form"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "POST form-data 传参（支持文本和文件）",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/public/api-call/upload",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"public",
+										"api-call",
+										"upload"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "POST JSON 传参",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/public/api-call/json",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"public",
+										"api-call",
+										"json"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "请求传参",
+					"item": [
+						{
+							"name": "GET URL 传参",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/public/params?name=GET 传参&num=0&type=1&dateTime=2023-02-28 11:11:11",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"public",
+										"params"
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": "GET 传参"
+										},
+										{
+											"key": "num",
+											"value": "0"
+										},
+										{
+											"key": "type",
+											"value": "1"
+										},
+										{
+											"key": "dateTime",
+											"value": "2023-02-28 11:11:11"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "POST x-www-form-urlencoded 传参（仅支持文本）",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "name",
+											"value": "POST x-www-form-urlencoded 请求",
+											"type": "text"
+										},
+										{
+											"key": "num",
+											"value": "0",
+											"type": "text"
+										},
+										{
+											"key": "type",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "dateTime",
+											"value": "2023-02-28 11:11:11",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/public/params",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"public",
+										"params"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "POST form-data 传参（支持文本和文件）",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name",
+											"value": "POST form-data 请求",
+											"type": "text"
+										},
+										{
+											"key": "num",
+											"value": "0",
+											"type": "text"
+										},
+										{
+											"key": "type",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "dateTime",
+											"value": "2023-02-28 11:11:11",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/public/params",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"public",
+										"params"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "POST form-data 上传文件",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "default",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "message",
+											"value": "测试文件",
+											"type": "text"
+										},
+										{
+											"key": "file",
+											"type": "file",
+											"src": "/Users/wxj/Workspace/部署的服务/独立音频/独立音频备份系统部署手册.pdf"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/public/params/upload",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"public",
+										"params",
+										"upload"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "POST JSON 传参",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/atom+xml",
+										"type": "default",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"id\": 100,\n  \"name\": \"POST JSON 请求\",\n  \"inner\": {\n    \"date\": \"2023-01-01 12:00:30\",\n    \"localDate\": \"2023-01-01\",\n    \"dateTime\": \"2023-01-01 12:00:30\"\n  }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/public/params/json",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"public",
+										"params",
+										"json"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "获取项目版本号",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_URL}}/api/v1/public/version",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"public",
+						"version"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "BASE_URL",
+			"value": "http://localhost:8080",
+			"type": "default"
+		},
+		{
+			"key": "accessToken",
+			"value": ""
+		},
+		{
+			"key": "refreshToken",
+			"value": ""
+		}
+	]
 }
