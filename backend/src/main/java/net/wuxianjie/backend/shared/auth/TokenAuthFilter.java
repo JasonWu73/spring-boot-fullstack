@@ -7,7 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import net.wuxianjie.backend.shared.auth.dto.CachedAuth;
+import net.wuxianjie.backend.shared.auth.dto.AuthenticatedUser;
 import net.wuxianjie.backend.shared.exception.ApiException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -52,9 +52,8 @@ public class TokenAuthFilter extends OncePerRequestFilter {
     @NonNull final HttpServletResponse response,
     @NonNull final FilterChain filterChain
   ) throws ServletException, IOException {
-    // 从 HTTP 请求头中获取访问令牌
+    // ----- 从 HTTP 请求头中获取访问令牌 -----
     final String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
-
     if (authorization == null) {
       filterChain.doFilter(request, response);
       return;
@@ -67,36 +66,30 @@ public class TokenAuthFilter extends OncePerRequestFilter {
         null,
         new ApiException(
           HttpStatus.UNAUTHORIZED,
-          "HTTP 请求头 [%s: %s] 格式错误".formatted(
-              HttpHeaders.AUTHORIZATION,
-              authorization
-            )
+          "HTTP 请求头 [%s: %s] 格式错误".formatted(HttpHeaders.AUTHORIZATION, authorization)
         )
       );
-
       return;
     }
 
     final String accessToken = authorization.substring(BEARER_PREFIX.length());
 
-    // 执行身份验证
-    final CachedAuth auth;
-
+    // ----- 执行身份验证 -----
+    final AuthenticatedUser user;
     try {
-      auth = tokenAuth.authenticate(accessToken);
+      user = tokenAuth.authenticate(accessToken);
     } catch (Exception e) {
       handlerExceptionResolver.resolveException(
         request,
         response,
         null,
-        new ApiException(HttpStatus.UNAUTHORIZED, "登录过期", e)
+        new ApiException(HttpStatus.UNAUTHORIZED, "Token 验证失败", e)
       );
-
       return;
     }
 
-    // 将登录信息写入 Spring Security Context
-    AuthUtils.setAuthenticatedContext(auth, request);
+    // ----- 将登录信息写入 Spring Security Context -----
+    AuthUtils.setAuthenticatedContext(user, request);
 
     // 继续执行过滤器链
     filterChain.doFilter(request, response);

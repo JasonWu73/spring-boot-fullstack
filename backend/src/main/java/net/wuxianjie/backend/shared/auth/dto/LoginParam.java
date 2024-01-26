@@ -1,16 +1,12 @@
 package net.wuxianjie.backend.shared.auth.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 /**
  * 登录参数。
  */
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class LoginParam {
 
   /**

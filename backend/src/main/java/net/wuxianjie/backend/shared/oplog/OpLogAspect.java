@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import net.wuxianjie.backend.shared.auth.AuthUtils;
-import net.wuxianjie.backend.shared.auth.dto.CachedAuth;
+import net.wuxianjie.backend.shared.auth.dto.AuthenticatedUser;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -40,7 +40,7 @@ public class OpLogAspect {
    *
    * @param joinPoint 连接点
    * @return 目标方法的执行结果
-   * @throws Throwable 继续抛出在执行目标方法时产生的异常
+   * @throws Throwable 目标方法执行异常或日志记录异常时抛出
    */
   @Around("@annotation(net.wuxianjie.backend.shared.oplog.Operation)")
   public Object recordOperationLog(final ProceedingJoinPoint joinPoint) throws Throwable {
@@ -54,7 +54,7 @@ public class OpLogAspect {
     final OpLog operation = new OpLog();
     operation.setRequestedAt(requestedAt);
     operation.setClientIp(getClientIp(request));
-    operation.setUsername(AuthUtils.getCurrentUser().map(CachedAuth::username).orElse(null));
+    operation.setUsername(AuthUtils.getCurrentUser().map(AuthenticatedUser::username).orElse(null));
     operation.setMessage(getOperation(joinPoint));
     opLogMapper.insert(operation);
 

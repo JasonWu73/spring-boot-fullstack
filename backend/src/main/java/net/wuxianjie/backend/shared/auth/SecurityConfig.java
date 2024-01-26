@@ -39,11 +39,6 @@ public class SecurityConfig {
    */
   public static final String API_PATH_PREFIX = "/api/";
 
-  private static final String AUTH_HIERARCHY =
-    """
-    root > admin
-    admin > user""";
-
   private final HandlerExceptionResolver handlerExceptionResolver;
 
   private final TokenAuth tokenAuth;
@@ -51,23 +46,23 @@ public class SecurityConfig {
   /**
    * 配置 Spring Security 过滤器链。
    * <p>
-   * <h2>对所有请求都生效的通用配置</h2>
+   * <h3>对所有请求都生效的通用配置</h3>
    *
    * <ul>
    *   <li>默认所有请求所有人都可访问（保证 SPA 前端资源可用）</li>
    *   <li>支持 CORS</li>
    *   <li>禁用 CSRF</li>
-   *   <li>允许浏览器在同源策略下使用 {@code <frame>} 或 {@code <iframe>}</li>
-   *   <li>无状态会话，即不向客户端发送 {@code JSESSIONID} Cookie</li>
+   *   <li>允许浏览器在同源策略下使用 `{@code <frame>}` 或 `{@code <iframe>}`</li>
+   *   <li>无状态会话，即不向客户端发送 `JSESSIONID` Cookie</li>
    *   <li>认证（Authentication）401 和授权（Authorization）403 异常处理</li>
    * </ul>
    *
-   * <h2>仅对特定请求（即以 {@value API_PATH_PREFIX} 为前缀的请求路径）生效的特殊配置</h2>
+   * <h3>仅对特定请求（{@value API_PATH_PREFIX}）生效的特殊配置</h3>
    *
    * <ul>
    *   <li>开放登录 API</li>
-   *   <li>开放公开的 API</li>
-   *   <li>默认所有 API 都需要登录才能访问</li>
+   *   <li>开放公开 API</li>
+   *   <li>默认其他 API 都需要登录才能访问</li>
    *   <li>自定义 Token 身份验证过滤器</li>
    * </ul>
    *
@@ -76,23 +71,19 @@ public class SecurityConfig {
    * @throws Exception 配置错误时抛出
    */
   @Bean
-  public SecurityFilterChain filterChain(final HttpSecurity http)
-    throws Exception {
-    // 以下配置仅对 API 请求（即以 `/api/` 为前缀的 Path）生效
+  public SecurityFilterChain filterChain(final HttpSecurity http) throws Exception {
+    // 以下配置仅对 API 请求生效
     http
       .securityMatcher("/api/**")
-      // 按顺序比较，符合则退出后续比较
-      .authorizeHttpRequests(auth -> {
+      // 注意：顺序很重要，前面的规则先匹配
+      .authorizeHttpRequests(registry -> {
         // 开放登录 API
-        auth
-          .requestMatchers("/api/v1/auth/login")
-          .permitAll()
-          // 开放公开的 API
-          .requestMatchers("/api/v1/public/**")
-          .permitAll()
-          // 默认所有 API 都需要登录才能访问
-          .requestMatchers("/**")
-          .authenticated();
+        registry
+          .requestMatchers("/api/v1/auth/login").permitAll()
+          // 开放公开 API
+          .requestMatchers("/api/v1/public/**").permitAll()
+          // 默认其他 API 都需要登录才能访问
+          .requestMatchers("/**").authenticated();
       })
       // 添加自定义 Token 身份验证过滤器
       .addFilterBefore(
@@ -102,27 +93,27 @@ public class SecurityConfig {
 
     // 以下配置对所有请求生效
     http
-      // 按顺序比较，符合则退出后续比较
-      .authorizeHttpRequests(auth -> {
+      // 注意：顺序很重要，前面的规则先匹配
+      .authorizeHttpRequests(registry -> {
         // 默认所有请求所有人都可访问（保证 SPA 前端资源可用）
-        auth.requestMatchers("/**").permitAll();
+        registry.requestMatchers("/**").permitAll();
       })
       // 支持 CORS
       .cors(Customizer.withDefaults())
       // 禁用 CSRF
       .csrf(AbstractHttpConfigurer::disable)
       // 允许浏览器在同源策略下使用 `<frame>` 或 `<iframe>`
-      .headers(headers ->
-        headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
+      .headers(config ->
+        config.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
       )
       // 无状态会话，即不向客户端发送 `JSESSIONID` Cookies
-      .sessionManagement(session ->
-        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+      .sessionManagement(config ->
+        config.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
       )
-      // 身份验证和权限异常处理
-      .exceptionHandling(exceptionHandling -> {
+      // 身份验证失败和没有访问权限的处理
+      .exceptionHandling(config -> {
         // 未通过身份验证，对应 401 HTTP 状态码
-        exceptionHandling.authenticationEntryPoint((request, response, e) ->
+        config.authenticationEntryPoint((request, response, e) ->
           handlerExceptionResolver.resolveException(
             request,
             response,
@@ -131,13 +122,13 @@ public class SecurityConfig {
           )
         );
 
-        // 通过身份验证，但权限不足，对应 403 HTTP 状态码
-        exceptionHandling.accessDeniedHandler((request, response, e) ->
+        // 通过身份验证，但没有访问权限，对应 403 HTTP 状态码
+        config.accessDeniedHandler((request, response, e) ->
           handlerExceptionResolver.resolveException(
             request,
             response,
             null,
-            new ApiException(HttpStatus.FORBIDDEN, "权限鉴权失败", e)
+            new ApiException(HttpStatus.FORBIDDEN, "没有访问权限", e)
           )
         );
       });
@@ -151,7 +142,7 @@ public class SecurityConfig {
    * @return CORS 配置
    */
   @Bean
-  CorsConfigurationSource corsConfigurationSource() {
+  public CorsConfigurationSource corsConfigurationSource() {
     final CorsConfiguration configuration = new CorsConfiguration();
 
     // 以下配置缺一不可
@@ -160,10 +151,8 @@ public class SecurityConfig {
     configuration.setAllowCredentials(true);
     configuration.setAllowedHeaders(List.of("*"));
 
-    final UrlBasedCorsConfigurationSource source =
-      new UrlBasedCorsConfigurationSource();
+    final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", configuration);
-
     return source;
   }
 
@@ -186,9 +175,9 @@ public class SecurityConfig {
    */
   @Bean
   public RoleHierarchy roleHierarchy() {
-    final RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
-    roleHierarchy.setHierarchy(AUTH_HIERARCHY);
-    return roleHierarchy;
+    final RoleHierarchyImpl hierarchy = new RoleHierarchyImpl();
+    hierarchy.setHierarchy(Authority.getHierarchy());
+    return hierarchy;
   }
 
   /**
@@ -198,8 +187,7 @@ public class SecurityConfig {
    */
   @Bean
   public DefaultMethodSecurityExpressionHandler expressionHandler() {
-    final DefaultMethodSecurityExpressionHandler handler =
-      new DefaultMethodSecurityExpressionHandler();
+    final DefaultMethodSecurityExpressionHandler handler = new DefaultMethodSecurityExpressionHandler();
     handler.setRoleHierarchy(roleHierarchy());
     return handler;
   }

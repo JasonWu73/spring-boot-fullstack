@@ -6,14 +6,22 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import net.wuxianjie.backend.shared.auth.AuthService;
 import net.wuxianjie.backend.shared.auth.AuthUtils;
 import net.wuxianjie.backend.shared.auth.Authority;
+import net.wuxianjie.backend.shared.auth.dto.AuthenticatedUser;
 import net.wuxianjie.backend.shared.exception.ApiException;
 import net.wuxianjie.backend.shared.pagination.PaginationParam;
 import net.wuxianjie.backend.shared.pagination.PaginationResult;
 import net.wuxianjie.backend.shared.util.RsaUtils;
 import net.wuxianjie.backend.shared.util.StrUtils;
-import net.wuxianjie.backend.user.dto.*;
+import net.wuxianjie.backend.user.dto.AddUserParam;
+import net.wuxianjie.backend.user.dto.GetUserParam;
+import net.wuxianjie.backend.user.dto.ResetPasswordParam;
+import net.wuxianjie.backend.user.dto.UpdateMeParam;
+import net.wuxianjie.backend.user.dto.UpdateUserParam;
+import net.wuxianjie.backend.user.dto.UpdateUserStatusParam;
+import net.wuxianjie.backend.user.dto.UserInfo;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -28,7 +36,7 @@ public class UserService {
 
   private final PasswordEncoder passwordEncoder;
 
-  private final AuthServiceImpl authService;
+  private final AuthService authService;
   private final UserMapper userMapper;
 
   /**
@@ -54,10 +62,10 @@ public class UserService {
    * @param param 更新当前用户信息参数
    */
   public void updateMe(final UpdateMeParam param) {
-    final long userId = AuthUtils.getCurrentUser().orElseThrow().userId();
+    final AuthenticatedUser loggedInUser = AuthUtils.getCurrentUser().orElseThrow();
 
     final User user = Optional
-      .ofNullable(userMapper.selectById(userId))
+      .ofNullable(userMapper.selectById(loggedInUser.userId()))
       .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "用户不存在"));
 
     user.setUpdatedAt(LocalDateTime.now());
@@ -89,7 +97,7 @@ public class UserService {
     userMapper.updateById(user);
 
     if (needsUpdatePassword) {
-      authService.logout();
+      authService.logout(loggedInUser.username());
     }
   }
 
@@ -245,6 +253,7 @@ public class UserService {
       .ofNullable(userMapper.selectById(userId))
       .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "用户不存在"));
 
+    // TODO: 管理员不可禁用超级管理员
     user.setUpdatedAt(LocalDateTime.now());
     user.setStatus(AccountStatus.resolve(param.getStatus()).orElseThrow());
 

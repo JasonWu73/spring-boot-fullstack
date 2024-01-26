@@ -3,7 +3,7 @@ package net.wuxianjie.backend.shared.auth.dto;
 import java.util.List;
 
 /**
- * 缓存的登录信息。
+ * 已通过身份验证的用户信息。
  *
  * @param userId 用户 ID
  * @param username 用户名
@@ -12,7 +12,7 @@ import java.util.List;
  * @param accessToken 访问令牌，用于访问接口时的身份验证
  * @param refreshToken 刷新令牌，用于刷新身份验证信息的令牌
  */
-public record CachedAuth(
+public record AuthenticatedUser(
   long userId,
   String username,
   String nickname,

@@ -8,14 +8,15 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 /**
- * 与用户表相关的数据库操作。
+ * 用户表 SQL 语句映射器。
  */
 @Mapper
 public interface UserMapper {
+
   /**
    * 根据用户 ID 查询用户。
    *
-   * @param userId 需要查询的用户 ID
+   * @param userId 用户 ID
    * @return 用户表数据
    */
   User selectById(long userId);
@@ -23,7 +24,7 @@ public interface UserMapper {
   /**
    * 根据用户名查询用户。
    *
-   * @param username 需要查询的用户名
+   * @param username 用户名
    * @return 用户表数据
    */
   User selectByUsername(String username);
@@ -31,7 +32,7 @@ public interface UserMapper {
   /**
    * 根据用户 ID 查询用户信息。
    *
-   * @param userId 需要查询的用户 ID
+   * @param userId 用户 ID
    * @return 用户信息
    */
   UserInfo selectInfoById(long userId);

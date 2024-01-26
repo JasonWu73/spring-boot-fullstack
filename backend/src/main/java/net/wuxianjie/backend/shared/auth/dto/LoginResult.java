@@ -7,11 +7,11 @@ import java.util.List;
  *
  * @param accessToken 访问令牌，用于访问接口时的身份验证
  * @param refreshToken 刷新令牌，用于刷新身份验证信息的令牌
- * @param expiresInSeconds 令牌在多少秒后过期
+ * @param expiresInSeconds 令牌过期时间，单位：秒
  * @param nickname 昵称
  * @param authorities 功能权限列表
  */
-public record AuthResult(
+public record LoginResult(
   String accessToken,
   String refreshToken,
   int expiresInSeconds,

@@ -51,11 +51,11 @@ public class GlobalExceptionHandler {
    * <p>
    * 由 {@link DefaultHandlerExceptionResolver} 可知 Spring 中默认对应 404 的异常有哪些。
    * <p>
-   * <h2>返回 JSON 数据</h2>
+   * <h3>返回 JSON 数据</h3>
    *
    * <ol>
    *   <li>请求头 {@value HttpHeaders#ACCEPT} 中明确指定了 {@value MediaType#APPLICATION_JSON_VALUE}</li>
-   *   <li>请求 URI 以 {@value net.wuxianjie.backend.shared.auth.SecurityConfig#API_PATH_PREFIX} 开头</li>
+   *   <li>请求 URI 以 {@value SecurityConfig#API_PATH_PREFIX} 开头</li>
    * </ol>
    *
    * <h3>返回页面</h3>

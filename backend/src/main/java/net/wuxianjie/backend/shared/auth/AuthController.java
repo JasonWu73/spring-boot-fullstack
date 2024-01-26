@@ -1,15 +1,12 @@
 package net.wuxianjie.backend.shared.auth;
 
 import jakarta.validation.Valid;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
-import net.wuxianjie.backend.shared.auth.dto.AuthResult;
 import net.wuxianjie.backend.shared.auth.dto.LoginParam;
+import net.wuxianjie.backend.shared.auth.dto.LoginResult;
 import net.wuxianjie.backend.shared.oplog.Operation;
-import net.wuxianjie.backend.user.AuthServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthController {
 
-  private final AuthServiceImpl authService;
+  private final AuthService authService;
 
   /**
    * 登录。
@@ -34,7 +31,7 @@ public class AuthController {
    */
   @Operation("登录")
   @PostMapping("/login")
-  public AuthResult login(@Valid @RequestBody final LoginParam param) {
+  public LoginResult login(@Valid @RequestBody final LoginParam param) {
     return authService.login(param);
   }
 
@@ -45,7 +42,7 @@ public class AuthController {
    * @return 身份验证结果
    */
   @PostMapping("/refresh/{refreshToken}")
-  public AuthResult refresh(@PathVariable final String refreshToken) {
+  public LoginResult refresh(@PathVariable final String refreshToken) {
     return authService.refresh(refreshToken);
   }
 
@@ -56,17 +53,8 @@ public class AuthController {
    */
   @DeleteMapping("/logout")
   public ResponseEntity<Void> logout() {
-    authService.logout();
+    final String username = AuthUtils.getCurrentUser().orElseThrow().username();
+    authService.logout(username);
     return ResponseEntity.noContent().build();
-  }
-
-  /**
-   * 获取已登录用户名列表。
-   *
-   * @return 已登录用户名列表
-   */
-  @GetMapping("/logged-in-users")
-  public List<String> getLoggedInUsers() {
-    return authService.getLoggedInUsers();
   }
 }
