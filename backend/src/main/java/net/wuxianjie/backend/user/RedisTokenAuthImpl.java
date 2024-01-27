@@ -43,7 +43,7 @@ public class RedisTokenAuthImpl implements TokenAuth {
       .opsForValue()
       .get(ACCESS_TOKEN_KEY_PREFIX + accessToken);
     if (userJson == null) {
-      throw new ApiException(HttpStatus.UNAUTHORIZED, "访问令牌已过期");
+      throw new ApiException(HttpStatus.UNAUTHORIZED, "未通过身份验证");
     }
 
     return jsonConverter.parse(userJson, AuthenticatedUser.class);

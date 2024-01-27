@@ -40,11 +40,7 @@ public interface UserMapper {
   /**
    * 根据查询条件获取用户分页列表。
    * <p>
-   * 排序规则：
-   * <ul>
-   *   <li>由分页参数决定是否按照某个列进行排序</li>
-   *   <li>支持排序的列有：创建时间、更新时间</li>
-   * </ul>
+   * 支持排序的列：创建时间、更新时间。
    *
    * @param paginationParam 分页参数
    * @param userParam 查询条件
@@ -66,7 +62,7 @@ public interface UserMapper {
   /**
    * 新增用户。
    *
-   * @param user 需要新增的用户数据
+   * @param user 用户数据
    */
   void insert(User user);
 
@@ -80,7 +76,7 @@ public interface UserMapper {
   /**
    * 根据用户 ID 删除用户。
    *
-   * @param userId 需要删除的用户 ID
+   * @param userId 用户 ID
    */
   void deleteById(long userId);
 }

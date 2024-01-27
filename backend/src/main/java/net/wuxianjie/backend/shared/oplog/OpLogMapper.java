@@ -16,7 +16,7 @@ public interface OpLogMapper {
   /**
    * 根据查询条件获取操作日志分页列表。
    * <p>
-   * 支持排序的列：请求时间、IP、用户名。
+   * 支持排序的列：请求时间。
    *
    * @param paginationParam 分页参数
    * @param logParam 查询条件

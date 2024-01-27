@@ -79,6 +79,11 @@ public class TokenAuthFilter extends OncePerRequestFilter {
     try {
       user = tokenAuth.authenticate(accessToken);
     } catch (Exception e) {
+      if (e instanceof ApiException) {
+        handlerExceptionResolver.resolveException(request, response, null, e);
+        return;
+      }
+
       handlerExceptionResolver.resolveException(
         request,
         response,

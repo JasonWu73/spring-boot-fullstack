@@ -11,8 +11,6 @@ import net.wuxianjie.backend.shared.auth.dto.AuthenticatedUser;
 import net.wuxianjie.backend.shared.auth.dto.LoginParam;
 import net.wuxianjie.backend.shared.auth.dto.LoginResult;
 import net.wuxianjie.backend.shared.exception.ApiException;
-import net.wuxianjie.backend.shared.json.JsonConverter;
-import net.wuxianjie.backend.shared.oplog.OpLogAspect;
 import net.wuxianjie.backend.shared.util.RsaUtils;
 import net.wuxianjie.backend.shared.util.StrUtils;
 import org.springframework.http.HttpStatus;
@@ -37,7 +35,6 @@ public class AuthServiceImpl implements AuthService {
 
   private final PasswordEncoder passwordEncoder;
 
-  private final JsonConverter jsonConverter;
   private final TokenAuth tokenAuth;
   private final UserMapper userMapper;
 

@@ -39,10 +39,7 @@
       <arg column="remark" javaType="string"/>
       <arg column="username" javaType="string"/>
       <arg column="nickname" javaType="string"/>
-      <arg
-        column="status"
-        javaType="net.wuxianjie.backend.user.AccountStatus"
-      />
+      <arg column="status" javaType="net.wuxianjie.backend.user.AccountStatus"/>
       <arg column="authorities" javaType="string"/>
     </constructor>
   </resultMap>
@@ -63,14 +60,14 @@
 
   <select id="selectByQueryLimit" resultMap="userInfo">
     select
-    id,
-    created_at as createdAt,
-    updated_at as updatedAt,
-    remark,
-    username,
-    nickname,
-    status,
-    authorities
+      id,
+      created_at as createdAt,
+      updated_at as updatedAt,
+      remark,
+      username,
+      nickname,
+      status,
+      authorities
     from user
     <include refid="whereQuery"/>
     <if test="p.sortColumn == 'createdAt' or p.sortColumn == 'updatedAt'">
@@ -87,59 +84,54 @@
 
   <sql id="whereQuery">
     <where>
-      <if test="q.username != null">
-        and username like #{q.username}
-      </if>
-      <if test="q.nickname != null">
-        and nickname like #{q.nickname}
-      </if>
-      <if test="q.status != null">
-        and status = #{q.status}
-      </if>
-      <if test="q.authority != null">
-        and (
+      <if test="q.username != null">and username like #{q.username}</if>
+      <if test="q.nickname != null">and nickname like #{q.nickname}</if>
+      <if test="q.status != null">and status = #{q.status}</if>
+      <if test="q.authority != null">and (
         authorities = #{q.authority} or
         authorities like concat(#{q.authority}, ',%') or
         authorities like concat('%,', #{q.authority}, ',%') or
         authorities like concat('%,', #{q.authority})
-        )
-      </if>
+      )</if>
     </where>
   </sql>
 
   <insert id="insert">
-    insert into user (created_at,
-                      updated_at,
-                      remark,
-                      username,
-                      nickname,
-                      hashed_password,
-                      status,
-                      authorities)
-    values (#{createdAt},
-            #{updatedAt},
-            #{remark},
-            #{username},
-            #{nickname},
-            #{hashedPassword},
-            #{status},
-            #{authorities})
+    insert into user (
+      created_at,
+      updated_at,
+      remark,
+      username,
+      nickname,
+      hashed_password,
+      status,
+      authorities
+    )
+    values (
+      #{createdAt},
+      #{updatedAt},
+      #{remark},
+      #{username},
+      #{nickname},
+      #{hashedPassword},
+      #{status},
+      #{authorities}
+   )
   </insert>
 
   <update id="updateById">
     update user
-    set updated_at = #{updatedAt},
-        remark = #{remark},
-        nickname = #{nickname},
-        hashed_password = #{hashedPassword},
-        status = #{status},
-        authorities = #{authorities}
+    set
+      updated_at = #{updatedAt},
+      remark = #{remark},
+      nickname = #{nickname},
+      hashed_password = #{hashedPassword},
+      status = #{status},
+      authorities = #{authorities}
     where id = #{id}
   </update>
 
   <delete id="deleteById">
-    delete
-    from user
-    where id = #{userId}
+    delete from user where id = #{userId}
   </delete>
 </mapper>

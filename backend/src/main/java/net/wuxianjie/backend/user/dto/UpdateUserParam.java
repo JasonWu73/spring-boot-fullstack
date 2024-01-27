@@ -1,5 +1,6 @@
 package net.wuxianjie.backend.user.dto;
 
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
 import java.util.List;
 import lombok.Data;
@@ -14,6 +15,7 @@ public class UpdateUserParam {
    * 昵称。
    */
   @NotBlank(message = "昵称不能为空")
+  @Max(value = 255, message = "昵称长度不能超过 255")
   private String nickname;
 
   /**
@@ -24,5 +26,6 @@ public class UpdateUserParam {
   /**
    * 备注。
    */
+  @Max(value = 255, message = "备注长度不能超过 255")
   private String remark;
 }

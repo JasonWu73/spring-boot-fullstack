@@ -90,7 +90,7 @@ public class RequestParamController {
    * POST JSON 传参。
    */
   @PostMapping("/json")
-  public OuterData postJsonData(@Valid @RequestBody final OuterData data) {
+  public OuterData postJsonData(@RequestBody @Valid final OuterData data) {
     return data;
   }
 

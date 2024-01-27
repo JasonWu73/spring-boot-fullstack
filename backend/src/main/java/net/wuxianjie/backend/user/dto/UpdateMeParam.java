@@ -1,5 +1,6 @@
 package net.wuxianjie.backend.user.dto;
 
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
@@ -13,6 +14,7 @@ public class UpdateMeParam {
    * 昵称。
    */
   @NotBlank(message = "昵称不能为空")
+  @Max(value = 255, message = "昵称长度不能超过 255")
   private String nickname;
 
   /**

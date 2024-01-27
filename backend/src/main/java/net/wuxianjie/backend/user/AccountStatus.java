@@ -11,10 +11,11 @@ import net.wuxianjie.backend.shared.mybatis.EnumType;
 /**
  * 账号状态。
  */
+@RequiredArgsConstructor
 @Getter
 @ToString
-@RequiredArgsConstructor
 public enum AccountStatus implements EnumType {
+
   /**
    * 禁用。
    */
@@ -46,8 +47,9 @@ public enum AccountStatus implements EnumType {
   public static Optional<AccountStatus> resolve(final Integer value) {
     return Optional
       .ofNullable(value)
-      .flatMap(val ->
-        Arrays.stream(VALUES).filter(theEnum -> theEnum.code == val).findFirst()
-      );
+      .flatMap(val -> Arrays
+        .stream(VALUES)
+        .filter(theEnum -> theEnum.code == val)
+        .findFirst());
   }
 }

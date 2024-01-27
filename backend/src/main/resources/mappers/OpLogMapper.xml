@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.wuxianjie.backend.shared.oplog.OpLogMapper">
-  <select
-    id="selectByQueryLimit"
-    resultType="net.wuxianjie.backend.shared.oplog.OpLog"
-  >
+  <select id="selectByQueryLimit" resultType="net.wuxianjie.backend.shared.oplog.OpLog">
     select
       id,
       requested_at as requestedAt,
@@ -13,13 +10,7 @@
       message
     from op_log
     <include refid="whereQuery"/>
-    <if
-      test="
-        p.sortColumn == 'requestedAt' or
-        p.sortColumn == 'clientIp' or
-        p.sortColumn == 'username'
-      "
-    >
+    <if test="p.sortColumn == 'requestedAt'">
       order by ${p.sortColumn} ${p.sortOrder}
     </if>
     limit #{p.offset}, #{p.pageSize}
@@ -41,10 +32,7 @@
     </where>
   </sql>
 
-  <select
-    id="selectLoginsLimit"
-    resultType="net.wuxianjie.backend.shared.dto.ChartData"
-  >
+  <select id="selectLoginsLimit" resultType="net.wuxianjie.backend.shared.dto.ChartData">
     select
       username as name,
       sum(if(message = '登录', 1, 0)) as value
@@ -54,10 +42,7 @@
     limit #{limit}
   </select>
 
-  <select
-    id="selectLoginsHistory"
-    resultType="net.wuxianjie.backend.shared.dto.ChartData"
-  >
+  <select id="selectLoginsHistory" resultType="net.wuxianjie.backend.shared.dto.ChartData">
     select
       date_format(requested_at, '%Y-%m-%d') as name,
       sum(if(message = '登录', 1, 0)) as value
