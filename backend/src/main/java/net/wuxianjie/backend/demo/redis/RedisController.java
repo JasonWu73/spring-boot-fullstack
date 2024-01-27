@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * Redis 分布式锁示例。
  */
-@Slf4j
 @RestController
 @RequestMapping("/api/v1/public/redis")
 @RequiredArgsConstructor
+@Slf4j
 public class RedisController {
 
   private static final String LOCK_KEY = "lock:demo";
@@ -31,15 +31,11 @@ public class RedisController {
     new Thread(this::executeSync).start();
     new Thread(this::executeSync).start();
     new Thread(this::executeSync).start();
-
     return ResponseEntity.noContent().build();
   }
 
   private void executeSync() {
-    System.out.printf(
-      "[%s] 准备开始执行业务逻辑%n",
-      Thread.currentThread().getName()
-    );
+    System.out.printf("[%s] 准备开始执行业务逻辑%n", Thread.currentThread().getName());
 
     // 生成锁的唯一值
     final String identifier = StrUtils.generateUuid();
@@ -64,7 +60,6 @@ public class RedisController {
 
   private void doBiz(final String identifier) {
     final String threadName = Thread.currentThread().getName();
-
     System.out.printf("🔐[%s] 获取锁成功%n", threadName);
 
     try {

@@ -42,8 +42,16 @@ public class ApiCallController {
    */
   @GetMapping("/params")
   public ApiResponse<OuterData> sendGetRequest() {
-    final Map<String, String> urlParams = getSendGetRequestParams();
-
+    final Map<String, String> urlParams = Map.of(
+      "name",
+      "张三",
+      "num",
+      "123",
+      "type",
+      "1",
+      "dateTime",
+      getNow()
+    );;
     return apiCaller.get(
       "http://localhost:%s/api/v1/public/params".formatted(port),
       urlParams,
@@ -56,9 +64,7 @@ public class ApiCallController {
    */
   @PostMapping("/form")
   public ApiResponse<OuterData> sendPostFormRequest() {
-    final LinkedMultiValueMap<String, String> formData =
-      getSendPostFormRequestParams();
-
+    final LinkedMultiValueMap<String, String> formData = getSendPostFormRequestParams();
     return apiCaller.form(
       HttpMethod.POST,
       "http://localhost:%s/api/v1/public/params".formatted(port),
@@ -73,7 +79,6 @@ public class ApiCallController {
   @PostMapping("/upload")
   public ApiResponse<Uploaded> sendPostUploadRequest() {
     final MultipartBodyBuilder formDataBuilder = getSendPostUploadRequest();
-
     return apiCaller.upload(
       HttpMethod.POST,
       "http://localhost:%s/api/v1/public/params/upload".formatted(port),
@@ -87,8 +92,11 @@ public class ApiCallController {
    */
   @PostMapping("/json")
   public ApiResponse<OuterData> sendPostJsonRequest() {
-    final OuterData jsonData = getSendPostJsonRequestParams();
-
+    final OuterData jsonData = new OuterData(
+      100L,
+      "张三",
+      new InnerData(new Date(), LocalDate.now(), LocalDateTime.now())
+    );
     return apiCaller.json(
       HttpMethod.POST,
       "http://localhost:%s/api/v1/public/params/json".formatted(port),
@@ -97,52 +105,23 @@ public class ApiCallController {
     );
   }
 
-  private static Map<String, String> getSendGetRequestParams() {
-    return Map.of(
-      "name",
-      "张三",
-      "num",
-      "123",
-      "type",
-      "1",
-      "dateTime",
-      getNow()
-    );
-  }
-
-  private static LinkedMultiValueMap<
-    String,
-    String
-  > getSendPostFormRequestParams() {
-    final LinkedMultiValueMap<String, String> formData =
-      new LinkedMultiValueMap<>();
-
+  private static LinkedMultiValueMap<String, String> getSendPostFormRequestParams() {
+    final LinkedMultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
     formData.add("name", "张三");
     formData.add("num", "123");
     formData.add("type", "1");
     formData.add("dateTime", getNow());
-
     return formData;
   }
 
   private MultipartBodyBuilder getSendPostUploadRequest() {
     final MultipartBodyBuilder formDataBuilder = new MultipartBodyBuilder();
-
     formDataBuilder.part("message", "测试上传文件");
     formDataBuilder.part(
       "file",
       resourceLoader.getResource("file:/Users/wxj/Downloads/README.md")
     );
-
     return formDataBuilder;
-  }
-
-  private static OuterData getSendPostJsonRequestParams() {
-    return new OuterData(
-      100L,
-      "张三",
-      new InnerData(new Date(), LocalDate.now(), LocalDateTime.now())
-    );
   }
 
   private static String getNow() {

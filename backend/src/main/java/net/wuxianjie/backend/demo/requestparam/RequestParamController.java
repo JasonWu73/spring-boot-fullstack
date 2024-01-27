@@ -15,16 +15,20 @@ import net.wuxianjie.backend.shared.json.JsonConfig;
 import net.wuxianjie.backend.shared.validator.EnumValidator;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 测试几种常用的请求参数接收方式。
  */
-@Slf4j
-@Validated
 @RestController
 @RequestMapping("/api/v1/public/params")
+@Validated
+@Slf4j
 public class RequestParamController {
 
   /**
@@ -40,26 +44,14 @@ public class RequestParamController {
   public OuterData getData(
     @RequestParam final String name,
     @NotNull(message = "num 不能为 null") final Integer num,
-    @EnumValidator(
-      value = Type.class,
-      message = "type 值不合法"
-    ) final Integer type,
-    @DateTimeFormat(
-      pattern = JsonConfig.DATE_TIME_PATTERN
-    ) final LocalDateTime dateTime
+    @EnumValidator(value = Type.class, message = "type 值不合法") final Integer type,
+    @DateTimeFormat(pattern = JsonConfig.DATE_TIME_PATTERN) final LocalDateTime dateTime
   ) {
-    log.info(
-      "name={}, num={}, type={}, dateTime={}",
-      name,
-      num,
-      type,
-      dateTime
-    );
+    log.info("name={}, num={}, type={}, dateTime={}", name, num, type, dateTime);
 
     final LocalDateTime returned = dateTime == null
       ? LocalDateTime.now()
       : dateTime;
-
     return new OuterData(
       100L,
       name,
@@ -94,10 +86,11 @@ public class RequestParamController {
     return data;
   }
 
+  @RequiredArgsConstructor
   @Getter
   @ToString
-  @RequiredArgsConstructor
   enum Type {
+
     ONE(1);
 
     @JsonValue
