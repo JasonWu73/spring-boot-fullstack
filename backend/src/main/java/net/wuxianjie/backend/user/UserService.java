@@ -56,9 +56,9 @@ public class UserService {
    */
   public void updateMe(final UpdateMeParam param) {
     // ----- 获取旧的用户数据 -----
-    final AuthenticatedUser loggedInUser = AuthUtils.getCurrentUser().orElseThrow();
+    final AuthenticatedUser loggedIn = AuthUtils.getCurrentUser().orElseThrow();
     final User user = Optional
-      .ofNullable(userMapper.selectById(loggedInUser.userId()))
+      .ofNullable(userMapper.selectById(loggedIn.userId()))
       .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "用户不存在"));
 
     // ----- 更新用户数据 -----
@@ -89,7 +89,7 @@ public class UserService {
 
     // ----- 如果需要更新密码，则需要重新登录 -----
     if (needsUpdatePassword) {
-      authService.logout(loggedInUser.username());
+      authService.logout(loggedIn.username());
     }
   }
 

@@ -17,7 +17,7 @@ public interface AuthService {
   LoginResult login(LoginParam param);
 
   /**
-   * 刷新身份验证信息。
+   * 刷新 Token。
    *
    * @param refreshToken 刷新令牌
    * @return 身份验证结果

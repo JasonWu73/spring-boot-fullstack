@@ -1,6 +1,8 @@
-# Backend
+# 前后端分离项目
 
-## REST API Endpoints
+## 后端项目
+
+### REST API Endpoints
 
 ```text
 GET  /orders          <---> orders
@@ -11,9 +13,7 @@ GET  /orders/1/lines  <---> orders[1].lines
 POST /orders/1/lines  <---> orders[1].lines.push(data)
 ```
 
-# Frontend
-
-## 创建项目
+## 前端项目
 
 ```bash
 # Vite 创建 React + TypeScript 项目
@@ -63,8 +63,3 @@ npm install react-router-dom
 npm install @preact/signals-react
 npm install --save-dev @types/use-sync-external-store
 ```
-
-## 教程
-
-- [The Ultimate React Course 2024: React, Redux & More](https://www.udemy.com/course/the-ultimate-react-course/)
-- [https://www.udemy.com/course/react-the-complete-guide-incl-redux/](https://www.udemy.com/course/react-the-complete-guide-incl-redux/)

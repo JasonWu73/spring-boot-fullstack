@@ -9,16 +9,16 @@
 			"name": "身份验证",
 			"item": [
 				{
-					"name": "登录",
+					"name": "登录（公开 API）",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
 									"if (pm.response.status === \"OK\") {",
-									"  const data = pm.response.json();",
-									"  pm.collectionVariables.set('accessToken', data.accessToken);",
-									"  pm.collectionVariables.set('refreshToken', data.refreshToken);",
+									"  const data = pm.response.json()",
+									"  pm.collectionVariables.set('accessToken', data.accessToken)",
+									"  pm.collectionVariables.set('refreshToken', data.refreshToken)",
 									"}",
 									""
 								],
@@ -31,7 +31,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"username\": \"ZRNE+4q5IFyPLycCpwvlUg8WvlcCjXStdHF7hnVkLqRwCPTMzoZ4g9L/glqv5EbXPn/Irix5mt/tTTubenAHXW1QwzKutBPYDylQmb6yonVyo3tm0EUnvj61czR0MCZF1st7aHuy8qAFVtf76blBjd6vqRY27572BUwlDn+boL4aStL0dopTPs9UJTcLNvCfKJmup7mKmKSHEEaRoY8XHdn+gufzSZwZmbBGCdjQAixmrgguF+s9FBzko0m+wlY+UQo28GdLoYzxVqNfS8KIdgwup/3rnIAPka7n2BFgLHJlnE4647GIBjUQZ2jk2otbrn6QEUX0wAcWCo5TwzXa+g==\", // 加密后的用户名（不区分大小写），必填\n  \"password\": \"BmoQzfEaVa1D0RgnRcBj17++JZAFqYKiCalbkaDlpkjehqANdU1MfUwZvLhoJMyaU9xZSfdGhaKt3VuD7tfXLUOsk+tvaRDqoaSgsqUjas3fhoQMcPFcGfqpNj9J8OTSeXeLpaw69R3dc1ZzYga6Xx9KhNX3BT7bhehYNkGvWginPUNDy6sBQm9r/GsLFMNq7MOjNYyJGBwRcowkoYp2hwBdd6hn21/g9XbPEPd57uRsHRidmCz2hdOiTb3WVnsoLIzYdoTEUJIOH9wuqUTnRLCMgCBg/hqKd3xGttZctblDUs4fM/2oATACdFArAxvITqPfK7iXF/SdgLqO40a55w==\" // 加密后的密码，必填\n}",
+							"raw": "{\n  \"username\": \"ljEXFUF/VJSsTH1l5AX+VwhvuFQ+I7TY3i2H5mmZxlMu3r4WNy4x2TkzlW0C9KkHOZ3fCEQU+qBRcUcic6QzvHYKRHUKjiX+q5sjGpZQKcsQG9wTrrhHl9rxSahSJyN0LpvUwxpnzHehMydPWyVuLT0v7rEJG/aOFINScNx9FH0JE06bBOfPPn3lj6SAKeXb5ZIlIFB99t7DpVj6V3hvmPaNAlYyveTw7f4lC+r1Hefd/+7G3lmN0jeowEWHdmdPP8/RT03S8Lfxvp8zoS3tiBDFK4ZSw9EkqQAg0hT/nnJaMU5QqSgszFKZnacXcCPTm5xJdjc4gYWd8m98d7o9ww==\",\n  \"password\": \"W5yvNdQL/rMVYNn7T1wvwwA88rCwyjTrdz9Rn8vhh54+nBFTwWyoa+0u/N/q0Sct0equRQCkjHe9VXkjiJbihgx0/CvpBtDOPiPrN/pt+J0gmma71jNS4TU0te2bwCk6OwVgOSX1n3YwnN7acq30jg6vxeh5TzCDXpgo2EmdftimQNN1n0EdQbLoNdwXf59Zuax22yjMNIE3OiwektZpqD+o+UL1L/oeEKnjRGXJ84Ym7yVT16LA9l5MqTAkqHMOD/Eykt1LvPI589x7hn8NgOu87vzz4JHAZNJSJyEqqolAAY7x1Olvrcu5oQ/YU28jvo5jc7xiUkUtR2/jxj2rCw==\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -49,21 +49,22 @@
 								"auth",
 								"login"
 							]
-						}
+						},
+						"description": "# 登录（公开 API）\n\n```\nPOST /api/v1/auth/login\n```\n\n**JSON 请求体**\n\n```json\n{\n  \"username\": \"xxx\", // 加密后的用户名（不区分大小写），必填\n  \"password\": \"xxx\" // 加密后的密码，必填\n}\n```\n\n## 响应结果\n\n**正确响应**\n\n```json\n{\n  \"accessToken\": \"f6df572d295642839dd3ab4e44a83700\", // 访问令牌，用于访问接口时的身份验证\n  \"refreshToken\": \"e90912c6bbb24c1cbddd033b098646b4\", // 刷新令牌，用于刷新身份验证信息的令牌\n  \"expiresInSeconds\": 1800, // 令牌过期时间，单位：秒\n  \"nickname\": \"超级管理员\", // 昵称\n  \"authorities\": [ // 功能权限列表\n    \"root\"\n  ]\n}\n```\n\n**错误响应**\n\n```json\n{\n  \"timestamp\": \"2024-01-29 11:47:06\", // 请求发起的时间戳\n  \"status\": 401, // HTTP 响应状态码\n  \"error\": \"用户名或密码错误\", // 错误信息\n  \"path\": \"/api/v1/auth/login\" // 请求地址\n}\n```"
 					},
 					"response": []
 				},
 				{
-					"name": "刷新身份验证信息",
+					"name": "刷新 Token（受保护 API）",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
 									"if (pm.response.status === \"OK\") {",
-									"  const data = pm.response.json();",
-									"  pm.collectionVariables.set('accessToken', data.accessToken);",
-									"  pm.collectionVariables.set('refreshToken', data.refreshToken);",
+									"  const data = pm.response.json()",
+									"  pm.collectionVariables.set('accessToken', data.accessToken)",
+									"  pm.collectionVariables.set('refreshToken', data.refreshToken)",
 									"}",
 									""
 								],
@@ -95,15 +96,17 @@
 							"variable": [
 								{
 									"key": "refreshToken",
-									"value": "{{refreshToken}}"
+									"value": "{{refreshToken}}",
+									"description": "刷新令牌"
 								}
 							]
-						}
+						},
+						"description": "# 刷新 Token（受保护 API）\n\n```\nPOST /api/v1/auth/refresh/{refreshToken}\n```\n\n- `refreshToken`：刷新令牌\n\n**HTTP Headers**\n\n```\nAuthorization: Bearer {accessToken}\n```\n\n- `accessToken`：访问令牌\n\n## 响应结果\n\n**正确响应**\n\n```json\n{\n  \"accessToken\": \"f6df572d295642839dd3ab4e44a83700\", // 访问令牌，用于访问接口时的身份验证\n  \"refreshToken\": \"e90912c6bbb24c1cbddd033b098646b4\", // 刷新令牌，用于刷新身份验证信息的令牌\n  \"expiresInSeconds\": 1800, // 令牌过期时间，单位：秒\n  \"nickname\": \"超级管理员\", // 昵称\n  \"authorities\": [ // 功能权限列表\n    \"root\"\n  ]\n}\n```\n\n**错误响应**\n\n```json\n{\n  \"timestamp\": \"2024-01-29 11:36:06\", // 请求发起的时间戳\n  \"status\": 401, // HTTP 响应状态码\n  \"error\": \"身份验证失败\", // 错误信息\n  \"path\": \"/api/v1/auth/refresh/e90912c6bbb24c1cbddd033b098646b4\" // 请求地址\n}\n```"
 					},
 					"response": []
 				},
 				{
-					"name": "退出登录",
+					"name": "退出登录（受保护 API）",
 					"request": {
 						"method": "DELETE",
 						"header": [
@@ -124,44 +127,8 @@
 								"auth",
 								"logout"
 							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "获取已登录用户名列表",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{accessToken}}",
-								"type": "default"
-							}
-						],
-						"url": {
-							"raw": "{{BASE_URL}}/api/v1/auth/logged-in-users",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"auth",
-								"logged-in-users"
-							]
-						}
+						},
+						"description": "# 退出登录（受保护 API）\n\n```\nDELETE /api/v1/auth/logout\n```\n\n**HTTP Headers**\n\n```\nAuthorization: Bearer {accessToken}\n```\n\n- `accessToken`：访问令牌\n\n## 响应结果\n\n**正确响应**\n\n无，HTTP 响应状态码为 `204`。\n\n**错误响应**\n\n```json\n{\n  \"timestamp\": \"2024-01-29 13:58:36\", // 请求发起的时间戳\n  \"status\": 401, // HTTP 响应状态码\n  \"error\": \"身份验证失败\", // 错误信息\n  \"path\": \"/api/v1/auth/logout\" // 请求地址\n}\n```"
 					},
 					"response": []
 				}
