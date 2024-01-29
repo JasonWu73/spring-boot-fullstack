@@ -490,7 +490,7 @@
 			"name": "操作日志",
 			"item": [
 				{
-					"name": "获取操作日志分页列表",
+					"name": "获取操作日志分页列表（管理员 API）",
 					"request": {
 						"method": "GET",
 						"header": [
@@ -501,7 +501,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/op-logs?pageNum=1&pageSize=10&sortColumn=username&sortOrder=desc&startAt=2023-11-17&endAt=2023-11-17",
+							"raw": "{{BASE_URL}}/api/v1/op-logs?pageNum=1&pageSize=10&sortColumn=requestedAt&sortOrder=desc&startAt=2024-01-29&endAt=2024-01-29&clientIp=12&username=ad&message=登 录",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -513,51 +513,57 @@
 							"query": [
 								{
 									"key": "pageNum",
-									"value": "1"
+									"value": "1",
+									"description": "页码，必填"
 								},
 								{
 									"key": "pageSize",
-									"value": "10"
+									"value": "10",
+									"description": "每页条数，必填"
 								},
 								{
 									"key": "sortColumn",
-									"value": "username",
-									"description": "请求时间、IP、用户名"
+									"value": "requestedAt",
+									"description": "排序的列名，支持：请求时间"
 								},
 								{
 									"key": "sortOrder",
-									"value": "desc"
+									"value": "desc",
+									"description": "排序方式，只能是 `asc` 或 `desc`"
 								},
 								{
 									"key": "startAt",
-									"value": "2023-11-17"
+									"value": "2024-01-29",
+									"description": "开始日期，必填"
 								},
 								{
 									"key": "endAt",
-									"value": "2023-11-17"
+									"value": "2024-01-29",
+									"description": "结束日期，必填"
 								},
 								{
 									"key": "clientIp",
-									"value": "127",
-									"disabled": true
+									"value": "12",
+									"description": "客户端 IP"
 								},
 								{
 									"key": "username",
-									"value": "su",
-									"disabled": true
+									"value": "ad",
+									"description": "用户名"
 								},
 								{
 									"key": "message",
 									"value": "登 录",
-									"disabled": true
+									"description": "操作描述"
 								}
 							]
-						}
+						},
+						"description": "# 获取操作日志分页列表（管理员 API）\n\n```\nGET /api/v1/op-logs \n```\n\n**URL 参数**\n\n请查看主面板中的 `Params` 标签。\n\n**HTTP Headers**\n\n```\nAuthorization: Bearer {accessToken}\n```\n\n- `accessToken`：访问令牌\n\n## 响应结果\n\n**正确响应**\n\n```json\n{\n  \"pageNum\": 1, // 页码\n  \"pageSize\": 10, // 每页条数\n  \"total\": 1, // 总条数\n  \"list\": [ // 操作日志列表\n    {\n      \"id\": 7, // 日志 ID\n      \"requestedAt\": \"2024-01-29 17:07:10\", // 请求时间\n      \"clientIp\": \"127.0.0.1\", // 客户端 IP\n      \"username\": \"admin\", // 用户名\n      \"message\": \"登录\" // 操作描述\n    }\n  ]\n}\n```\n\n**错误响应**\n\n```json\n{\n  \"timestamp\": \"2024-01-29 17:11:51\", // 请求发起的时间戳\n  \"status\": 403, // HTTP 响应状态码\n  \"error\": \"没有访问权限\", // 错误信息\n  \"path\": \"/api/v1/op-logs\" // 请求地址\n}\n```"
 					},
 					"response": []
 				},
 				{
-					"name": "获取登录数前 N 名的用户",
+					"name": "获取登录数前 N 名的用户（管理员 API）",
 					"request": {
 						"method": "GET",
 						"header": [
@@ -582,16 +588,17 @@
 							"variable": [
 								{
 									"key": "num",
-									"value": "3",
-									"description": "取值范围为 1 ~ 10"
+									"value": "1",
+									"description": "前几名，取值范围为 1 ~ 10"
 								}
 							]
-						}
+						},
+						"description": "# 获取登录数前 N 名的用户（管理员 API）\n\n```\nGET /api/v1/op-logs/logins-top/{num}\n```\n\n- `num`：前几名，取值范围为 1 ~ 10\n\n**HTTP Headers**\n\n```\nAuthorization: Bearer {accessToken}\n```\n\n- `accessToken`：访问令牌\n\n## 响应结果\n\n**正确响应**\n\n```json\n[\n  {\n    \"name\": \"su\", // 用户名\n    \"value\": 7 // 登录数\n  }\n]\n```\n\n**错误响应**\n\n```json\n{\n  \"timestamp\": \"2024-01-29 17:32:56\", // 请求发起的时间戳\n  \"status\": 401, // HTTP 响应状态码\n  \"error\": \"身份验证失败\", // 错误信息\n  \"path\": \"/api/v1/op-logs/logins-top/1\" // 请求地址\n}\n```"
 					},
 					"response": []
 				},
 				{
-					"name": "获取最近 N 天的登录数",
+					"name": "获取最近 N 天的登录数（管理员 API）",
 					"request": {
 						"method": "GET",
 						"header": [
@@ -617,10 +624,11 @@
 								{
 									"key": "days",
 									"value": "1",
-									"description": "取值范围为 1 ~ 30"
+									"description": "最近几天，取值范围为 1 ~ 30"
 								}
 							]
-						}
+						},
+						"description": "# 获取最近 N 天的登录数（管理员 API）\n\n```\nGET /api/v1/op-logs/logins-history/{days}\n```\n\n- `days`：最近几天，取值范围为 1 ~ 30\n\n**HTTP Headers**\n\n```\nAuthorization: Bearer {accessToken}\n```\n\n- `accessToken`：访问令牌\n\n## 响应结果\n\n**正确响应**\n\n```json\n[\n  {\n    \"name\": \"2024-01-29\", // 日期\n    \"value\": 9 // 登录数\n  }\n]\n```\n\n**错误响应**\n\n```json\n{\n  \"timestamp\": \"2024-01-29 17:39:23\", // 请求发起的时间戳\n  \"status\": 401, // HTTP 响应状态码\n  \"error\": \"身份验证失败\", // 错误信息\n  \"path\": \"/api/v1/op-logs/logins-history/1\" // 请求地址\n}\n```"
 					},
 					"response": []
 				}
@@ -1057,7 +1065,7 @@
 			]
 		},
 		{
-			"name": "获取项目版本号",
+			"name": "获取项目版本号（公开 API）",
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -1072,7 +1080,8 @@
 						"public",
 						"version"
 					]
-				}
+				},
+				"description": "# 获取项目版本号（公开 API）\n\n```\nGET /api/v1/public/version\n```\n\n## 响应结果\n\n**正确响应**\n\n```json\n{\n  \"version\": \"v1.0.0\", // 版本号\n  \"appName\": \"Spring Boot Demo\", // 应用名\n  \"developer\": \"吴仙杰\" // 开发者\n}\n```\n\n**错误响应**\n\n```json\n{\n  \"timestamp\": \"2024-01-29 16:56:23\", // 请求发起的时间戳\n  \"status\": 500, // HTTP 响应状态码\n  \"error\": \"服务异常\", // 错误信息\n  \"path\": \"/api/v1/public/version\" // 请求地址\n}\n```"
 			},
 			"response": []
 		}
