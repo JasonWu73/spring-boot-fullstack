@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 /**
  * 基于 Redis 的访问令牌身份验证业务处理。
  */
-@Service
+// @Service
 @RequiredArgsConstructor
 public class RedisTokenAuthImpl implements TokenAuth {
 
@@ -26,7 +26,7 @@ public class RedisTokenAuthImpl implements TokenAuth {
   private static final String ACCESS_TOKEN_KEY_PREFIX = "access:";
 
   /**
-   * 已登录用户在 Redis 中的键前缀：`{ "loggedIn:username": accessToken }`
+   * 已登录用户在 Redis 中的键前缀：`{ "loggedIn:username": accessToken }`。
    * <p>
    * 用于清除旧的登录信息（{@link #ACCESS_TOKEN_KEY_PREFIX}），以防止同一个用户通过不停登录或刷新身份验证信息，从而不断往 Redis 中写入登录信息。
    */
