@@ -37,13 +37,13 @@ public class PaginationParam {
   private int offset;
 
   /**
-   * 排序的列名。
+   * 支持排序的列。
    */
   @Pattern(regexp = "^[a-zA-Z0-9_]+$", message = "列名只能包含字母、数字和下划线")
   private String sortColumn;
 
   /**
-   * 排序方式，只能是 `asc` 或 `desc`。
+   * 排序方式：`asc` 或 `desc`。
    */
   @EnumValidator(value = SortOrder.class, message = "排序方式只能是 `asc` 或 `desc`")
   private String sortOrder;

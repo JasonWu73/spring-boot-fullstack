@@ -50,7 +50,7 @@
 								"login"
 							]
 						},
-						"description": "# 登录（公开 API）\n\n```\nPOST /api/v1/auth/login\n```\n\n**JSON 请求体**\n\n```json\n{\n  \"username\": \"xxx\", // 加密后的用户名（不区分大小写），必填\n  \"password\": \"xxx\" // 加密后的密码，必填\n}\n```\n\n## 响应结果\n\n**正确响应**\n\n```json\n{\n  \"accessToken\": \"f6df572d295642839dd3ab4e44a83700\", // 访问令牌，用于访问接口时的身份验证\n  \"refreshToken\": \"e90912c6bbb24c1cbddd033b098646b4\", // 刷新令牌，用于刷新身份验证信息的令牌\n  \"expiresInSeconds\": 1800, // 令牌过期时间，单位：秒\n  \"nickname\": \"超级管理员\", // 昵称\n  \"authorities\": [ // 功能权限列表\n    \"root\"\n  ]\n}\n```\n\n**错误响应**\n\n```json\n{\n  \"timestamp\": \"2024-01-29 11:47:06\", // 请求发起的时间戳\n  \"status\": 401, // HTTP 响应状态码\n  \"error\": \"用户名或密码错误\", // 错误信息\n  \"path\": \"/api/v1/auth/login\" // 请求地址\n}\n```"
+						"description": "# 登录（公开 API）\n\n```\nPOST /api/v1/auth/login\n```\n\n**JSON 请求体**\n\n```json\n{\n  \"username\": \"xxx\", // 加密后的用户名（不区分大小写），必填\n  \"password\": \"xxx\" // 加密后的密码，必填\n}\n```\n\n## 响应结果\n\n**正确响应**\n\n```json\n{\n  \"accessToken\": \"f6df572d295642839dd3ab4e44a83700\", // 访问令牌，用于访问接口时的身份验证\n  \"refreshToken\": \"e90912c6bbb24c1cbddd033b098646b4\", // 刷新令牌，用于刷新身份验证信息的令牌\n  \"expiresInSeconds\": 1800, // 令牌过期时间，单位：秒\n  \"username\": \"xxx\", // 用户名\n  \"nickname\": \"xxx\", // 昵称\n  \"authorities\": [ // 功能权限列表\n    \"root\"\n  ]\n}\n```\n\n**错误响应**\n\n```json\n{\n  \"timestamp\": \"2024-01-29 11:47:06\", // 请求发起的时间戳\n  \"status\": 401, // HTTP 响应状态码\n  \"error\": \"用户名或密码错误\", // 错误信息\n  \"path\": \"/api/v1/auth/login\" // 请求地址\n}\n```"
 					},
 					"response": []
 				},
@@ -101,7 +101,7 @@
 								}
 							]
 						},
-						"description": "# 刷新 Token（受保护 API）\n\n```\nPOST /api/v1/auth/refresh/{refreshToken}\n```\n\n- `refreshToken`：刷新令牌\n\n**HTTP Headers**\n\n```\nAuthorization: Bearer {accessToken}\n```\n\n- `accessToken`：访问令牌\n\n## 响应结果\n\n**正确响应**\n\n```json\n{\n  \"accessToken\": \"f6df572d295642839dd3ab4e44a83700\", // 访问令牌，用于访问接口时的身份验证\n  \"refreshToken\": \"e90912c6bbb24c1cbddd033b098646b4\", // 刷新令牌，用于刷新身份验证信息的令牌\n  \"expiresInSeconds\": 1800, // 令牌过期时间，单位：秒\n  \"nickname\": \"超级管理员\", // 昵称\n  \"authorities\": [ // 功能权限列表\n    \"root\"\n  ]\n}\n```\n\n**错误响应**\n\n```json\n{\n  \"timestamp\": \"2024-01-29 11:36:06\", // 请求发起的时间戳\n  \"status\": 401, // HTTP 响应状态码\n  \"error\": \"身份验证失败\", // 错误信息\n  \"path\": \"/api/v1/auth/refresh/e90912c6bbb24c1cbddd033b098646b4\" // 请求地址\n}\n```"
+						"description": "# 刷新 Token（受保护 API）\n\n```\nPOST /api/v1/auth/refresh/{refreshToken}\n```\n\n- `refreshToken`：刷新令牌\n\n**HTTP Headers**\n\n```\nAuthorization: Bearer {accessToken}\n```\n\n- `accessToken`：访问令牌\n\n## 响应结果\n\n**正确响应**\n\n```json\n{\n  \"accessToken\": \"f6df572d295642839dd3ab4e44a83700\", // 访问令牌，用于访问接口时的身份验证\n  \"refreshToken\": \"e90912c6bbb24c1cbddd033b098646b4\", // 刷新令牌，用于刷新身份验证信息的令牌\n  \"expiresInSeconds\": 1800, // 令牌过期时间，单位：秒\n  \"username\": \"xxx\", // 用户名\n  \"nickname\": \"xxx\", // 昵称\n  \"authorities\": [ // 功能权限列表\n    \"root\"\n  ]\n}\n```\n\n**错误响应**\n\n```json\n{\n  \"timestamp\": \"2024-01-29 11:36:06\", // 请求发起的时间戳\n  \"status\": 401, // HTTP 响应状态码\n  \"error\": \"身份验证失败\", // 错误信息\n  \"path\": \"/api/v1/auth/refresh/e90912c6bbb24c1cbddd033b098646b4\" // 请求地址\n}\n```"
 					},
 					"response": []
 				},
@@ -138,7 +138,7 @@
 			"name": "用户管理",
 			"item": [
 				{
-					"name": "获取当前用户数据",
+					"name": "获取当前用户数据（受保护 API）",
 					"request": {
 						"method": "GET",
 						"header": [
@@ -159,12 +159,13 @@
 								"users",
 								"me"
 							]
-						}
+						},
+						"description": "# 获取当前用户数据（受保护 API）\n\n```\nGET /api/v1/users/me\n```\n\n**HTTP Headers**\n\n```\nAuthorization: Bearer {accessToken}\n```\n\n- `accessToken`：访问令牌\n\n## 响应结果\n\n**正确响应**\n\n```json\n{\n  \"id\": 1, // 用户 ID\n  \"createdAt\": \"2023-11-16 17:28:06\", // 创建时间\n  \"updatedAt\": \"2023-12-14 17:01:10\", // 更新时间\n  \"remark\": null, // 备注\n  \"username\": \"xxx\", // 用户名\n  \"nickname\": \"xxx\", // 昵称\n  \"status\": 1, // 账号状态，0：禁用，1：启用\n  \"authorities\": [ // 功能权限列表\n    \"root\"\n  ]\n}\n```\n\n**错误响应**\n\n```json\n{\n  \"timestamp\": \"2024-01-29 20:34:46\", // 请求发起的时间戳\n  \"status\": 401, // HTTP 响应状态码\n  \"error\": \"身份验证失败\", // 错误信息\n  \"path\": \"/api/v1/users/me\" // 请求地址\n}\n```"
 					},
 					"response": []
 				},
 				{
-					"name": "更新当前用户信息",
+					"name": "更新当前用户信息（受保护 API）",
 					"request": {
 						"method": "PUT",
 						"header": [
@@ -176,7 +177,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"nickname\": \"吴仙杰\", // 昵称，必填\n  \"oldPassword\": \"Qm+TowObbPw0jWJp/bzu+uwqihWstzT4H49R0A1VbYZRt4lAZ8TshxZ3IwGC2PHHqbM1S+kJ3Z7W +Km6OeNf4u2oae5wbcNxb4RurOBHkTJA4xfmKfzmGD37gG9xIiCMrLxxOvuFSvTZDrmPufMNTcJ3NvLoP82QqgHvTMiAh2A=\", // 加密后的旧密码\n  \"newPassword\": \"HpTcmgLTKMaxzwJHF+HkrJXR/ffnNIwp5AW51vRtRUu4ITjGUED+6g96hHk8zc9r0SdKwWIgTzE0iZPTKaO0NFSXJA6uuIyaQIqLv1PPRdOCN6UeHqgf+noUEXBl5cw5pvMVAUZMFh7fr9otL8H6i+U4G0c8xDyxVI8bBiQ3fVo=\" // 加密后的新密码，`oldPassword` 与 `newPassword` 要么同时存在，要么同时不存在\n}",
+							"raw": "{\n  \"nickname\": \"吴仙杰\",\n  \"oldPassword\": \"QbMLjDmETzDujmdpW3RbDNMQJFln9OjyR0BWNIgbCPUL0YwQMDeHEDfclSpxTyReZNrK6QWyKFRYdkZjD+3dTvZwtz9q4bC+bvlHn1ipXjq/Zb/9TlpX1zxxsRcJ910MEtbyEwSGGJY+VrCBh/Vy1wmQzc9hReuLA0nISNpOkewwh9RVazqNqCMxG2CpcZBsqYxuELz0JXyMuihHOM0DOUD4JHbV1qtttqV89ETUdy6Db0NLA+2jkIRBkI8TUw/USjUAPiKFQY7yJO1Xaj5uEjhIMQkyrpzKonFcgXSaXoBq9N3ds8z9dCwmZ5VUldjhKjQGn7cScYyp/uuK6JZYbA==\",\n  \"newPassword\": \"W5yvNdQL/rMVYNn7T1wvwwA88rCwyjTrdz9Rn8vhh54+nBFTwWyoa+0u/N/q0Sct0equRQCkjHe9VXkjiJbihgx0/CvpBtDOPiPrN/pt+J0gmma71jNS4TU0te2bwCk6OwVgOSX1n3YwnN7acq30jg6vxeh5TzCDXpgo2EmdftimQNN1n0EdQbLoNdwXf59Zuax22yjMNIE3OiwektZpqD+o+UL1L/oeEKnjRGXJ84Ym7yVT16LA9l5MqTAkqHMOD/Eykt1LvPI589x7hn8NgOu87vzz4JHAZNJSJyEqqolAAY7x1Olvrcu5oQ/YU28jvo5jc7xiUkUtR2/jxj2rCw==\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -194,12 +195,13 @@
 								"users",
 								"me"
 							]
-						}
+						},
+						"description": "# 更新当前用户信息（受保护 API）\n\n```\nPUT /api/v1/users/me\n```\n\n**HTTP Headers**\n\n```\nAuthorization: Bearer {accessToken}\n```\n\n- `accessToken`：访问令牌\n\n**JSON 请求体**\n\n```json\n{\n  \"nickname\": \"xxx\", // 昵称，必填\n  \"oldPassword\": \"xxx\", // 加密后的旧密码，与 `newPassword` 要么同时存在，要么同时不存在\n  \"newPassword\": \"xxx\" // 加密后的新密码，与 `oldPassword` 要么同时存在，要么同时不存在\n}\n```\n\n## 响应结果\n\n**正确响应**\n\n无，HTTP 响应状态码为 `204`。\n\n**错误响应**\n\n```json\n{\n  \"timestamp\": \"2024-01-29 21:11:29\", // 请求发起的时间戳\n  \"status\": 400, // HTTP 响应状态码\n  \"error\": \"旧密码和新密码必须同时提供\", // 错误信息\n  \"path\": \"/api/v1/users/me\" // 请求地址\n}\n```"
 					},
 					"response": []
 				},
 				{
-					"name": "获取用户分页列表",
+					"name": "获取用户分页列表（管理员 API）",
 					"request": {
 						"method": "GET",
 						"header": [
@@ -210,7 +212,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/users?pageNum=1&pageSize=10&sortColumn=createdAt&sortOrder=desc",
+							"raw": "{{BASE_URL}}/api/v1/users?pageNum=1&pageSize=10&sortColumn=createdAt&sortOrder=desc&username=a m&nickname=管&status=1&authority=admin",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -222,47 +224,52 @@
 							"query": [
 								{
 									"key": "pageNum",
-									"value": "1"
+									"value": "1",
+									"description": "页码，必填"
 								},
 								{
 									"key": "pageSize",
-									"value": "10"
+									"value": "10",
+									"description": "每页条数，必填"
 								},
 								{
 									"key": "sortColumn",
-									"value": "createdAt"
+									"value": "createdAt",
+									"description": "支持排序的列：创建时间、更新时间"
 								},
 								{
 									"key": "sortOrder",
-									"value": "desc"
+									"value": "desc",
+									"description": "排序方式：`asc` 或 `desc`"
 								},
 								{
 									"key": "username",
-									"value": "u e",
-									"disabled": true
+									"value": "a m",
+									"description": "用户名"
 								},
 								{
 									"key": "nickname",
-									"value": "用",
-									"disabled": true
+									"value": "管",
+									"description": "昵称"
 								},
 								{
 									"key": "status",
 									"value": "1",
-									"disabled": true
+									"description": "账号状态，0：禁用，1：启用"
 								},
 								{
 									"key": "authority",
 									"value": "admin",
-									"disabled": true
+									"description": "权限：`root`、`admin`"
 								}
 							]
-						}
+						},
+						"description": "# 获取用户分页列表（管理员 API）\n\n```\nGET /api/v1/users \n```\n\n**URL 参数**\n\n请查看主面板中的 `Params` 标签。\n\n**HTTP Headers**\n\n```\nAuthorization: Bearer {accessToken}\n```\n\n- `accessToken`：访问令牌\n\n## 响应结果\n\n**正确响应**\n\n```json\n{\n  \"pageNum\": 1, // 页码\n  \"pageSize\": 10, // 每页条数\n  \"total\": 1, // 总条数\n  \"list\": [ // 用户列表\n    {\n      \"id\": 2, // 用户 ID\n      \"createdAt\": \"2023-11-16 17:28:35\", // 创建时间\n      \"updatedAt\": \"2023-12-14 15:53:55\", // 更新时间\n      \"remark\": null, // 备注\n      \"username\": \"xxx\", // 用户名\n      \"nickname\": \"xxx\", // 昵称\n      \"status\": 1, // 账号状态，0：禁用，1：启用\n      \"authorities\": [ // 权限列表\n        \"admin\"\n      ]\n    }\n  ]\n}\n```\n\n**错误响应**\n\n```json\n{\n  \"timestamp\": \"2024-01-29 21:33:13\", // 请求发起的时间戳\n  \"status\": 403, // HTTP 响应状态码\n  \"error\": \"没有访问权限\", // 错误信息\n  \"path\": \"/api/v1/users\" // 请求地址\n}\n```"
 					},
 					"response": []
 				},
 				{
-					"name": "获取用户详情",
+					"name": "获取用户详情（管理员 API）",
 					"request": {
 						"method": "GET",
 						"header": [
@@ -286,15 +293,17 @@
 							"variable": [
 								{
 									"key": "userId",
-									"value": "2"
+									"value": "2",
+									"description": "用户 ID"
 								}
 							]
-						}
+						},
+						"description": "# 获取用户详情（管理员 API）\n\n```\nGET /api/v1/users/{userId}\n```\n\n- `userId`：用户 ID\n\n**HTTP Headers**\n\n```\nAuthorization: Bearer {accessToken}\n```\n\n- `accessToken`：访问令牌\n\n## 响应结果\n\n**正确响应**\n\n```json\n{\n  \"id\": 1, // 用户 ID\n  \"createdAt\": \"2023-11-16 17:28:35\", // 创建时间\n  \"updatedAt\": \"2023-12-14 15:53:55\", // 更新时间\n  \"remark\": null, // 备注\n  \"username\": \"xxx\", // 用户名\n  \"nickname\": \"xxx\", // 昵称\n  \"status\": 1, // 账号状态，0：禁用，1：启用\n  \"authorities\": [ // 功能权限列表\n    \"root\"\n  ]\n}\n```\n\n**错误响应**\n\n```json\n{\n  \"timestamp\": \"2024-01-29 21:38:30\", // 请求发起的时间戳\n  \"status\": 403, // HTTP 响应状态码\n  \"error\": \"没有访问权限\", // 错误信息\n  \"path\": \"/api/v1/users/2\" // 请求地址\n}\n```"
 					},
 					"response": []
 				},
 				{
-					"name": "新增用户",
+					"name": "新增用户（管理员 API）",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -306,7 +315,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"username\": \"test6\", // 用户名，必填\n  \"nickname\": \"测试用户\", // 昵称，必填\n  \"password\": \"Qm+TowObbPw0jWJp/bzu+uwqihWstzT4H49R0A1VbYZRt4lAZ8TshxZ3IwGC2PHHqbM1S+kJ3Z7W+Km6OeNf4u2oae5wbcNxb4RurOBHkTJA4xfmKfzmGD37gG9xIiCMrLxxOvuFSvTZDrmPufMNTcJ3NvLoP82QqgHvTMiAh2A=\", // 加密后的密码，必填\n  \"authorities\": [\"admin\"], // 功能权限列表\n  \"remark\": \"测试账号，用完即删\" // 备注\n}",
+							"raw": "{\n  \"username\": \"test66\",\n  \"nickname\": \"测试用户\",\n  \"password\": \"W5yvNdQL/rMVYNn7T1wvwwA88rCwyjTrdz9Rn8vhh54+nBFTwWyoa+0u/N/q0Sct0equRQCkjHe9VXkjiJbihgx0/CvpBtDOPiPrN/pt+J0gmma71jNS4TU0te2bwCk6OwVgOSX1n3YwnN7acq30jg6vxeh5TzCDXpgo2EmdftimQNN1n0EdQbLoNdwXf59Zuax22yjMNIE3OiwektZpqD+o+UL1L/oeEKnjRGXJ84Ym7yVT16LA9l5MqTAkqHMOD/Eykt1LvPI589x7hn8NgOu87vzz4JHAZNJSJyEqqolAAY7x1Olvrcu5oQ/YU28jvo5jc7xiUkUtR2/jxj2rCw==\",\n  \"authorities\": [\"admin\"],\n  \"remark\": \"测试账号，用完即删\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -323,7 +332,8 @@
 								"v1",
 								"users"
 							]
-						}
+						},
+						"description": "# 新增用户（管理员 API）\n\n```\nPOST /api/v1/users\n```\n\n- `userId`：用户 ID\n\n**HTTP Headers**\n\n```\nAuthorization: Bearer {accessToken}\n```\n\n- `accessToken`：访问令牌\n\n**JSON 请求体**\n\n```json\n{\n  \"username\": \"xxx\", // 用户名，必填\n  \"nickname\": \"xxx\", // 昵称，必填\n  \"password\": \"xxx\", // 加密后的密码，必填\n  \"authorities\": [\"admin\"], // 功能权限列表\n  \"remark\": \"测试账号，用完即删\" // 备注\n}\n```\n\n## 响应结果\n\n**正确响应**\n\n无，HTTP 响应状态码为 `204`。\n\n**错误响应**\n\n```json\n{\n  \"timestamp\": \"2024-01-29 21:42:59\", // 请求发起的时间戳\n  \"status\": 409, // HTTP 响应状态码\n  \"error\": \"用户名已存在\", // 错误信息\n  \"path\": \"/api/v1/users\" // 请求地址\n}\n```"
 					},
 					"response": []
 				},
@@ -524,12 +534,12 @@
 								{
 									"key": "sortColumn",
 									"value": "requestedAt",
-									"description": "排序的列名，支持：请求时间"
+									"description": "支持排序的列：请求时间"
 								},
 								{
 									"key": "sortOrder",
 									"value": "desc",
-									"description": "排序方式，只能是 `asc` 或 `desc`"
+									"description": "排序方式：`asc` 或 `desc`"
 								},
 								{
 									"key": "startAt",

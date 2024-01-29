@@ -137,6 +137,7 @@ public class AuthServiceImpl implements AuthService {
       accessToken,
       refreshToken,
       TokenAuth.TOKEN_EXPIRES_IN_SECONDS,
+      auth.username(),
       auth.nickname(),
       auth.authorities()
     );
