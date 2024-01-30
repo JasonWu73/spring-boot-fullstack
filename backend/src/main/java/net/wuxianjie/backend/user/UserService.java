@@ -28,7 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 /**
- * 用户业务逻辑实现。
+ * 用户业务处理。
  */
 @Service
 @RequiredArgsConstructor
