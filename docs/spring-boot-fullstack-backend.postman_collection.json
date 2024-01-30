@@ -338,7 +338,7 @@
 					"response": []
 				},
 				{
-					"name": "更新用户",
+					"name": "更新用户（管理员 API）",
 					"request": {
 						"method": "PUT",
 						"header": [
@@ -350,7 +350,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"nickname\": \"更新测试\", // 昵称，必填\n  \"authorities\": [\"user\"], // 功能权限列表\n  \"remark\": \"更新测试账号，用完即删\" // 备注\n}",
+							"raw": "{\n  \"nickname\": \"测试更新\",\n  \"authorities\": [\"admin\"],\n  \"remark\": \"更新测试账号，用完即删\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -371,15 +371,17 @@
 							"variable": [
 								{
 									"key": "userId",
-									"value": "11"
+									"value": "60",
+									"description": "需要更新的用户 ID"
 								}
 							]
-						}
+						},
+						"description": "# 更新用户（管理员 API）\n\n```\nPUT /api/v1/users/{userId}\n```\n\n- `userId`：需要更新的用户 ID\n\n**HTTP Headers**\n\n```\nAuthorization: Bearer {accessToken}\n```\n\n- `accessToken`：访问令牌\n\n**JSON 请求体**\n\n```json\n{\n  \"nickname\": \"测试更新\", // 昵称，必填\n  \"authorities\": [\"admin\"], // 功能权限列表\n  \"remark\": \"更新测试账号，用完即删\" // 备注\n}\n```\n\n## 响应结果\n\n**正确响应**\n\n无，HTTP 响应状态码为 `204`。\n\n**错误响应**\n\n```json\n{\n  \"timestamp\": \"2024-01-30 11:01:26\", // 请求发起的时间戳\n  \"status\": 403, // HTTP 响应状态码\n  \"error\": \"超级管理员账号不允许再调整权限\", // 错误信息\n  \"path\": \"/api/v1/users/1\" // 请求地址\n}\n```"
 					},
 					"response": []
 				},
 				{
-					"name": "重置用户密码",
+					"name": "重置用户密码（超级管理员 API）",
 					"request": {
 						"method": "PUT",
 						"header": [
@@ -391,7 +393,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"password\": \"Qm+TowObbPw0jWJp/bzu+uwqihWstzT4H49R0A1VbYZRt4lAZ8TshxZ3IwGC2PHHqbM1S+kJ3Z7W+Km6OeNf4u2oae5wbcNxb4RurOBHkTJA4xfmKfzmGD37gG9xIiCMrLxxOvuFSvTZDrmPufMNTcJ3NvLoP82QqgHvTMiAh2A=\" // 加密后的密码，必填\n}",
+							"raw": "{\n  \"password\": \"W5yvNdQL/rMVYNn7T1wvwwA88rCwyjTrdz9Rn8vhh54+nBFTwWyoa+0u/N/q0Sct0equRQCkjHe9VXkjiJbihgx0/CvpBtDOPiPrN/pt+J0gmma71jNS4TU0te2bwCk6OwVgOSX1n3YwnN7acq30jg6vxeh5TzCDXpgo2EmdftimQNN1n0EdQbLoNdwXf59Zuax22yjMNIE3OiwektZpqD+o+UL1L/oeEKnjRGXJ84Ym7yVT16LA9l5MqTAkqHMOD/Eykt1LvPI589x7hn8NgOu87vzz4JHAZNJSJyEqqolAAY7x1Olvrcu5oQ/YU28jvo5jc7xiUkUtR2/jxj2rCw==\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -413,15 +415,17 @@
 							"variable": [
 								{
 									"key": "userId",
-									"value": "1"
+									"value": "1",
+									"description": "需要重置密码的用户 ID"
 								}
 							]
-						}
+						},
+						"description": "# 重置用户密码（超级管理员 API）\n\n```\nPUT /api/v1/users/{userId}/password\n```\n\n- `userId`：需要重置密码的用户 ID\n\n**HTTP Headers**\n\n```\nAuthorization: Bearer {accessToken}\n```\n\n- `accessToken`：访问令牌\n\n**JSON 请求体**\n\n```json\n{\n  \"password\": \"xxx\" // 加密后的密码，必填\n}\n```\n\n## 响应结果\n\n**正确响应**\n\n无，HTTP 响应状态码为 `204`。\n\n**错误响应**\n\n```json\n{\n  \"timestamp\": \"2024-01-30 11:28:22\", // 请求发起的时间戳\n  \"status\": 400, // HTTP 响应状态码\n  \"error\": \"密码错误\", // 错误信息\n  \"path\": \"/api/v1/users/1/password\" // 请求地址\n}\n```"
 					},
 					"response": []
 				},
 				{
-					"name": "禁用/启用用户",
+					"name": "禁用/启用用户（管理员 API）",
 					"request": {
 						"method": "PUT",
 						"header": [
@@ -433,7 +437,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"status\": 0 // 账号状态，0：禁用，1：启用\n}",
+							"raw": "{\n  \"status\": 1\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -455,15 +459,17 @@
 							"variable": [
 								{
 									"key": "userId",
-									"value": "11"
+									"value": "60",
+									"description": "需要更新的用户 ID"
 								}
 							]
-						}
+						},
+						"description": "# 禁用/启用用户（管理员 API）\n\n```\nPUT /api/v1/users/{userId}/status\n```\n\n- `userId`：需要更新的用户 ID\n\n**HTTP Headers**\n\n```\nAuthorization: Bearer {accessToken}\n```\n\n- `accessToken`：访问令牌\n\n**JSON 请求体**\n\n```json\n{\n  \"status\": 0 // 账号状态，0：禁用，1：启用\n}\n```\n\n## 响应结果\n\n**正确响应**\n\n无，HTTP 响应状态码为 `204`。\n\n**错误响应**\n\n```json\n{\n  \"timestamp\": \"2024-01-30 11:39:05\", // 请求发起的时间戳\n  \"status\": 403, // HTTP 响应状态码\n  \"error\": \"非超级管理员不可操作超级管理员账号\", // 错误信息\n  \"path\": \"/api/v1/users/1/status\" // 请求地址\n}\n```"
 					},
 					"response": []
 				},
 				{
-					"name": "删除用户",
+					"name": "删除用户（超级管理员 API）",
 					"request": {
 						"method": "DELETE",
 						"header": [
@@ -487,10 +493,12 @@
 							"variable": [
 								{
 									"key": "userId",
-									"value": "11"
+									"value": "60",
+									"description": "需要删除的用户 ID"
 								}
 							]
-						}
+						},
+						"description": "# 删除用户（超级管理员 API）\n\n```\nDELETE /api/v1/users/{userId}\n```\n\n- `userId`：需要删除的用户 ID\n\n**HTTP Headers**\n\n```\nAuthorization: Bearer {accessToken}\n```\n\n- `accessToken`：访问令牌\n\n## 响应结果\n\n**正确响应**\n\n无，HTTP 响应状态码为 `204`。\n\n**错误响应**\n\n```json\n{\n  \"timestamp\": \"2024-01-30 13:16:24\", // 请求发起的时间戳\n  \"status\": 403, // HTTP 响应状态码\n  \"error\": \"没有访问权限\", // 错误信息\n  \"path\": \"/api/v1/users/60\" // 请求地址\n}\n```"
 					},
 					"response": []
 				}

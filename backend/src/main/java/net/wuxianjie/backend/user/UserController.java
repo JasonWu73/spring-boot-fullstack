@@ -105,7 +105,7 @@ public class UserController {
   /**
    * 更新用户。
    *
-   * @param userId 需要更新数据的用户 ID
+   * @param userId 需要更新的用户 ID
    * @param param 更新用户参数
    * @return 204 No Content
    */
@@ -139,7 +139,7 @@ public class UserController {
   /**
    * 禁用/启用用户。
    *
-   * @param userId 需要更新数据的用户 ID
+   * @param userId 需要更新的用户 ID
    * @param param 更新用户状态参数
    * @return 204 No Content
    */

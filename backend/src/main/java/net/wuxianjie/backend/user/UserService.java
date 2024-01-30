@@ -171,7 +171,7 @@ public class UserService {
   /**
    * 更新用户。
    *
-   * @param userId 需要更新数据的用户 ID
+   * @param userId 需要更新的用户 ID
    * @param param 更新用户参数
    */
   public void updateUser(final long userId, final UpdateUserParam param) {
@@ -180,13 +180,15 @@ public class UserService {
       .ofNullable(userMapper.selectById(userId))
       .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "用户不存在"));
 
-    // ----- 不允许更新超级管理员权限 -----
+    // ----- 不允许更新和分配超级管理员权限 -----
     final String newAuthorities = toStorageAuthorities(param.getAuthorities(), true);
-    if (
-      hasRoot(user.getAuthorities()) &&
-      !Objects.equals(user.getAuthorities(), newAuthorities)
-    ) {
+    final boolean updateRoot = hasRoot(user.getAuthorities());
+    if (updateRoot && !Objects.equals(user.getAuthorities(), newAuthorities)) {
       throw new ApiException(HttpStatus.FORBIDDEN, "超级管理员账号不允许再调整权限");
+    }
+
+    if (!updateRoot && hasRoot(newAuthorities)) {
+      throw new ApiException(HttpStatus.FORBIDDEN, "不能直接分配超级管理员权限");
     }
 
     // ----- 更新用户数据 -----
@@ -228,7 +230,7 @@ public class UserService {
   /**
    * 更新用户状态。
    *
-   * @param userId 需要更新数据的用户 ID
+   * @param userId 需要更新的用户 ID
    * @param param 更新用户状态参数
    */
   public void updateUserStatus(
@@ -241,8 +243,8 @@ public class UserService {
       .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "用户不存在"));
 
     // 非超级管理员不可操作超级管理员账号
-    final boolean isUpdateRoot = hasRoot(user.getAuthorities());
-    if (isUpdateRoot) {
+    final boolean updateRoot = hasRoot(user.getAuthorities());
+    if (updateRoot) {
       final List<String> currentAuthorities = AuthUtils
         .getCurrentUser()
         .orElseThrow()
@@ -304,13 +306,10 @@ public class UserService {
     return password;
   }
 
-  private String toStorageAuthorities(
-    final List<String> authorities,
-    final boolean canRoot
-  ) {
+  private String toStorageAuthorities(final List<String> authorities, final boolean canRoot) {
     if (authorities == null || authorities.isEmpty()) return null;
 
-    return authorities
+    final String authoritiesToSave = authorities
       .stream()
       .distinct()
       .filter(authStr -> {
@@ -336,6 +335,7 @@ public class UserService {
       })
       .map(String::trim)
       .collect(Collectors.joining(","));
+    return authoritiesToSave.isEmpty() ? null : authoritiesToSave;
   }
 
   private void setFuzzyQuery(final GetUserParam userParam) {
