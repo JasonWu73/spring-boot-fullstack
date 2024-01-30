@@ -9,9 +9,26 @@ server:
 spring:
   datasource:
     # 数据库地址
-    url: jdbc:mysql://localhost:3306/backend
+    url: jdbc:mysql://localhost:3306/backend?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false
     username: ENC(ANOf5l6jbyPQN8dk9dHy9C8sd0ZhowraFYXInEcG8am+ybTJhQwxR+MKN/bl54Z4)
     password: ENC(H0yLbj9m4Y9UpTSt4spGMqmOR/pvL0yDFCKp04gGBJCa+C+vgj27kXST+nCzP72z)
+    hikari:
+      connection-timeout: 30_000
+      maximum-pool-size: 10
+      idle-timeout: 600_000
+      max-lifetime: 28795_000
+      auto-commit: true
+      data-source-properties:
+        cachePrepStmts: true
+        prepStmtCacheSize: 250
+        prepStmtCacheSqlLimit: 2048
+        useServerPrepStmts: true
+        useLocalSessionState: true
+        rewriteBatchedStatements: true
+        cacheResultSetMetadata: true
+        cacheServerConfiguration: true
+        elideSetAutoCommits: true
+        maintainTimeStats: false
   data:
     redis:
       # Redis 地址
