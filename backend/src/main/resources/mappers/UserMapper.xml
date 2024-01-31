@@ -44,7 +44,7 @@
     </constructor>
   </resultMap>
 
-  <select id="selectInfoById" resultMap="userInfo">
+  <select id="selectDetail" resultMap="userInfo">
     select
       id,
       created_at as createdAt,

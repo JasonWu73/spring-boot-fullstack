@@ -45,7 +45,7 @@ public class UserService {
   public UserInfo getMe() {
     final long userId = AuthUtils.getCurrentUser().orElseThrow().userId();
     return Optional
-      .ofNullable(userMapper.selectInfoById(userId))
+      .ofNullable(userMapper.selectDetail(userId))
       .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "用户不存在"));
   }
 
@@ -130,7 +130,7 @@ public class UserService {
    */
   public UserInfo getUserDetail(final long userId) {
     return Optional
-      .ofNullable(userMapper.selectInfoById(userId))
+      .ofNullable(userMapper.selectDetail(userId))
       .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "用户不存在"));
   }
 
