@@ -1,15 +1,17 @@
-import clsx, { type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
+import clsx, { type ClassValue } from 'clsx'
+import { twMerge } from 'tailwind-merge'
 
 /**
- * 合并 Tailwind CSS 类名（可覆盖之前的类），由 `npx shadcn-ui@latest init` 自动生成。
+ * 合并 Tailwind CSS 类名。
+ *
+ * 1. `npm install clsx`
+ * 2. `npm install tailwind-merge`
  *
  * @param inputs CSS 类名
- * @returns string 合并后的 CSS 类名
- * @see https://ui.shadcn.com/docs/installation/vite
+ * @returns {string} 合并后的 CSS 类名
  */
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
+export function cn(...inputs: ClassValue[]): string {
+  return twMerge(clsx(inputs))
 }
 
 /**
@@ -21,7 +23,7 @@ export function cn(...inputs: ClassValue[]) {
  * @see https://github.com/tailwindlabs/prettier-plugin-tailwindcss#sorting-classes-in-template-literals
  */
 export function tw(strings: TemplateStringsArray, ...values: unknown[]) {
-  return String.raw({ raw: strings }, ...values);
+  return String.raw({ raw: strings }, ...values)
 }
 
 /**
@@ -34,9 +36,9 @@ export function tw(strings: TemplateStringsArray, ...values: unknown[]) {
  * @returns string 截断后的字符串值
  */
 export function truncate(value: string, maxlength: number) {
-  if (value.length <= maxlength) return value;
+  if (value.length <= maxlength) return value
 
-  return value.slice(0, maxlength - 1) + "…";
+  return value.slice(0, maxlength - 1) + '…'
 }
 
 /**
@@ -46,5 +48,5 @@ export function truncate(value: string, maxlength: number) {
  * @returns Promise<void> 等待指定秒数后，返回一个空的 Promise 对象
  */
 export function wait(seconds: number) {
-  return new Promise((resolve) => setTimeout(resolve, seconds * 1000));
+  return new Promise((resolve) => setTimeout(resolve, seconds * 1000))
 }

@@ -3,39 +3,28 @@
 @layer base {
   /* 自定义 CSS 变量 */
   :root {
-    /* night */
-    /* For rgb(36 41 51 / <alpha-value>) */
-    --color-night: 36 41 51;
 
-    /* night-1 */
-    /* For rgb(46 52 64 / <alpha-value>) */
-    --color-night-1: 46 52 64;
+    /* one-dark: `#282c34` */
+    /* `rgb(40 44 52 / <alpha-value>)` */
+    --color-one-dark: 40 44 52;
 
-    /* night-2 */
-    /* For rgb(59 66 82 / <alpha-value>) */
-    --color-night-2: 59 66 82;
+    /* one-dark-1: `#22252a` */
+    /* `rgb(34 37 42 / <alpha-value>)` */
+    --color-one-dark-1: 34 37 42;
 
-    /* night-3 */
-    /* For rgb(67 76 94 / <alpha-value>) */
-    --color-night-3: 67 76 94;
+    /* one-dark-2: `#1a1c20` */
+    /* `rgb(26 28 32 / <alpha-value>)` */
+    --color-one-dark-2: 26 28 32;
 
-    /* night-4 */
-    /* For rgb(76 86 106 / <alpha-value>) */
-    --color-night-4: 76 86 106;
-
-    /* snow */
-    /* For rgb(236 239 244 / <alpha-value>) */
-    --color-snow: 236 239 244;
-
-    /* predawn */
-    /* For rgb(241 130 96 / <alpha-value>) */
-    --color-predawn: 241 130 96;
+    /* dark-selection: `#404859` */
+    /* `rgb(64 72 89 / <alpha-value>)` */
+    --color-dark-selection: 64 72 89;
 
     /* sky-500 */
     --nprogress-color: #0ea5e9;
 
-    /* red-600 */
-    --nprogress-dark-color: #dc2626;
+    /* red-500 */
+    --nprogress-dark-color: #ef4444;
   }
 
   /* ----- 自定义标题的预设样式 ----- */
@@ -59,38 +48,31 @@
 @tailwind utilities;
 
 /* ----- 系统主题 ----- */
-/* 亮色主题 */
+/* 浅色主题 */
 html {
-  @apply bg-gray-100;
   @apply text-slate-950;
+  @apply bg-white;
 
-  /* 滚动条亮色主题 */
+  /* 滚动条浅色主题 */
   color-scheme: light;
 }
 
-/* 暗色主题 */
+/* 深色主题 */
 html.dark {
-  @apply bg-night-2;
-  @apply text-snow;
+  @apply text-slate-50;
+  @apply bg-one-dark;
 
-  /* 滚动条暗色主题 */
+  /* 滚动条深色主题 */
   color-scheme: dark;
 }
 
-/* ----- 选中文本时的背景色 ----- */
-/* 亮色主题 */
+/* 选中文本时的背景色 */
 ::selection {
-  @apply bg-teal-500;
-  @apply text-teal-50;
+  @apply text-slate-950;
+  @apply bg-sky-200;
 }
 
-/* 暗色主题 */
-html.dark ::selection {
-  @apply bg-teal-600;
-  @apply text-teal-100;
-}
-
-/* ----- NProgress 亮色主题样式 ----- */
+/* ----- NProgress 浅色主题样式 ----- */
 #nprogress .bar {
   background-color: var(--nprogress-color);
 }
@@ -106,7 +88,7 @@ html.dark ::selection {
   border-left-color: var(--nprogress-color);
 }
 
-/* ----- NProgress 暗色主题样式 ----- */
+/* ----- NProgress 深色主题样式 ----- */
 html.dark #nprogress .bar {
   background-color: var(--nprogress-dark-color);
 }

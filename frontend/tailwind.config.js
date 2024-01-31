@@ -2,7 +2,7 @@ import animatePlugin from 'tailwindcss-animate'
 
 /** @type {import('tailwindcss').Config} */
 export default {
-  // 启用暗色模式
+  // 启用深色模式
   darkMode: ['class'],
 
   content: [
@@ -25,20 +25,12 @@ export default {
         screen: ['100vh /* fallback for Opera, IE and etc. */', '100dvh']
       },
 
-      /* 扩展自定义颜色 */
+      /* 添加新的颜色 */
       colors: {
-        night: {
-          DEFAULT: 'rgb(var(--color-night) / <alpha-value>)',
-          1: 'rgb(var(--color-night-1) / <alpha-value>)',
-          2: 'rgb(var(--color-night-2) / <alpha-value>)',
-          3: 'rgb(var(--color-night-3) / <alpha-value>)',
-          4: 'rgb(var(--color-night-4) / <alpha-value>)'
-        },
-        snow: {
-          DEFAULT: 'rgb(var(--color-snow) / <alpha-value>)'
-        },
-        predawn: {
-          DEFAULT: 'rgb(var(--color-predawn) / <alpha-value>)'
+        'one-dark': {
+          DEFAULT: 'rgb(var(--color-one-dark) / <alpha-value>)',
+          1: 'rgb(var(--color-one-dark-1) / <alpha-value>)',
+          2: 'rgb(var(--color-one-dark-2) / <alpha-value>)'
         }
       },
 

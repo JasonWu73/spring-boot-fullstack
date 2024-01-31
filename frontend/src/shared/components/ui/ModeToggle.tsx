@@ -29,15 +29,15 @@ export function ModeToggle({ setTheme, className }: ModeToggleProps) {
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={() => setTheme("light")}>
           <Sun className="mr-2 h-4 w-4" />
-          亮色
+          浅色
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme("dark")}>
           <Moon className="mr-2 h-4 w-4" />
-          暗色
+          深色
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme("system")}>
           <Monitor className="mr-2 h-4 w-4" />
-          跟随系统
+          自动
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

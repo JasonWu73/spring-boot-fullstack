@@ -1,23 +1,23 @@
-import React from "react";
+import React from 'react'
 
-import { TopNavBar } from "@/shared/components/layout/top-nav-bar/TopNavBar";
-import { cn } from "@/shared/utils/helpers";
+import { TopNavBar } from '@/shared/components/layout/top-nav-bar/TopNavBar'
+import { cn } from '@/shared/utils/helpers'
 
-type HeaderProps = React.ComponentPropsWithoutRef<"header"> & {
-  showPanelFold?: boolean;
-};
+type HeaderProps = React.ComponentPropsWithoutRef<'header'>
 
 export function Header({
-  showPanelFold = false,
   className,
   ...props
 }: HeaderProps) {
   return (
     <header
-      className={cn("bg-night text-snow dark:bg-night", className)}
       {...props}
+      className={cn(
+        'border-b border-one-dark-2 text-slate-50 bg-one-dark-1 shadow-sm shadow-one-dark-1',
+        className
+      )}
     >
-      <TopNavBar showPanelFold={showPanelFold} />
+      <TopNavBar/>
     </header>
-  );
+  )
 }

@@ -25,7 +25,7 @@ export function TopNavBar({ showPanelFold = false }: TopNavBarProps) {
   return (
     <nav
       onClick={handleClick}
-      className="flex h-16 items-center justify-between gap-4 p-4"
+      className="flex items-center justify-between gap-4 p-2"
     >
       <div className="flex items-center gap-4">
         {showPanelFold && <PanelFold />}
