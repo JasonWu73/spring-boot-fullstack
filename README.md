@@ -69,29 +69,7 @@ npm install --save-dev @types/node
 npm install --save-dev tailwindcss postcss autoprefixer
 
 # 生成 `tailwind.config.js` 和 `postcss.config.js` 文件
-# 其中 `tailwind.config.js` 文件内容会被 `shadcn/ui` 初始化命令所覆盖
 npx tailwindcss init -p
-
-# 生成 shadcn/ui 的配置文件 `components.json`
-# ```json
-# {
-#   "$schema": "https://ui.shadcn.com/schema.json",
-#   "style": "new-york",
-#   "rsc": false,
-#   "tsx": true,
-#   "tailwind": {
-#     "config": "tailwind.config.js",
-#     "css": "src/index.css",
-#     "baseColor": "slate",
-#     "cssVariables": false
-#   },
-#   "aliases": {
-#     "components": "@/shared/components",
-#     "utils": "@/shared/utils/helpers"
-#   }
-# }
-# ```
-npx shadcn-ui@latest init
 
 # 安装 NProgress
 npm install nprogress
