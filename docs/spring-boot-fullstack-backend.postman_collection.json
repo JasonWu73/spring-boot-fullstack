@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "53e9f0f9-0e9a-45fd-992f-715d8dcae30a",
+		"_postman_id": "2da5b30e-dd79-4d19-90ce-271c9bbe70c2",
 		"name": "spring-boot-fullstack-backend",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -709,6 +709,43 @@
 										"v1",
 										"public",
 										"mybatis"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "新增失败（事务管理）",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/atom+xml",
+										"type": "default",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"测试数据\", // 名称不能为空\n  \"date\": \"2023-11-12 18:25:41\", // date 不能为 null\n  \"localDateTime\": \"2023-11-12 18:25:41\", // localDateTime 不能为 null\n  \"localDate\": \"2023-11-12\" // localDate 不能为 null\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/public/mybatis/failed",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"public",
+										"mybatis",
+										"failed"
 									]
 								}
 							},

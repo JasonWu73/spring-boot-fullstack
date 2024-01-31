@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,6 +37,21 @@ public class MyBatisController {
   public MyBatisData addData(@RequestBody @Valid final MyBatisData data) {
     data.setType(MyBatisType.TYPE_2);
     myBatisMapper.insertData(data);
+    return data;
+  }
+
+  /**
+   * 新增失败（事务管理）。
+   */
+  @PostMapping("/failed")
+  @Transactional(rollbackFor = Exception.class)
+  public MyBatisData addDataWithTransaction(@RequestBody @Valid final MyBatisData data) {
+    data.setType(MyBatisType.TYPE_2);
+    myBatisMapper.insertData(data);
+
+    int i = 1 / 0;
+    System.out.println(i);
+
     return data;
   }
 
