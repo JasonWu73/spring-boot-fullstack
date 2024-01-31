@@ -63,7 +63,7 @@ public class UserController {
    * 获取用户分页列表。
    *
    * @param paginationParam 分页参数
-   * @param userParam 用户查询参数
+   * @param userParam 查询参数
    * @return 用户分页列表
    */
   @Admin

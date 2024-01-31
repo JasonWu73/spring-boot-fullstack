@@ -30,7 +30,7 @@ public class OpLogService {
     final GetOpLogParam logParam
   ) {
     // 设置符合数据库 Like 条件的模糊查询参数
-    setFuzzyQuery(logParam);
+    setFuzzyQueryParams(logParam);
 
     // 根据查询条件获取分页列表
     final List<OpLog> list = opLogMapper.selectByQueryLimit(paginationParam, logParam);
@@ -67,9 +67,9 @@ public class OpLogService {
     return opLogMapper.selectLoginsHistory(days - 1);
   }
 
-  private void setFuzzyQuery(final GetOpLogParam logParam) {
-    logParam.setClientIp(StrUtils.toLikeValue(logParam.getClientIp()));
-    logParam.setUsername(StrUtils.toLikeValue(logParam.getUsername()));
-    logParam.setMessage(StrUtils.toLikeValue(logParam.getMessage()));
+  private void setFuzzyQueryParams(final GetOpLogParam param) {
+    param.setClientIp(StrUtils.toLikeValue(param.getClientIp()));
+    param.setUsername(StrUtils.toLikeValue(param.getUsername()));
+    param.setMessage(StrUtils.toLikeValue(param.getMessage()));
   }
 }

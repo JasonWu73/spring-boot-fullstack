@@ -97,7 +97,7 @@ public class UserService {
    * 获取用户分页列表。
    *
    * @param paginationParam 分页参数
-   * @param userParam 用户查询参数
+   * @param userParam 查询参数
    * @return 用户分页列表
    */
   public PaginationResult<UserInfo> getUsers(
@@ -105,7 +105,7 @@ public class UserService {
     final GetUserParam userParam
   ) {
     // 设置符合数据库 Like 条件的模糊查询参数
-    setFuzzyQuery(userParam);
+    setFuzzyQueryParams(userParam);
 
     // 根据查询条件获取分页列表
     final List<UserInfo> list = userMapper.selectByQueryLimit(paginationParam, userParam);
@@ -338,9 +338,9 @@ public class UserService {
     return authoritiesToSave.isEmpty() ? null : authoritiesToSave;
   }
 
-  private void setFuzzyQuery(final GetUserParam userParam) {
-    userParam.setUsername(StrUtils.toLikeValue(userParam.getUsername()));
-    userParam.setNickname(StrUtils.toLikeValue(userParam.getNickname()));
+  private void setFuzzyQueryParams(final GetUserParam param) {
+    param.setUsername(StrUtils.toLikeValue(param.getUsername()));
+    param.setNickname(StrUtils.toLikeValue(param.getNickname()));
   }
 
   private static boolean hasRoot(final String authorities) {
