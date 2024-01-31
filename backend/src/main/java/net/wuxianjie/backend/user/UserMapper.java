@@ -35,7 +35,7 @@ public interface UserMapper {
    * @param userId 用户 ID
    * @return 用户信息
    */
-  UserInfo selectDetail(long userId);
+  UserInfo selectDetailById(long userId);
 
   /**
    * 根据查询条件获取用户分页列表。
