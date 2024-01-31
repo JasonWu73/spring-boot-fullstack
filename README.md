@@ -22,22 +22,45 @@ npm create vite@latest react-app -- --template react-ts
 # 去除意义不大的 ESLint 规则插件
 npm uninstall eslint-plugin-react-refresh
 
-# 配置别名
+# 调整配置
 
-# 1. 修改 `tsconfig.json` 在 `compilerOptions` 中添加：
+# 1. `tsconfig.json`
 #
-#   /* 配置别名 */
-#   "baseUrl": "./",
-#   "paths": {
-#     "@/*": ["./src/*"]
+# ```json
+# {
+#   "compilerOptions": {
+#     // ...
+#     "allowImportingTsExtensions": false, // import TS 文件时不用指定 `.tsx` 后缀
+#     // ...
+#
+#     /* 配置别名 */
+#     "baseUrl": "./",
+#     "paths": {
+#       "@/*": ["./src/*"]
+#     }
+#   },
+#   // ...
+# }
+# ```
+
+# 2. `vite.config.ts`
+#
+# ```ts
+# // ...
+# import path from 'path'
+# 
+# // https://vitejs.dev/config/
+# export default defineConfig({
+#   // ...
+# 
+#   resolve: {
+#     // 配置别名
+#     alias: {
+#       '@': path.resolve(__dirname, './src')
+#     }
 #   }
-#
-# 2. 修改 `vite.config.ts` 在 `resolve` 中添加：
-#
-#   // 配置别名
-#   alias: {
-#     "@": path.resolve(__dirname, "./src")
-#   }
+# })
+# ```
 
 # 安装 Node 的类型定义，避免 IDE 因无法识别 Node 类型的而产生的警告
 npm install --save-dev @types/node
@@ -46,10 +69,28 @@ npm install --save-dev @types/node
 npm install --save-dev tailwindcss postcss autoprefixer
 
 # 生成 `tailwind.config.js` 和 `postcss.config.js` 文件
+# 其中 `tailwind.config.js` 文件内容会被 `shadcn/ui` 初始化命令所覆盖
 npx tailwindcss init -p
 
 # 生成 shadcn/ui 的配置文件 `components.json`
-# 可直接拷贝已有的 `components.json` 和 `tailwind.config.js` 使用
+# ```json
+# {
+#   "$schema": "https://ui.shadcn.com/schema.json",
+#   "style": "new-york",
+#   "rsc": false,
+#   "tsx": true,
+#   "tailwind": {
+#     "config": "tailwind.config.js",
+#     "css": "src/index.css",
+#     "baseColor": "slate",
+#     "cssVariables": false
+#   },
+#   "aliases": {
+#     "components": "@/shared/components",
+#     "utils": "@/shared/utils/helpers"
+#   }
+# }
+# ```
 npx shadcn-ui@latest init
 
 # 安装 NProgress
