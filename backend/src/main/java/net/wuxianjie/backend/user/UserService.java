@@ -128,7 +128,7 @@ public class UserService {
    * @param userId 用户 ID
    * @return 用户详情
    */
-  public UserInfo getUserInfo(final long userId) {
+  public UserInfo getUserDetail(final long userId) {
     return Optional
       .ofNullable(userMapper.selectInfoById(userId))
       .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "用户不存在"));

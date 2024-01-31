@@ -83,8 +83,8 @@ public class UserController {
    */
   @Admin
   @GetMapping("/{userId}")
-  public UserInfo getUserInfo(@PathVariable final long userId) {
-    return userService.getUserInfo(userId);
+  public UserInfo getUserDetail(@PathVariable final long userId) {
+    return userService.getUserDetail(userId);
   }
 
   /**
