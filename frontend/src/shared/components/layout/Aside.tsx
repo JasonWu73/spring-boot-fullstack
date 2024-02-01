@@ -1,6 +1,6 @@
 import React from "react";
 
-import { SideNavBar } from "@/shared/components/layout/side-nav-bar/SideNavBar";
+import { SideNavbar } from "@/shared/components/layout/SideNavbar";
 import { cn } from "@/shared/utils/helpers";
 
 type AsideProps = React.ComponentPropsWithoutRef<"header">;
@@ -11,7 +11,7 @@ export function Aside({ className, ...props }: AsideProps) {
       className={cn("bg-night-1 p-4 text-snow dark:bg-night-1", className)}
       {...props}
     >
-      <SideNavBar />
+      <SideNavbar />
     </aside>
   );
 }

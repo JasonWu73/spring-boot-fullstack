@@ -8,7 +8,7 @@ import { buttonVariants } from '@/shared/components/ui/Button'
 import { cn } from '@/shared/utils/helpers'
 import { hasRoot } from '@/shared/auth/auth-signals'
 
-export function SideNavBar() {
+export function SideNavbar() {
   return (
     <ScrollArea className="h-[calc(100vh-6rem)] w-48">
       <nav className="flex flex-col items-center gap-2 py-1">

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { TopNavBar } from '@/shared/components/layout/top-nav-bar/TopNavBar'
+import { TopNavbar } from '@/shared/components/layout/TopNavbar'
 import { cn } from '@/shared/utils/helpers'
 
 type HeaderProps = React.ComponentPropsWithoutRef<'header'>
@@ -17,7 +17,7 @@ export function Header({
         className
       )}
     >
-      <TopNavBar/>
+      <TopNavbar/>
     </header>
   )
 }

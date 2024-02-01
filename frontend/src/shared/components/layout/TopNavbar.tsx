@@ -12,7 +12,7 @@ type TopNavBarProps = {
   showPanelFold?: boolean;
 };
 
-export function TopNavBar({ showPanelFold = false }: TopNavBarProps) {
+export function TopNavbar({ showPanelFold = false }: TopNavBarProps) {
   const [openHamburger, setOpenHamburger] = React.useState(false);
 
   function handleClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
