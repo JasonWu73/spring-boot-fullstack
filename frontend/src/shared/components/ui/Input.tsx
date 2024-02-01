@@ -27,7 +27,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         ref={ref}
         type={type}
         className={cn(
-          'font-sans inline-block h-9 w-full py-2 px-3 text-sm leading-5 border border-slate-300 text-slate-900 bg-white placeholder-slate-400 rounded shadow-sm transition focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-200 disabled:border-slate-200 disabled:text-slate-500 disabled:bg-slate-50 disabled:pointer-events-none dark:border-slate-500 dark:text-slate-200 dark:bg-slate-900 dark:disabled:border-slate-600 dark:disabled:text-slate-300 dark:disabled:bg-slate-800 dark:focus:border-sky-600 dark:focus:ring-sky-900',
+          'font-sans inline-block h-9 w-full py-2 px-3 text-sm leading-5 border border-slate-300 text-slate-900 bg-white placeholder-slate-400 rounded shadow-sm transition-colors focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-200 disabled:border-slate-200 disabled:text-slate-500 disabled:bg-slate-50 disabled:pointer-events-none dark:border-slate-500 dark:text-slate-200 dark:bg-slate-900 dark:disabled:border-slate-600 dark:disabled:text-slate-300 dark:disabled:bg-slate-800 dark:focus:border-sky-600 dark:focus:ring-sky-900',
           type === 'file' && 'text-slate-100 file:h-9 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-medium file:text-slate-100 file:bg-sky-500 hover:file:bg-sky-500/90 hover:file:cursor-pointer',
           invalidClasses(invalid),
           className

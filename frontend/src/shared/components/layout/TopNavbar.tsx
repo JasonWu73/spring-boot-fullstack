@@ -11,7 +11,7 @@ export function TopNavbar() {
   const [openHamburger, setOpenHamburger] = React.useState(false)
 
   function handleClickNavItem(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-    // 当点击页面链接后，应该自动关闭汉堡包导航菜单
+    // 当点击页面链接后，应该自动关闭汉堡导航菜单
     if (e.target instanceof HTMLAnchorElement) {
       setOpenHamburger(false)
     }
@@ -33,7 +33,7 @@ export function TopNavbar() {
 
         <ModeToggle
           setTheme={setTheme}
-          className="border-slate-900 focus-visible:ring-slate-300"
+          className="bg-slate-700 hover:bg-slate-600 focus:bg-slate-600 focus:ring-0"
         />
 
         <Hamburger open={openHamburger} onOpenChange={setOpenHamburger}/>

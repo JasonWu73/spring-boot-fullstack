@@ -29,7 +29,7 @@ export function TopNavSearch({ className }: SearchInputProps) {
             name="search"
             type="search"
             placeholder="搜索"
-            className="peer pl-10 border-r-0 rounded-tr-none rounded-br-none"
+            className="peer pl-10 border-r-0 rounded-tr-none rounded-br-none focus:ring-0"
           />
 
           <span className="absolute inset-y-0 flex items-center pl-2 text-slate-400 peer-focus:text-slate-600 dark:peer-focus:text-slate-300">
@@ -39,7 +39,7 @@ export function TopNavSearch({ className }: SearchInputProps) {
 
         <Button
           type="submit"
-          className="rounded-tl-none rounded-bl-none"
+          className="bg-slate-700 rounded-tl-none rounded-bl-none hover:bg-slate-600 focus:bg-slate-600 focus:ring-0"
         >
           搜索
         </Button>
