@@ -3,7 +3,7 @@
  */
 import React from "react";
 
-import { Button } from "@/shared/components/ui/Button";
+import { ShadButton } from "@/shared/components/ui/ShadButton";
 import { cn } from "@/shared/utils/helpers";
 
 // 1. 创建 Context
@@ -79,14 +79,14 @@ function Increase({ icon, className }: IncreaseOrDecreaseProps) {
   const { increase } = useCounter();
 
   return (
-    <Button
+    <ShadButton
       variant="outline"
       size="icon"
       onClick={increase}
       className={className}
     >
       {icon}
-    </Button>
+    </ShadButton>
   );
 }
 
@@ -94,14 +94,14 @@ function Decrease({ icon, className }: IncreaseOrDecreaseProps) {
   const { decrease } = useCounter();
 
   return (
-    <Button
+    <ShadButton
       variant="outline"
       size="icon"
       onClick={decrease}
       className={className}
     >
       {icon}
-    </Button>
+    </ShadButton>
   );
 }
 

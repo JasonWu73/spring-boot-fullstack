@@ -3,7 +3,7 @@ import animatePlugin from 'tailwindcss-animate'
 /** @type {import('tailwindcss').Config} */
 export default {
   // 启用深色模式
-  darkMode: ['class'],
+  darkMode: 'class',
 
   content: [
     './index.html',

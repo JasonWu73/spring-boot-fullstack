@@ -2,7 +2,7 @@ import React from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import type { SortingState } from "@tanstack/react-table";
 
-import { Button, buttonVariants } from "@/shared/components/ui/Button";
+import { ShadButton, buttonVariants } from "@/shared/components/ui/ShadButton";
 import { Code } from "@/shared/components/ui/Code";
 import { ConfirmDialog } from "@/shared/components/ui/ConfirmDialog";
 import {
@@ -228,9 +228,9 @@ export function UserTable() {
       >
         {hasRoot() && (
           <div>
-            <Button variant="secondary" size="sm" onClick={handleShowSelection}>
+            <ShadButton variant="secondary" size="sm" onClick={handleShowSelection}>
               查看被选中的行
-            </Button>
+            </ShadButton>
 
             <Link
               to="/users/add"

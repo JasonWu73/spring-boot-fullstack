@@ -1,6 +1,6 @@
 import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
 
-import { Button } from "@/shared/components/ui/Button";
+import { ShadButton } from "@/shared/components/ui/ShadButton";
 import {
   getFolded,
   setFolded,
@@ -15,13 +15,13 @@ export function PanelFold() {
   const IconComponent = folded ? PanelLeftOpen : PanelLeftClose;
 
   return (
-    <Button
+    <ShadButton
       variant="outline"
       size="icon"
       onClick={() => setFolded(!folded)}
       className={cn("group border-slate-900 focus-visible:ring-slate-300")}
     >
       <IconComponent className="h-[1.2rem] w-[1.2rem] cursor-pointer text-slate-300 group-hover:text-slate-800 group-hover:dark:text-white" />
-    </Button>
+    </ShadButton>
   );
 }

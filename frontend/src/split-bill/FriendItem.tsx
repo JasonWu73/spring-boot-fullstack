@@ -5,7 +5,7 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/shared/components/ui/Avatar";
-import { Button } from "@/shared/components/ui/Button";
+import { ShadButton } from "@/shared/components/ui/ShadButton";
 import { Code } from "@/shared/components/ui/Code";
 import { ConfirmDialog } from "@/shared/components/ui/ConfirmDialog";
 import {
@@ -111,9 +111,9 @@ export function FriendItem({ friend, onDeleteFriend }: FriendItemProps) {
         )}
       </div>
 
-      <Button disabled={loading} onClick={handleToggleSelect}>
+      <ShadButton disabled={loading} onClick={handleToggleSelect}>
         {selected ? "关闭" : "选择"}
-      </Button>
+      </ShadButton>
     </li>
   );
 }

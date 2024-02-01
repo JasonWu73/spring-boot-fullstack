@@ -12,7 +12,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/shared/components/ui/AlertDialog";
-import { buttonVariants } from "@/shared/components/ui/Button";
+import { buttonVariants } from "@/shared/components/ui/ShadButton";
 
 type ConfirmDialogProps = {
   open?: boolean;

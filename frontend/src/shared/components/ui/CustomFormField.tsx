@@ -4,7 +4,7 @@ import { CalendarIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
 import { zhCN } from "date-fns/locale";
 
-import { Button } from "@/shared/components/ui/Button";
+import { ShadButton } from "@/shared/components/ui/ShadButton";
 import { Calendar } from "@/shared/components/ui/Calendar";
 import {
   FormControl,
@@ -13,7 +13,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/shared/components/ui/Form";
-import { Input, inputErrorClasses } from "@/shared/components/ui/Input";
+import { Input, invalidClasses } from "@/shared/components/ui/Input";
 import { MultiSelect } from "@/shared/components/ui/MultiSelect";
 import {
   Popover,
@@ -77,7 +77,7 @@ export function FormInput<T extends FieldValues>({
               type={type}
               placeholder={placeholder}
               disabled={disabled}
-              isError={isError}
+              invalid={isError}
               ref={(ref) => {
                 field.ref(ref);
 
@@ -286,11 +286,11 @@ export function FormCalendar<T extends FieldValues>({
           <Popover>
             <PopoverTrigger asChild>
               <FormControl className={cn(className)}>
-                <Button
+                <ShadButton
                   variant="outline"
                   className={cn(
                     "pl-3 text-left font-normal",
-                    inputErrorClasses(isError),
+                    invalidClasses(isError),
                   )}
                 >
                   <span className="pr-2">
@@ -299,7 +299,7 @@ export function FormCalendar<T extends FieldValues>({
                       : placeholder}
                   </span>
                   <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                </Button>
+                </ShadButton>
               </FormControl>
             </PopoverTrigger>
 

@@ -4,7 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 
 import { LoginButton } from "@/shared/components/layout/top-nav-bar/LoginButton";
 import { LogoutButton } from "@/shared/components/layout/top-nav-bar/LogoutButton";
-import { buttonVariants } from "@/shared/components/ui/Button";
+import { buttonVariants } from "@/shared/components/ui/ShadButton";
 import {
   NavigationMenu,
   NavigationMenuContent,

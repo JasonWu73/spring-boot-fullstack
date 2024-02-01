@@ -4,7 +4,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 
 import { Badge } from "@/shared/components/ui/Badge";
-import { Button } from "@/shared/components/ui/Button";
+import { ShadButton } from "@/shared/components/ui/ShadButton";
 import { Checkbox } from "@/shared/components/ui/Checkbox";
 import { Code } from "@/shared/components/ui/Code";
 import { DataTableColumnHeader } from "@/shared/components/ui/DataTableColumnHeader";
@@ -167,9 +167,9 @@ export function getUserTableColumns({
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild disabled={submitting}>
-              <Button variant="ghost" className="h-8 w-8 p-0">
+              <ShadButton variant="ghost" className="h-8 w-8 p-0">
                 <MoreHorizontal className="h-4 w-4" />
-              </Button>
+              </ShadButton>
             </DropdownMenuTrigger>
 
             <DropdownMenuContent align="end">

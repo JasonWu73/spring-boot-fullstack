@@ -2,7 +2,7 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 
 import { AuthSwitch } from "@/shared/components/layout/top-nav-bar/AuthSwitch";
-import { buttonVariants } from "@/shared/components/ui/Button";
+import { buttonVariants } from "@/shared/components/ui/ShadButton";
 import {
   NavigationMenu,
   NavigationMenuItem,

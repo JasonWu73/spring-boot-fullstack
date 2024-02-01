@@ -7,7 +7,7 @@ import {
 import type { Column } from "@tanstack/react-table";
 import React from "react";
 
-import { Button } from "@/shared/components/ui/Button";
+import { ShadButton } from "@/shared/components/ui/ShadButton";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -35,7 +35,7 @@ function DataTableColumnHeader<TData, TValue>({
     <div className={cn("flex items-center space-x-2", className)}>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button
+          <ShadButton
             variant="ghost"
             size="sm"
             className="data-[state=open]:bg-accent -ml-3 h-8"
@@ -52,7 +52,7 @@ function DataTableColumnHeader<TData, TValue>({
               ) : (
                 <CaretSortIcon className="ml-2 h-4 w-4" />
               ))}
-          </Button>
+          </ShadButton>
         </DropdownMenuTrigger>
 
         <DropdownMenuContent align="start">

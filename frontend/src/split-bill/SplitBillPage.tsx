@@ -1,7 +1,7 @@
 import React from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 
-import { Button } from "@/shared/components/ui/Button";
+import { ShadButton } from "@/shared/components/ui/ShadButton";
 import { Loading } from "@/shared/components/ui/Loading";
 import { useKeypress } from "@/shared/hooks/use-keypress";
 import { useTitle } from "@/shared/hooks/use-title";
@@ -52,9 +52,9 @@ export default function SplitBillPage() {
         </div>
 
         <div className="self-end">
-          <Button onClick={handleToggleAddFriend}>
+          <ShadButton onClick={handleToggleAddFriend}>
             {showAddFriend ? "关闭" : "添加好友"}
-          </Button>
+          </ShadButton>
         </div>
       </div>
 

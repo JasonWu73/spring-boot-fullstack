@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-import { buttonVariants } from "@/shared/components/ui/Button";
+import { buttonVariants } from "@/shared/components/ui/ShadButton";
 import { cn } from "@/shared/utils/helpers";
 import { LogIn } from "lucide-react";
 

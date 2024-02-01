@@ -4,7 +4,7 @@ import { BugOff, FileClock, Gauge, ShoppingCart, UserCog2 } from 'lucide-react'
 
 import { ScrollArea } from '@/shared/components/ui/ScrollArea'
 import { Separator } from '@/shared/components/ui/Separator'
-import { buttonVariants } from '@/shared/components/ui/Button'
+import { buttonVariants } from '@/shared/components/ui/ShadButton'
 import { cn } from '@/shared/utils/helpers'
 import { hasRoot } from '@/shared/auth/auth-signals'
 
@@ -45,7 +45,7 @@ export function SideNavbar() {
 
         <Menu title="测试路由">
           {hasRoot() && (
-            <MenuItem link="/product">
+            <MenuItem link="/products">
               <ShoppingCart className="h-4 w-4"/>
               <span>随机商品</span>
             </MenuItem>

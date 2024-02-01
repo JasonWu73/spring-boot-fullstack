@@ -8,7 +8,7 @@ import {
   AlertDescription,
   AlertTitle,
 } from "@/shared/components/ui/Alert";
-import { Button } from "@/shared/components/ui/Button";
+import { ShadButton } from "@/shared/components/ui/ShadButton";
 import { Code } from "@/shared/components/ui/Code";
 import { FormInput } from "@/shared/components/ui/CustomFormField";
 import {
@@ -157,9 +157,9 @@ export function ResetPasswordDialog({
 
             <DialogFooter>
               <DialogClose asChild>
-                <Button type="button" variant="outline" disabled={loading}>
+                <ShadButton type="button" variant="outline" disabled={loading}>
                   取消
-                </Button>
+                </ShadButton>
               </DialogClose>
 
               <LoadingButton type="submit" loading={loading}>

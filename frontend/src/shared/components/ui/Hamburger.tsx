@@ -1,4 +1,4 @@
-import { Button } from "@/shared/components/ui/Button";
+import { ShadButton } from "@/shared/components/ui/ShadButton";
 import { cn, tw } from "@/shared/utils/helpers";
 
 type HamburgerProps = {
@@ -13,8 +13,8 @@ export function Hamburger({ open, onOpenChange }: HamburgerProps) {
   const line = tw`my-1 h-[2px] w-[1.2rem] bg-white duration-300 group-hover:bg-slate-800 group-hover:dark:bg-white`;
 
   return (
-    <div className="flex items-center lg:hidden">
-      <Button
+    <div className="flex items-center sm:hidden">
+      <ShadButton
         variant="outline"
         size="icon"
         onClick={() => onOpenChange(!open)}
@@ -25,7 +25,7 @@ export function Hamburger({ open, onOpenChange }: HamburgerProps) {
         <div
           className={cn(line, open && "-translate-y-[0.625rem] -rotate-45")}
         />
-      </Button>
+      </ShadButton>
     </div>
   );
 }

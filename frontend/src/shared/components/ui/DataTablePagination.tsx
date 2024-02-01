@@ -6,7 +6,7 @@ import {
 } from "@radix-ui/react-icons";
 import type { Table } from "@tanstack/react-table";
 
-import { Button } from "@/shared/components/ui/Button";
+import { ShadButton } from "@/shared/components/ui/ShadButton";
 import {
   Select,
   SelectContent,
@@ -76,7 +76,7 @@ function DataTablePagination<TData>({
         </div>
 
         <div className="flex items-center space-x-2">
-          <Button
+          <ShadButton
             variant="outline"
             disabled={!table.getCanPreviousPage()}
             onClick={() => table.setPageIndex(0)}
@@ -84,9 +84,9 @@ function DataTablePagination<TData>({
           >
             <span className="sr-only">转到第一页</span>
             <DoubleArrowLeftIcon className="h-4 w-4" />
-          </Button>
+          </ShadButton>
 
-          <Button
+          <ShadButton
             variant="outline"
             disabled={!table.getCanPreviousPage()}
             onClick={() => table.previousPage()}
@@ -94,9 +94,9 @@ function DataTablePagination<TData>({
           >
             <span className="sr-only">转到上一页</span>
             <ChevronLeftIcon className="h-4 w-4" />
-          </Button>
+          </ShadButton>
 
-          <Button
+          <ShadButton
             variant="outline"
             disabled={!table.getCanNextPage()}
             onClick={() => table.nextPage()}
@@ -104,9 +104,9 @@ function DataTablePagination<TData>({
           >
             <span className="sr-only">转到下一页</span>
             <ChevronRightIcon className="h-4 w-4" />
-          </Button>
+          </ShadButton>
 
-          <Button
+          <ShadButton
             variant="outline"
             disabled={!table.getCanNextPage()}
             onClick={() => table.setPageIndex(table.getPageCount() - 1)}
@@ -114,7 +114,7 @@ function DataTablePagination<TData>({
           >
             <span className="sr-only">转到最后一页</span>
             <DoubleArrowRightIcon className="h-4 w-4" />
-          </Button>
+          </ShadButton>
         </div>
       </div>
     </div>

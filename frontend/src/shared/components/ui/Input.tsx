@@ -1,40 +1,38 @@
-import * as React from "react";
+import React from 'react'
 
-import { cn, tw } from "@/shared/utils/helpers";
+import { cn } from '@/shared/utils/helpers'
 
 /**
  * 当参数验证不通过时的文本框样式。
  *
- * @param isError 是否验证不通过
+ * @param invalid 是否验证不通过
  * @returns Tailwind CSS 类名字符串
  */
-export function inputErrorClasses(isError: boolean) {
-  return isError
-    ? tw`border-red-500 focus-visible:ring-red-500 dark:border-red-600 dark:focus-visible:ring-red-600`
-    : tw`border-slate-200 focus-visible:ring-slate-950 dark:border-slate-800 dark:focus-visible:ring-slate-300`;
+export function invalidClasses(invalid: boolean) {
+  return invalid
+    ? 'border-rose-600 text-rose-600 focus:border-rose-500 focus:ring-rose-200 dark:border-rose-500 dark:text-rose-500 dark:focus:border-rose-600 dark:focus:ring-rose-900'
+    : ''
 }
 
-export interface InputProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {
-  isError?: boolean;
+type InputProps = React.ComponentPropsWithoutRef<'input'> & {
+  type?: 'text' | 'password' | 'search' | 'email' | 'url' | 'tel' | 'number' | 'radio' | 'checkbox' | 'datetime-local' | 'date' | 'time' | 'month' | 'week' | 'file' | 'color' | 'range'
+  invalid?: boolean
 }
 
-const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ isError = false, className, type, ...props }, ref) => {
+export const Input = React.forwardRef<HTMLInputElement, InputProps>(
+  function Input({ invalid = false, type = 'text', className, ...props }, ref) {
     return (
       <input
+        {...props}
+        ref={ref}
         type={type}
         className={cn(
-          "flex h-9 w-full rounded-md border bg-transparent px-3 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-1 disabled:cursor-not-allowed disabled:opacity-50 dark:placeholder:text-slate-400",
-          inputErrorClasses(isError),
-          className,
+          'font-sans inline-block h-9 w-full py-2 px-3 text-sm leading-5 border border-slate-300 text-slate-900 bg-white placeholder-slate-400 rounded shadow-sm transition focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-200 disabled:border-slate-200 disabled:text-slate-500 disabled:bg-slate-50 disabled:pointer-events-none dark:border-slate-500 dark:text-slate-200 dark:bg-slate-900 dark:disabled:border-slate-600 dark:disabled:text-slate-300 dark:disabled:bg-slate-800 dark:focus:border-sky-600 dark:focus:ring-sky-900',
+          type === 'file' && 'text-slate-100 file:h-9 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-medium file:text-slate-100 file:bg-sky-500 hover:file:bg-sky-500/90 hover:file:cursor-pointer',
+          invalidClasses(invalid),
+          className
         )}
-        ref={ref}
-        {...props}
       />
-    );
-  },
-);
-Input.displayName = "Input";
-
-export { Input };
+    )
+  }
+)

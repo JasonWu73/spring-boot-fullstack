@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 
 import { addUserApi } from "@/shared/apis/backend/user";
-import { Button } from "@/shared/components/ui/Button";
+import { ShadButton } from "@/shared/components/ui/ShadButton";
 import { Code } from "@/shared/components/ui/Code";
 import {
   FormInput,
@@ -155,14 +155,14 @@ export function AddUser() {
         />
 
         <div className="flex gap-2 sm:justify-end">
-          <Button
+          <ShadButton
             type="button"
             variant="outline"
             disabled={submitting}
             onClick={goBackToUserListPage}
           >
             返回
-          </Button>
+          </ShadButton>
 
           <LoadingButton
             type="submit"

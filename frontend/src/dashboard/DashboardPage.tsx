@@ -1,7 +1,4 @@
-import { Navigate } from 'react-router-dom'
-
 import { useTitle } from '@/shared/hooks/use-title'
-import { hasAdmin } from '@/shared/auth/auth-signals'
 import {
   Card,
   CardContent,
@@ -15,9 +12,6 @@ import { LoginsTopThree } from '@/dashboard/LoginsTopThree'
 
 export default function DashboardPage() {
   useTitle('Dashboard')
-
-  // 该页面只显示给管理员用户查看
-  if (!hasAdmin()) return <Navigate to="/split-bill" replace/>
 
   return (
     <Card className="mx-auto mt-8 max-w-7xl">

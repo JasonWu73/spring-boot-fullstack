@@ -3,7 +3,7 @@ import { format } from "date-fns";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { Button } from "@/shared/components/ui/Button";
+import { ShadButton } from "@/shared/components/ui/ShadButton";
 import {
   Card,
   CardContent,
@@ -104,9 +104,9 @@ export function AddFriend() {
               className="bg-slate-50"
             />
 
-            <Button type="submit" className="self-end">
+            <ShadButton type="submit" className="self-end">
               添加
-            </Button>
+            </ShadButton>
           </form>
         </Form>
       </CardContent>

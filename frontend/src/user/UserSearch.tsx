@@ -3,7 +3,7 @@ import React from "react";
 import { useForm, type UseFormSetValue } from "react-hook-form";
 import { z } from "zod";
 
-import { Button } from "@/shared/components/ui/Button";
+import { ShadButton } from "@/shared/components/ui/ShadButton";
 import { FormInput, FormSelect } from "@/shared/components/ui/CustomFormField";
 import { Form } from "@/shared/components/ui/Form";
 import {
@@ -114,18 +114,18 @@ export function UserSearch() {
           isError={form.getFieldState("authority")?.invalid}
         />
 
-        <Button type="submit" className="self-end">
+        <ShadButton type="submit" className="self-end">
           查询
-        </Button>
+        </ShadButton>
 
-        <Button
+        <ShadButton
           type="reset"
           variant="outline"
           onClick={handleReset}
           className="self-end"
         >
           重置
-        </Button>
+        </ShadButton>
       </form>
     </Form>
   );

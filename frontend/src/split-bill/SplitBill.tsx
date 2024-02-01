@@ -5,7 +5,7 @@ import { useForm, type UseFormReturn } from "react-hook-form";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { z } from "zod";
 
-import { Button } from "@/shared/components/ui/Button";
+import { ShadButton } from "@/shared/components/ui/ShadButton";
 import {
   Card,
   CardContent,
@@ -266,9 +266,9 @@ export function SplitBill() {
                   className="bg-slate-50"
                 />
 
-                <Button type="submit" className="self-end">
+                <ShadButton type="submit" className="self-end">
                   分摊账单
-                </Button>
+                </ShadButton>
               </form>
             </Form>
           </CardContent>

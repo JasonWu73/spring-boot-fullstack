@@ -23,8 +23,8 @@
     /* sky-500 */
     --nprogress-color: #0ea5e9;
 
-    /* red-500 */
-    --nprogress-dark-color: #ef4444;
+    /* rose-500 */
+    --nprogress-dark-color: #f43f5e;
   }
 
   /* ----- 自定义标题的预设样式 ----- */
@@ -50,7 +50,7 @@
 /* ----- 系统主题 ----- */
 /* 浅色主题 */
 html {
-  @apply text-slate-950;
+  @apply text-slate-900;
   @apply bg-white;
 
   /* 滚动条浅色主题 */
@@ -59,17 +59,11 @@ html {
 
 /* 深色主题 */
 html.dark {
-  @apply text-slate-50;
+  @apply text-slate-200;
   @apply bg-one-dark;
 
   /* 滚动条深色主题 */
   color-scheme: dark;
-}
-
-/* 选中文本时的背景色 */
-::selection {
-  @apply text-slate-950;
-  @apply bg-sky-200;
 }
 
 /* ----- NProgress 浅色主题样式 ----- */
