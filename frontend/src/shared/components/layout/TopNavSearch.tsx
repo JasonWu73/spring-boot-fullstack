@@ -7,7 +7,7 @@ import { cn } from '@/shared/utils/helpers'
 
 type SearchInputProps = React.ComponentPropsWithoutRef<'form'>
 
-export function SearchInput({ className }: SearchInputProps) {
+export function TopNavSearch({ className }: SearchInputProps) {
 
   function handleSearch(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()

@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { Logo } from '@/shared/components/layout/top-nav-bar/Logo'
-import { SearchInput } from '@/shared/components/layout/SearchInput'
+import { TopNavSearch } from '@/shared/components/layout/TopNavSearch'
 import { AuthSwitch } from '@/shared/components/layout/top-nav-bar/AuthSwitch'
 import { Hamburger } from '@/shared/components/ui/Hamburger'
 import { ModeToggle } from '@/shared/components/ui/ModeToggle'
@@ -24,7 +24,7 @@ export function TopNavbar() {
     >
       <Logo/>
 
-      <SearchInput className="hidden flex-grow sm:block"/>
+      <TopNavSearch className="hidden flex-grow sm:block"/>
 
       <div className="flex items-center gap-4">
         <div className="hidden sm:block">
