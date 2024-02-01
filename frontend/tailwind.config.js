@@ -10,15 +10,6 @@ export default {
     './src/**/*.{js,ts,jsx,tsx}'
   ],
   theme: {
-    /* 由 shad-cn/ui 生成 */
-    container: {
-      center: true,
-      padding: '2rem',
-      screens: {
-        '2xl': '1400px'
-      }
-    },
-
     extend: {
       height: {
         // 因手机浏览器的地址栏会占用部分高度，导致 `100vh` 会出现垂直滚动条，故使用 `100dvh`
@@ -52,6 +43,5 @@ export default {
     }
   },
 
-  /* 由 shad-cn/ui 生成 */
   plugins: [animatePlugin]
 }
