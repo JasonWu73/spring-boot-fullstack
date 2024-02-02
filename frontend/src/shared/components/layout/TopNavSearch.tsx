@@ -12,12 +12,13 @@ export function TopNavSearch({ className }: SearchInputProps) {
   function handleSearch(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
-    const formData = new FormData(event.currentTarget)
+    const form = event.currentTarget
+    const formData = new FormData(form)
     let search = formData.get('search') as string
     search = search.trim()
     if (!search) return
 
-    event.currentTarget.reset()
+    form.reset()
     console.log(`跳转至页面: ${search}`)
   }
 

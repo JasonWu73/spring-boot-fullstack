@@ -26,10 +26,11 @@ export function LoginForm() {
   // 已登录则跳转到目标页面，即登录后就不允许再访问登录页面
   if (getAuth()) return <Navigate to={targetUrl} replace/>
 
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleLogin(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
-    const formData = new FormData(event.currentTarget)
+    const form = event.currentTarget
+    const formData = new FormData(form)
     let username = formData.get('username') as string
     username = username.trim()
     let password = formData.get('password') as string
@@ -50,12 +51,11 @@ export function LoginForm() {
       setAuth(data)
     }
 
-    event.currentTarget.reset()
-    return <Navigate to={targetUrl} replace/>
+    form.reset()
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+    <form onSubmit={handleLogin} className="flex flex-col gap-4">
       <div>
         <label htmlFor="username">用户名</label>
         <Input

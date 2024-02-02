@@ -26,10 +26,10 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     function handleValidate(event: React.FormEvent<HTMLInputElement>) {
       if (!onValidate) return
 
-      const inputEl = event.target as HTMLInputElement
-      const validityState = inputEl.validity
+      const input = event.target as HTMLInputElement
+      const validityState = input.validity
       const error = onValidate(validityState)
-      inputEl.setCustomValidity(error || '')
+      input.setCustomValidity(error || '')
     }
 
     return (
