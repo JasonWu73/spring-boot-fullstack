@@ -32,6 +32,9 @@ export function buttonVariantClasses(variant?: ButtonVariant) {
     case 'danger': {
       return cn(defaultStyle, 'bg-rose-500 hover:bg-rose-600 hover:shadow-rose-500 focus:bg-rose-600 focus:ring-rose-400 focus:shadow-rose-500')
     }
+    case 'link': {
+      return cn(defaultStyle, 'text-sky-500 underline underline-offset-4 shadow-none hover:text-sky-600 hover:shadow-none focus:text-sky-600 focus:ring-sky-500 focus:shadow-none dark:text-sky-500 dark:hover:text-sky-600')
+    }
   }
 }
 
@@ -51,7 +54,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           {...props}
           ref={ref}
           type={type}
-          className={cn(buttonVariantClasses(variant), className, '')}
+          className={cn(buttonVariantClasses(variant), className)}
         >
           {children}
         </button>
