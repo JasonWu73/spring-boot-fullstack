@@ -16,8 +16,9 @@ type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'link'
  * 获取按钮样式类名。
  *
  * @param variant 按钮类型
+ * @returns {string} Tailwind CSS 类名字符串
  */
-export function buttonVariantClasses(variant?: ButtonVariant) {
+export function buttonVariantClasses(variant?: ButtonVariant): string {
   const defaultStyle = 'relative flex items-center justify-center h-9 py-2 px-4 text-sm font-medium text-slate-50 rounded shadow-sm transition-colors hover:shadow-md focus:outline-none focus:ring-1 focus:shadow-md disabled:pointer-events-none disabled:opacity-50 dark:text-slate-200'
 
   if (!variant) return defaultStyle

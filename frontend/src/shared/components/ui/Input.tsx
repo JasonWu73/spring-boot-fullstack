@@ -6,9 +6,9 @@ import { cn } from '@/shared/utils/helpers'
  * 当参数验证不通过时的文本框样式。
  *
  * @param invalid 是否为验证不通过的样式
- * @returns Tailwind CSS 类名字符串
+ * @returns {string} Tailwind CSS 类名字符串
  */
-export function inputClasses(invalid: boolean) {
+export function inputClasses(invalid: boolean): string {
   return invalid
     ? 'text-rose-600 bg-rose-100 border-rose-300 focus:border-rose-500 focus:ring-rose-200 dark:border-rose-200 dark:text-rose-500 dark:bg-rose-200 dark:focus:border-rose-600 dark:focus:ring-rose-900'
     : 'text-slate-900 bg-white border-slate-300 focus:border-sky-500 focus:ring-sky-200 dark:border-slate-500 dark:text-slate-200 dark:bg-slate-900 dark:focus:border-sky-600 dark:focus:ring-sky-900'
