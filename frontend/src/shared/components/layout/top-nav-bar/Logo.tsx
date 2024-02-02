@@ -1,16 +1,10 @@
 import { Link } from 'react-router-dom'
 
-import { buttonVariants } from '@/shared/components/ui/ShadButton'
-import { cn } from '@/shared/utils/helpers'
-
 export function Logo() {
   return (
     <Link
       to="/"
-      className={cn(
-        buttonVariants({ variant: 'link' }),
-        'text-snow hover:no-underline focus-visible:ring-slate-300 dark:text-snow'
-      )}
+      className="text-slate-200 focus:outline-none focus:border focus:border-sky-600 focus:rounded focus:ring-1 focus:ring-sky-900"
     >
       <span className="flex items-center gap-2">
         <h2
