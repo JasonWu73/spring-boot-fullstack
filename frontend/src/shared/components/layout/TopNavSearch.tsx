@@ -42,7 +42,7 @@ export function TopNavSearch({ className }: SearchInputProps) {
         <Button
           type="submit"
           title="搜索"
-          className="bg-slate-700 rounded-tl-none rounded-bl-none hover:bg-slate-600 focus:bg-slate-600 focus:ring-0"
+          className="w-16 bg-slate-700 rounded-tl-none rounded-bl-none hover:bg-slate-600 focus:bg-slate-600 focus:ring-0"
         >
           搜索
         </Button>
