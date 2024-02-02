@@ -5,10 +5,7 @@ import { cn } from '@/shared/utils/helpers'
 
 type HeaderProps = React.ComponentPropsWithoutRef<'header'>
 
-export function Header({
-  className,
-  ...props
-}: HeaderProps) {
+export function Header({ className, ...props }: HeaderProps) {
   return (
     <header
       {...props}
