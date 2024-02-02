@@ -19,7 +19,7 @@ type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'link'
  * @returns {string} Tailwind CSS 类名字符串
  */
 export function buttonVariantClasses(variant?: ButtonVariant): string {
-  const defaultStyle = 'relative flex items-center justify-center h-9 py-2 px-4 text-sm font-medium text-slate-50 rounded shadow-sm transition-colors hover:shadow-md focus:outline-none focus:ring-1 focus:shadow-md disabled:pointer-events-none disabled:opacity-50 dark:text-slate-200'
+  const defaultStyle = 'relative flex items-center justify-center h-9 py-2 px-4 text-sm font-medium text-slate-50 rounded shadow-sm transition-colors hover:shadow focus:outline-none focus:ring-1 focus:shadow-md disabled:pointer-events-none disabled:opacity-50 dark:text-slate-200'
 
   if (!variant) return defaultStyle
 
@@ -28,7 +28,7 @@ export function buttonVariantClasses(variant?: ButtonVariant): string {
       return cn(defaultStyle, 'bg-sky-500 hover:bg-sky-600 hover:shadow-sky-500 focus:bg-sky-600 focus:ring-sky-400 focus:shadow-sky-500')
     }
     case 'secondary': {
-      return cn(defaultStyle, 'text-sky-900 bg-slate-100 hover:bg-slate-200 hover:shadow-slate-300 focus:bg-slate-200 focus:ring-slate-200 focus:shadow-slate-300 dark:text-sky-900')
+      return cn(defaultStyle, 'text-sky-900 bg-slate-100 hover:bg-slate-200 hover:shadow-slate-300 focus:bg-slate-200 focus:ring-slate-200 focus:shadow-slate-300 dark:bg-slate-600 dark:hover:bg-slate-700 dark:hover:shadow-slate-600 dark:focus:bg-slate-700 dark:focus:ring-slate-500 dark:focus:shadow-slate-600')
     }
     case 'danger': {
       return cn(defaultStyle, 'bg-rose-500 hover:bg-rose-600 hover:shadow-rose-500 focus:bg-rose-600 focus:ring-rose-400 focus:shadow-rose-500')
@@ -47,7 +47,16 @@ type ButtonProps = React.ComponentPropsWithoutRef<'button'> & {
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   function Button(
-    { children, className, title, type = 'button', variant = 'primary', loading = false, ...props },
+    {
+      children,
+      className,
+      title,
+      type = 'button',
+      variant = 'primary',
+      disabled,
+      loading = false,
+      ...props
+    },
     ref
   ) {
     return (
@@ -56,7 +65,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           {...props}
           ref={ref}
           type={type}
-          disabled={loading}
+          disabled={disabled ?? loading}
           className={cn(buttonVariantClasses(variant), className)}
         >
           {loading && <Loading/>}
