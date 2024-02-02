@@ -13,8 +13,11 @@ export function Logo() {
       )}
     >
       <span className="flex items-center gap-2">
-        <img draggable={false} src="/img/react.svg" alt="React Logo" className="select-none"/>
-        <h2 className="uppercase">React</h2>
+        <h2
+          className="flex items-center h-8 pl-10 uppercase bg-[url('/img/react.svg')] bg-left bg-no-repeat"
+        >
+          React
+        </h2>
       </span>
     </Link>
   )
