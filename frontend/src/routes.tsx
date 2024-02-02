@@ -14,6 +14,7 @@ const UserListPage = React.lazy(() => import('@/user/UserListPage'))
 const AddUserPage = React.lazy(() => import('@/user/AddUserPage'))
 const UpdateUserPage = React.lazy(() => import('@/user/UpdateUserPage'))
 const OpLogListPage = React.lazy(() => import('@/op-log/OpLogListPage'))
+const DemoPage = React.lazy(() => import('@/demo/DemoPage'))
 
 export const router = createBrowserRouter([
   {
@@ -39,7 +40,8 @@ export const router = createBrowserRouter([
               { path: '/users', element: <UserListPage/> },
               { path: '/users/add', element: <AddUserPage/> },
               { path: '/users/:userId', element: <UpdateUserPage/> },
-              { path: '/op-logs', element: <OpLogListPage/> }
+              { path: '/op-logs', element: <OpLogListPage/> },
+              { path: '/demo', element: <DemoPage/>}
             ]
           }
         ]

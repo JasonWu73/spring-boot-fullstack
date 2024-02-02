@@ -1,6 +1,6 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
-import { BugOff, FileClock, Gauge, ShoppingCart, UserCog2 } from 'lucide-react'
+import { Blocks, BugOff, FileClock, Gauge, ShoppingCart, UserCog2 } from 'lucide-react'
 
 import { ScrollArea } from '@/shared/components/ui/ScrollArea'
 import { Separator } from '@/shared/components/ui/Separator'
@@ -20,7 +20,7 @@ export function SideNavbar() {
                 buttonVariants({ variant: 'link' }),
                 'grid grid-cols-[16px_1fr] grid-rows-1 items-center gap-2 rounded px-4 py-2 text-sm text-snow hover:bg-sky-500 hover:no-underline focus-visible:ring-slate-300 dark:text-snow hover:dark:bg-sky-600',
                 isActive &&
-                  'rounded border border-sky-500 bg-sky-500 font-bold dark:border-sky-600 dark:bg-sky-600'
+                'rounded border border-sky-500 bg-sky-500 font-bold dark:border-sky-600 dark:bg-sky-600'
               )
             }
           >
@@ -50,6 +50,11 @@ export function SideNavbar() {
               <span>随机商品</span>
             </MenuItem>
           )}
+
+          <MenuItem link="/demo">
+            <Blocks className="h-4 w-4"/>
+            <span>UI 组件</span>
+          </MenuItem>
 
           <MenuItem link="/no-route">
             <BugOff className="h-4 w-4"/>
@@ -90,7 +95,7 @@ function MenuItem({ children, link }: MenuItemProps) {
             buttonVariants({ variant: 'link' }),
             'grid grid-cols-[16px_1fr] grid-rows-1 items-center gap-2 rounded px-4 py-2 text-sm text-snow hover:bg-sky-500 hover:no-underline focus-visible:ring-slate-300 dark:text-snow hover:dark:bg-sky-600',
             isActive &&
-              'rounded border border-sky-500 bg-sky-500 font-bold dark:border-sky-600 dark:bg-sky-600'
+            'rounded border border-sky-500 bg-sky-500 font-bold dark:border-sky-600 dark:bg-sky-600'
           )
         }
       >
