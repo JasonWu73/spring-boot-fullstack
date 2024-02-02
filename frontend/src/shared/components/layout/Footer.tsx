@@ -32,7 +32,7 @@ export function Footer({ className }: FooterProps) {
         <span>© {new Date().getFullYear()}</span>
 
         {loading && (
-          <RefreshCcw className="mr-2 h-4 w-4 animate-spin"/>
+          <RefreshCcw className="h-4 w-4 mr-2 animate-spin"/>
         )}
 
         {!loading && error && (

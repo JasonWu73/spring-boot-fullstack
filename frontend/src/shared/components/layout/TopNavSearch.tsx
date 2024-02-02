@@ -28,7 +28,7 @@ export function TopNavSearch({ className }: SearchInputProps) {
           <Input
             name="search"
             type="search"
-            placeholder="搜索 ..."
+            placeholder="搜索..."
             className="peer pl-10 border-0 rounded-tr-none rounded-br-none focus:ring-0"
           />
 
