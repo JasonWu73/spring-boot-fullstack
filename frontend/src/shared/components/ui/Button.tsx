@@ -11,12 +11,17 @@ import { cn } from '@/shared/utils/helpers'
  */
 type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'outline' | 'link'
 
-export function getButtonVariantClasses(type?: ButtonVariant) {
+/**
+ * 获取按钮样式类名。
+ *
+ * @param variant 按钮类型
+ */
+export function buttonVariantClasses(variant?: ButtonVariant) {
   const defaultStyle = 'relative flex items-center justify-center h-9 py-2 px-4 text-sm font-medium text-slate-50 rounded shadow-sm transition-colors hover:shadow-md focus:outline-none focus:ring-1 focus:shadow-md disabled:pointer-events-none disabled:opacity-50 dark:text-slate-200'
 
-  if (!type) return defaultStyle
+  if (!variant) return defaultStyle
 
-  switch (type) {
+  switch (variant) {
     case 'primary': {
       return cn(defaultStyle, 'bg-sky-500 hover:bg-sky-600 hover:shadow-sky-500 focus:bg-sky-600 focus:ring-sky-400 focus:shadow-sky-500')
     }
@@ -42,7 +47,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           {...props}
           ref={ref}
           type={type}
-          className={cn(getButtonVariantClasses(variant), className, '')}
+          className={cn(buttonVariantClasses(variant), className, '')}
         >
           {children}
         </button>

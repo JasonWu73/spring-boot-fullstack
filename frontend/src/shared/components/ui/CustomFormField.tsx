@@ -13,7 +13,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/shared/components/ui/Form";
-import { Input, getInvalidClasses } from "@/shared/components/ui/Input";
+import { Input, inputClasses } from "@/shared/components/ui/Input";
 import { MultiSelect } from "@/shared/components/ui/MultiSelect";
 import {
   Popover,
@@ -290,7 +290,7 @@ export function FormCalendar<T extends FieldValues>({
                   variant="outline"
                   className={cn(
                     "pl-3 text-left font-normal",
-                    getInvalidClasses(isError),
+                    inputClasses(isError),
                   )}
                 >
                   <span className="pr-2">
