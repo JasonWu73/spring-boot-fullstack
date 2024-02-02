@@ -7,14 +7,13 @@ type SideMenuHamburgerProps = {
 };
 
 export function SideMenuHamburger({ className }: SideMenuHamburgerProps) {
-  const line = 'h-[0.08rem] w-5 bg-slate-50 duration-300'
-
   const collapsed = isCollapsed();
+
+  const line = 'h-[0.08rem] w-5 bg-slate-50 duration-300'
 
   return (
     <div className="flex items-center">
       <Button
-        title="侧边栏菜单"
         onClick={() => setCollapsed(!collapsed)}
         className={cn(
           'flex-col gap-1',

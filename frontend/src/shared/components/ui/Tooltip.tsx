@@ -9,9 +9,9 @@ type TooltipProps = {
 }
 
 export function Tooltip({ children, title, className }: TooltipProps) {
-  if (!title) return <>{children}</>
-
   const tooltipRef = React.useRef<HTMLDivElement>(null)
+
+  if (!title) return <>{children}</>
 
   // 根据元素到页面底部的距离判断显示 Tooltip 显示在元素的上方还是下方
   function showUp() {
