@@ -1,14 +1,16 @@
 import React from 'react'
-import { ReloadIcon } from '@radix-ui/react-icons'
+import { RefreshCcw } from 'lucide-react'
 
-import { getVersionApi } from '@/shared/apis/backend/version'
-import { useFetch } from '@/shared/hooks/use-fetch'
 import { cn } from '@/shared/utils/helpers'
+import { useFetch } from '@/shared/hooks/use-fetch'
 import { useSavedRef } from '@/shared/hooks/use-saved'
+import { getVersionApi } from '@/shared/apis/backend/version'
 
-type FooterProps = React.ComponentPropsWithoutRef<'footer'>
+type FooterProps = {
+  className?: string
+}
 
-export function Footer({ className, ...props }: FooterProps) {
+export function Footer({ className }: FooterProps) {
   const {
     loading,
     data: versionInfo,
@@ -25,28 +27,22 @@ export function Footer({ className, ...props }: FooterProps) {
   const { developer, appName, version } = versionInfo ?? {}
 
   return (
-    <footer
-      className={cn('bg-gray-200/50 dark:bg-night-3 dark:text-snow', className)}
-      {...props}
-    >
-      <div className="container mx-auto flex flex-col flex-wrap px-5 py-4">
-        <p className="flex items-center justify-center gap-1 text-sm">
-          <span>© {new Date().getFullYear()}</span>
-          {loading && (
-            <ReloadIcon className="mr-2 inline-block h-4 w-4 animate-spin"/>
-          )}
+    <footer className={cn('py-4 px-5 bg-slate-100 dark:bg-slate-700', className)}>
+      <p className="flex items-center justify-center gap-1 text-sm">
+        <span>© {new Date().getFullYear()}</span>
 
-          {!loading && error && (
-            <span className="text-red-500 dark:text-red-600">{error}</span>
-          )}
+        {loading && (
+          <RefreshCcw className="mr-2 h-4 w-4 animate-spin"/>
+        )}
 
-          {!loading && !error && versionInfo && (
-            <span>
-              {developer} {appName} {version}
-            </span>
-          )}
-        </p>
-      </div>
+        {!loading && error && (
+          <span className="text-rose-600 dark:text-rose-500">{error}</span>
+        )}
+
+        {!loading && !error && versionInfo && (
+          <span>{developer} {appName} {version}</span>
+        )}
+      </p>
     </footer>
   )
 }
