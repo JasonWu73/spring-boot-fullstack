@@ -19,12 +19,6 @@
     /* dark-selection: `#404859` */
     /* `rgb(64 72 89 / <alpha-value>)` */
     --color-dark-selection: 64 72 89;
-
-    /* sky-500 */
-    --nprogress-color: #0ea5e9;
-
-    /* rose-500 */
-    --nprogress-dark-color: #f43f5e;
   }
 
   /* ----- 自定义标题的预设样式 ----- */
@@ -68,32 +62,39 @@ html.dark {
 
 /* ----- NProgress 浅色主题样式 ----- */
 #nprogress .bar {
-  background-color: var(--nprogress-color);
+  background-color: theme('colors.sky.500');
 }
 
 #nprogress .peg {
   box-shadow:
-    0 0 10px var(--nprogress-color),
-    0 0 5px var(--nprogress-color);
+    0 0 10px theme('colors.sky.500'),
+    0 0 5px theme('colors.sky.500');
 }
 
 #nprogress .spinner-icon {
-  border-top-color: var(--nprogress-color);
-  border-left-color: var(--nprogress-color);
+  border-top-color: theme('colors.sky.500');
+  border-left-color: theme('colors.sky.500');
 }
 
 /* ----- NProgress 深色主题样式 ----- */
 html.dark #nprogress .bar {
-  background-color: var(--nprogress-dark-color);
+  background-color: theme('colors.rose.500');
 }
 
 html.dark #nprogress .peg {
   box-shadow:
-    0 0 10px var(--nprogress-dark-color),
-    0 0 5px var(--nprogress-dark-color);
+    0 0 10px theme('colors.rose.500'),
+    0 0 5px theme('colors.rose.500');
 }
 
 html.dark #nprogress .spinner-icon {
-  border-top-color: var(--nprogress-dark-color);
-  border-left-color: var(--nprogress-dark-color);
+  border-top-color: theme('colors.rose.500');
+  border-left-color: theme('colors.rose.500');
+}
+
+/* 表单中必填项菜单使用红色星号标明 */
+.required::after {
+  content: '*';
+  color: theme('colors.rose.500');
+  @apply ml-1;
 }

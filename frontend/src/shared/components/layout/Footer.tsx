@@ -36,7 +36,7 @@ export function Footer({ className }: FooterProps) {
         )}
 
         {!loading && error && (
-          <span className="text-rose-600 dark:text-rose-500">{error}</span>
+          <span className="text-rose-500">{error}</span>
         )}
 
         {!loading && !error && versionInfo && (

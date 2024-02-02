@@ -57,7 +57,7 @@ export function LoginForm() {
   return (
     <form onSubmit={handleLogin} className="flex flex-col gap-4">
       <div className="md:flex items-center">
-        <label htmlFor="username" className="w-16">用户名</label>
+        <label htmlFor="username" className="w-20 required">用户名</label>
         <Input
           type="text"
           name="username"
@@ -75,7 +75,7 @@ export function LoginForm() {
       </div>
 
       <div className="md:flex items-center">
-        <label htmlFor="password" className="w-16">密码</label>
+        <label htmlFor="password" className="w-20 required">密码</label>
         <Input
           type="password"
           name="password"
