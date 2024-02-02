@@ -13,7 +13,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/shared/components/ui/Form";
-import { Input, inputClasses } from "@/shared/components/ui/Input";
+import { Input  } from "@/shared/components/ui/Input";
 import { MultiSelect } from "@/shared/components/ui/MultiSelect";
 import {
   Popover,
@@ -52,7 +52,6 @@ export function FormInput<T extends FieldValues>({
   type = "text",
   placeholder,
   disabled,
-  isError = false,
   inputRef,
   className,
   autoComplete,
@@ -77,7 +76,6 @@ export function FormInput<T extends FieldValues>({
               type={type}
               placeholder={placeholder}
               disabled={disabled}
-              invalid={isError}
               ref={(ref) => {
                 field.ref(ref);
 
@@ -109,7 +107,6 @@ export function FormTextarea<T extends FieldValues>({
   labelWidth,
   placeholder,
   disabled,
-  isError = false,
   textareaRef,
   className,
 }: FormTextareaProps<T>) {
@@ -131,7 +128,6 @@ export function FormTextarea<T extends FieldValues>({
               {...field}
               placeholder={placeholder}
               disabled={disabled}
-              isError={isError}
               ref={(ref) => {
                 field.ref(ref);
 
@@ -266,7 +262,6 @@ export function FormCalendar<T extends FieldValues>({
   label,
   labelWidth,
   placeholder,
-  isError = false,
   disabledWhen,
   className,
 }: FormCalendarProps<T>) {
@@ -290,7 +285,6 @@ export function FormCalendar<T extends FieldValues>({
                   variant="outline"
                   className={cn(
                     "pl-3 text-left font-normal",
-                    inputClasses(isError),
                   )}
                 >
                   <span className="pr-2">

@@ -6,10 +6,10 @@ export default function LoginPage() {
 
   return (
     <div
-      className="max-w-md mt-36 mx-auto rounded shadow bg-gradient-to-br from-amber-500 to-pink-500 dark:from-purple-950 dark:to-rose-900"
+      className="max-w-md mt-36 mx-auto rounded shadow bg-gradient-to-br from-cyan-500 to-amber-300 dark:from-violet-950 dark:to-rose-900"
     >
       <h1
-        className="p-2 text-lg font-medium text-slate-700 bg-gradient-to-r from-yellow-500 to-teal-500 rounded-tl rounded-tr dark:text-slate-200 dark:from-purple-800 dark:to-rose-600"
+        className="p-2 text-lg font-medium text-slate-100 bg-gradient-to-r from-green-500 to-yellow-500 rounded-tl rounded-tr dark:text-slate-200 dark:from-purple-800 dark:to-red-600"
       >
         全栈前端 Demo
       </h1>

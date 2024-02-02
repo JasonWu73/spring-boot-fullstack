@@ -7,6 +7,8 @@ import { Footer } from '@/shared/components/layout/Footer'
 import { isCollapsed } from '@/shared/components/layout/side-menu-signals'
 import { LoadingFullPage } from '@/shared/components/ui/LoadingFullPage'
 import { cn } from '@/shared/utils/helpers'
+import { Button } from '@/shared/components/ui/Button'
+import { Input } from '@/shared/components/ui/Input'
 
 export function AdminLayout() {
   const collapsed = isCollapsed()
@@ -23,6 +25,27 @@ export function AdminLayout() {
           collapsed && 'col-span-2'
         )}
       >
+        <div className="flex items-center gap-2 m-4">
+          <Input value="测试文本"/>
+          <Input disabled value="测试文本"/>
+          <Input type="email" value="测试文本"/>
+          <Input type="email" disabled value="测试文本"/>
+        </div>
+
+        <div className="flex items-center gap-2 m-4">
+          <Button variant="primary">测试</Button>
+          <Button variant="primary" disabled>测试</Button>
+
+          <Button variant="secondary">测试</Button>
+          <Button variant="secondary" disabled>测试</Button>
+
+          <Button variant="danger">测试</Button>
+          <Button variant="danger" disabled>测试</Button>
+
+          <Button variant="link">测试</Button>
+          <Button variant="link" disabled>测试</Button>
+        </div>
+
         <div className="flex-grow relative p-4">
           <React.Suspense fallback={<LoadingFullPage/>}>
             <Outlet/>
