@@ -1,31 +1,22 @@
-import { ShieldPlus } from "lucide-react";
-
-import { LoginForm } from "@/login/LoginForm";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/shared/components/ui/Card";
-import { useTitle } from "@/shared/hooks/use-title";
+import { LoginForm } from '@/login/LoginForm'
+import { useTitle } from '@/shared/hooks/use-title'
 
 export default function LoginPage() {
-  useTitle("登录");
+  useTitle('登录')
 
   return (
-    <Card className="mx-auto mt-8 max-w-md lg:mt-24">
-      <CardHeader>
-        <CardTitle>登录</CardTitle>
-        <CardDescription className="flex items-center text-green-500 dark:text-green-600">
-          <ShieldPlus className="mr-1 h-4 w-4" />
-          用户名和密码进行加密传输，且不会被保存在本地
-        </CardDescription>
-      </CardHeader>
+    <div
+      className="max-w-md mt-36 mx-auto rounded shadow bg-gradient-to-br from-amber-500 to-pink-500"
+    >
+      <h1
+        className="p-2 text-lg font-medium text-slate-700 bg-gradient-to-r from-yellow-500 to-teal-500 rounded-tl rounded-tr"
+      >
+        全栈前端 Demo
+      </h1>
 
-      <CardContent>
-        <LoginForm />
-      </CardContent>
-    </Card>
-  );
+      <div className="mt-4 p-4">
+        <LoginForm/>
+      </div>
+    </div>
+  )
 }
