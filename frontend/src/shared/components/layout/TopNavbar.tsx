@@ -10,7 +10,7 @@ export function TopNavbar() {
     <nav className="flex items-center justify-between gap-4 p-2">
       <div className="flex items-center">
         <SideMenuHamburger
-          className="bg-transparent hover:bg-slate-600 focus:bg-slate-600 focus:ring-0"
+          className="bg-transparent hover:bg-slate-600 hover:shadow-none focus:bg-slate-600 focus:ring-0 focus:shadow-none"
         />
 
         <Logo/>
@@ -23,7 +23,7 @@ export function TopNavbar() {
 
         <ModeToggle
           setTheme={setTheme}
-          className="bg-transparent hover:bg-slate-600 focus:bg-slate-600 focus:ring-0"
+          className="bg-transparent hover:bg-slate-600 hover:shadow-none focus:bg-slate-600 focus:ring-0 focus:shadow-none"
         />
       </div>
     </nav>
