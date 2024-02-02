@@ -27,7 +27,10 @@ export function buttonVariantClasses(variant?: ButtonVariant) {
       return cn(defaultStyle, 'bg-sky-500 hover:bg-sky-600 hover:shadow-sky-500 focus:bg-sky-600 focus:ring-sky-400 focus:shadow-sky-500')
     }
     case 'secondary': {
-      return cn(defaultStyle, 'text-sky-900 bg-slate-100 hover:bg-slate-200 hover:shadow-sky-100 focus:bg-slate-300 focus:ring-sky-200 focus:shadow-sky-100 dark:text-sky-900')
+      return cn(defaultStyle, 'text-sky-900 bg-slate-100 hover:bg-slate-200 hover:shadow-slate-300 focus:bg-slate-200 focus:ring-slate-200 focus:shadow-slate-300 dark:text-sky-900')
+    }
+    case 'danger': {
+      return cn(defaultStyle, 'bg-rose-500 hover:bg-rose-600 hover:shadow-rose-500 focus:bg-rose-600 focus:ring-rose-400 focus:shadow-rose-500')
     }
   }
 }
