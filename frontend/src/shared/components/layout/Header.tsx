@@ -13,7 +13,7 @@ export function Header({
     <header
       {...props}
       className={cn(
-        'border-b border-one-dark-2 text-slate-50 bg-one-dark-1 shadow-sm shadow-one-dark-1',
+        'text-slate-200 bg-one-dark-1 border-b border-one-dark-2 shadow-sm shadow-one-dark-1',
         className
       )}
     >
