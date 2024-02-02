@@ -3,7 +3,7 @@ import { RouterProvider } from 'react-router-dom'
 import { router } from '@/routes'
 import { Toaster } from '@/shared/components/ui/Toaster'
 import { createThemeState } from '@/shared/components/ui/theme-signals'
-import { createPanelFoldState } from '@/shared/components/layout/panel-fold/panel-fold-signals'
+import { createPanelFoldState } from '@/shared/components/layout/side-menu-signals'
 import { createAuthState } from '@/shared/auth/auth-signals'
 import { createSplitBillState } from '@/split-bill/split-bill-signals'
 

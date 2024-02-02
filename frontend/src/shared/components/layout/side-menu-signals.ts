@@ -1,22 +1,22 @@
 import { effect, signal } from '@preact/signals-react'
 
 // ----- Signals（不要直接导出 Signal，而是应该导出方法来使用 Signal）-----
-const folded = signal(undefined as unknown as boolean)
+const collapsed = signal(undefined as unknown as boolean)
 
 /**
- * 创建侧边栏折叠状态数据 Signal。
+ * 创建是否显示侧边栏菜单 Signal。
  */
 export function createPanelFoldState() {
-  if (folded.value !== undefined) return
+  if (collapsed.value !== undefined) return
 
   const largeScreen = window.matchMedia('(max-width: 1024px)')
-  folded.value = largeScreen.matches
+  collapsed.value = largeScreen.matches
 
   effect(() => {
     largeScreen.addEventListener('change', handleScreenChange)
 
-    function handleScreenChange(largeScreenMatchEvent: MediaQueryListEvent) {
-      folded.value = largeScreenMatchEvent.matches
+    function handleScreenChange(event: MediaQueryListEvent) {
+      collapsed.value = event.matches
     }
 
     return () => largeScreen.removeEventListener('change', handleScreenChange)
@@ -24,19 +24,19 @@ export function createPanelFoldState() {
 }
 
 /**
- * 获取是否折叠侧边栏。
+ * 是否折叠侧边栏菜单。
  *
  * @returns {boolean} 是否折叠侧边栏
  */
-export function getFolded(): boolean {
-  return folded.value
+export function isCollapsed(): boolean {
+  return collapsed.value
 }
 
 /**
  * 设置是否折叠侧边栏。
  *
- * @param newFolded 是否折叠侧边栏
+ * @param collapse 是否折叠侧边栏
  */
-export function setFolded(newFolded: boolean) {
-  folded.value = newFolded
+export function setCollapsed(collapse: boolean) {
+  collapsed.value = collapse
 }

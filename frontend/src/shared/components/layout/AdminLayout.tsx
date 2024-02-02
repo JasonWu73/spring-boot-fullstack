@@ -5,11 +5,11 @@ import { Header } from '@/shared/components/layout/Header'
 import { Aside } from '@/shared/components/layout/Aside'
 import { Footer } from '@/shared/components/layout/Footer'
 import { LoadingFullPage } from '@/shared/components/ui/LoadingFullPage'
-import { getFolded } from '@/shared/components/layout/panel-fold/panel-fold-signals'
+import { isCollapsed } from '@/shared/components/layout/side-menu-signals'
 import { cn } from '@/shared/utils/helpers'
 
 export function AdminLayout() {
-  const folded = getFolded()
+  const folded = isCollapsed()
 
   return (
     <div className="grid h-screen grid-cols-[auto_1fr] grid-rows-[auto_1fr]">
