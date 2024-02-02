@@ -18,11 +18,11 @@ import { Form } from "@/shared/components/ui/Form";
 import { Skeleton } from "@/shared/components/ui/Skeleton";
 import { StarRating } from "@/shared/components/ui/StarRating";
 import {
-  Tooltip,
+  ShadTooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/shared/components/ui/Tooltip";
+} from "@/shared/components/ui/ShadTooltip";
 import { useFetch } from "@/shared/hooks/use-fetch";
 import { useRefresh } from "@/shared/hooks/use-refresh";
 import { useTitle } from "@/shared/hooks/use-title";
@@ -195,7 +195,7 @@ export function SplitBill() {
             <CardDescription className="flex gap-1">
               好友：
               <TooltipProvider>
-                <Tooltip>
+                <ShadTooltip>
                   <TooltipTrigger
                     asChild
                     className="max-w-xs overflow-hidden text-ellipsis whitespace-nowrap"
@@ -206,7 +206,7 @@ export function SplitBill() {
                   </TooltipTrigger>
 
                   <TooltipContent>{friend.name}</TooltipContent>
-                </Tooltip>
+                </ShadTooltip>
               </TooltipProvider>
             </CardDescription>
 

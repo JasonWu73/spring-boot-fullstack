@@ -1,28 +1,67 @@
-import * as TooltipPrimitive from "@radix-ui/react-tooltip";
-import * as React from "react";
+import React from 'react'
 
-import { cn } from "@/shared/utils/helpers";
+import { cn } from '@/shared/utils/helpers'
 
-const TooltipProvider = TooltipPrimitive.Provider;
+type TooltipProps = {
+  children: React.ReactNode
+  title?: string
+  className?: string
+}
 
-const Tooltip = TooltipPrimitive.Root;
+export function Tooltip({ children, title, className }: TooltipProps) {
+  if (!title) return <>{children}</>
 
-const TooltipTrigger = TooltipPrimitive.Trigger;
+  const tooltipRef = React.useRef<HTMLDivElement>(null)
 
-const TooltipContent = React.forwardRef<
-  React.ElementRef<typeof TooltipPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Content>
->(({ className, sideOffset = 4, ...props }, ref) => (
-  <TooltipPrimitive.Content
-    ref={ref}
-    sideOffset={sideOffset}
-    className={cn(
-      "z-50 overflow-hidden rounded-md bg-slate-900 px-3 py-1.5 text-xs text-slate-50 animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 dark:bg-slate-50 dark:text-slate-900",
-      className,
-    )}
-    {...props}
-  />
-));
-TooltipContent.displayName = TooltipPrimitive.Content.displayName;
+  // 根据元素到页面底部的距离判断显示 Tooltip 显示在元素的上方还是下方
+  function showUp() {
+    const tooltip = tooltipRef.current
+    if (!tooltip) return false
 
-export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger };
+    const tooltipHeight = tooltip.offsetHeight
+    const distanceToTop = tooltip.offsetTop + tooltipHeight
+    const distanceToBottom = window.innerHeight - distanceToTop
+    return distanceToBottom < tooltipHeight
+  }
+
+  return (
+    <div ref={tooltipRef} className="group relative flex items-center">
+      {children}
+
+      <span
+        className={cn(
+          'group-hover:inline-block hidden absolute top-[140%] left-0 z-50 py-2 px-4 text-sm text-gray-50 bg-slate-700 rounded shadow-md',
+          showUp() && '-top-[140%]'
+        )}
+      >
+        <Arrow
+          className={cn(
+            !showUp() && '-top-2 rotate-180',
+            className
+          )}
+        />
+
+        {title}
+      </span>
+    </div>
+  )
+}
+
+type ArrowProps = React.ComponentPropsWithoutRef<'svg'>
+
+function Arrow({ className }: ArrowProps) {
+  return (
+    <svg
+      className={cn(
+        'absolute top-full left-0 h-2 w-full text-slate-700',
+        className
+      )}
+      x="0px"
+      y="0px"
+      viewBox="0 0 255 255"
+      xmlSpace="preserve"
+    >
+      <polygon className="fill-current" points="0,0 127.5,127.5 255,0"/>
+    </svg>
+  )
+}

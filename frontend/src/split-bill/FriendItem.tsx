@@ -9,11 +9,11 @@ import { ShadButton } from "@/shared/components/ui/ShadButton";
 import { Code } from "@/shared/components/ui/Code";
 import { ConfirmDialog } from "@/shared/components/ui/ConfirmDialog";
 import {
-  Tooltip,
+  ShadTooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/shared/components/ui/Tooltip";
+} from "@/shared/components/ui/ShadTooltip";
 import {
   isLoadingFriend,
   setShowAddFriend,
@@ -79,7 +79,7 @@ export function FriendItem({ friend, onDeleteFriend }: FriendItemProps) {
 
       <div className="flex-1">
         <TooltipProvider>
-          <Tooltip>
+          <ShadTooltip>
             <TooltipTrigger asChild>
               <span className="text-lg font-bold">
                 {name}
@@ -89,7 +89,7 @@ export function FriendItem({ friend, onDeleteFriend }: FriendItemProps) {
             </TooltipTrigger>
 
             <TooltipContent>{friend.name}</TooltipContent>
-          </Tooltip>
+          </ShadTooltip>
         </TooltipProvider>
 
         {friend.balance > 0 && (
