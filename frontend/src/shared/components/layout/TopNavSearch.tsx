@@ -29,7 +29,7 @@ export function TopNavSearch({ className }: SearchInputProps) {
             name="search"
             type="search"
             placeholder="搜索 ..."
-            className="peer pl-10 border-r-0 rounded-tr-none rounded-br-none focus:border-slate-600 focus:ring-0"
+            className="peer pl-10 border-0 rounded-tr-none rounded-br-none focus:ring-0"
           />
 
           <span
