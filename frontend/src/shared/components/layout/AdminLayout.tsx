@@ -14,8 +14,8 @@ export function AdminLayout() {
   const [zenMode, setZenMode] = React.useState(false)
 
   // 禅模式（Zen Mode）快捷键：
-  // 1. macOS 中 `cmd + shift + s`
-  // 2. windows 或 Linux 中 `ctrl + shift + s`
+  // 1. macOS：`cmd + shift + s`
+  // 2. windows 或 Linux：`ctrl + shift + s`
   if (isMac()) {
     useKeypress({ key: 's', modifiers: ['metaKey', 'shiftKey'] }, toggleZenMode)
   } else {

@@ -1,52 +1,100 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import { Search } from 'lucide-react'
 
+import { DropdownMenu } from '@/shared/components/ui/DropdownMenu'
 import { Input } from '@/shared/components/ui/Input'
-import { Button } from '@/shared/components/ui/Button'
+import { Code } from '@/shared/components/ui/Code'
 import { cn } from '@/shared/utils/helpers'
 
 type SearchInputProps = React.ComponentPropsWithoutRef<'form'>
 
 export function TopNavSearch({ className }: SearchInputProps) {
-
-  function handleSearch(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-
-    const form = event.currentTarget
-    const formData = new FormData(form)
-    let search = formData.get('search') as string
-    search = search.trim()
-    if (!search) return
-
-    form.reset()
-    console.log(`跳转至页面: ${search}`)
-  }
+  const [search, setSearch] = React.useState('')
+  const [open, setOpen] = React.useState(false)
 
   return (
-    <form onSubmit={handleSearch} autoComplete="off" className={cn(className)}>
-      <div className="relative flex items-center justify-center">
-        <div className="flex-grow max-w-md">
-          <Input
-            name="search"
-            type="search"
-            placeholder="搜索..."
-            className="peer pl-10 border-0 rounded-tr-none rounded-br-none focus:ring-0"
-          />
+    <div className={cn('relative flex items-center justify-center', className)}>
+      <DropdownMenu
+        open={open}
+        onOpenChange={setOpen}
+        className="flex-grow max-w-xl"
+        trigger={
+          <div>
+            <Input
+              name="search"
+              type="search"
+              placeholder="搜索..."
+              onFocus={() => setOpen(true)}
+              value={search}
+              onChange={event => setSearch(event.target.value)}
+              className="peer pl-10 border-0 focus:ring-0"
+            />
 
-          <span
-            className="peer-focus:text-slate-600 absolute inset-y-0 flex items-center pl-2 text-slate-400 dark:peer-focus:text-slate-300"
-          >
-            <Search/>
-          </span>
-        </div>
+            <span
+              className="peer-focus:text-slate-600 absolute inset-y-0 flex items-center pl-2 text-slate-400 dark:peer-focus:text-slate-300"
+            >
+              <Search/>
+            </span>
+          </div>
+        }
+        content={
+          <div>
+            {!search && (
+              <>
+                <h2
+                  className="p-4 text-slate-500 text-base border-b border-b-slate-200 dark:text-slate-400 dark:border-b-slate-700"
+                >
+                  禅模式（Zen Mode）快捷键
+                </h2>
 
-        <Button
-          type="submit"
-          className="w-16 bg-slate-700 rounded-tl-none rounded-bl-none hover:bg-slate-600 hover:shadow-none focus:bg-slate-600 focus:ring-0 focus:shadow-none"
-        >
-          搜索
-        </Button>
-      </div>
-    </form>
+                <ol className="p-4 list-decimal space-y-2 text-slate-600 text-sm dark:text-slate-400">
+                  <li>macOS：<Code>cmd + shift + s</Code></li>
+                  <li>windows 或 Linux：<Code>ctrl + shift + s</Code></li>
+                </ol>
+              </>
+            )}
+
+            {search && (
+              <>
+                <h2 className="p-4 text-slate-500 dark:text-slate-400">
+                  搜索结果
+                </h2>
+
+                <ul>
+                  {[
+                    { link: '/search/1', title: '搜索结果 1' },
+                    { link: '/search/2', title: '搜索结果 2' },
+                    { link: '/search/3', title: '搜索结果 3' }
+                  ].map(item => (
+                    <li key={item.link}>
+                      <SearchResultItem {...item} onClick={() => setSearch('')}/>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+          </div>
+        }
+      />
+    </div>
+  )
+}
+
+type SearchResultItemProps = {
+  link: string
+  title: string
+  onClick: () => void
+}
+
+function SearchResultItem({ link, title, onClick }: SearchResultItemProps) {
+  return (
+    <Link
+      to={link}
+      onClick={onClick}
+      className="block p-4 text-slate-900 rounded hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800"
+    >
+      {title}
+    </Link>
   )
 }

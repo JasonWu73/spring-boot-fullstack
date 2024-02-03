@@ -16,7 +16,7 @@ export function TopNavbar() {
         <Logo/>
       </div>
 
-      <TopNavSearch className="hidden flex-grow sm:block"/>
+      <TopNavSearch className="hidden flex-grow sm:flex"/>
 
       <div className="flex items-center gap-4">
         <AuthSwitch/>

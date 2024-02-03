@@ -24,9 +24,6 @@ export function useKeypress({ key, modifiers = [] }: Keypress, callback: () => v
     document.addEventListener('keydown', handleKeydown)
 
     function handleKeydown(event: KeyboardEvent) {
-      // 禁用默认的快捷键功能
-      event.preventDefault()
-
       const { key, modifiers, callback } = keypressRef.current
 
       if (

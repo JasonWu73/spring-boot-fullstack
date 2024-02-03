@@ -7,9 +7,7 @@ type SideMenuHamburgerProps = {
 };
 
 export function SideMenuHamburger({ className }: SideMenuHamburgerProps) {
-  const collapsed = isCollapsed();
-
-  const line = 'h-[0.08rem] w-5 bg-slate-50 duration-300'
+  const collapsed = isCollapsed()
 
   return (
     <div className="flex items-center">
@@ -21,9 +19,24 @@ export function SideMenuHamburger({ className }: SideMenuHamburgerProps) {
           className
         )}
       >
-        <div className={cn(line, !collapsed && 'translate-y-[0.34rem] rotate-45')}/>
-        <div className={cn(line, 'duration-0', !collapsed && 'opacity-0')}/>
-        <div className={cn(line, !collapsed && '-translate-y-[0.34rem] -rotate-45')}/>
+        <div
+          className={cn(
+            'h-[0.08rem] w-5 bg-slate-50 duration-300',
+            !collapsed && 'translate-y-[0.34rem] rotate-45'
+          )}
+        />
+        <div
+          className={cn(
+            'h-[0.08rem] w-5 bg-slate-50 duration-0',
+            !collapsed && 'opacity-0'
+          )}
+        />
+        <div
+          className={cn(
+            'h-[0.08rem] w-5 bg-slate-50 duration-300',
+            !collapsed && '-translate-y-[0.34rem] -rotate-45'
+          )}
+        />
       </Button>
     </div>
   )
