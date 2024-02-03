@@ -13,20 +13,25 @@ export function Tooltip({ children, title }: TooltipProps) {
   if (!title) return <>{children}</>
 
   // 判断 Tooltip 显示在元素的上方还是下方
-  function showBottom() {
+  function isAbove() {
     const tooltip = tooltipRef.current
-    if (!tooltip) return false
+    if (!tooltip) return true
 
-    return tooltip.offsetHeight > tooltip.offsetTop
+    const rect = tooltip.getBoundingClientRect()
+    const tooltipHeight = rect.height
+    const offsetTop = rect.top
+    return offsetTop > tooltipHeight
   }
 
-  // 判断 Tooltip 显示在元素的左方还是右方
-  function showLeft() {
+  // 判断 Tooltip 显示在元素的左侧还是右侧
+  function isOnRight() {
     const tooltip = tooltipRef.current
-    if (!tooltip) return false
+    if (!tooltip) return true
 
-    const rightDistance = window.innerWidth - tooltip.offsetLeft - tooltip.offsetWidth
-    return tooltip.offsetWidth > rightDistance
+    const rect = tooltip.getBoundingClientRect()
+    const tooltipWidth = rect.width
+    const offsetRight = window.innerWidth - rect.right
+    return offsetRight > tooltipWidth
   }
 
   const shortTitle = title.length < 10
@@ -37,17 +42,17 @@ export function Tooltip({ children, title }: TooltipProps) {
 
       <span
         className={cn(
-          'group-hover:inline-block hidden absolute -top-[140%] z-50 py-2 px-4 text-sm text-nowrap text-gray-50 bg-slate-700 rounded shadow-md dark:text-gray-200',
-          showBottom() && 'top-[140%]',
-          showLeft() ? 'right-0' : 'left-0'
+          'group-hover:inline-block hidden absolute top-[140%] z-[100] py-2 px-4 text-sm text-nowrap text-gray-50 bg-slate-700 rounded shadow-md dark:text-gray-200',
+          isAbove() && '-top-[140%]',
+          isOnRight() ? 'left-0' : 'right-0'
         )}
       >
         <Arrow
           className={cn(
-            showBottom() ? '-top-2 rotate-180' : 'top-full',
-            showLeft()
-              ? (shortTitle ? 'right-1/4' : 'right-[8%]')
-              : (shortTitle ? 'left-1/4' : 'left-[8%]')
+            isAbove() ? 'top-full' : '-top-2 rotate-180',
+            isOnRight()
+              ? (shortTitle ? 'left-1/4' : 'left-[8%]')
+              : (shortTitle ? 'right-1/4' : 'right-[8%]')
           )}
         />
 

@@ -3,13 +3,13 @@ import type { Table } from "@tanstack/react-table";
 
 import { ShadButton } from "@/shared/components/ui/ShadButton";
 import {
-  DropdownMenu,
+  ShadDropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/shared/components/ui/DropdownMenu";
+} from "@/shared/components/ui/ShadDropdownMenu";
 
 type DataTableViewOptionsProps<TData> = {
   table: Table<TData>;
@@ -19,7 +19,7 @@ function DataTableViewOptions<TData>({
   table,
 }: DataTableViewOptionsProps<TData>) {
   return (
-    <DropdownMenu>
+    <ShadDropdownMenu>
       <DropdownMenuTrigger asChild>
         <ShadButton
           variant="outline"
@@ -48,7 +48,7 @@ function DataTableViewOptions<TData>({
             </DropdownMenuCheckboxItem>
           ))}
       </DropdownMenuContent>
-    </DropdownMenu>
+    </ShadDropdownMenu>
   );
 }
 

@@ -9,12 +9,12 @@ import React from "react";
 
 import { ShadButton } from "@/shared/components/ui/ShadButton";
 import {
-  DropdownMenu,
+  ShadDropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/shared/components/ui/DropdownMenu";
+} from "@/shared/components/ui/ShadDropdownMenu";
 import { cn } from "@/shared/utils/helpers";
 
 type DataTableColumnHeaderProps<TData, TValue> =
@@ -33,7 +33,7 @@ function DataTableColumnHeader<TData, TValue>({
 }: DataTableColumnHeaderProps<TData, TValue>) {
   return (
     <div className={cn("flex items-center space-x-2", className)}>
-      <DropdownMenu>
+      <ShadDropdownMenu>
         <DropdownMenuTrigger asChild>
           <ShadButton
             variant="ghost"
@@ -85,7 +85,7 @@ function DataTableColumnHeader<TData, TValue>({
             隐藏
           </DropdownMenuItem>
         </DropdownMenuContent>
-      </DropdownMenu>
+      </ShadDropdownMenu>
     </div>
   );
 }

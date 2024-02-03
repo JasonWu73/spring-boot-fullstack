@@ -9,13 +9,13 @@ import { Checkbox } from "@/shared/components/ui/Checkbox";
 import { Code } from "@/shared/components/ui/Code";
 import { DataTableColumnHeader } from "@/shared/components/ui/DataTableColumnHeader";
 import {
-  DropdownMenu,
+  ShadDropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/shared/components/ui/DropdownMenu";
+} from "@/shared/components/ui/ShadDropdownMenu";
 import { Switch } from "@/shared/components/ui/Switch";
 import { ADMIN, ROOT, USER, hasRoot } from "@/shared/auth/auth-signals";
 import type { User } from "@/shared/apis/backend/user";
@@ -165,7 +165,7 @@ export function getUserTableColumns({
         const user = row.original;
 
         return (
-          <DropdownMenu>
+          <ShadDropdownMenu>
             <DropdownMenuTrigger asChild disabled={submitting}>
               <ShadButton variant="ghost" className="h-8 w-8 p-0">
                 <MoreHorizontal className="h-4 w-4" />
@@ -214,7 +214,7 @@ export function getUserTableColumns({
                 </>
               )}
             </DropdownMenuContent>
-          </DropdownMenu>
+          </ShadDropdownMenu>
         );
       },
     },
