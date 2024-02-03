@@ -30,7 +30,7 @@ export function ModeToggle({ setTheme, className }: ModeToggleProps) {
         </Button>
       }
       content={
-        <ul className="flex flex-col gap-2 w-28">
+        <ul className="flex flex-col gap-0.5 w-24">
           <li>
             <Button
               variant="ghost"
