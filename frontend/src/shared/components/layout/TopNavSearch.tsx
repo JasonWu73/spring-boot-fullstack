@@ -23,7 +23,7 @@ export function TopNavSearch({ className }: SearchInputProps) {
   }
 
   return (
-    <form onSubmit={handleSearch} className={cn(className)}>
+    <form onSubmit={handleSearch} autoComplete="off" className={cn(className)}>
       <div className="relative flex items-center justify-center">
         <div className="flex-grow max-w-md">
           <Input
