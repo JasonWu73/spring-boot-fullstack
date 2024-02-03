@@ -9,7 +9,7 @@ export function Logo() {
       to="/"
       className={cn(
         buttonVariantClasses('link'),
-        'px-2 text-slate-200 no-underline focus:text-slate-200 focus:ring-2'
+        'px-2 text-slate-200 no-underline hover:text-slate-200 focus:text-slate-200 focus:ring-2'
       )}
     >
       <h2
