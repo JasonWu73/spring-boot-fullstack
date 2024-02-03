@@ -26,8 +26,6 @@ export function useKeypress({ key, modifiers = [] }: Keypress, callback: () => v
     function handleKeydown(event: KeyboardEvent) {
       const { key, modifiers, callback } = keypressRef.current
 
-      console.log(event.key)
-
       if (
         event.key?.toLowerCase() === key.toLowerCase() &&
         modifiers.every(modifier => event[modifier])

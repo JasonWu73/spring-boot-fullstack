@@ -6,16 +6,31 @@ import { Aside } from '@/shared/components/layout/Aside'
 import { Footer } from '@/shared/components/layout/Footer'
 import { isCollapsed } from '@/shared/components/layout/side-menu-signals'
 import { LoadingFullPage } from '@/shared/components/ui/LoadingFullPage'
-import { cn } from '@/shared/utils/helpers'
+import { cn, isMac } from '@/shared/utils/helpers'
+import { useKeypress } from '@/shared/hooks/use-keypress'
 
 export function AdminLayout() {
   const collapsed = isCollapsed()
+  const [zenMode, setZenMode] = React.useState(false)
+
+  // 禅模式（Zen Mode）快捷键：
+  // 1. macOS 中 `cmd + shift + s`
+  // 2. windows 或 Linux 中 `ctrl + shift + s`
+  if (isMac()) {
+    useKeypress({ key: 's', modifiers: ['metaKey', 'shiftKey'] }, toggleZenMode)
+  } else {
+    useKeypress({ key: 's', modifiers: ['ctrlKey', 'shiftKey'] }, toggleZenMode)
+  }
+
+  function toggleZenMode() {
+    setZenMode(prev => !prev)
+  }
 
   return (
     <div className="grid grid-cols-[auto_1fr] grid-rows-[auto_1fr] h-screen">
-      <Header className="col-span-2 row-span-1"/>
+      {!zenMode && <Header className="col-span-2 row-span-1"/>}
 
-      <Aside className={cn('col-span-1 row-span-1', collapsed && 'hidden')}/>
+      {!zenMode && <Aside className={cn('col-span-1 row-span-1', collapsed && 'hidden')}/>}
 
       <main
         className={cn(
@@ -29,7 +44,7 @@ export function AdminLayout() {
           </React.Suspense>
         </div>
 
-        <Footer/>
+        {!zenMode && <Footer/>}
       </main>
     </div>
   )

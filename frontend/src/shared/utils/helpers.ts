@@ -50,3 +50,24 @@ export function truncate(value: string, maxlength: number) {
 export function wait(seconds: number) {
   return new Promise((resolve) => setTimeout(resolve, seconds * 1000))
 }
+
+/**
+ * 判断当前操作系统是否为 macOS。
+ */
+export function isMac() {
+  return window.navigator.userAgent.toLowerCase().search('mac') !== -1
+}
+
+/**
+ * 判断当前操作系统是否为 Windows。
+ */
+export function isWindows() {
+  return window.navigator.userAgent.toLowerCase().search('windows') !== -1
+}
+
+/**
+ * 判断当前操作系统是否为 Linux。
+ */
+export function isLinux() {
+  return window.navigator.userAgent.toLowerCase().search('linux') !== -1
+}
