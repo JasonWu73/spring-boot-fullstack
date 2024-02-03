@@ -53,21 +53,27 @@ export function wait(seconds: number) {
 
 /**
  * 判断当前操作系统是否为 macOS。
+ *
+ * @returns {boolean} 当前操作系统是否为 macOS
  */
-export function isMac() {
+export function isMac(): boolean {
   return window.navigator.userAgent.toLowerCase().search('mac') !== -1
 }
 
 /**
  * 判断当前操作系统是否为 Windows。
+ *
+ * @returns {boolean} 当前操作系统是否为 Windows
  */
-export function isWindows() {
+export function isWindows(): boolean {
   return window.navigator.userAgent.toLowerCase().search('windows') !== -1
 }
 
 /**
  * 判断当前操作系统是否为 Linux。
+ *
+ * @returns {boolean} 当前操作系统是否为 Linux
  */
-export function isLinux() {
+export function isLinux(): boolean {
   return window.navigator.userAgent.toLowerCase().search('linux') !== -1
 }
