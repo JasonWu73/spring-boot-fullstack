@@ -13,13 +13,13 @@ export function createPanelFoldState() {
   collapsed.value = largeScreen.matches
 
   effect(() => {
-    largeScreen.addEventListener('change', handleScreenChange)
+    largeScreen.addEventListener('change', handleChangeScreen)
 
-    function handleScreenChange(event: MediaQueryListEvent) {
+    function handleChangeScreen(event: MediaQueryListEvent) {
       collapsed.value = event.matches
     }
 
-    return () => largeScreen.removeEventListener('change', handleScreenChange)
+    return () => largeScreen.removeEventListener('change', handleChangeScreen)
   })
 }
 

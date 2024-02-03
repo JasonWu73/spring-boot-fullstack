@@ -1,12 +1,12 @@
-import React from "react";
+import React from 'react'
 
-import { useSavedRef } from "@/shared/hooks/use-saved";
+import { useSavedRef } from '@/shared/hooks/use-saved'
 
-type ModifierKey = "ctrlKey" | "shiftKey" | "altKey" | "metaKey";
+type ModifierKey = 'ctrlKey' | 'shiftKey' | 'altKey' | 'metaKey';
 
 type Keypress = {
-  key: string;
-  modifiers?: ModifierKey[];
+  key: string
+  modifiers?: ModifierKey[]
 };
 
 /**
@@ -17,26 +17,25 @@ type Keypress = {
  * @param keypress.modifiers 修饰键
  * @param callback 按键触发后的回调函数
  */
-export function useKeypress(
-  { key, modifiers = [] }: Keypress,
-  callback: () => void,
-) {
-  const keypressRef = useSavedRef({ key, modifiers, callback });
+export function useKeypress({ key, modifiers = [] }: Keypress, callback: () => void) {
+  const keypressRef = useSavedRef({ key, modifiers, callback })
 
   React.useEffect(() => {
+    document.addEventListener('keydown', handleKeydown)
+
     function handleKeydown(event: KeyboardEvent) {
-      const { key, modifiers, callback } = keypressRef.current;
+      const { key, modifiers, callback } = keypressRef.current
+
+      console.log(event.key)
 
       if (
         event.key?.toLowerCase() === key.toLowerCase() &&
-        modifiers.every((modifier) => event[modifier])
+        modifiers.every(modifier => event[modifier])
       ) {
-        callback();
+        callback()
       }
     }
 
-    document.addEventListener("keydown", handleKeydown);
-
-    return () => document.removeEventListener("keydown", handleKeydown);
-  }, [keypressRef]);
+    return () => document.removeEventListener('keydown', handleKeydown)
+  }, [keypressRef])
 }

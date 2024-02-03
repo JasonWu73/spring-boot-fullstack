@@ -15,7 +15,7 @@ export function SideMenuHamburger({ className }: SideMenuHamburgerProps) {
     <div className="flex items-center">
       <Button
         onClick={() => setCollapsed(!collapsed)}
-        title="开关侧边栏"
+        title={collapsed ? '展开菜单' : '折叠菜单'}
         className={cn(
           'flex-col gap-1',
           className
