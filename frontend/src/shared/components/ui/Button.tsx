@@ -35,7 +35,7 @@ export function buttonVariantClasses(variant?: ButtonVariant): string {
       return cn(defaultStyle, 'bg-rose-500 hover:bg-rose-600 hover:shadow-rose-500 focus:bg-rose-600 focus:ring-rose-400 focus:shadow-rose-500')
     }
     case 'ghost': {
-      return cn(defaultStyle, 'text-slate-900 shadow-none hover:bg-slate-100 hover:shadow-none focus:bg-slate-100 focus:ring-slate-500 focus:shadow-none dark:text-slate-200 dark:hover:bg-slate-600 dark:focus:bg-slate-600 dark:focus:ring-slate-500 dark:focus:shadow-none')
+      return cn(defaultStyle, 'text-slate-900 shadow-none hover:bg-slate-100 hover:shadow-none focus:bg-slate-100 focus:ring-slate-500 focus:shadow-none dark:text-slate-200 dark:hover:bg-slate-600 dark:focus:bg-slate-600')
     }
     case 'link': {
       return cn(defaultStyle, 'text-sky-500 underline underline-offset-4 shadow-none hover:text-sky-600 hover:shadow-none focus:text-sky-600 focus:ring-sky-500 focus:shadow-none dark:text-sky-500 dark:hover:text-sky-600')
