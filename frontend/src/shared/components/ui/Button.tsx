@@ -8,9 +8,10 @@ import { cn } from '@/shared/utils/helpers'
  * 1. `primary` - 主要用于突出显示主要操作，如提交表单、保存更改等。通常在页面上主要的行动按钮。通常具有鲜明的颜色，以引起用户的注意
  * 2. `secondary` - 用于次要操作，或作为次要行动按钮。可以用于取消、返回或执行辅助操作。通常具有较为柔和的颜色，以不引起用户的注意
  * 3. `danger` - 用于危险操作，如删除数据或执行可能导致问题的操作等。通常采用红色或与危险相关的颜色
- * 4. `link` - 超链接样式
+ * 4. `ghost` - 透明按钮样式，用于菜单项、不带背景色的按钮
+ * 5. `link` - 超链接样式
  */
-type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'link'
+type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'ghost' | 'link'
 
 /**
  * 获取按钮样式类名。
@@ -32,6 +33,9 @@ export function buttonVariantClasses(variant?: ButtonVariant): string {
     }
     case 'danger': {
       return cn(defaultStyle, 'bg-rose-500 hover:bg-rose-600 hover:shadow-rose-500 focus:bg-rose-600 focus:ring-rose-400 focus:shadow-rose-500')
+    }
+    case 'ghost': {
+      return cn(defaultStyle, 'text-slate-900 shadow-none hover:bg-slate-100 hover:shadow-none focus:bg-slate-100 focus:ring-slate-500 focus:shadow-none dark:text-slate-200 dark:hover:bg-slate-600 dark:focus:bg-slate-600 dark:focus:ring-slate-500 dark:focus:shadow-none')
     }
     case 'link': {
       return cn(defaultStyle, 'text-sky-500 underline underline-offset-4 shadow-none hover:text-sky-600 hover:shadow-none focus:text-sky-600 focus:ring-sky-500 focus:shadow-none dark:text-sky-500 dark:hover:text-sky-600')

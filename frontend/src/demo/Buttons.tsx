@@ -27,6 +27,14 @@ export function Buttons() {
       </Button>
       <Button variant="danger" disabled title="禁用">测试</Button>
 
+      <Button
+        variant="ghost"
+        title="透明按钮样式，用于菜单项、不带背景色的按钮"
+      >
+        测试
+      </Button>
+      <Button variant="ghost" disabled title="禁用">测试</Button>
+
       <Button variant="link" title="超链接样式">测试</Button>
       <Button variant="link" disabled title="禁用">测试</Button>
     </div>

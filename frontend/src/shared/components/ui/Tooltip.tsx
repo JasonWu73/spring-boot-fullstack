@@ -42,7 +42,7 @@ export function Tooltip({ children, title }: TooltipProps) {
 
       <span
         className={cn(
-          'group-hover:inline-block hidden absolute top-[140%] z-[100] py-2 px-4 text-sm text-nowrap text-gray-50 bg-slate-700 rounded shadow-md dark:text-gray-200',
+          'group-hover:inline-block hidden absolute top-[140%] z-[100] py-2 px-4 text-sm text-nowrap text-slate-50 bg-slate-700 rounded shadow-md dark:text-slate-200',
           isAbove() && '-top-[140%]',
           isOnRight() ? 'left-0' : 'right-0'
         )}
