@@ -29,8 +29,8 @@ export function LoginForm() {
   async function handleLogin(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
-    const form = event.currentTarget
-    const formData = new FormData(form)
+    const formEl = event.currentTarget
+    const formData = new FormData(formEl)
     let username = formData.get('username') as string
     username = username.trim()
     let password = formData.get('password') as string
@@ -51,7 +51,7 @@ export function LoginForm() {
       setAuth(data)
     }
 
-    form.reset()
+    formEl.reset()
   }
 
   return (
