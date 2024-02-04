@@ -31,9 +31,17 @@ export function DropdownMenu({
     document.addEventListener('click', handleClickOutside)
 
     function handleClickOutside(event: MouseEvent) {
-      if (!dropdown!.contains(event.target as Node)) {
-        onOpenChange(false)
-      }
+      if (!dropdown) return
+
+      // 点击的是下拉框子元素，不做处理
+      if (dropdown.contains(event.target as Node)) return
+
+      // 点击的是下拉框虚拟子元素（通过 `state` 进行判断渲染），不做处理
+      const target = event.target as HTMLElement
+      const rect = target.getBoundingClientRect()
+      if (rect.width === 0 && rect.height === 0 && rect.x === 0 && rect.y === 0) return
+
+      onOpenChange(false)
     }
 
     return () => document.removeEventListener('click', handleClickOutside)
