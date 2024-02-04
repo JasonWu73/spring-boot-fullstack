@@ -9,7 +9,7 @@ export function Buttons() {
       >
         测试
       </Button>
-      <Button variant="primary" disabled title="禁用">测试</Button>
+      <Button variant="primary" title="禁用" disabled>测试</Button>
 
       <Button
         variant="secondary"
@@ -17,7 +17,7 @@ export function Buttons() {
       >
         测试
       </Button>
-      <Button variant="secondary" disabled title="禁用">测试</Button>
+      <Button variant="secondary" title="禁用" disabled>测试</Button>
 
       <Button
         variant="danger"
@@ -25,7 +25,7 @@ export function Buttons() {
       >
         测试
       </Button>
-      <Button variant="danger" disabled title="禁用">测试</Button>
+      <Button variant="danger" title="禁用" disabled>测试</Button>
 
       <Button
         variant="ghost"
@@ -33,10 +33,10 @@ export function Buttons() {
       >
         测试
       </Button>
-      <Button variant="ghost" disabled title="禁用">测试</Button>
+      <Button variant="ghost" title="禁用" disabled>测试</Button>
 
       <Button variant="link" title="超链接样式">测试</Button>
-      <Button variant="link" disabled title="禁用">测试</Button>
+      <Button variant="link" title="禁用" disabled>测试</Button>
     </div>
   )
 }
