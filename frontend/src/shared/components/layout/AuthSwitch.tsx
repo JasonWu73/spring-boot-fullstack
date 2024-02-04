@@ -83,7 +83,7 @@ export function AuthSwitch() {
       }
       content={
         // 这里不要使用 `<a>`、`<button>` 等会获取焦点的标签，因它会导致 `Tab` 导航丢失一次
-        <ul className="space-y-0.5 w-28">
+        <ul className="space-y-0.5">
           <li
             onClick={() => navigate('/profile')}
             onMouseEnter={() => setSelectedIndex(0)}

@@ -64,7 +64,7 @@ export function DropdownMenu({
 
       <div
         className={cn(
-          'hidden absolute top-[120%] z-50 min-w-full p-2 text-slate-900 bg-white rounded ring-1 ring-slate-900 ring-opacity-5 shadow-lg dark:text-slate-200 dark:bg-slate-900',
+          'hidden absolute top-[120%] z-50 min-w-full text-slate-900 bg-white rounded ring-1 ring-slate-900 ring-opacity-5 shadow-lg dark:text-slate-200 dark:bg-slate-900',
           isOnRight() ? 'left-0' : 'right-0',
           open && 'block'
         )}
