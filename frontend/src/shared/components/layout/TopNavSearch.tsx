@@ -28,6 +28,7 @@ export function TopNavSearch({ className }: SearchInputProps) {
               onFocus={() => setOpen(true)}
               value={search}
               onChange={event => setSearch(event.target.value)}
+              autoComplete="off"
               className="peer pl-10 border-0 focus:ring-0"
             />
 
