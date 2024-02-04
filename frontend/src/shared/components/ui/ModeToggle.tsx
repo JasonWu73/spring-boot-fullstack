@@ -23,6 +23,8 @@ export function ModeToggle({ setTheme, className }: ModeToggleProps) {
 
   // 通过键盘的上下箭头控制结果的选择，回车键确认
   function handleKeyDown(event: React.KeyboardEvent<HTMLButtonElement>) {
+    if (!open) return
+
     if (event.key !== 'ArrowUp' && event.key !== 'ArrowDown' && event.key !== 'Enter') return
 
     // 禁用非回车键的默认行为
@@ -41,10 +43,16 @@ export function ModeToggle({ setTheme, className }: ModeToggleProps) {
       const theme = selectedIndex === 0
         ? 'light'
         : selectedIndex === 1 ? 'dark' : 'system'
-
       setTheme(theme)
-      setOpen(false)
+
+      // 重置选择，以免下次回车打开菜单时自动触发选择
+      setSelectedIndex(-1)
     }
+  }
+
+  function delayClose() {
+    // 延迟关闭下拉菜单，以便处理点击事件
+    setTimeout(() => setOpen(false), 100)
   }
 
   return (
@@ -54,11 +62,8 @@ export function ModeToggle({ setTheme, className }: ModeToggleProps) {
       trigger={
         <Button
           title="切换外观"
-          onClick={() => setOpen(prev => !prev)}
-          onBlur={() => {
-            // 延迟关闭下拉菜单，以便处理点击事件
-            setTimeout(() => setOpen(false), 100)
-          }}
+          onClick={() => setOpen(!open)}
+          onBlur={delayClose}
           onKeyDown={handleKeyDown}
           className={className}
         >
@@ -71,9 +76,7 @@ export function ModeToggle({ setTheme, className }: ModeToggleProps) {
         <ul className="space-y-0.5 w-24">
           <li
             onClick={() => handleChangeTheme('light')}
-            onMouseEnter={() => {
-              setSelectedIndex(0)
-            }}
+            onMouseEnter={() => setSelectedIndex(0)}
             className={cn(
               buttonVariant('ghost'),
               'grid grid-cols-[auto_1fr] gap-2 w-full text-left',
@@ -85,9 +88,7 @@ export function ModeToggle({ setTheme, className }: ModeToggleProps) {
           </li>
           <li
             onClick={() => handleChangeTheme('dark')}
-            onMouseEnter={() => {
-              setSelectedIndex(1)
-            }}
+            onMouseEnter={() => setSelectedIndex(1)}
             className={cn(
               buttonVariant('ghost'),
               'grid grid-cols-[auto_1fr] gap-2 w-full text-left',
@@ -99,9 +100,7 @@ export function ModeToggle({ setTheme, className }: ModeToggleProps) {
           </li>
           <li
             onClick={() => handleChangeTheme('system')}
-            onMouseEnter={() => {
-              setSelectedIndex(2)
-            }}
+            onMouseEnter={() => setSelectedIndex(2)}
             className={cn(
               buttonVariant('ghost'),
               'grid grid-cols-[auto_1fr] gap-2 w-full text-left',

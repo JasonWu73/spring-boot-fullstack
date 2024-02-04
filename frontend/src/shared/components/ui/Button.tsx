@@ -14,7 +14,7 @@ import { cn } from '@/shared/utils/helpers'
 type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'ghost' | 'link'
 
 export function buttonVariant(variant: ButtonVariant) {
-  const defaultClasses = 'relative flex items-center justify-center h-9 py-2 px-4 text-sm font-medium text-slate-50 rounded shadow-sm transition-colors hover:shadow focus:outline-none focus:ring-1 focus:shadow-md disabled:pointer-events-none disabled:opacity-50 dark:text-slate-200'
+  const defaultClasses = 'relative flex items-center justify-center h-9 py-2 px-4 text-sm font-medium text-slate-50 rounded shadow-sm transition-colors cursor-pointer hover:shadow focus:outline-none focus:ring-1 focus:shadow-md disabled:pointer-events-none disabled:opacity-50 dark:text-slate-200'
 
   switch (variant) {
     case 'primary': {
@@ -76,7 +76,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           {...props}
           ref={ref}
           type={type}
-          disabled={disabled ?? loading}
+          disabled={disabled || loading}
           className={cn(
             buttonVariant(variant),
             className

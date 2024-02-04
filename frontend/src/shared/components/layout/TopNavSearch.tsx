@@ -27,6 +27,8 @@ export function TopNavSearch({ className }: SearchInputProps) {
 
   // 通过键盘的上下箭头控制搜索结果的选择，回车键跳转
   function handleSearchKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
+    if (!open) return
+
     if (event.key !== 'ArrowUp' && event.key !== 'ArrowDown' && event.key !== 'Enter') return
 
     // 禁用非回车键的默认行为
@@ -56,6 +58,11 @@ export function TopNavSearch({ className }: SearchInputProps) {
     }
   }
 
+  function delayClose() {
+    // 延迟关闭下拉菜单，以便处理点击事件
+    setTimeout(() => setOpen(false), 100)
+  }
+
   return (
     <div className={cn('relative flex items-center justify-center', className)}>
       <DropdownMenu
@@ -71,10 +78,7 @@ export function TopNavSearch({ className }: SearchInputProps) {
               placeholder="搜索..."
               autoComplete="off"
               onFocus={() => setOpen(true)}
-              onBlur={() => {
-                // 延迟关闭下拉菜单，以便处理点击事件
-                setTimeout(() => setOpen(false), 100)
-              }}
+              onBlur={delayClose}
               value={search}
               onChange={event => setSearch(event.target.value)}
               onKeyDown={handleSearchKeyDown}
@@ -117,9 +121,7 @@ export function TopNavSearch({ className }: SearchInputProps) {
                       key={item.link}
                       {...item}
                       selected={index === selectedIndex}
-                      onMouseEnter={() => {
-                        setSelectedIndex(index)
-                      }}
+                      onMouseEnter={() => setSelectedIndex(index)}
                     />
                   ))}
                 </ul>
