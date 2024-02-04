@@ -57,7 +57,7 @@ export function ModeToggle({ setTheme, className }: ModeToggleProps) {
       trigger={
         <Button
           title="切换外观"
-          onClick={() => setOpen(!open)}
+          onClick={() => setOpen(prev => !prev)}
           onBlur={delayClose}
           onKeyDown={handleKeyDown}
           className={className}

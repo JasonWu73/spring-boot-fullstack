@@ -69,7 +69,7 @@ export function AuthSwitch() {
       trigger={
         <Button
           variant="ghost"
-          onClick={() => setOpen(!open)}
+          onClick={() => setOpen(prev => !prev)}
           onBlur={delayClose}
           onKeyDown={handleKeyDown}
           className="text-slate-600 bg-white hover:text-slate-900 focus:text-slate-900 dark:bg-slate-900"
