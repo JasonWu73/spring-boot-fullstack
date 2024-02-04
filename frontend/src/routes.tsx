@@ -40,8 +40,13 @@ export const router = createBrowserRouter([
               { path: '/users', element: <UserListPage/> },
               { path: '/users/add', element: <AddUserPage/> },
               { path: '/users/:userId', element: <UpdateUserPage/> },
-              { path: '/op-logs', element: <OpLogListPage/> },
-              { path: '/demo', element: <DemoPage/>}
+              { path: '/op-logs', element: <OpLogListPage/> }
+            ]
+          },
+          {
+            element: <SecureRoute authority="root"/>,
+            children: [
+              { path: '/demo', element: <DemoPage/> }
             ]
           }
         ]
