@@ -7,7 +7,9 @@ import { Input } from '@/shared/components/ui/Input'
 import { Code } from '@/shared/components/ui/Code'
 import { cn } from '@/shared/utils/helpers'
 
-type SearchInputProps = React.ComponentPropsWithoutRef<'form'>
+type SearchInputProps = {
+  className?: string
+}
 
 export function TopNavSearch({ className }: SearchInputProps) {
   const [search, setSearch] = React.useState('')
@@ -25,10 +27,10 @@ export function TopNavSearch({ className }: SearchInputProps) {
               name="search"
               type="search"
               placeholder="搜索..."
+              autoComplete="off"
               onFocus={() => setOpen(true)}
               value={search}
               onChange={event => setSearch(event.target.value)}
-              autoComplete="off"
               className="peer pl-10 border-0 focus:ring-0"
             />
 

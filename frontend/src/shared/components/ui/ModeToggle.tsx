@@ -30,14 +30,14 @@ export function ModeToggle({ setTheme, className }: ModeToggleProps) {
         </Button>
       }
       content={
-        <ul className="flex flex-col gap-0.5 w-24">
+        <ul className="space-y-0.5 w-24">
           <li>
             <Button
               variant="ghost"
               onClick={() => handleChangeTheme('light')}
-              className="w-full"
+              className="grid grid-cols-[auto_1fr] gap-2 w-full text-left"
             >
-              <Sun className="h-4 w-4 mr-2"/>
+              <Sun className="h-4 w-4"/>
               浅色
             </Button>
           </li>
@@ -45,9 +45,9 @@ export function ModeToggle({ setTheme, className }: ModeToggleProps) {
             <Button
               variant="ghost"
               onClick={() => handleChangeTheme('dark')}
-              className="w-full"
+              className="grid grid-cols-[auto_1fr] gap-2 w-full text-left"
             >
-              <Moon className="h-4 w-4 mr-2"/>
+              <Moon className="h-4 w-4"/>
               深色
             </Button>
           </li>
@@ -55,9 +55,9 @@ export function ModeToggle({ setTheme, className }: ModeToggleProps) {
             <Button
               variant="ghost"
               onClick={() => handleChangeTheme('system')}
-              className="w-full"
+              className="grid grid-cols-[auto_1fr] gap-2 w-full text-left"
             >
-              <Monitor className="h-4 w-4 mr-2"/>
+              <Monitor className="h-4 w-4"/>
               自动
             </Button>
           </li>
