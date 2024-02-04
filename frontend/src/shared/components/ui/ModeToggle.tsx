@@ -16,11 +16,6 @@ export function ModeToggle({ setTheme, className }: ModeToggleProps) {
   const [open, setOpen] = React.useState(false)
   const [selectedIndex, setSelectedIndex] = React.useState(-1)
 
-  function handleChangeTheme(theme: Theme) {
-    setTheme(theme)
-    setOpen(false)
-  }
-
   // 通过键盘的上下箭头控制结果的选择，回车键确认
   function handleKeyDown(event: React.KeyboardEvent<HTMLButtonElement>) {
     if (!open) return
@@ -51,8 +46,8 @@ export function ModeToggle({ setTheme, className }: ModeToggleProps) {
   }
 
   function delayClose() {
-    // 延迟关闭下拉菜单，以便处理点击事件
-    setTimeout(() => setOpen(false), 100)
+    // 延迟关闭下拉菜单，以便处理点击事件，延迟不能过短，否则有概率会导致点击事件无法触发
+    setTimeout(() => setOpen(false), 200)
   }
 
   return (
@@ -75,7 +70,7 @@ export function ModeToggle({ setTheme, className }: ModeToggleProps) {
         // 这里不要使用 `<a>`、`<button>` 等会获取焦点的标签，因它会导致 `Tab` 导航丢失一次
         <ul className="space-y-0.5 w-24">
           <li
-            onClick={() => handleChangeTheme('light')}
+            onClick={() => setTheme('light')}
             onMouseEnter={() => setSelectedIndex(0)}
             className={cn(
               buttonVariant('ghost'),
@@ -87,7 +82,7 @@ export function ModeToggle({ setTheme, className }: ModeToggleProps) {
             浅色
           </li>
           <li
-            onClick={() => handleChangeTheme('dark')}
+            onClick={() => setTheme('dark')}
             onMouseEnter={() => setSelectedIndex(1)}
             className={cn(
               buttonVariant('ghost'),
@@ -99,7 +94,7 @@ export function ModeToggle({ setTheme, className }: ModeToggleProps) {
             深色
           </li>
           <li
-            onClick={() => handleChangeTheme('system')}
+            onClick={() => setTheme('system')}
             onMouseEnter={() => setSelectedIndex(2)}
             className={cn(
               buttonVariant('ghost'),

@@ -59,8 +59,8 @@ export function TopNavSearch({ className }: SearchInputProps) {
   }
 
   function delayClose() {
-    // 延迟关闭下拉菜单，以便处理点击事件
-    setTimeout(() => setOpen(false), 100)
+    // 延迟关闭下拉菜单，以便处理点击事件，延迟不能过短，否则有概率会导致点击事件无法触发
+    setTimeout(() => setOpen(false), 200)
   }
 
   return (
