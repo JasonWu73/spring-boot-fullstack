@@ -4,7 +4,6 @@ import { createBrowserRouter } from 'react-router-dom'
 import { LoginLayout } from '@/shared/components/layout/LoginLayout'
 import { AdminLayout } from '@/shared/components/layout/AdminLayout'
 import ErrorPage from '@/shared/components/ui/ErrorPage'
-import NotFoundPage from '@/shared/components/ui/NotFoundPage'
 import { SecureRoute } from '@/shared/auth/SecureRoute'
 
 const LoginPage = React.lazy(() => import('@/login/LoginPage'))
@@ -51,7 +50,7 @@ export const router = createBrowserRouter([
           }
         ]
       },
-      { path: '*', element: <NotFoundPage/> }
+      { path: '*', element: <ErrorPage notFound/> }
     ]
   }
 ])

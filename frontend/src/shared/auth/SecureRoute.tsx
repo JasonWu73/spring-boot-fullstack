@@ -1,6 +1,6 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
 
-import ForbiddenPage from '@/shared/components/ui/ForbiddenPage'
+import ErrorPage from '@/shared/components/ui/ErrorPage'
 import { ADMIN, getAuth, hasAdmin, hasRoot, hasUser, ROOT, USER } from '@/shared/auth/auth-signals'
 
 type SecureRouteProps = {
@@ -21,7 +21,7 @@ export function SecureRoute({ authority }: SecureRouteProps) {
     (authority === ADMIN.value && !hasAdmin()) ||
     (authority === USER.value && !hasUser())
   ) {
-    return <ForbiddenPage/>
+    return <ErrorPage forbidden/>
   }
 
   // ----- 已登录，且拥有组件的访问权限，则渲染组件 -----
