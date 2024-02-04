@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { Search } from 'lucide-react'
 
 import { DropdownMenu } from '@/shared/components/ui/DropdownMenu'
@@ -15,6 +15,47 @@ export function TopNavSearch({ className }: SearchInputProps) {
   const [search, setSearch] = React.useState('')
   const [open, setOpen] = React.useState(false)
 
+  const inputRef = React.useRef<HTMLInputElement>(null)
+  const [selectedIndex, setSelectedIndex] = React.useState(-1)
+  const navigate = useNavigate()
+  const results = [
+    { link: '/', title: '工作台' },
+    { link: '/users', title: '用户管理' },
+    { link: '/op-logs', title: '操作日志' },
+    { link: '/404', title: '未知页面' }
+  ]
+
+  // 通过键盘的上下箭头控制搜索结果的选择，回车键跳转
+  function handleSearchKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
+    if (event.key !== 'ArrowUp' && event.key !== 'ArrowDown' && event.key !== 'Enter') return
+
+    // 不要让输入框的光标跳动
+    event.preventDefault()
+
+    if (event.key === 'ArrowUp') {
+      setSelectedIndex(prev => Math.max(prev - 1, 0))
+    }
+
+    if (event.key === 'ArrowDown') {
+      setSelectedIndex(prev => Math.min(prev + 1, results.length - 1))
+    }
+
+    if (event.key === 'Enter' && selectedIndex !== -1) {
+      // 跳转到选中的搜索结果
+      const link = results[selectedIndex].link
+      navigate(link)
+
+      // 清空搜索框
+      setSearch('')
+
+      // 重置搜索结果的选择
+      setSelectedIndex(-1)
+
+      // 失去搜索框焦点
+      inputRef.current?.blur()
+    }
+  }
+
   return (
     <div className={cn('relative flex items-center justify-center', className)}>
       <DropdownMenu
@@ -22,15 +63,21 @@ export function TopNavSearch({ className }: SearchInputProps) {
         onOpenChange={setOpen}
         className="flex-grow max-w-xl"
         trigger={
-          <div>
+          <>
             <Input
+              ref={inputRef}
               name="search"
               type="search"
               placeholder="搜索..."
               autoComplete="off"
               onFocus={() => setOpen(true)}
+              onBlur={() => {
+                // 延迟关闭搜索结果，以便点击搜索结果
+                setTimeout(() => setOpen(false), 100)
+              }}
               value={search}
               onChange={event => setSearch(event.target.value)}
+              onKeyDown={handleSearchKeyDown}
               className="peer pl-10 border-0 focus:ring-0"
             />
 
@@ -39,7 +86,7 @@ export function TopNavSearch({ className }: SearchInputProps) {
             >
               <Search/>
             </span>
-          </div>
+          </>
         }
         content={
           <div>
@@ -65,14 +112,15 @@ export function TopNavSearch({ className }: SearchInputProps) {
                 </h2>
 
                 <ul>
-                  {[
-                    { link: '/search/1', title: '搜索结果 1' },
-                    { link: '/search/2', title: '搜索结果 2' },
-                    { link: '/search/3', title: '搜索结果 3' }
-                  ].map(item => (
-                    <li key={item.link}>
-                      <SearchResultItem {...item} onClick={() => setSearch('')}/>
-                    </li>
+                  {results.map((item, index) => (
+                    <SearchResultItem
+                      key={item.link}
+                      {...item}
+                      selected={index === selectedIndex}
+                      onMouseEnter={() => {
+                        setSelectedIndex(index)
+                      }}
+                    />
                   ))}
                 </ul>
               </>
@@ -84,20 +132,28 @@ export function TopNavSearch({ className }: SearchInputProps) {
   )
 }
 
-type SearchResultItemProps = {
+type SearchResultItemProps = React.ComponentPropsWithoutRef<'li'> & {
   link: string
   title: string
-  onClick: () => void
+  selected: boolean
 }
 
-function SearchResultItem({ link, title, onClick }: SearchResultItemProps) {
+function SearchResultItem({ link, title, selected, ...props }: SearchResultItemProps) {
+  const navigate = useNavigate()
+
+  // 这里不要使用 React Router 的 `<Link>` 组件，它会导致 `Tab` 导航丢失一次
   return (
-    <Link
-      to={link}
-      onClick={onClick}
-      className="block p-4 text-slate-900 rounded hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800"
+    <li
+      {...props}
+      onClick={() => {
+        navigate(link)
+      }}
+      className={cn(
+        'block p-4 text-slate-900 rounded cursor-pointer hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800',
+        selected && 'bg-slate-100 dark:bg-slate-800'
+      )}
     >
       {title}
-    </Link>
+    </li>
   )
 }
