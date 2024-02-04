@@ -1,4 +1,4 @@
-import { Logo } from '@/shared/components/layout/top-nav-bar/Logo'
+import { Logo } from '@/shared/components/layout/Logo'
 import { TopNavSearch } from '@/shared/components/layout/TopNavSearch'
 import { AuthSwitch } from '@/shared/components/layout/top-nav-bar/AuthSwitch'
 import { SideMenuHamburger } from '@/shared/components/layout/SideMenuHamburger'
