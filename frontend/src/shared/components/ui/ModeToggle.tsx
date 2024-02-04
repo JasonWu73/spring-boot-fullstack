@@ -2,7 +2,8 @@ import React from 'react'
 import { Monitor, Moon, Sun } from 'lucide-react'
 
 import { DropdownMenu } from '@/shared/components/ui/DropdownMenu'
-import { Button } from '@/shared/components/ui/Button'
+import { Button, buttonVariant } from '@/shared/components/ui/Button'
+import { cn } from '@/shared/utils/helpers'
 
 export type Theme = 'dark' | 'light' | 'system'
 
@@ -13,10 +14,37 @@ type ModeToggleProps = {
 
 export function ModeToggle({ setTheme, className }: ModeToggleProps) {
   const [open, setOpen] = React.useState(false)
+  const [selectedIndex, setSelectedIndex] = React.useState(-1)
 
   function handleChangeTheme(theme: Theme) {
     setTheme(theme)
     setOpen(false)
+  }
+
+  // 通过键盘的上下箭头控制结果的选择，回车键确认
+  function handleKeyDown(event: React.KeyboardEvent<HTMLButtonElement>) {
+    if (event.key !== 'ArrowUp' && event.key !== 'ArrowDown' && event.key !== 'Enter') return
+
+    // 禁用非回车键的默认行为
+    if (event.key !== 'Enter') event.preventDefault()
+
+    if (event.key === 'ArrowUp') {
+      setSelectedIndex(prev => Math.max(prev - 1, 0))
+    }
+
+    if (event.key === 'ArrowDown') {
+      setSelectedIndex(prev => Math.min(prev + 1, 2))
+    }
+
+    if (event.key === 'Enter' && selectedIndex !== -1) {
+      // 通过回车键确认选择
+      const theme = selectedIndex === 0
+        ? 'light'
+        : selectedIndex === 1 ? 'dark' : 'system'
+
+      setTheme(theme)
+      setOpen(false)
+    }
   }
 
   return (
@@ -27,6 +55,11 @@ export function ModeToggle({ setTheme, className }: ModeToggleProps) {
         <Button
           title="切换外观"
           onClick={() => setOpen(prev => !prev)}
+          onBlur={() => {
+            // 延迟关闭下拉菜单，以便处理点击事件
+            setTimeout(() => setOpen(false), 100)
+          }}
+          onKeyDown={handleKeyDown}
           className={className}
         >
           <Sun className="h-5 w-5 rotate-0 scale-100 transition-transform dark:-rotate-90 dark:scale-0"/>
@@ -34,36 +67,49 @@ export function ModeToggle({ setTheme, className }: ModeToggleProps) {
         </Button>
       }
       content={
+        // 这里不要使用 `<a>`、`<button>` 等会获取焦点的标签，因它会导致 `Tab` 导航丢失一次
         <ul className="space-y-0.5 w-24">
-          <li>
-            <Button
-              variant="ghost"
-              onClick={() => handleChangeTheme('light')}
-              className="grid grid-cols-[auto_1fr] gap-2 w-full text-left"
-            >
-              <Sun className="h-4 w-4"/>
-              浅色
-            </Button>
+          <li
+            onClick={() => handleChangeTheme('light')}
+            onMouseEnter={() => {
+              setSelectedIndex(0)
+            }}
+            className={cn(
+              buttonVariant('ghost'),
+              'grid grid-cols-[auto_1fr] gap-2 w-full text-left',
+              selectedIndex === 0 && 'bg-slate-100 dark:bg-slate-800'
+            )}
+          >
+            <Sun className="h-4 w-4"/>
+            浅色
           </li>
-          <li>
-            <Button
-              variant="ghost"
-              onClick={() => handleChangeTheme('dark')}
-              className="grid grid-cols-[auto_1fr] gap-2 w-full text-left"
-            >
-              <Moon className="h-4 w-4"/>
-              深色
-            </Button>
+          <li
+            onClick={() => handleChangeTheme('dark')}
+            onMouseEnter={() => {
+              setSelectedIndex(1)
+            }}
+            className={cn(
+              buttonVariant('ghost'),
+              'grid grid-cols-[auto_1fr] gap-2 w-full text-left',
+              selectedIndex === 1 && 'bg-slate-100 dark:bg-slate-800'
+            )}
+          >
+            <Moon className="h-4 w-4"/>
+            深色
           </li>
-          <li>
-            <Button
-              variant="ghost"
-              onClick={() => handleChangeTheme('system')}
-              className="grid grid-cols-[auto_1fr] gap-2 w-full text-left"
-            >
-              <Monitor className="h-4 w-4"/>
-              自动
-            </Button>
+          <li
+            onClick={() => handleChangeTheme('system')}
+            onMouseEnter={() => {
+              setSelectedIndex(2)
+            }}
+            className={cn(
+              buttonVariant('ghost'),
+              'grid grid-cols-[auto_1fr] gap-2 w-full text-left',
+              selectedIndex === 2 && 'bg-slate-100 dark:bg-slate-800'
+            )}
+          >
+            <Monitor className="h-4 w-4"/>
+            自动
           </li>
         </ul>
       }

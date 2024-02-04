@@ -29,8 +29,8 @@ export function TopNavSearch({ className }: SearchInputProps) {
   function handleSearchKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
     if (event.key !== 'ArrowUp' && event.key !== 'ArrowDown' && event.key !== 'Enter') return
 
-    // 不要让输入框的光标跳动
-    event.preventDefault()
+    // 禁用非回车键的默认行为
+    if (event.key !== 'Enter') event.preventDefault()
 
     if (event.key === 'ArrowUp') {
       setSelectedIndex(prev => Math.max(prev - 1, 0))
@@ -72,7 +72,7 @@ export function TopNavSearch({ className }: SearchInputProps) {
               autoComplete="off"
               onFocus={() => setOpen(true)}
               onBlur={() => {
-                // 延迟关闭搜索结果，以便点击搜索结果
+                // 延迟关闭下拉菜单，以便处理点击事件
                 setTimeout(() => setOpen(false), 100)
               }}
               value={search}
@@ -141,7 +141,7 @@ type SearchResultItemProps = React.ComponentPropsWithoutRef<'li'> & {
 function SearchResultItem({ link, title, selected, ...props }: SearchResultItemProps) {
   const navigate = useNavigate()
 
-  // 这里不要使用 React Router 的 `<Link>` 组件，它会导致 `Tab` 导航丢失一次
+  // 这里不要使用 `<a>`、`<button>` 等会获取焦点的标签，因它会导致 `Tab` 导航丢失一次
   return (
     <li
       {...props}
