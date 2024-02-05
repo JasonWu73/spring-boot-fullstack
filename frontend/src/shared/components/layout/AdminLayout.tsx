@@ -30,7 +30,14 @@ export function AdminLayout() {
     <div className="grid grid-cols-[auto_1fr] grid-rows-[auto_1fr] h-screen">
       {!zenMode && <Header className="col-span-2 row-span-1"/>}
 
-      {!zenMode && <Aside className={cn('col-span-1 row-span-1', collapsed && 'hidden')}/>}
+      {!zenMode && (
+        <Aside
+          className={cn(
+            'col-span-1 row-span-1 overflow-auto h-[calc(100vh-3.3125rem)]',
+            collapsed && 'hidden'
+          )}
+        />
+      )}
 
       <main
         className={cn(
