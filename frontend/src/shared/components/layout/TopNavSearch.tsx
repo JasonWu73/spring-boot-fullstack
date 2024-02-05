@@ -102,7 +102,7 @@ export function TopNavSearch({ className }: SearchInputProps) {
                   禅模式（Zen Mode）快捷键
                 </h2>
 
-                <ol className="p-4 list-decimal space-y-2 text-slate-600 text-sm dark:text-slate-400">
+                <ol className="p-4 space-y-2 text-slate-600 text-sm dark:text-slate-400">
                   <li>macOS：<Code>cmd + shift + s</Code></li>
                   <li>windows 或 Linux：<Code>ctrl + shift + s</Code></li>
                 </ol>

@@ -64,6 +64,7 @@ export function AuthSwitch() {
   function handleLogout() {
     logout(null).then()
     clearAuth()
+    navigate('/login')
   }
 
   return (
@@ -87,7 +88,7 @@ export function AuthSwitch() {
       }
       content={
         // 这里不要使用 `<a>`、`<button>` 等会获取焦点的标签，因它会导致 `Tab` 导航丢失一次
-        <ul>
+        <ul className="w-28">
           {navs.map((nav, index) => (
             <NavItem
               key={index}
