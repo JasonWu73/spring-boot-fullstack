@@ -68,13 +68,13 @@ export function ModeToggle({ setTheme, className }: ModeToggleProps) {
       }
       content={
         // 这里不要使用 `<a>`、`<button>` 等会获取焦点的标签，因它会导致 `Tab` 导航丢失一次
-        <ul className="space-y-0.5 w-24">
+        <ul className="w-24">
           <li
             onClick={() => setTheme('light')}
             onMouseEnter={() => setSelectedIndex(0)}
             className={cn(
               buttonVariant('ghost'),
-              'grid grid-cols-[auto_1fr] gap-2 w-full text-left',
+              'grid grid-cols-[auto_1fr] gap-2 w-full text-left rounded-br-none rounded-bl-none',
               selectedIndex === 0 && 'bg-slate-100 dark:bg-slate-800'
             )}
           >
@@ -86,7 +86,7 @@ export function ModeToggle({ setTheme, className }: ModeToggleProps) {
             onMouseEnter={() => setSelectedIndex(1)}
             className={cn(
               buttonVariant('ghost'),
-              'grid grid-cols-[auto_1fr] gap-2 w-full text-left',
+              'grid grid-cols-[auto_1fr] gap-2 w-full text-left rounded-none',
               selectedIndex === 1 && 'bg-slate-100 dark:bg-slate-800'
             )}
           >
@@ -98,7 +98,7 @@ export function ModeToggle({ setTheme, className }: ModeToggleProps) {
             onMouseEnter={() => setSelectedIndex(2)}
             className={cn(
               buttonVariant('ghost'),
-              'grid grid-cols-[auto_1fr] gap-2 w-full text-left',
+              'grid grid-cols-[auto_1fr] gap-2 w-full text-left rounded-tr-none rounded-tl-none',
               selectedIndex === 2 && 'bg-slate-100 dark:bg-slate-800'
             )}
           >
