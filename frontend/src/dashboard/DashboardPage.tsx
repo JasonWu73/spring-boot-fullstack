@@ -11,7 +11,7 @@ import { LoginHistoryChart } from '@/dashboard/LoginHistoryChart'
 import { LoginsTopThree } from '@/dashboard/LoginsTopThree'
 
 export default function DashboardPage() {
-  useTitle('Dashboard')
+  useTitle('工作台')
 
   return (
     <Card className="mx-auto mt-8 max-w-7xl">
