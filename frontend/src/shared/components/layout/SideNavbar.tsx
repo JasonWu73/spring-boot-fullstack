@@ -8,7 +8,7 @@ import { hasRoot } from '@/shared/auth/auth-signals'
 
 export function SideNavbar() {
   return (
-    <nav className="flex flex-col items-center gap-1">
+    <nav className="flex flex-col items-center gap-1 w-40">
       <NavItem link="/">
         <Gauge className="h-5 w-5"/>
         <span>工作台</span>
