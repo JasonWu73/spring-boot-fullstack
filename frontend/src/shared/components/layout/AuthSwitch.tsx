@@ -39,7 +39,7 @@ export function AuthSwitch() {
     }
 
     if (event.key === 'ArrowDown') {
-      setSelectedIndex(prev => Math.min(prev + 1, 1))
+      setSelectedIndex(prev => Math.min(prev + 1, navs.length - 1))
     }
 
     if (event.key === 'Enter' && selectedIndex !== -1) {
