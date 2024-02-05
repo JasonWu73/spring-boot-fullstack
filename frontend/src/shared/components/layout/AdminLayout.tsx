@@ -42,7 +42,7 @@ export function AdminLayout() {
       <main
         className={cn(
           'col-span-1 row-span-1 flex flex-col',
-          (collapsed || !zenMode) && 'col-span-2',
+          collapsed && 'col-span-2',
           zenMode && 'col-span-2 row-span-2',
         )}
       >
