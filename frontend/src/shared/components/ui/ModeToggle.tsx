@@ -12,14 +12,15 @@ type ModeToggleProps = {
   className?: string
 };
 
+const modes = [
+  { theme: 'light', icon: <Sun className="h-4 w-4"/>, text: '浅色' },
+  { theme: 'dark', icon: <Moon className="h-4 w-4"/>, text: '深色' },
+  { theme: 'system', icon: <Monitor className="h-4 w-4"/>, text: '自动' }
+] as const
+
 export function ModeToggle({ setTheme, className }: ModeToggleProps) {
   const [open, setOpen] = React.useState(false)
   const [selectedIndex, setSelectedIndex] = React.useState(-1)
-  const modes = [
-    { icon: <Sun className="h-4 w-4"/>, theme: 'light',  text: '浅色' },
-    { icon: <Moon className="h-4 w-4"/>, theme: 'dark', text: '深色' },
-    { icon: <Monitor className="h-4 w-4"/>, theme: 'system', text: '自动' }
-  ] as const
 
   // 通过键盘的上下箭头控制结果的选择，回车键确认
   function handleKeyDown(event: React.KeyboardEvent<HTMLButtonElement>) {
@@ -72,7 +73,7 @@ export function ModeToggle({ setTheme, className }: ModeToggleProps) {
         // 这里不要使用 `<a>`、`<button>` 等会获取焦点的标签，因它会导致 `Tab` 导航丢失一次
         <ul className="w-24">
           {modes.map((mode, index) => (
-            <MenuItem
+            <ModeItem
               key={index}
               selected={selectedIndex === index}
               onMouseEnter={() => setSelectedIndex(index)}
@@ -85,7 +86,7 @@ export function ModeToggle({ setTheme, className }: ModeToggleProps) {
             >
               {mode.icon}
               {mode.text}
-            </MenuItem>
+            </ModeItem>
           ))}
         </ul>
       }
@@ -98,7 +99,7 @@ type MenuItemProps = React.ComponentPropsWithoutRef<'li'> & {
   className?: string
 }
 
-function MenuItem({ children, selected, className, ...props }: MenuItemProps) {
+function ModeItem({ children, selected, className, ...props }: MenuItemProps) {
   return (
     <li
       {...props}

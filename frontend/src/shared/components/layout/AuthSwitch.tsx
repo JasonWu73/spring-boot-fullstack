@@ -10,6 +10,11 @@ import { clearAuth, getAuth } from '@/shared/auth/auth-signals'
 import { useFetch } from '@/shared/hooks/use-fetch'
 import { logoutApi } from '@/shared/apis/backend/auth'
 
+const navs = [
+  { link: '/profile', icon: <CircleUserRound className="h-4 w-4"/>, text: '个人资料' },
+  { link: null, icon: <LogOut className="h-4 w-4"/>, text: '退出登录' }
+] as const
+
 export function AuthSwitch() {
   const [open, setOpen] = React.useState(false)
   const [selectedIndex, setSelectedIndex] = React.useState(-1)
@@ -39,11 +44,10 @@ export function AuthSwitch() {
 
     if (event.key === 'Enter' && selectedIndex !== -1) {
       // 通过回车键确认选择
-      if (selectedIndex === 0) {
-        navigate('/profile')
-      }
-
-      if (selectedIndex === 1) {
+      const link = navs[selectedIndex].link
+      if (link) {
+        navigate(link)
+      } else {
         handleLogout()
       }
 
@@ -84,33 +88,49 @@ export function AuthSwitch() {
       content={
         // 这里不要使用 `<a>`、`<button>` 等会获取焦点的标签，因它会导致 `Tab` 导航丢失一次
         <ul>
-          <li
-            onClick={() => navigate('/profile')}
-            onMouseEnter={() => setSelectedIndex(0)}
-            className={cn(
-              buttonVariant('ghost'),
-              'grid grid-cols-[auto_1fr] gap-2 w-full text-left rounded-br-none rounded-bl-none',
-              selectedIndex === 0 && 'bg-slate-100 dark:bg-slate-800'
-            )}
-          >
-            <CircleUserRound className="h-4 w-4"/>
-            个人资料
-          </li>
-
-          <li
-            onClick={handleLogout}
-            onMouseEnter={() => setSelectedIndex(1)}
-            className={cn(
-              buttonVariant('ghost'),
-              'grid grid-cols-[auto_1fr] gap-2 w-full text-left rounded-tr-none rounded-tl-none',
-              selectedIndex === 1 && 'bg-slate-100 dark:bg-slate-800'
-            )}
-          >
-            <LogOut className="h-4 w-4"/>
-            退出登录
-          </li>
+          {navs.map((nav, index) => (
+            <NavItem
+              key={index}
+              selected={selectedIndex === index}
+              onClick={() => {
+                if (nav.link) {
+                  navigate(nav.link)
+                } else {
+                  handleLogout()
+                }
+              }}
+              className={cn(
+                index === 0 && 'rounded-br-none rounded-bl-none',
+                index === navs.length - 1 && 'rounded-tr-none rounded-tl-none',
+                index !== 0 && index !== navs.length - 1 && 'rounded-none'
+              )}
+            >
+              {nav.icon}
+              {nav.text}
+            </NavItem>
+          ))}
         </ul>
       }
     />
+  )
+}
+
+type NavItemProps = React.ComponentPropsWithoutRef<'li'> & {
+  selected: boolean
+}
+
+function NavItem({ children, selected, className, ...props }: NavItemProps) {
+  return (
+    <li
+      {...props}
+      className={cn(
+        buttonVariant('ghost'),
+        'grid grid-cols-[auto_1fr] gap-2 w-full text-left',
+        selected && 'bg-slate-100 dark:bg-slate-800',
+        className
+      )}
+    >
+      {children}
+    </li>
   )
 }

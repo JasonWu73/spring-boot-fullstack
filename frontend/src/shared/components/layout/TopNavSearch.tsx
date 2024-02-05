@@ -117,11 +117,12 @@ export function TopNavSearch({ className }: SearchInputProps) {
 
                 <ul>
                   {results.map((item, index) => (
-                    <SearchResultItem
+                    <ResultItem
                       {...item}
                       key={item.link}
                       selected={index === selectedIndex}
                       onMouseEnter={() => setSelectedIndex(index)}
+                      onClick={() => navigate(item.link)}
                       className={cn(
                         'rounded-none',
                         index === results.length - 1 && 'rounded-tr-none rounded-tl-none'
@@ -139,22 +140,16 @@ export function TopNavSearch({ className }: SearchInputProps) {
 }
 
 type SearchResultItemProps = React.ComponentPropsWithoutRef<'li'> & {
-  link: string
   title: string
   selected: boolean
   className?: string
 }
 
-function SearchResultItem({ link, title, selected, className, ...props }: SearchResultItemProps) {
-  const navigate = useNavigate()
-
+function ResultItem({ title, selected, className, ...props }: SearchResultItemProps) {
   // 这里不要使用 `<a>`、`<button>` 等会获取焦点的标签，因它会导致 `Tab` 导航丢失一次
   return (
     <li
       {...props}
-      onClick={() => {
-        navigate(link)
-      }}
       className={cn(
         'block p-4 text-slate-900 rounded cursor-pointer hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800',
         selected && 'bg-slate-100 dark:bg-slate-800',
