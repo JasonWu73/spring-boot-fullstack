@@ -83,13 +83,13 @@ export function AuthSwitch() {
       }
       content={
         // 这里不要使用 `<a>`、`<button>` 等会获取焦点的标签，因它会导致 `Tab` 导航丢失一次
-        <ul className="space-y-0.5">
+        <ul>
           <li
             onClick={() => navigate('/profile')}
             onMouseEnter={() => setSelectedIndex(0)}
             className={cn(
               buttonVariant('ghost'),
-              'grid grid-cols-[auto_1fr] gap-2 w-full text-left',
+              'grid grid-cols-[auto_1fr] gap-2 w-full text-left rounded-br-none rounded-bl-none',
               selectedIndex === 0 && 'bg-slate-100 dark:bg-slate-800'
             )}
           >
@@ -102,7 +102,7 @@ export function AuthSwitch() {
             onMouseEnter={() => setSelectedIndex(1)}
             className={cn(
               buttonVariant('ghost'),
-              'grid grid-cols-[auto_1fr] gap-2 w-full text-left',
+              'grid grid-cols-[auto_1fr] gap-2 w-full text-left rounded-tr-none rounded-tl-none',
               selectedIndex === 1 && 'bg-slate-100 dark:bg-slate-800'
             )}
           >
