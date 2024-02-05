@@ -42,7 +42,8 @@ export function AdminLayout() {
       <main
         className={cn(
           'col-span-1 row-span-1 flex flex-col',
-          collapsed && 'col-span-2'
+          (collapsed || !zenMode) && 'col-span-2',
+          zenMode && 'col-span-2 row-span-2',
         )}
       >
         <div className="flex-grow relative p-4">
