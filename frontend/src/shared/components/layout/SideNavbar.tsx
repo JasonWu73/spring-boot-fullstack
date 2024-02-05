@@ -2,109 +2,79 @@ import React from 'react'
 import { NavLink } from 'react-router-dom'
 import { Blocks, BugOff, FileClock, Gauge, ShoppingCart, UserCog2 } from 'lucide-react'
 
-import { ScrollArea } from '@/shared/components/ui/ScrollArea'
-import { Separator } from '@/shared/components/ui/Separator'
-import { buttonVariants } from '@/shared/components/ui/ShadButton'
+import { buttonVariant } from '@/shared/components/ui/Button'
 import { cn } from '@/shared/utils/helpers'
 import { hasRoot } from '@/shared/auth/auth-signals'
 
 export function SideNavbar() {
   return (
-    <ScrollArea className="h-[calc(100vh-6rem)] w-48">
-      <nav className="flex flex-col items-center gap-2 py-1">
-        <div className="flex w-10/12 flex-col gap-0.5">
-          <NavLink
-            to="/"
-            className={({ isActive }) =>
-              cn(
-                buttonVariants({ variant: 'link' }),
-                'grid grid-cols-[16px_1fr] grid-rows-1 items-center gap-2 rounded px-4 py-2 text-sm text-snow hover:bg-sky-500 hover:no-underline focus-visible:ring-slate-300 dark:text-snow hover:dark:bg-sky-600',
-                isActive &&
-                'rounded border border-sky-500 bg-sky-500 font-bold dark:border-sky-600 dark:bg-sky-600'
-              )
-            }
-          >
-            <Gauge className="h-5 w-5"/>
-            <span>Dashboard</span>
-          </NavLink>
-        </div>
+    <nav className="flex flex-col items-center gap-1">
+      <NavItem link="/">
+        <Gauge className="h-5 w-5"/>
+        <span>工作台</span>
+      </NavItem>
 
-        <Menu title="系统管理">
-          <MenuItem link="/users">
-            <UserCog2 className="h-5 w-5"/>
-            <span>用户管理</span>
-          </MenuItem>
+      <Separator/>
+      <Title text="系统管理"/>
+      <NavItem link="/users">
+        <UserCog2 className="h-5 w-5"/>
+        <span>用户管理</span>
+      </NavItem>
+      <NavItem link="/op-logs">
+        <FileClock className="h-5 w-5"/>
+        <span>操作日志</span>
+      </NavItem>
 
-          <MenuItem link="/op-logs">
-            <FileClock className="h-5 w-5"/>
-            <span>操作日志</span>
-          </MenuItem>
-        </Menu>
-
-        <MenuSeparator/>
-
-        <Menu title="测试路由">
-          {hasRoot() && (
-            <MenuItem link="/products">
-              <ShoppingCart className="h-4 w-4"/>
-              <span>随机商品</span>
-            </MenuItem>
-          )}
-
-          <MenuItem link="/demo">
+      {hasRoot() && (
+        <>
+          <Separator/>
+          <Title text="测试路由"/>
+          <NavItem link="/products">
+            <ShoppingCart className="h-4 w-4"/>
+            <span>随机商品</span>
+          </NavItem>
+          <NavItem link="/demo">
             <Blocks className="h-4 w-4"/>
             <span>UI 组件</span>
-          </MenuItem>
-
-          <MenuItem link="/no-route">
+          </NavItem>
+          <NavItem link="/no-route">
             <BugOff className="h-4 w-4"/>
             <span>Not Found</span>
-          </MenuItem>
-        </Menu>
-      </nav>
-    </ScrollArea>
+          </NavItem>
+        </>
+      )}
+    </nav>
   )
 }
 
-type MenuProps = {
-  children: React.ReactNode
-  title: string
-}
-
-function Menu({ children, title }: MenuProps) {
-  return (
-    <>
-      <h3 className="w-10/12 pl-4 text-slate-400">{title}</h3>
-      <ul className="flex w-10/12 flex-col gap-0.5">{children}</ul>
-    </>
-  )
-}
-
-type MenuItemProps = {
+type NavItemProps = {
   children: React.ReactNode
   link: string
 }
 
-function MenuItem({ children, link }: MenuItemProps) {
+function NavItem({ children, link }: NavItemProps) {
   return (
-    <li>
-      <NavLink
-        to={link}
-        className={({ isActive }) =>
-          cn(
-            buttonVariants({ variant: 'link' }),
-            'grid grid-cols-[16px_1fr] grid-rows-1 items-center gap-2 rounded px-4 py-2 text-sm text-snow hover:bg-sky-500 hover:no-underline focus-visible:ring-slate-300 dark:text-snow hover:dark:bg-sky-600',
-            isActive &&
-            'rounded border border-sky-500 bg-sky-500 font-bold dark:border-sky-600 dark:bg-sky-600'
-          )
-        }
-      >
-        {children}
-      </NavLink>
-    </li>
+    <NavLink
+      to={link}
+      className={({ isActive }) => cn(
+        buttonVariant('primary'),
+        'grid grid-cols-[auto_1fr] gap-2 w-full bg-transparent text-left',
+        isActive && 'bg-sky-500'
+      )}
+    >
+      {children}
+    </NavLink>
   )
 }
 
-function MenuSeparator() {
-  return <Separator className="my-2 w-4/5 dark:bg-night-4"/>
+function Separator() {
+  return <div className="w-4/5 h-px my-2 bg-slate-600"/>
+}
+
+type TitleProps = {
+  text: string
+}
+
+function Title({ text }: TitleProps) {
+  return <h2 className="text-slate-400 text-base">{text}</h2>
 }
