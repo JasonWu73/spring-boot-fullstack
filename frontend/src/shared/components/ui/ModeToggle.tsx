@@ -15,6 +15,11 @@ type ModeToggleProps = {
 export function ModeToggle({ setTheme, className }: ModeToggleProps) {
   const [open, setOpen] = React.useState(false)
   const [selectedIndex, setSelectedIndex] = React.useState(-1)
+  const modes = [
+    { icon: <Sun className="h-4 w-4"/>, theme: 'light',  text: '浅色' },
+    { icon: <Moon className="h-4 w-4"/>, theme: 'dark', text: '深色' },
+    { icon: <Monitor className="h-4 w-4"/>, theme: 'system', text: '自动' }
+  ] as const
 
   // 通过键盘的上下箭头控制结果的选择，回车键确认
   function handleKeyDown(event: React.KeyboardEvent<HTMLButtonElement>) {
@@ -30,15 +35,12 @@ export function ModeToggle({ setTheme, className }: ModeToggleProps) {
     }
 
     if (event.key === 'ArrowDown') {
-      setSelectedIndex(prev => Math.min(prev + 1, 2))
+      setSelectedIndex(prev => Math.min(prev + 1, modes.length - 1))
     }
 
     if (event.key === 'Enter' && selectedIndex !== -1) {
       // 通过回车键确认选择
-      const theme = selectedIndex === 0
-        ? 'light'
-        : selectedIndex === 1 ? 'dark' : 'system'
-      setTheme(theme)
+      setTheme(modes[selectedIndex].theme)
 
       // 重置选择，以免下次回车打开菜单时自动触发选择
       setSelectedIndex(-1)
@@ -69,44 +71,45 @@ export function ModeToggle({ setTheme, className }: ModeToggleProps) {
       content={
         // 这里不要使用 `<a>`、`<button>` 等会获取焦点的标签，因它会导致 `Tab` 导航丢失一次
         <ul className="w-24">
-          <li
-            onClick={() => setTheme('light')}
-            onMouseEnter={() => setSelectedIndex(0)}
-            className={cn(
-              buttonVariant('ghost'),
-              'grid grid-cols-[auto_1fr] gap-2 w-full text-left rounded-br-none rounded-bl-none',
-              selectedIndex === 0 && 'bg-slate-100 dark:bg-slate-800'
-            )}
-          >
-            <Sun className="h-4 w-4"/>
-            浅色
-          </li>
-          <li
-            onClick={() => setTheme('dark')}
-            onMouseEnter={() => setSelectedIndex(1)}
-            className={cn(
-              buttonVariant('ghost'),
-              'grid grid-cols-[auto_1fr] gap-2 w-full text-left rounded-none',
-              selectedIndex === 1 && 'bg-slate-100 dark:bg-slate-800'
-            )}
-          >
-            <Moon className="h-4 w-4"/>
-            深色
-          </li>
-          <li
-            onClick={() => setTheme('system')}
-            onMouseEnter={() => setSelectedIndex(2)}
-            className={cn(
-              buttonVariant('ghost'),
-              'grid grid-cols-[auto_1fr] gap-2 w-full text-left rounded-tr-none rounded-tl-none',
-              selectedIndex === 2 && 'bg-slate-100 dark:bg-slate-800'
-            )}
-          >
-            <Monitor className="h-4 w-4"/>
-            自动
-          </li>
+          {modes.map((mode, index) => (
+            <MenuItem
+              key={index}
+              selected={selectedIndex === index}
+              onMouseEnter={() => setSelectedIndex(index)}
+              onClick={() => setTheme(mode.theme)}
+              className={cn(
+                index === 0 && 'rounded-br-none rounded-bl-none',
+                index === modes.length - 1 && 'rounded-tr-none rounded-tl-none',
+                index !== 0 && index !== modes.length - 1 && 'rounded-none'
+              )}
+            >
+              {mode.icon}
+              {mode.text}
+            </MenuItem>
+          ))}
         </ul>
       }
     />
+  )
+}
+
+type MenuItemProps = React.ComponentPropsWithoutRef<'li'> & {
+  selected: boolean
+  className?: string
+}
+
+function MenuItem({ children, selected, className, ...props }: MenuItemProps) {
+  return (
+    <li
+      {...props}
+      className={cn(
+        buttonVariant('ghost'),
+        'grid grid-cols-[auto_1fr] gap-2 w-full text-left',
+        selected && 'bg-slate-100 dark:bg-slate-800',
+        className
+      )}
+    >
+      {children}
+    </li>
   )
 }
