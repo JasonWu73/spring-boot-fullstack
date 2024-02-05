@@ -10,7 +10,7 @@ import { clearAuth, getAuth } from '@/shared/auth/auth-signals'
 import { useFetch } from '@/shared/hooks/use-fetch'
 import { logoutApi } from '@/shared/apis/backend/auth'
 
-const navs = [
+const ROUTES = [
   { link: '/profile', icon: <CircleUserRound className="h-4 w-4"/>, text: '个人资料' },
   { link: null, icon: <LogOut className="h-4 w-4"/>, text: '退出登录' }
 ] as const
@@ -39,21 +39,24 @@ export function AuthSwitch() {
     }
 
     if (event.key === 'ArrowDown') {
-      setSelectedIndex(prev => Math.min(prev + 1, navs.length - 1))
+      setSelectedIndex(prev => Math.min(prev + 1, ROUTES.length - 1))
     }
 
     if (event.key === 'Enter' && selectedIndex !== -1) {
       // 通过回车键确认选择
-      const link = navs[selectedIndex].link
-      if (link) {
-        navigate(link)
-      } else {
-        handleLogout()
-      }
-
-      // 重置选择，以免下次回车打开菜单时自动触发选择
-      setSelectedIndex(-1)
+      handleNavigate(ROUTES[selectedIndex].link)
     }
+  }
+
+  function handleNavigate(link: string | null) {
+    if (link) {
+      navigate(link)
+    } else {
+      handleLogout()
+    }
+
+    // 重置选择
+    setSelectedIndex(-1)
   }
 
   function delayClose() {
@@ -89,21 +92,15 @@ export function AuthSwitch() {
       content={
         // 这里不要使用 `<a>`、`<button>` 等会获取焦点的标签，因它会导致 `Tab` 导航丢失一次
         <ul className="w-28">
-          {navs.map((nav, index) => (
+          {ROUTES.map((nav, index) => (
             <NavItem
               key={index}
               selected={selectedIndex === index}
-              onClick={() => {
-                if (nav.link) {
-                  navigate(nav.link)
-                } else {
-                  handleLogout()
-                }
-              }}
+              onClick={() => handleNavigate(nav.link)}
               className={cn(
                 index === 0 && 'rounded-br-none rounded-bl-none',
-                index === navs.length - 1 && 'rounded-tr-none rounded-tl-none',
-                index !== 0 && index !== navs.length - 1 && 'rounded-none'
+                index === ROUTES.length - 1 && 'rounded-tr-none rounded-tl-none',
+                index !== 0 && index !== ROUTES.length - 1 && 'rounded-none'
               )}
             >
               {nav.icon}

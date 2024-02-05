@@ -5,18 +5,18 @@ import { DropdownMenu } from '@/shared/components/ui/DropdownMenu'
 import { Button, buttonVariant } from '@/shared/components/ui/Button'
 import { cn } from '@/shared/utils/helpers'
 
+const MODES = [
+  { theme: 'light', icon: <Sun className="h-4 w-4"/>, text: '浅色' },
+  { theme: 'dark', icon: <Moon className="h-4 w-4"/>, text: '深色' },
+  { theme: 'system', icon: <Monitor className="h-4 w-4"/>, text: '自动' }
+] as const
+
 export type Theme = 'dark' | 'light' | 'system'
 
 type ModeToggleProps = {
   setTheme: (theme: Theme) => void
   className?: string
 };
-
-const modes = [
-  { theme: 'light', icon: <Sun className="h-4 w-4"/>, text: '浅色' },
-  { theme: 'dark', icon: <Moon className="h-4 w-4"/>, text: '深色' },
-  { theme: 'system', icon: <Monitor className="h-4 w-4"/>, text: '自动' }
-] as const
 
 export function ModeToggle({ setTheme, className }: ModeToggleProps) {
   const [open, setOpen] = React.useState(false)
@@ -36,16 +36,20 @@ export function ModeToggle({ setTheme, className }: ModeToggleProps) {
     }
 
     if (event.key === 'ArrowDown') {
-      setSelectedIndex(prev => Math.min(prev + 1, modes.length - 1))
+      setSelectedIndex(prev => Math.min(prev + 1, MODES.length - 1))
     }
 
     if (event.key === 'Enter' && selectedIndex !== -1) {
       // 通过回车键确认选择
-      setTheme(modes[selectedIndex].theme)
-
-      // 重置选择，以免下次回车打开菜单时自动触发选择
-      setSelectedIndex(-1)
+      handleChangeMode(MODES[selectedIndex].theme)
     }
+  }
+
+  function handleChangeMode(theme: Theme) {
+    setTheme(theme)
+
+    // 重置选择
+    setSelectedIndex(-1)
   }
 
   function delayClose() {
@@ -72,16 +76,16 @@ export function ModeToggle({ setTheme, className }: ModeToggleProps) {
       content={
         // 这里不要使用 `<a>`、`<button>` 等会获取焦点的标签，因它会导致 `Tab` 导航丢失一次
         <ul className="w-24">
-          {modes.map((mode, index) => (
+          {MODES.map((mode, index) => (
             <ModeItem
               key={index}
               selected={selectedIndex === index}
               onMouseEnter={() => setSelectedIndex(index)}
-              onClick={() => setTheme(mode.theme)}
+              onClick={() => handleChangeMode(mode.theme)}
               className={cn(
                 index === 0 && 'rounded-br-none rounded-bl-none',
-                index === modes.length - 1 && 'rounded-tr-none rounded-tl-none',
-                index !== 0 && index !== modes.length - 1 && 'rounded-none'
+                index === MODES.length - 1 && 'rounded-tr-none rounded-tl-none',
+                index !== 0 && index !== MODES.length - 1 && 'rounded-none'
               )}
             >
               {mode.icon}

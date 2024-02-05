@@ -7,6 +7,21 @@ import { Input } from '@/shared/components/ui/Input'
 import { Code } from '@/shared/components/ui/Code'
 import { cn } from '@/shared/utils/helpers'
 
+type Route = {
+  link: string
+  text: string
+}
+
+// 待搜索的路由
+const ROUTES: Route[] = [
+  { link: '/', text: '工作台' },
+  { link: '/profile', text: '个人资料' },
+  { link: '/users', text: '用户管理' },
+  { link: '/op-logs', text: '操作日志' },
+  { link: '/demo', text: 'UI 组件' },
+  { link: '/no-route', text: 'Not Found' }
+]
+
 type SearchInputProps = {
   className?: string
 }
@@ -17,13 +32,8 @@ export function TopNavSearch({ className }: SearchInputProps) {
 
   const inputRef = React.useRef<HTMLInputElement>(null)
   const [selectedIndex, setSelectedIndex] = React.useState(-1)
+  const [matchedResults, setMatchedResults] = React.useState<Route[]>([])
   const navigate = useNavigate()
-  const results = [
-    { link: '/', title: '工作台' },
-    { link: '/users', title: '用户管理' },
-    { link: '/op-logs', title: '操作日志' },
-    { link: '/404', title: '未知页面' }
-  ]
 
   // 通过键盘的上下箭头控制搜索结果的选择，回车键跳转
   function handleSearchKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
@@ -39,28 +49,41 @@ export function TopNavSearch({ className }: SearchInputProps) {
     }
 
     if (event.key === 'ArrowDown') {
-      setSelectedIndex(prev => Math.min(prev + 1, results.length - 1))
+      setSelectedIndex(prev => Math.min(prev + 1, matchedResults.length - 1))
     }
 
     if (event.key === 'Enter' && selectedIndex !== -1) {
       // 跳转到选中的搜索结果
-      const link = results[selectedIndex].link
-      navigate(link)
-
-      // 清空搜索框
-      setSearch('')
-
-      // 重置搜索结果的选择
-      setSelectedIndex(-1)
-
-      // 失去搜索框焦点
-      inputRef.current?.blur()
+      handleNavigate(matchedResults[selectedIndex].link)
     }
+  }
+
+  function handleNavigate(link: string) {
+    navigate(link)
+
+    // 清空搜索框
+    setSearch('')
+
+    // 重置搜索结果的选择
+    setSelectedIndex(-1)
+
+    // 失去搜索框焦点
+    inputRef.current?.blur()
   }
 
   function delayClose() {
     // 延迟关闭下拉菜单，以便处理点击事件，延迟不能过短，否则有概率会导致点击事件无法触发
     setTimeout(() => setOpen(false), 200)
+  }
+
+  function handleSearch(event: React.ChangeEvent<HTMLInputElement>) {
+    const value = event.target.value
+    setSearch(value)
+
+    // 过滤匹配的路由
+    const text = value.toLowerCase().trim()
+    const results = ROUTES.filter(route => route.text.toLowerCase().includes(text))
+    setMatchedResults(results)
   }
 
   return (
@@ -80,7 +103,7 @@ export function TopNavSearch({ className }: SearchInputProps) {
               onFocus={() => setOpen(true)}
               onBlur={delayClose}
               value={search}
-              onChange={event => setSearch(event.target.value)}
+              onChange={handleSearch}
               onKeyDown={handleSearchKeyDown}
               className="peer pl-10 border-0 focus:ring-0"
             />
@@ -109,23 +132,22 @@ export function TopNavSearch({ className }: SearchInputProps) {
               </>
             )}
 
-            {search && (
+            {search && matchedResults.length > 0 && (
               <>
                 <h2 className="p-4 text-slate-500 dark:text-slate-400">
                   搜索结果
                 </h2>
-
                 <ul>
-                  {results.map((item, index) => (
+                  {matchedResults.map((item, index) => (
                     <ResultItem
                       {...item}
                       key={item.link}
                       selected={index === selectedIndex}
                       onMouseEnter={() => setSelectedIndex(index)}
-                      onClick={() => navigate(item.link)}
+                      onClick={() => handleNavigate(item.link)}
                       className={cn(
                         'rounded-none',
-                        index === results.length - 1 && 'rounded-tr-none rounded-tl-none'
+                        index === matchedResults.length - 1 && 'rounded-tr-none rounded-tl-none'
                       )}
                     />
                   ))}
@@ -140,12 +162,12 @@ export function TopNavSearch({ className }: SearchInputProps) {
 }
 
 type SearchResultItemProps = React.ComponentPropsWithoutRef<'li'> & {
-  title: string
+  text: string
   selected: boolean
   className?: string
 }
 
-function ResultItem({ title, selected, className, ...props }: SearchResultItemProps) {
+function ResultItem({ text, selected, className, ...props }: SearchResultItemProps) {
   // 这里不要使用 `<a>`、`<button>` 等会获取焦点的标签，因它会导致 `Tab` 导航丢失一次
   return (
     <li
@@ -156,7 +178,7 @@ function ResultItem({ title, selected, className, ...props }: SearchResultItemPr
         className
       )}
     >
-      {title}
+      {text}
     </li>
   )
 }

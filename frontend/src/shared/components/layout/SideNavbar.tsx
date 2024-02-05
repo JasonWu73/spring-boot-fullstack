@@ -1,6 +1,6 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
-import { Blocks, BugOff, FileClock, Gauge, ShoppingCart, UserCog2 } from 'lucide-react'
+import { Blocks, BugOff, FileClock, Gauge, UserCog2 } from 'lucide-react'
 
 import { buttonVariant } from '@/shared/components/ui/Button'
 import { cn } from '@/shared/utils/helpers'
@@ -29,10 +29,6 @@ export function SideNavbar() {
         <>
           <Separator/>
           <Title text="测试路由"/>
-          <NavItem link="/products">
-            <ShoppingCart className="h-4 w-4"/>
-            <span>随机商品</span>
-          </NavItem>
           <NavItem link="/demo">
             <Blocks className="h-4 w-4"/>
             <span>UI 组件</span>
