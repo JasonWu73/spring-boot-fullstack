@@ -13,7 +13,7 @@ export function Aside({ className, ...props }: AsideProps) {
         // 因为左侧导航栏的背景色是黑色，所以这里设置滚动条的颜色为黑色
         colorScheme: 'dark'
       }}
-      className={cn('colors text-slate-200 bg-one-dark-1 p-2', className)}
+      className={cn('text-slate-200 bg-one-dark-1 p-2', className)}
     >
       <SideNavbar/>
     </aside>

@@ -1,12 +1,12 @@
 import React from 'react'
 import { Navigate, useLocation } from 'react-router-dom'
+import { toast } from 'sonner'
 
 import { Input } from '@/shared/components/ui/Input'
 import { Button } from '@/shared/components/ui/Button'
-import { toast } from '@/shared/components/ui/use-toast'
+import { getAuth, setAuth } from '@/shared/auth/auth-signals'
 import { useFetch } from '@/shared/hooks/use-fetch'
 import { loginApi } from '@/shared/apis/backend/auth'
-import { getAuth, setAuth } from '@/shared/auth/auth-signals'
 
 const DEFAULT_REDIRECT_URL = '/'
 
@@ -39,11 +39,7 @@ export function LoginForm() {
     const { data, error } = await login({ username, password })
 
     if (error) {
-      toast({
-        title: '登录失败',
-        description: error,
-        variant: 'destructive'
-      })
+      toast.error(error)
       return
     }
 

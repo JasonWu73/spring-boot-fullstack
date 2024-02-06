@@ -1,6 +1,6 @@
 import { effect, signal } from '@preact/signals-react'
 
-import type { Theme } from '@/shared/components/ui/ModeToggle'
+export type Theme = 'dark' | 'light' | 'system'
 
 let STORAGE_KEY: string
 
@@ -60,6 +60,15 @@ export function createThemeState(
 
     return () => darkQuery.removeEventListener('change', handleToggleTheme)
   })
+}
+
+/**
+ * 获取主题。
+ *
+ * @returns {Theme} 当前主题
+ */
+export function getTheme(): Theme {
+  return theme.value
 }
 
 /**

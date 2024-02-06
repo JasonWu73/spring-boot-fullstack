@@ -59,5 +59,5 @@ export function LoginHistoryChart() {
     }
   }, [data])
 
-  return <div ref={containerRef} className="w-full h-96 text-center"/>
+  return <div ref={containerRef} className="h-96 w-fit text-center"/>
 }

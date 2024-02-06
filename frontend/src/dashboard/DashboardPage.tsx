@@ -14,7 +14,7 @@ export default function DashboardPage() {
   useTitle('工作台')
 
   return (
-    <Card className="mx-auto mt-8 max-w-7xl">
+    <Card className="mx-auto mt-8">
       <CardHeader className="text-center">
         <CardTitle>Dashboard</CardTitle>
 

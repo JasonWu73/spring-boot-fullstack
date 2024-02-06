@@ -26,24 +26,33 @@ export function AdminLayout() {
     setZenMode(prev => !prev)
   }
 
+  if (zenMode) {
+    return (
+      <div className="grid grid-cols-[auto_1fr] grid-rows-[auto_1fr] h-screen">
+        <main className="col-span-2 row-span-2 relative p-4">
+          <React.Suspense fallback={<LoadingFullPage/>}>
+            <Outlet/>
+          </React.Suspense>
+        </main>
+      </div>
+    )
+  }
+
   return (
     <div className="grid grid-cols-[auto_1fr] grid-rows-[auto_1fr] h-screen">
-      {!zenMode && <Header className="col-span-2 row-span-1"/>}
+      <Header className="col-span-2 row-span-1"/>
 
-      {!zenMode && (
-        <Aside
-          className={cn(
-            'col-span-1 row-span-1 overflow-auto h-[calc(100vh-3.3125rem)]',
-            collapsed && 'hidden'
-          )}
-        />
-      )}
+      <Aside
+        className={cn(
+          'col-span-1 row-span-1 overflow-auto h-[calc(100vh-3.3125rem)]',
+          collapsed && 'hidden'
+        )}
+      />
 
       <main
         className={cn(
           'col-span-1 row-span-1 flex flex-col',
-          collapsed && 'col-span-2',
-          zenMode && 'col-span-2 row-span-2',
+          collapsed && 'col-span-2'
         )}
       >
         <div className="flex-grow relative p-4">
@@ -52,7 +61,7 @@ export function AdminLayout() {
           </React.Suspense>
         </div>
 
-        {!zenMode && <Footer/>}
+        <Footer/>
       </main>
     </div>
   )

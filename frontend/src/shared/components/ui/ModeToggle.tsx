@@ -1,6 +1,7 @@
 import React from 'react'
 import { Monitor, Moon, Sun } from 'lucide-react'
 
+import { setTheme, type Theme } from '@/shared/components/ui/theme-signals'
 import { DropdownMenu } from '@/shared/components/ui/DropdownMenu'
 import { Button, buttonVariant } from '@/shared/components/ui/Button'
 import { cn } from '@/shared/utils/helpers'
@@ -11,14 +12,12 @@ const MODES = [
   { theme: 'system', icon: <Monitor className="h-4 w-4"/>, text: '自动' }
 ] as const
 
-export type Theme = 'dark' | 'light' | 'system'
 
 type ModeToggleProps = {
-  setTheme: (theme: Theme) => void
   className?: string
 };
 
-export function ModeToggle({ setTheme, className }: ModeToggleProps) {
+export function ModeToggle({ className }: ModeToggleProps) {
   const [open, setOpen] = React.useState(false)
   const [selectedIndex, setSelectedIndex] = React.useState(-1)
 
@@ -75,7 +74,7 @@ export function ModeToggle({ setTheme, className }: ModeToggleProps) {
       }
       content={
         // 这里不要使用 `<a>`、`<button>` 等会获取焦点的标签，因它会导致 `Tab` 导航丢失一次
-        <ul className="w-24">
+        <ul className="min-w-24">
           {MODES.map((mode, index) => (
             <ModeItem
               key={index}
