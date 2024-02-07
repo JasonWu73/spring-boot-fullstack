@@ -55,5 +55,5 @@ export function LoginsTopThree() {
     }
   }, [data])
 
-  return <div ref={containerRef} className="h-96 w-fit text-center"/>
+  return <div ref={containerRef} className="h-96 w-full"/>
 }

@@ -3,7 +3,6 @@ import { TopNavSearch } from '@/shared/components/layout/TopNavSearch'
 import { AuthSwitch } from '@/shared/components/layout/AuthSwitch'
 import { SideMenuHamburger } from '@/shared/components/layout/SideMenuHamburger'
 import { ModeToggle } from '@/shared/components/ui/ModeToggle'
-import { setTheme } from '@/shared/components/ui/theme-signals'
 
 export function TopNavbar() {
   return (
@@ -22,7 +21,6 @@ export function TopNavbar() {
         <AuthSwitch/>
 
         <ModeToggle
-          setTheme={setTheme}
           className="bg-transparent hover:bg-slate-600 hover:shadow-none focus:bg-slate-600 focus:ring-0 focus:shadow-none"
         />
       </div>

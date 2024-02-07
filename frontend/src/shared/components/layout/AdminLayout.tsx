@@ -28,41 +28,42 @@ export function AdminLayout() {
 
   if (zenMode) {
     return (
-      <div className="grid grid-cols-[auto_1fr] grid-rows-[auto_1fr] h-screen">
-        <main className="col-span-2 row-span-2 relative p-4">
-          <React.Suspense fallback={<LoadingFullPage/>}>
-            <Outlet/>
-          </React.Suspense>
-        </main>
-      </div>
+      <main className="relative h-screen p-4">
+        <React.Suspense fallback={<LoadingFullPage/>}>
+          <Outlet/>
+        </React.Suspense>
+      </main>
     )
   }
 
   return (
-    <div className="grid grid-cols-[auto_1fr] grid-rows-[auto_1fr] h-screen">
+    <div className="relative grid grid-cols-[auto_1fr] grid-rows-[auto_1fr_auto] h-screen">
       <Header className="col-span-2 row-span-1"/>
 
       <Aside
         className={cn(
-          'col-span-1 row-span-1 overflow-auto h-[calc(100vh-3.3125rem)]',
+          'absolute top-[3.3125rem] z-40 lg:static lg:col-span-1 lg:row-span-3',
           collapsed && 'hidden'
         )}
       />
 
       <main
         className={cn(
-          'col-span-1 row-span-1 flex flex-col',
-          collapsed && 'col-span-2'
+          'col-span-2 row-span-1 lg:col-span-1',
+          collapsed && 'lg:col-span-2'
         )}
       >
-        <div className="flex-grow relative p-4">
+        <div className="relative p-4">
           <React.Suspense fallback={<LoadingFullPage/>}>
             <Outlet/>
           </React.Suspense>
         </div>
-
-        <Footer/>
       </main>
+
+      <Footer className={cn(
+        'col-span-2 row-span-1 lg:col-span-1',
+        collapsed && 'lg:col-span-2'
+      )}/>
     </div>
   )
 }

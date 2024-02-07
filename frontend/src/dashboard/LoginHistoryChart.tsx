@@ -1,18 +1,18 @@
 import React from 'react'
 import * as echarts from 'echarts'
 
-import { getLoginsHistoryApi } from "@/shared/apis/backend/op-log";
-import { useFetch } from "@/shared/hooks/use-fetch";
-import { useRefresh } from "@/shared/hooks/use-refresh";
+import { useFetch } from '@/shared/hooks/use-fetch'
+import { useRefresh } from '@/shared/hooks/use-refresh'
+import { getLoginsHistoryApi } from '@/shared/apis/backend/op-log'
 
 export function LoginHistoryChart() {
   const containerRef = React.useRef<HTMLDivElement>(null)
   const chartRef = React.useRef<echarts.EChartsType>()
-  const { data, fetchData: getLoginsHistory } = useFetch(getLoginsHistoryApi);
+  const { data, fetchData: getLoginsHistory } = useFetch(getLoginsHistoryApi)
 
   useRefresh(() => {
-    getLoginsHistory(7).then();
-  });
+    getLoginsHistory(7).then()
+  })
 
   React.useEffect(() => {
     // 初始化图表
@@ -59,5 +59,5 @@ export function LoginHistoryChart() {
     }
   }, [data])
 
-  return <div ref={containerRef} className="h-96 w-fit text-center"/>
+  return <div ref={containerRef} className="h-96 w-full"/>
 }
