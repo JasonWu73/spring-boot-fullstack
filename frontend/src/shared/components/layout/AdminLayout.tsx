@@ -42,7 +42,7 @@ export function AdminLayout() {
 
       <Aside
         className={cn(
-          'absolute top-[3.3125rem] z-40 lg:static lg:col-span-1 lg:row-span-3',
+          'absolute top-[3.3125rem] z-40 overflow-y-auto max-h-[calc(100vh-3.3125rem)] lg:static lg:col-span-1 lg:row-span-3 lg:max-h-full',
           collapsed && 'hidden'
         )}
       />
