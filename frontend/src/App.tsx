@@ -17,6 +17,7 @@ export default function App() {
       <RouterProvider router={router}/>
 
       <Toaster
+        position="top-right"
         theme={getTheme()}
         richColors
         className="toaster group"
