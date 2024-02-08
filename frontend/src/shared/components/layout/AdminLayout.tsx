@@ -4,7 +4,7 @@ import { Outlet } from 'react-router-dom'
 import { Header } from '@/shared/components/layout/Header'
 import { Aside } from '@/shared/components/layout/Aside'
 import { Footer } from '@/shared/components/layout/Footer'
-import { isCollapsed } from '@/shared/components/layout/side-menu-signals'
+import { isCollapsed, setCollapsed } from '@/shared/components/layout/side-menu-signals'
 import { LoadingFullPage } from '@/shared/components/ui/LoadingFullPage'
 import { cn, isMac } from '@/shared/utils/helpers'
 import { useKeypress } from '@/shared/hooks/use-keypress'
@@ -36,6 +36,14 @@ export function AdminLayout() {
     )
   }
 
+  function handleClickMainContent() {
+    // 当页面 1024px 以下时，点击页面主题区域时关闭左侧菜单栏
+    const currentWidth = window.innerWidth
+    if (currentWidth >= 1024) return
+
+    setCollapsed(true)
+  }
+
   return (
     <div className="relative grid grid-cols-[auto_1fr] grid-rows-[auto_1fr_auto] h-screen">
       <Header className="col-span-2 row-span-1"/>
@@ -48,6 +56,7 @@ export function AdminLayout() {
       />
 
       <main
+        onClick={handleClickMainContent}
         className={cn(
           'col-span-2 row-span-1 lg:col-span-1',
           collapsed && 'lg:col-span-2'
@@ -60,10 +69,12 @@ export function AdminLayout() {
         </div>
       </main>
 
-      <Footer className={cn(
-        'col-span-2 row-span-1 lg:col-span-1',
-        collapsed && 'lg:col-span-2'
-      )}/>
+      <Footer
+        className={cn(
+          'col-span-2 row-span-1 lg:col-span-1',
+          collapsed && 'lg:col-span-2'
+        )}
+      />
     </div>
   )
 }

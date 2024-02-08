@@ -2,6 +2,7 @@ import React from 'react'
 import { NavLink } from 'react-router-dom'
 import { Blocks, BugOff, FileClock, Gauge, UserCog2 } from 'lucide-react'
 
+import { setCollapsed } from '@/shared/components/layout/side-menu-signals'
 import { buttonVariant } from '@/shared/components/ui/Button'
 import { cn } from '@/shared/utils/helpers'
 import { hasRoot } from '@/shared/auth/auth-signals'
@@ -49,9 +50,19 @@ type NavItemProps = {
 }
 
 function NavItem({ children, link }: NavItemProps) {
+
+  function handleClick() {
+    // 当页面 1024px 以下时，点击页面主题区域时关闭左侧菜单栏
+    const currentWidth = window.innerWidth
+    if (currentWidth >= 1024) return
+
+    setCollapsed(true)
+  }
+
   return (
     <NavLink
       to={link}
+      onClick={handleClick}
       className={({ isActive }) => cn(
         buttonVariant('primary'),
         'grid grid-cols-[auto_1fr] gap-2 w-full bg-transparent text-left',
