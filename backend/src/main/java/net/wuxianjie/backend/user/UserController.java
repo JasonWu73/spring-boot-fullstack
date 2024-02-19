@@ -103,7 +103,7 @@ public class UserController {
     final long userId = userService.addUser(param);
 
     // 构建新增资源的 URI
-    URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+    final URI location = ServletUriComponentsBuilder.fromCurrentRequest()
       .path("/{userId}")
       .buildAndExpand(userId)
       .toUri();
