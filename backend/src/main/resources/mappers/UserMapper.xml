@@ -96,7 +96,12 @@
     </where>
   </sql>
 
-  <insert id="insert">
+  <insert
+    id="insert"
+    parameterType="net.wuxianjie.backend.user.User"
+    useGeneratedKeys="true"
+    keyProperty="id"
+  >
     insert into user (
       created_at,
       updated_at,

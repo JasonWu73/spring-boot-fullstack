@@ -1,6 +1,7 @@
 package net.wuxianjie.backend.user;
 
 import jakarta.validation.Valid;
+import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import net.wuxianjie.backend.shared.auth.annotation.Admin;
 import net.wuxianjie.backend.shared.auth.annotation.Root;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 /**
  * 用户 API。
@@ -91,15 +93,22 @@ public class UserController {
    * 新增用户。
    *
    * @param param 新增用户参数
-   * @return 204 No Content
+   * @return 201 Created
    */
   @Admin
   @PostMapping
   public ResponseEntity<Void> addUser(
     @RequestBody @Valid final AddUserParam param
   ) {
-    userService.addUser(param);
-    return ResponseEntity.noContent().build();
+    final long userId = userService.addUser(param);
+
+    // 构建新增资源的 URI
+    URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+      .path("/{userId}")
+      .buildAndExpand(userId)
+      .toUri();
+
+    return ResponseEntity.created(location).build();
   }
 
   /**

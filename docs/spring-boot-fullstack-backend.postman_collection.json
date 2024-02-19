@@ -333,7 +333,7 @@
 								"users"
 							]
 						},
-						"description": "# 新增用户（管理员 API）\n\n```\nPOST /api/v1/users\n```\n\n**HTTP Headers**\n\n```\nAuthorization: Bearer {accessToken}\n```\n\n- `accessToken`：访问令牌\n\n**JSON 请求体**\n\n```json\n{\n  \"username\": \"xxx\", // 用户名，必填\n  \"nickname\": \"xxx\", // 昵称，必填\n  \"password\": \"xxx\", // 加密后的密码，必填\n  \"authorities\": [\"admin\"], // 功能权限列表\n  \"remark\": \"测试账号，用完即删\" // 备注\n}\n```\n\n## 响应结果\n\n**正确响应**\n\n无，HTTP 响应状态码为 `204`。\n\n**错误响应**\n\n```json\n{\n  \"timestamp\": \"2024-01-29 21:42:59\", // 请求发起的时间戳\n  \"status\": 409, // HTTP 响应状态码\n  \"error\": \"用户名已存在\", // 错误信息\n  \"path\": \"/api/v1/users\" // 请求地址\n}\n```"
+						"description": "# 新增用户（管理员 API）\n\n```\nPOST /api/v1/users\n```\n\n**HTTP Headers**\n\n```\nAuthorization: Bearer {accessToken}\n```\n\n- `accessToken`：访问令牌\n\n**JSON 请求体**\n\n```json\n{\n  \"username\": \"xxx\", // 用户名，必填\n  \"nickname\": \"xxx\", // 昵称，必填\n  \"password\": \"xxx\", // 加密后的密码，必填\n  \"authorities\": [\"admin\"], // 功能权限列表\n  \"remark\": \"测试账号，用完即删\" // 备注\n}\n```\n\n## 响应结果\n\n**正确响应**\n\n无，HTTP 响应状态码为 `201`，且响应头 `Location` 指定了新增资源的路径。\n\n**错误响应**\n\n```json\n{\n  \"timestamp\": \"2024-01-29 21:42:59\", // 请求发起的时间戳\n  \"status\": 409, // HTTP 响应状态码\n  \"error\": \"用户名已存在\", // 错误信息\n  \"path\": \"/api/v1/users\" // 请求地址\n}\n```"
 					},
 					"response": []
 				},
