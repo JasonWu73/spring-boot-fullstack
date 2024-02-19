@@ -58,6 +58,10 @@
     where id = #{userId}
   </select>
 
+  <select id="existsUserByUsername" resultType="boolean">
+    select exists(select 1 from user where username = #{username})
+  </select>
+
   <select id="selectByQueryLimit" resultMap="userInfo">
     select
       id,

@@ -38,6 +38,14 @@ public interface UserMapper {
   UserInfo selectDetailById(long userId);
 
   /**
+   * 根据用户名查询用户是否存在。
+   *
+   * @param username 用户名
+   * @return 是否存在指定用户名的用户
+   */
+  boolean existsUserByUsername(String username);
+
+  /**
    * 根据查询条件获取用户分页列表。
    * <p>
    * 支持排序的列：创建时间、更新时间。

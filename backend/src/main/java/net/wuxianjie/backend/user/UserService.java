@@ -142,11 +142,9 @@ public class UserService {
    */
   public long addUser(final AddUserParam param) {
     // 判断是否存在相同用户名的用户
-    Optional
-      .ofNullable(userMapper.selectByUsername(param.getUsername()))
-      .ifPresent(user -> {
-        throw new ApiException(HttpStatus.CONFLICT, "用户名已存在");
-      });
+    if (userMapper.existsUserByUsername(param.getUsername())) {
+      throw new ApiException(HttpStatus.CONFLICT, "用户名已存在");
+    }
 
     // ----- 新增用户 -----
     final User user = new User();
