@@ -138,7 +138,7 @@ public class UserService {
    * 新增用户。
    *
    * @param param 新增用户参数
-   * @return 新增的用户 ID
+   * @return 新增用户的 ID
    */
   public long addUser(final AddUserParam param) {
     // 判断是否存在相同用户名的用户
