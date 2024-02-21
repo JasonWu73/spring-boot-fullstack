@@ -21,7 +21,8 @@ public class CaffeineConfig {
    */
   @Bean
   public Cache<String, AuthenticatedUser> accessTokenCache() {
-    return Caffeine.newBuilder()
+    return Caffeine
+      .newBuilder()
       .expireAfterWrite(TokenAuth.TOKEN_EXPIRES_IN_SECONDS, TimeUnit.SECONDS)
       .build();
   }
@@ -33,7 +34,8 @@ public class CaffeineConfig {
    */
   @Bean
   public Cache<String, String> loggedInCache() {
-    return Caffeine.newBuilder()
+    return Caffeine
+      .newBuilder()
       .expireAfterWrite(TokenAuth.TOKEN_EXPIRES_IN_SECONDS, TimeUnit.SECONDS)
       .build();
   }
