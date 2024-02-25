@@ -51,7 +51,7 @@ export function LoginForm() {
   }
 
   return (
-    <form onSubmit={handleLogin} className="flex flex-col gap-4">
+    <form autoComplete="off" onSubmit={handleLogin} className="flex flex-col gap-4">
       <div className="md:flex items-center">
         <label htmlFor="username" className="required w-20">用户名</label>
         <Input
@@ -59,7 +59,6 @@ export function LoginForm() {
           name="username"
           id="username"
           placeholder="用户名"
-          autoComplete="username"
           required
           minLength={2}
           onValidate={validityState => {
@@ -77,7 +76,6 @@ export function LoginForm() {
           name="password"
           id="password"
           placeholder="密码"
-          autoComplete="current-password"
           required
           minLength={2}
           onValidate={validityState => {
