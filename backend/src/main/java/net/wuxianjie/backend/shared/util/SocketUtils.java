@@ -11,6 +11,7 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 网络 Socket 工具类。
@@ -69,7 +70,13 @@ public class SocketUtils {
       output.write(data);
       output.flush();
 
-      // ❗一定要关闭输出流，否则服务端的 `read` 方法会一直阻塞
+      // ❗一定要关闭输出流（发送 FIN 包），否则服务端的 `read` 方法会一直阻塞
+      // 这里等待一小段时间再关闭输出流，以确保服务端能够接收到数据
+      try {
+        TimeUnit.MILLISECONDS.sleep(50);
+      } catch (InterruptedException e) {
+        throw new RuntimeException(e);
+      }
       client.shutdownOutput();
 
       // ----- 读取服务端的响应数据 -----
@@ -78,10 +85,7 @@ public class SocketUtils {
 
       return read(client.getInputStream());
     } catch (IOException e) {
-      throw new RuntimeException(
-        "TCP 通信失败 [ip=%s;port=%s;hexData=%s]".formatted(ip, port, StrUtils.toHex(data)),
-        e
-      );
+      throw new RuntimeException(e);
     }
   }
 
@@ -140,10 +144,7 @@ public class SocketUtils {
       // 使用已设置地址的 `DatagramPacket`，从而实现只接收目标服务端的响应数据
       return Optional.ofNullable(read(client, packet));
     } catch (IOException e) {
-      throw new RuntimeException(
-        "UDP 通信失败 [ip=%s;port=%s;hexData=%s]".formatted(ip, port, StrUtils.toHex(data)),
-        e
-      );
+      throw new RuntimeException(e);
     }
   }
 
