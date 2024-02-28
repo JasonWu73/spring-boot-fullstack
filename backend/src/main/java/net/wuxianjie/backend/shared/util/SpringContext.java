@@ -1,4 +1,4 @@
-package com.hzqg.digitalcourtom.shared.util;
+package net.wuxianjie.backend.shared.util;
 
 import lombok.NonNull;
 import org.springframework.beans.BeansException;
@@ -7,7 +7,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
 /**
- * This class is used to get a spring bean from IOC container to be used for regular java pojo classes.
+ * 通过此类可在 POJO 中获取 Spring 管理的 Bean 实例。
  */
 @Component
 public class SpringContext implements ApplicationContextAware {
@@ -15,12 +15,11 @@ public class SpringContext implements ApplicationContextAware {
   private static ApplicationContext context;
 
   /**
-   * Returns the Spring managed bean instance of the given class type if it exists.
-   * Returns null otherwise.
+   * 获取 Spring 管理的 Bean 实例。
    *
-   * @param beanClass the class type of the managed bean
-   * @return the managed bean instance
-   * @param <T> the type of the managed bean
+   * @param beanClass IoC 容器中的 Bean 类型
+   * @return Spring IoC 容器中的 Bean 实例，如果不存在则返回 `null`
+   * @param <T> Bean 类型
    */
   public static <T> T getBean(final Class<T> beanClass) {
     return context.getBean(beanClass);
@@ -29,7 +28,7 @@ public class SpringContext implements ApplicationContextAware {
   @Override
   public void setApplicationContext(@NonNull final ApplicationContext applicationContext)
     throws BeansException {
-    // store ApplicationContext reference to access required beans later on
+    // 保存 ApplicationContext 引用，以便后续用于获取 Spring 管理的 Bean 实例
     SpringContext.context = applicationContext;
   }
 }
