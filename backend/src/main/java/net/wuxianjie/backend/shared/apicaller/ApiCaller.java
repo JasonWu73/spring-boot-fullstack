@@ -27,6 +27,7 @@ public class ApiCaller {
    *
    * @param url 请求地址
    * @param urlParams URL 参数
+   * @param headers 请求头
    * @param responseType 响应结果的类类型
    * @param <T> 响应结果的泛型类型参数
    * @return 响应结果
@@ -34,6 +35,7 @@ public class ApiCaller {
   public <T> ApiResponse<T> get(
     final String url,
     final Map<String, String> urlParams,
+    final Map<String, String> headers,
     final Class<T> responseType
   ) {
     return getResponse(() -> restClient
@@ -42,6 +44,7 @@ public class ApiCaller {
         urlParams.forEach(uriBuilder::queryParam);
         return uriBuilder.build();
       })
+      .headers(httpHeaders -> httpHeaders.setAll(headers))
       .retrieve()
       .toEntity(responseType));
   }
@@ -51,6 +54,7 @@ public class ApiCaller {
    *
    * @param method 请求方法
    * @param url 请求地址
+   * @param headers 请求头
    * @param formData 表单请求体
    * @param responseType 响应结果的类类型
    * @param <T> 响应结果的泛型类型参数
@@ -59,12 +63,14 @@ public class ApiCaller {
   public <T> ApiResponse<T> form(
     final HttpMethod method,
     final String url,
+    final Map<String, String> headers,
     final LinkedMultiValueMap<String, String> formData,
     final Class<T> responseType
   ) {
     return getResponse(() -> restClient
       .method(method)
       .uri(url)
+      .headers(httpHeaders -> httpHeaders.setAll(headers))
       .contentType(MediaType.APPLICATION_FORM_URLENCODED)
       .body(formData)
       .retrieve()
@@ -76,6 +82,7 @@ public class ApiCaller {
    *
    * @param method 请求方法
    * @param url 请求地址
+   * @param headers 请求头
    * @param formDataBuilder 表单请求体生成器
    * @param responseType 响应结果的类类型
    * @param <T> 响应结果的泛型类型参数
@@ -84,12 +91,14 @@ public class ApiCaller {
   public <T> ApiResponse<T> upload(
     final HttpMethod method,
     final String url,
+    final Map<String, String> headers,
     final MultipartBodyBuilder formDataBuilder,
     final Class<T> responseType
   ) {
     return getResponse(() -> restClient
       .method(method)
       .uri(url)
+      .headers(httpHeaders -> httpHeaders.setAll(headers))
       .contentType(MediaType.MULTIPART_FORM_DATA)
       .body(formDataBuilder.build())
       .retrieve()
@@ -101,6 +110,7 @@ public class ApiCaller {
    *
    * @param method 请求方法
    * @param url 请求地址
+   * @param headers 请求头
    * @param jsonData JSON 请求体
    * @param responseType 响应结果的类类型
    * @param <T> 响应结果的泛型类型参数
@@ -109,12 +119,14 @@ public class ApiCaller {
   public <T> ApiResponse<T> json(
     final HttpMethod method,
     final String url,
+    final Map<String, String> headers,
     final Object jsonData,
     final Class<T> responseType
   ) {
     return getResponse(() -> restClient
       .method(method)
       .uri(url)
+      .headers(httpHeaders -> httpHeaders.setAll(headers))
       .contentType(MediaType.APPLICATION_JSON)
       .body(jsonData)
       .retrieve()
