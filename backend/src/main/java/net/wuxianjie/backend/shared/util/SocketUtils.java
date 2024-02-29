@@ -1,8 +1,8 @@
 package net.wuxianjie.backend.shared.util;
 
 import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -10,8 +10,8 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.util.Arrays;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 网络 Socket 工具类。
@@ -35,7 +35,7 @@ public class SocketUtils {
    * @param data 要发送的数据
    * @return TCP 服务端的响应结果
    */
-  public static byte[] sendTcp(
+  public static Optional<byte[]> sendTcp(
     final String ip,
     final int port,
     final byte[] data
@@ -53,7 +53,7 @@ public class SocketUtils {
    * @param readTimeout 读取超时时间，单位：毫秒
    * @return TCP 服务端的响应结果
    */
-  public static byte[] sendTcp(
+  public static Optional<byte[]> sendTcp(
     final String ip,
     final int port,
     final byte[] data,
@@ -70,20 +70,10 @@ public class SocketUtils {
       output.write(data);
       output.flush();
 
-      // ❗一定要关闭输出流（发送 FIN 包），否则服务端的 `read` 方法会一直阻塞
-      // 这里等待一小段时间再关闭输出流，以确保服务端能够接收到数据
-      try {
-        TimeUnit.MILLISECONDS.sleep(50);
-      } catch (InterruptedException e) {
-        throw new RuntimeException(e);
-      }
-      client.shutdownOutput();
-
       // ----- 读取服务端的响应数据 -----
       // 设置最长数据读取时间
       client.setSoTimeout(readTimeout);
-
-      return read(client.getInputStream());
+      return read(client);
     } catch (IOException e) {
       throw new RuntimeException(
         "TCP 通信失败 [ip=%s;port=%s]: %s".formatted(ip, port, e.getMessage())
@@ -144,7 +134,7 @@ public class SocketUtils {
       client.setSoTimeout(readTimeout);
 
       // 使用已设置地址的 `DatagramPacket`，从而实现只接收目标服务端的响应数据
-      return Optional.ofNullable(read(client, packet));
+      return read(client, packet);
     } catch (IOException e) {
       throw new RuntimeException(
         "UDP 通信失败 [ip=%s;port=%s]: %s".formatted(ip, port, e.getMessage())
@@ -152,19 +142,22 @@ public class SocketUtils {
     }
   }
 
-  private static byte[] read(final InputStream input) throws IOException {
-    final byte[] buffer = new byte[BUFFER_SIZE];
-    final ByteArrayOutputStream output = new ByteArrayOutputStream();
-    int readLength;
+  private static Optional<byte[]> read(final Socket client) throws IOException {
+    final DataInputStream inputStream = new DataInputStream(client.getInputStream());
 
-    while ((readLength = input.read(buffer)) != -1) {
-      output.write(buffer, 0, readLength);
+    // ❗️因为只读取一次，故预设的缓存区大小将影响能读取的最多数据量
+    final byte[] buffer = new byte[BUFFER_SIZE];
+
+    final int length = inputStream.read(buffer);
+
+    if (length > 0) {
+      return Optional.of(Arrays.copyOfRange(buffer, 0, length));
     }
 
-    return output.toByteArray();
+    return Optional.empty();
   }
 
-  private static byte[] read(
+  private static Optional<byte[]> read(
     final DatagramSocket client,
     final DatagramPacket packet
   ) throws IOException {
@@ -177,11 +170,11 @@ public class SocketUtils {
       client.receive(packet);
       output.write(packet.getData(), packet.getOffset(), packet.getLength());
 
-      return output.toByteArray();
+      return Optional.of(output.toByteArray());
     } catch (SocketTimeoutException e) {
       // 如果读取 UDP 服务端响应数据超时，则认为服务端没有响应数据
       // 这里不能判定为通信失败，因为 UDP 是面向无连接的协议
-      return null;
+      return Optional.empty();
     }
   }
 }
