@@ -85,7 +85,9 @@ public class SocketUtils {
 
       return read(client.getInputStream());
     } catch (IOException e) {
-      throw new RuntimeException(e);
+      throw new RuntimeException(
+        "TCP 通信失败 [ip=%s;port=%s]: %s".formatted(ip, port, e.getMessage())
+      );
     }
   }
 
@@ -144,7 +146,9 @@ public class SocketUtils {
       // 使用已设置地址的 `DatagramPacket`，从而实现只接收目标服务端的响应数据
       return Optional.ofNullable(read(client, packet));
     } catch (IOException e) {
-      throw new RuntimeException(e);
+      throw new RuntimeException(
+        "UDP 通信失败 [ip=%s;port=%s]: %s".formatted(ip, port, e.getMessage())
+      );
     }
   }
 
