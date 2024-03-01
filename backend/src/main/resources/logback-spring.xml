@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!--
   部署时将 `logback-spring.xml` 放于与 Jar 同级目录的 `config` 子目录下，并通过如下命令运行程序：
   `java -jar xxx.jar &#45;&#45;logging.config=file:./config/logback-spring.xml`
