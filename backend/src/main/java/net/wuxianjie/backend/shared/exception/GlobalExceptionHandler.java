@@ -72,7 +72,7 @@ public class GlobalExceptionHandler {
   @ExceptionHandler({ NoResourceFoundException.class, NoHandlerFoundException.class })
   public ResponseEntity<?> handleNoResourceFoundException(final HttpServletRequest request) {
     final String requestPath = request.getRequestURI();
-    final String accept = request.getHeader(HttpHeaders.ACCEPT);
+    final String accept = Optional.ofNullable(request.getHeader(HttpHeaders.ACCEPT)).orElse("");
     if (isJsonRequest(requestPath, accept)) {
       return ResponseEntity
         .status(HttpStatus.NOT_FOUND)
