@@ -1,5 +1,6 @@
 package net.wuxianjie.backend.shared.util;
 
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.KeyPairGenerator;
@@ -80,7 +81,7 @@ public class RsaUtils {
       throw new RuntimeException("使用私钥解密失败", e);
     }
 
-    return new String(bytes);
+    return new String(bytes, StandardCharsets.UTF_8);
   }
 
   /**
