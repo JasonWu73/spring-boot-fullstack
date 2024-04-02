@@ -51,10 +51,11 @@ public class ApiCallController {
       "1",
       "dateTime",
       getNow()
-    );;
+    );
     return apiCaller.get(
       "http://localhost:%s/api/v1/public/params".formatted(port),
       urlParams,
+      null,
       OuterData.class
     );
   }
@@ -68,6 +69,7 @@ public class ApiCallController {
     return apiCaller.form(
       HttpMethod.POST,
       "http://localhost:%s/api/v1/public/params".formatted(port),
+      null,
       formData,
       OuterData.class
     );
@@ -82,6 +84,7 @@ public class ApiCallController {
     return apiCaller.upload(
       HttpMethod.POST,
       "http://localhost:%s/api/v1/public/params/upload".formatted(port),
+      null,
       formDataBuilder,
       Uploaded.class
     );
@@ -100,6 +103,7 @@ public class ApiCallController {
     return apiCaller.json(
       HttpMethod.POST,
       "http://localhost:%s/api/v1/public/params/json".formatted(port),
+      null,
       jsonData,
       OuterData.class
     );

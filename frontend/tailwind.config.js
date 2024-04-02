@@ -13,7 +13,7 @@ export default {
     extend: {
       height: {
         // 因手机浏览器的地址栏会占用部分高度，导致 `100vh` 会出现垂直滚动条，故使用 `100dvh`
-        screen: ['100vh /* fallback for Opera, IE and etc. */', '100dvh']
+        screen: ['100vh /* fallback for Opera, IE and etc. */', '100svh']
       },
 
       /* 添加新的颜色 */
