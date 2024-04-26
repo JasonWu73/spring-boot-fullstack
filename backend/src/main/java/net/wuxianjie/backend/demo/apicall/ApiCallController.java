@@ -69,7 +69,7 @@ public class ApiCallController {
     return apiCaller.form(
       HttpMethod.POST,
       "http://localhost:%s/api/v1/public/params".formatted(port),
-      null,
+      Map.of(),
       formData,
       OuterData.class
     );
@@ -84,7 +84,7 @@ public class ApiCallController {
     return apiCaller.upload(
       HttpMethod.POST,
       "http://localhost:%s/api/v1/public/params/upload".formatted(port),
-      null,
+      Map.of(),
       formDataBuilder,
       Uploaded.class
     );
@@ -103,7 +103,7 @@ public class ApiCallController {
     return apiCaller.json(
       HttpMethod.POST,
       "http://localhost:%s/api/v1/public/params/json".formatted(port),
-      null,
+      Map.of(),
       jsonData,
       OuterData.class
     );
