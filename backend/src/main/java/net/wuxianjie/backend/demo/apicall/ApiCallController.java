@@ -55,7 +55,7 @@ public class ApiCallController {
     return apiCaller.get(
       "http://localhost:%s/api/v1/public/params".formatted(port),
       urlParams,
-      null,
+      Map.of(),
       OuterData.class
     );
   }
